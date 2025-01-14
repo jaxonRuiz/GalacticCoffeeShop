@@ -1,9 +1,15 @@
 <script lang="ts">
+  import PlanetInfo from "./components/PlanetInfo.svelte";
+
 </script>
 
-<main>
-  <h1>insert GCS game here...</h1>
+<main class="fl">
+  <PlanetInfo />
 </main>
 
 <style>
+  main {
+    width: 100vw;
+    height: 100vh;
+  }
 </style>
