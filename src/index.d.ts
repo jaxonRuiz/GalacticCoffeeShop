@@ -1,0 +1,1 @@
+// global interfaces, no enums
