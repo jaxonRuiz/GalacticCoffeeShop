@@ -23,6 +23,21 @@ div {
   box-sizing: border-box;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.center {
+  display: grid;
+  place-content: center;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
