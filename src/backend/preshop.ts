@@ -2,7 +2,8 @@ export class Preshop {
   // resources
   money: number = 0;
   beans: number = 5;
-  coffee: number = 0;
+  groundCoffee: number = 0;
+  coffeeCups: number = 0;
   waitingCustomers: number = 0;
 
   // stats
@@ -15,6 +16,8 @@ export class Preshop {
   customerDraw: number = 0; // rate of drawing customers
   appealDecay: number = 0.05 // rate of decay of customer appeal
 
+  // contains list of upgrades (IDs) and their levels
+  upgrades: Map<string, number> = new Map();
 
   constructor() {
 
@@ -43,11 +46,11 @@ export class Preshop {
   }
 
   sellCoffee() {
-    if (this.coffee <= 0) return;
+    if (this.coffeeCups <= 0) return;
 
     if (this.waitingCustomers > 0) {
       this.waitingCustomers--;
-      this.coffee--;
+      this.coffeeCups--;
       this.money += this.coffeePrice;
     }
   }
@@ -57,7 +60,7 @@ export class Preshop {
 
     // if finished grinding
     if (this.grindProgress >= this.grindTime) {
-      this.coffee += this.coffeePerBean;
+      this.groundCoffee += this.coffeePerBean;
       this.grindProgress = -1;
     }
 
@@ -73,9 +76,29 @@ export class Preshop {
     }
   }
 
+  makeCoffee() {
+    if (this.groundCoffee <= 0) return;
+
+    // possibly add cooldown or timer effect
+    this.groundCoffee--;
+    this.coffeeCups++;
+  }
+
   buyBeans() {
     // possibly make bean cost scale or change over time(?)
     this.beans += 5;
     this.money -= 5;
+  }
+
+
+  saveState() {
+    localStorage.setItem('game', JSON.stringify(this));
+  }
+
+  loadState() {
+    const state = localStorage.getItem('game');
+    if (state) {
+      Object.assign(this, JSON.parse(state));
+    }
   }
 }
