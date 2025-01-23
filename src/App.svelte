@@ -6,8 +6,7 @@
 
 <main class="fl">
   <PlanetInfo />
-  <!-- <PlanetInfo /> -->
-  <Test />
+  <!-- <Test /> -->
 </main>
 
 <style>
