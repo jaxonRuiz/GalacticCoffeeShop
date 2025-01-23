@@ -4,10 +4,10 @@ const ticksPerHour = 16;
 
 // currently mostly exists to track time
 // also contains an observer object, so can use Timer.timeEvents.subscribe()
-/* NOTES: 
-*   Timer.day gives calander day
-*   DAYS ARE 0 INDEXED
-*/
+/* NOTES:
+ *   Timer.day gives calander day
+ *   DAYS ARE 0 INDEXED
+ */
 export class Timer {
   days = [
     "Sunday",
@@ -26,9 +26,17 @@ export class Timer {
   month = 1;
   year = 1999; // will have years of 336 days (i refuse to do leap years or async months ):<
   ticker: number;
-  timeEvents = new Observer();
+  timeEvents: Observer; // dont forget to relevant classes to this
 
   constructor() {
+    this.timeEvents = new Observer([
+      "tick",
+      "hour",
+      "day",
+      "week",
+      "month",
+      "year",
+    ]);
     this.ticker = setInterval(() => this.tick(), 250);
   }
 
@@ -74,9 +82,9 @@ export class Timer {
   get calanderDay() {
     return this.days[this.day];
   }
-  
+
   get monthDay() {
-    return this.day + this.week*7;
+    return this.day + this.week * 7;
   }
 
   get numericDate() {
@@ -84,6 +92,8 @@ export class Timer {
   }
 
   get printableDate() {
-    return `${this.calanderDay}, ${this.monthDay+1} ${this.month+1}, ${this.year}`;
+    return `${this.calanderDay}, ${this.monthDay + 1} ${this.month + 1}, ${
+      this.year
+    }`;
   }
 }

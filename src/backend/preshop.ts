@@ -1,4 +1,5 @@
-import { Subscriber } from "./observer";
+import type { Subscriber } from "./observer";
+import { Observer } from "./observer";
 
 export class Preshop implements Subscriber {
   // resources
@@ -21,18 +22,25 @@ export class Preshop implements Subscriber {
   // contains list of upgrades (IDs) and their levels
   upgrades: Map<string, number> = new Map();
 
-  constructor() {}
+  constructor(timer: Observer) {
+    timer.subscribe(this, "tick");
+    timer.subscribe(this, "hour");
+  }
 
   notify(event: string, data?: any) {
     if (event === "tick") {
       this.tick();
+    }
+    if (event === "week") {
+      console.log("week end", data);
+      // give weekly recap receipt
     }
   }
 
   tick() {
     this.drawCustomers();
   }
-
+ 
   drawCustomers() {
     if (this.customerDraw > 0) {
       // customer generation
