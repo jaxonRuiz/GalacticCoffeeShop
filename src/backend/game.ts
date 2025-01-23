@@ -16,4 +16,14 @@ function tick() {
   console.log("tick");
 }
 
+function setup() {
+  // start game (?)
+}
 
+function saveState() {
+  // save state to local storage
+}
+
+function loadState() {
+  // load state from local storage
+}

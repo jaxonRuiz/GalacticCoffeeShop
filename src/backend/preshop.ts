@@ -1,4 +1,6 @@
-export class Preshop {
+import { Subscriber } from "./observer";
+
+export class Preshop implements Subscriber {
   // resources
   money: number = 0;
   beans: number = 5;
@@ -11,16 +13,20 @@ export class Preshop {
   coffeePerBean: number = 5;
   grindTime: number = 5; // number of times to click to grind a bean
   grindProgress: number = -1; // -1 means not grinding yet
-  appeal: number = 0; // sets customerDraw 
+  appeal: number = 0; // sets customerDraw
   customerProgress: number = 0; // progress to next customer
   customerDraw: number = 0; // rate of drawing customers
-  appealDecay: number = 0.05 // rate of decay of customer appeal
+  appealDecay: number = 0.05; // rate of decay of customer appeal
 
   // contains list of upgrades (IDs) and their levels
   upgrades: Map<string, number> = new Map();
 
-  constructor() {
+  constructor() {}
 
+  notify(event: string, data?: any) {
+    if (event === "tick") {
+      this.tick();
+    }
   }
 
   tick() {
@@ -37,7 +43,10 @@ export class Preshop {
       }
 
       // appeal decay
-      this.customerDraw = Math.min(this.customerDraw * (1 - this.appealDecay), 0.0001);
+      this.customerDraw = Math.min(
+        this.customerDraw * (1 - this.appealDecay),
+        0.0001
+      );
     }
   }
 
@@ -90,13 +99,12 @@ export class Preshop {
     this.money -= 5;
   }
 
-
   saveState() {
-    localStorage.setItem('game', JSON.stringify(this));
+    localStorage.setItem("game", JSON.stringify(this));
   }
 
   loadState() {
-    const state = localStorage.getItem('game');
+    const state = localStorage.getItem("game");
     if (state) {
       Object.assign(this, JSON.parse(state));
     }
