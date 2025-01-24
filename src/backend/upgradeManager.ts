@@ -20,7 +20,7 @@ export class UpgradeManager {
 }
 
 
-let upgradeJSON: { [key: string] : any} = {
+export let upgradeJSON: { [key: string] : any} = {
   preshop: {
     "crank_grinder": {
       "name": "Crank Grinder",

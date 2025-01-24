@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { upgradeJSON } from '../backend/upgradeManager';
   import { Observer } from "../backend/observer";
   import { Preshop } from "../backend/preshop";
   import { Timer } from "../backend/time";
@@ -7,6 +8,9 @@
   let timer = new Timer();
   let pshop = new Preshop(timer.timeEvents);
   let manager = new UpgradeManager("preshop");
+
+  // for upgrades
+  const upgs = upgradeJSON["preshop"];
 
   // define variables
   let money = pshop.w_money;
@@ -63,6 +67,9 @@
 
   <div class="col">
     <h1>upgrades</h1>
+    {#each Object.keys(upgs) as upgkey}
+      {@render upgrade(upgkey)}
+    {/each}
   </div>
 
   <div class="col">
@@ -74,6 +81,15 @@
       }}>buy coffee beans</button
     >
   </div>
+
+
+  {#snippet upgrade(upgkey: string)}
+    <button on:click={() => {manager.applyUpgrade(upgkey, pshop)}}>
+      <h3>{upgs[upgkey].name}</h3>
+      <p>{upgs[upgkey].description}</p>
+      <p>cost: ${upgs[upgkey].cost.toFixed(2)}</p>
+    </button>
+  {/snippet}
 </main>
 
 <style>
