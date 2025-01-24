@@ -4,19 +4,22 @@ import { get, type Writable, writable } from "svelte/store";
 
 export class Preshop implements Subscriber {
   // resources (setting writable to interact with svelte)
+  // not to be used in backend
   w_money: Writable<number> = writable(0);
   w_beans: Writable<number> = writable(5);
   w_groundCoffee: Writable<number> = writable(0);
   w_coffeeCups: Writable<number> = writable(0);
   w_waitingCustomers: Writable<number> = writable(0);
   w_appeal: Writable<number> = writable(0);
+  w_beanPrice: Writable<number> = writable(5.99);
+  w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
 
 
-  // stats
-  coffeePrice: number = 3;
+  // internal stats
+  coffeePrice: number = 3.5;
+  beansPerBuy: number = 4; // how many beans are bought at a time
   coffeePerBean: number = 5;
   grindTime: number = 5; // number of times to click to grind a bean
-  grindProgress: number = -1; // -1 means not grinding yet
   customerProgress: number = 0; // progress to next customer
   promotionEffectiveness: number = 0.1; // current rate of customer generation
   appealDecay: number = 0.05; // rate of decay of customer appeal
@@ -24,7 +27,7 @@ export class Preshop implements Subscriber {
   // contains list of upgrades (IDs) and their levels
   upgrades: Map<string, number> = new Map();
 
-  // abstracting svelte store from normal usage
+  // abstracting svelte store from normal usage (allows use of writables in backend)
   // resources
   get money() { return get(this.w_money); }
   set money(value) { this.w_money.set(value); }
@@ -36,9 +39,14 @@ export class Preshop implements Subscriber {
   set coffeeCups(value) { this.w_coffeeCups.set(value); }
   get waitingCustomers() { return get(this.w_waitingCustomers); }
   set waitingCustomers(value) { this.w_waitingCustomers.set(value); }
+  
   // stats
   get appeal() { return get(this.w_appeal); }
   set appeal(value) { this.w_appeal.set(value); }
+  get beanPrice() { return get(this.w_beanPrice); }
+  set beanPrice(value) { this.w_beanPrice.set(value); }
+  get grindProgress() { return get(this.w_grindProgress); }
+  set grindProgress(value) { this.w_grindProgress.set(value); }
 
   constructor(timer: Observer) {
     timer.subscribe(this, "tick");
@@ -80,11 +88,9 @@ export class Preshop implements Subscriber {
 
   decayAppeal() {
     // appeal decay
-    if (this.appeal > 0.005) {
-      this.appeal = Math.max(
-        this.appeal * (1 - this.appealDecay),
-        0.005
-      );
+    if (this.appeal > 0.00005) {
+      this.appeal = this.appeal * (1 - this.appealDecay);
+
     } else {
       this.appeal = 0;
     }
@@ -136,8 +142,9 @@ export class Preshop implements Subscriber {
 
   buyBeans() {
     // possibly make bean cost scale or change over time(?)
-    this.beans += 5;
-    this.money -= 5;
+    if (this.money < this.beanPrice) return;
+    this.beans += this.beansPerBuy;
+    this.money -= this.beanPrice;
   }
 
   saveState() {

@@ -14,14 +14,15 @@
   let appeal = pshop.w_appeal;
   let groundedBeans = pshop.w_groundCoffee;
   let waitingCustomers = pshop.w_waitingCustomers;
+  let beanPrice = pshop.w_beanPrice;
 </script>
 
 <main>
   <div class="col">
-    <h1>coffee stats</h1>
-    <p>money: {$money}</p>
-    <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
-    <p>coffees made: {pshop.coffeeCups}</p>
+    <h1>Coffee Stats</h1>
+    <p>Money: ${$money.toFixed(2)}</p>
+    <p>Appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
+    <p>Sellable Coffee: {pshop.coffeeCups}</p>
   </div>
 
   <div class="col">
@@ -66,6 +67,7 @@
 
   <div class="col">
     <h1>shop</h1>
+    <p>Bean Price: ${$beanPrice.toFixed(2)}</p>
     <button
       on:click={() => {
         pshop.buyBeans();
