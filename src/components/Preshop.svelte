@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { upgradeJSON } from '../backend/upgradeManager';
+  import { upgradeJSON } from "../backend/upgradeManager";
   import { Observer } from "../backend/observer";
   import { Preshop } from "../backend/preshop";
   import { Timer } from "../backend/time";
@@ -19,6 +19,7 @@
   let groundedBeans = pshop.w_groundCoffee;
   let waitingCustomers = pshop.w_waitingCustomers;
   let beanPrice = pshop.w_beanPrice;
+  let grindProg = pshop.w_grindProgress;
 </script>
 
 <main>
@@ -32,13 +33,19 @@
   <div class="col">
     <h1>making coffee</h1>
     <p>beans: {$beans}</p>
+    <!-- button style to showcase how much more to grind -->
     <button
+      style="background: linear-gradient(90deg, #aa1a1a 0% {($grindProg /
+        pshop.grindTime) *
+        100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
+      disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
       on:click={() => {
         pshop.grindBeans();
       }}>grind beans</button
     >
     <p>grounded beans: {$groundedBeans}</p>
     <button
+    disabled={$groundedBeans > 0 ? false : true}
       on:click={() => {
         pshop.makeCoffee();
       }}>make coffee</button
@@ -76,15 +83,21 @@
     <h1>shop</h1>
     <p>Bean Price: ${$beanPrice.toFixed(2)}</p>
     <button
+      disabled={$money < $beanPrice ? true : false}
       on:click={() => {
         pshop.buyBeans();
       }}>buy coffee beans</button
     >
   </div>
 
-
   {#snippet upgrade(upgkey: string)}
-    <button on:click={() => {manager.applyUpgrade(upgkey, pshop)}}>
+    <!-- disabled={$money < upgs[upgkey].cost ? true : false} -->
+    <!-- not enabling disable right now for testing purposes -->
+    <button
+      on:click={() => {
+        manager.applyUpgrade(upgkey, pshop);
+      }}
+    >
       <h3>{upgs[upgkey].name}</h3>
       <p>{upgs[upgkey].description}</p>
       <p>cost: ${upgs[upgkey].cost.toFixed(2)}</p>

@@ -110,7 +110,7 @@ export class Preshop implements Subscriber {
   }
 
   grindBeans() {
-    if (this.beans <= 0) return;
+    if (this.beans <= 0 && this.grindProgress == -1) return;
 
     // if finished grinding
     if (this.grindProgress >= this.grindTime) {
@@ -120,7 +120,7 @@ export class Preshop implements Subscriber {
 
     // if not grinding yet
     else if (this.grindProgress === -1) {
-      this.grindProgress = 0;
+      this.grindProgress = 1;
       this.beans--;
     }
 
