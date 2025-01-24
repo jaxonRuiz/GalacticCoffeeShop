@@ -2,11 +2,11 @@
   import { Observer } from "../backend/observer";
   import { Preshop } from "../backend/preshop";
   import { Timer } from "../backend/time";
-  import { preshopUpgrades, UpgradeManager } from "../backend/upgradeManager";
+  import { UpgradeManager } from "../backend/upgradeManager";
 
   let timer = new Timer();
   let pshop = new Preshop(timer.timeEvents);
-  let manager = new UpgradeManager(preshopUpgrades);
+  let manager = new UpgradeManager("preshop");
 
   // define variables
   let money = pshop.w_money;

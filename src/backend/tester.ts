@@ -1,5 +1,5 @@
 import { Preshop } from "./preshop";
-import { UpgradeManager, preshopUpgrades } from "./upgradeManager";
+import { UpgradeManager } from "./upgradeManager";
 import { Timer } from "./time";
 
 export class Tester {
@@ -11,7 +11,7 @@ export class Tester {
     let timer = new Timer();
     let preshop = new Preshop(timer.timeEvents);
 
-    let preshopManager = new UpgradeManager(preshopUpgrades);
+    let preshopManager = new UpgradeManager("preshop");
     // let globalTick = setInterval(tick, 250);
     console.log("starting");
 
