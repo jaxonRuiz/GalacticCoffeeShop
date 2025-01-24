@@ -9,6 +9,7 @@ export class Preshop implements Subscriber {
   w_groundCoffee: Writable<number> = writable(0);
   w_coffeeCups: Writable<number> = writable(0);
   w_waitingCustomers: Writable<number> = writable(0);
+  w_appeal: Writable<number> = writable(0);
 
 
   // stats
@@ -16,9 +17,8 @@ export class Preshop implements Subscriber {
   coffeePerBean: number = 5;
   grindTime: number = 5; // number of times to click to grind a bean
   grindProgress: number = -1; // -1 means not grinding yet
-  w_appeal: Writable<number> = writable(0.2); // affects customer draw per promotion
   customerProgress: number = 0; // progress to next customer
-  // appeal: number = 0; // current rate of customer generation
+  promotionEffectiveness: number = 0.1; // current rate of customer generation
   appealDecay: number = 0.05; // rate of decay of customer appeal
 
   // contains list of upgrades (IDs) and their levels
@@ -43,11 +43,18 @@ export class Preshop implements Subscriber {
   constructor(timer: Observer) {
     timer.subscribe(this, "tick");
     timer.subscribe(this, "hour");
+    timer.subscribe(this, "week");
   }
 
   notify(event: string, data?: any) {
     if (event === "tick") {
       this.tick();
+    }
+    if (event === "hour") {
+      if (this.waitingCustomers > 0) {
+        this.waitingCustomers--;
+      }
+      // this.decayAppeal();
     }
     if (event === "week") {
       console.log("week end", data);
@@ -57,6 +64,7 @@ export class Preshop implements Subscriber {
 
   tick() {
     this.drawCustomers();
+    this.decayAppeal();
   }
  
   drawCustomers() {
@@ -67,13 +75,18 @@ export class Preshop implements Subscriber {
         this.waitingCustomers += Math.floor(this.customerProgress);
         this.customerProgress %= 1;
       }
+    }
+  }
 
-      // appeal decay
-      
-      this.appeal = Math.min(
+  decayAppeal() {
+    // appeal decay
+    if (this.appeal > 0.005) {
+      this.appeal = Math.max(
         this.appeal * (1 - this.appealDecay),
         0.005
       );
+    } else {
+      this.appeal = 0;
     }
   }
 

@@ -20,7 +20,7 @@
   <div class="col">
     <h1>coffee stats</h1>
     <p>money: {$money}</p>
-    <p>appeal: {$appeal + "/5"}</p>
+    <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
     <p>coffees made: {pshop.coffeeCups}</p>
   </div>
 
@@ -52,7 +52,7 @@
 
   <div class="col">
     <h1>promoting coffee</h1>
-    <p>appeal: {Math.round(100 * $appeal).toFixed(2) + "%"}</p>
+    <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
     <button
       on:click={() => {
         pshop.promoteShop();
