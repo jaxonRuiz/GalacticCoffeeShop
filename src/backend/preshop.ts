@@ -1,4 +1,3 @@
-import type { Subscriber } from "./observer";
 import { Observer } from "./observer";
 import { get, type Writable, writable } from "svelte/store";
 

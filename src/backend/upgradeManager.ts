@@ -1,7 +1,3 @@
-interface Shop {
-  upgrades: Map<string, number>;
-}
-
 export class UpgradeManager {
   allUpgrades;
 
@@ -10,22 +6,22 @@ export class UpgradeManager {
   }
 
   applyUpgrade(id: string, shopObject: Shop) {
-    this.allUpgrades[id].upgrade(shopObject, shopObject.upgrades[id] ?? 1);
+    this.allUpgrades[id].upgrade(shopObject, shopObject.upgrades.get(id) ?? 1);
   }
 
   // returns all purchasable upgrades at shop
-  checkUpgrade(shopObject) {
+  checkUpgrade(shopObject: Shop) {
     // todo
   }
 }
 
 
-export let upgradeJSON: { [key: string] : any} = {
+export let upgradeJSON: { [key: string] : {[key: string ] : Upgrade}} = {
   preshop: {
-    "crank_grinder": {
+    crank_grinder: {
       "name": "Crank Grinder",
       "description": "Simplify grinding process! Grind more coffee per grind!",
-      "unlock_condition": (shop) => { return true; },
+      "unlock_condition": (_shop) => { return true; },
       "upgrade": (shop) => { shop.grindTime -= 2 },
       "cost": 50,
       "cost_multiplier": 1,

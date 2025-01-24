@@ -23,12 +23,3 @@ export class Observer {
     // i hope data is optional how i expect it to be :/
   }
 }
-
-export interface Subscriber {
-  notify(event: string, data?: any): void;
-}
-/*
-classes that implement subscriber should implement a 
-notify(event: string, data?: any) method that does a behavior
-dont forget to add the subscriber to the observer with .subscribe()
-*/

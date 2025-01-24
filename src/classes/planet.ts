@@ -17,7 +17,6 @@ interface BuildingEffects {
   beans?: number;
   beanFactor?: number;
   coffeeCapacity?: number;
-
 }
 
 interface Building {
@@ -39,7 +38,7 @@ export class Planet {
   usedLand = 0;
 
   // planet stats (can also be done with a map)
-  stats = {
+  stats: { [key: string]: number } = {
     population: 0,
     appeal: 0,
     purchasingPower: 0,
@@ -48,13 +47,12 @@ export class Planet {
     beanFactor: 0,
     coffeeCapacity: 0,
     beanCollectors: 0,
-    supplies: 0
-  }
+    supplies: 0,
+  };
 
   // planet upgrades
   buildings: Building[] = [];
   infrastructure: Infrastructure[] = [];
-
 
   constructor(config: PlanetConfig) {
     this.name = config.name;
@@ -73,13 +71,11 @@ export class Planet {
   tick() {
     // production of beans to supplies
     this.stats.supplies = this.stats.beanCollectors * this.stats.beanFactor;
-
-    
   }
 
   addBuilding(building: Building) {
     if (this.usedLand + building.size > this.totalLand) {
-      console.log('Not enough land');
+      console.log("Not enough land");
       return;
     }
 
@@ -87,17 +83,15 @@ export class Planet {
     this.usedLand += building.size;
     console.log("placing building: ", building.name);
     for (let key in building.effect) {
-      this.stats[key] += building.effect[key];
+      this.stats[key] += building.effect[key as keyof BuildingEffects]!;
     }
   }
 
   removeBuilding(building: Building) {
-    this.buildings = this.buildings.filter(b => b !== building);
+    this.buildings = this.buildings.filter((b) => b !== building);
     this.usedLand -= building.size;
     for (let key in building.effect) {
-      this.stats[key] -= building.effect[key];
+      this.stats[key] -= building.effect[key as keyof BuildingEffects]!;
     }
   }
-
-  
 }
