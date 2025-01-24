@@ -16,9 +16,9 @@ export class Preshop implements Subscriber {
   coffeePerBean: number = 5;
   grindTime: number = 5; // number of times to click to grind a bean
   grindProgress: number = -1; // -1 means not grinding yet
-  w_appeal: Writable<number> = writable(0); // sets customerDraw
+  w_appeal: Writable<number> = writable(0.2); // affects customer draw per promotion
   customerProgress: number = 0; // progress to next customer
-  customerDraw: number = 0; // rate of drawing customers
+  // appeal: number = 0; // current rate of customer generation
   appealDecay: number = 0.05; // rate of decay of customer appeal
 
   // contains list of upgrades (IDs) and their levels
@@ -60,24 +60,25 @@ export class Preshop implements Subscriber {
   }
  
   drawCustomers() {
-    if (this.customerDraw > 0) {
+    if (this.appeal > 0) {
       // customer generation
-      this.customerProgress += this.customerDraw;
+      this.customerProgress += this.appeal;
       if (this.customerProgress >= 1) {
         this.waitingCustomers += Math.floor(this.customerProgress);
         this.customerProgress %= 1;
       }
 
       // appeal decay
-      this.customerDraw = Math.min(
-        this.customerDraw * (1 - this.appealDecay),
-        0.0001
+      
+      this.appeal = Math.min(
+        this.appeal * (1 - this.appealDecay),
+        0.005
       );
     }
   }
 
   promoteShop() {
-    this.customerDraw += this.appeal;
+    this.appeal += this.promotionEffectiveness;
   }
 
   sellCoffee() {
@@ -90,7 +91,7 @@ export class Preshop implements Subscriber {
     }
   }
 
-  grindCoffee() {
+  grindBeans() {
     if (this.beans <= 0) return;
 
     // if finished grinding
@@ -114,6 +115,7 @@ export class Preshop implements Subscriber {
   makeCoffee() {
     if (this.groundCoffee <= 0) return;
 
+    console.log("making coffee");
     // possibly add cooldown or timer effect
     this.groundCoffee--;
     this.coffeeCups++;

@@ -27,20 +27,37 @@
   <div class="col">
     <h1>making coffee</h1>
     <p>beans: {$beans}</p>
-    <button on:click={pshop.grindCoffee}>grind beans</button>
+    <button
+      on:click={() => {
+        pshop.grindBeans();
+      }}>grind beans</button
+    >
     <p>grounded beans: {$groundedBeans}</p>
-    <button on:click={pshop.makeCoffee}>make coffee</button>
+    <button
+      on:click={() => {
+        pshop.makeCoffee();
+      }}>make coffee</button
+    >
   </div>
 
   <div class="col">
     <h1>selling coffee</h1>
     <p>customers waiting: {$waitingCustomers}</p>
-    <button on:click={pshop.sellCoffee}>sell coffee</button>
+    <button
+      on:click={() => {
+        pshop.sellCoffee();
+      }}>sell coffee</button
+    >
   </div>
 
   <div class="col">
     <h1>promoting coffee</h1>
-    <button on:click={pshop.promoteShop}>promote</button>
+    <p>appeal: {Math.round(100 * $appeal).toFixed(2) + "%"}</p>
+    <button
+      on:click={() => {
+        pshop.promoteShop();
+      }}>promote</button
+    >
   </div>
 
   <div class="col">
@@ -49,7 +66,11 @@
 
   <div class="col">
     <h1>shop</h1>
-    <button on:click={pshop.buyBeans}>buy coffee beans</button>
+    <button
+      on:click={() => {
+        pshop.buyBeans();
+      }}>buy coffee beans</button
+    >
   </div>
 </main>
 
