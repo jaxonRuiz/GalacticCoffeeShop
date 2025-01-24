@@ -15,14 +15,20 @@ export class Tester {
     // let globalTick = setInterval(tick, 250);
     console.log("starting");
 
-    console.log(preshop.grindTime);
+    console.log("testing upgrade");
+    console.assert(preshop.grindTime == 5); // or whatever the starting grindTime is
     preshopManager.applyUpgrade("crank_grinder", preshop);
-    console.log(preshop.grindTime);
+    console.assert(preshop.grindTime == 3);
 
-    // function tick() {
-    //   // update preshop
-    //   preshop.tick();
-    //   console.log("tick");
-    // }
+    console.log("testing grindBeans");
+    console.log("beans: ", preshop.beans);
+    console.log("groundCoffee: ", preshop.groundCoffee);
+    preshop.grindBeans();
+    console.log("beans: ", preshop.beans);
+    preshop.grindBeans();
+    preshop.grindBeans();
+    preshop.grindBeans();
+    preshop.grindBeans();
+    console.log("ground coffee", preshop.groundCoffee);
   }
 }
