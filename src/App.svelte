@@ -1,12 +1,14 @@
 <script lang="ts">
   import PlanetInfo from "./components/PlanetInfo.svelte";
+  import Preshop from "./components/Preshop.svelte";
   import Test from "./components/Test.svelte";
 
 </script>
 
 <main class="fl">
-  <PlanetInfo />
+  <!-- <PlanetInfo /> -->
   <!-- <Test /> -->
+  <Preshop />
 </main>
 
 <style>

@@ -1,26 +1,44 @@
 import type { Subscriber } from "./observer";
 import { Observer } from "./observer";
+import { get, type Writable, writable } from "svelte/store";
 
 export class Preshop implements Subscriber {
-  // resources
-  money: number = 0;
-  beans: number = 5;
-  groundCoffee: number = 0;
-  coffeeCups: number = 0;
-  waitingCustomers: number = 0;
+  // resources (setting writable to interact with svelte)
+  w_money: Writable<number> = writable(0);
+  w_beans: Writable<number> = writable(5);
+  w_groundCoffee: Writable<number> = writable(0);
+  w_coffeeCups: Writable<number> = writable(0);
+  w_waitingCustomers: Writable<number> = writable(0);
+
 
   // stats
   coffeePrice: number = 3;
   coffeePerBean: number = 5;
   grindTime: number = 5; // number of times to click to grind a bean
   grindProgress: number = -1; // -1 means not grinding yet
-  appeal: number = 0; // sets customerDraw
+  w_appeal: Writable<number> = writable(0); // sets customerDraw
   customerProgress: number = 0; // progress to next customer
   customerDraw: number = 0; // rate of drawing customers
   appealDecay: number = 0.05; // rate of decay of customer appeal
 
   // contains list of upgrades (IDs) and their levels
   upgrades: Map<string, number> = new Map();
+
+  // abstracting svelte store from normal usage
+  // resources
+  get money() { return get(this.w_money); }
+  set money(value) { this.w_money.set(value); }
+  get beans() { return get(this.w_beans); }
+  set beans(value) { this.w_beans.set(value); }
+  get groundCoffee() { return get(this.w_groundCoffee); }
+  set groundCoffee(value) { this.w_groundCoffee.set(value); }
+  get coffeeCups() { return get(this.w_coffeeCups); }
+  set coffeeCups(value) { this.w_coffeeCups.set(value); }
+  get waitingCustomers() { return get(this.w_waitingCustomers); }
+  set waitingCustomers(value) { this.w_waitingCustomers.set(value); }
+  // stats
+  get appeal() { return get(this.w_appeal); }
+  set appeal(value) { this.w_appeal.set(value); }
 
   constructor(timer: Observer) {
     timer.subscribe(this, "tick");
