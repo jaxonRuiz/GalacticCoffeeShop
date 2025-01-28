@@ -23,6 +23,11 @@ export class Preshop implements Subscriber {
   promotionEffectiveness: number = 0.1; // current rate of customer generation
   appealDecay: number = 0.05; // rate of decay of customer appeal
 
+  // stat counters
+  lifetimeGrindBeans: number = 0;
+  lifetimeCoffeeSold: number = 0;
+  lifetimeCoffeeMade: number = 0;
+
   // contains list of upgrades (IDs) and their levels
   upgrades: Map<string, number> = new Map();
 
@@ -106,6 +111,7 @@ export class Preshop implements Subscriber {
       this.waitingCustomers--;
       this.coffeeCups--;
       this.money += this.coffeePrice;
+      this.lifetimeCoffeeSold++;
     }
   }
 
@@ -116,6 +122,7 @@ export class Preshop implements Subscriber {
     if (this.grindProgress >= this.grindTime) {
       this.groundCoffee += this.coffeePerBean;
       this.grindProgress = -1;
+      this.lifetimeGrindBeans++;
     }
 
     // if not grinding yet
@@ -137,6 +144,7 @@ export class Preshop implements Subscriber {
     // possibly add cooldown or timer effect
     this.groundCoffee--;
     this.coffeeCups++;
+    this.lifetimeCoffeeMade++;
   }
 
   buyBeans() {
