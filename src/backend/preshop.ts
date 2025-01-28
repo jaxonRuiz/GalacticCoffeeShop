@@ -155,11 +155,11 @@ export class Preshop implements Subscriber {
   }
 
   saveState() {
-    localStorage.setItem("game", JSON.stringify(this));
+    localStorage.setItem("preshop", JSON.stringify(this));
   }
 
   loadState() {
-    const state = localStorage.getItem("game");
+    const state = localStorage.getItem("preshop");
     if (state) {
       Object.assign(this, JSON.parse(state));
     }
