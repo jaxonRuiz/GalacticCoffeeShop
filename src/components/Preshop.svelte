@@ -12,6 +12,12 @@
   // for upgrades
   const upgs = upgradeJSON["preshop"];
 
+  // upgrade checker on interval
+  let availableUpgrades = $state(manager.checkUpgrade(pshop));
+  setInterval(() => {
+    availableUpgrades = manager.checkUpgrade(pshop);
+  }, 1000);
+
   // define variables
   let money = pshop.w_money;
   let beans = pshop.w_beans;
@@ -39,14 +45,14 @@
         pshop.grindTime) *
         100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
       disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
-      on:click={() => {
+      onclick={() => {
         pshop.grindBeans();
       }}>grind beans</button
     >
     <p>grounded beans: {$groundedBeans}</p>
     <button
     disabled={$groundedBeans > 0 ? false : true}
-      on:click={() => {
+      onclick={() => {
         pshop.makeCoffee();
       }}>make coffee</button
     >
@@ -56,7 +62,7 @@
     <h1>selling coffee</h1>
     <p>customers waiting: {$waitingCustomers}</p>
     <button
-      on:click={() => {
+      onclick={() => {
         pshop.sellCoffee();
       }}>sell coffee</button
     >
@@ -66,7 +72,7 @@
     <h1>promoting coffee</h1>
     <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
     <button
-      on:click={() => {
+      onclick={() => {
         pshop.promoteShop();
       }}>promote</button
     >
@@ -74,7 +80,7 @@
 
   <div class="col">
     <h1>upgrades</h1>
-    {#each Object.keys(upgs) as upgkey}
+    {#each availableUpgrades as upgkey}
       {@render upgrade(upgkey)}
     {/each}
   </div>
@@ -84,7 +90,7 @@
     <p>Bean Price: ${$beanPrice.toFixed(2)}</p>
     <button
       disabled={$money < $beanPrice ? true : false}
-      on:click={() => {
+      onclick={() => {
         pshop.buyBeans();
       }}>buy coffee beans</button
     >
@@ -94,8 +100,9 @@
     <!-- disabled={$money < upgs[upgkey].cost ? true : false} -->
     <!-- not enabling disable right now for testing purposes -->
     <button
-      on:click={() => {
+      onclick={() => {
         manager.applyUpgrade(upgkey, pshop);
+        availableUpgrades = manager.checkUpgrade(pshop);
       }}
     >
       <h3>{upgs[upgkey].name}</h3>

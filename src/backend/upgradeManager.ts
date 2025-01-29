@@ -22,7 +22,7 @@ export class UpgradeManager {
     );
 
     return unpurchasedUpgrades.filter((id: string) => {
-      this.allUpgrades[id].unlock_condition(shopObject);
+      return this.allUpgrades[id].unlock_condition(shopObject);
     });
   }
 }
