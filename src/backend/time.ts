@@ -26,7 +26,7 @@ export class Timer {
   month = 1;
   year = 1999; // will have years of 336 days (i refuse to do leap years or async months ):<
   ticker: number;
-  timeEvents: Observer; // dont forget to relevant classes to this
+  timeEvents: Observer; // dont forget to subscribe relevant classes to this
 
   constructor() {
     this.timeEvents = new Observer([
