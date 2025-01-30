@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { upgradeJSON } from "../backend/upgradeManager";
-  import { Observer } from "../backend/observer";
-  import { Preshop } from "../backend/preshop";
-  import { Timer } from "../backend/time";
-  import { UpgradeManager } from "../backend/upgradeManager";
+  import { upgradeJSON } from "../backend/systems/upgradeManager";
+  import { Observer } from "../backend/systems/observer";
+  import { Preshop } from "../backend/classes/preshop";
+  import { Timer } from "../backend/systems/time";
+  import { UpgradeManager } from "../backend/systems/upgradeManager";
 
   let timer = new Timer();
   let pshop = new Preshop(timer.timeEvents);

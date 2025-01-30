@@ -1,4 +1,4 @@
-import { Observer } from "./observer";
+import { Observer } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 
 export class Preshop implements Subscriber {
@@ -12,7 +12,6 @@ export class Preshop implements Subscriber {
   w_appeal: Writable<number> = writable(0);
   w_beanPrice: Writable<number> = writable(5.99);
   w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
-
 
   // internal stats
   coffeePrice: number = 3.5;
@@ -33,24 +32,56 @@ export class Preshop implements Subscriber {
 
   // abstracting svelte store from normal usage (allows use of writables in backend)
   // resources
-  get money() { return get(this.w_money); }
-  set money(value) { this.w_money.set(value); }
-  get beans() { return get(this.w_beans); }
-  set beans(value) { this.w_beans.set(value); }
-  get groundCoffee() { return get(this.w_groundCoffee); }
-  set groundCoffee(value) { this.w_groundCoffee.set(value); }
-  get coffeeCups() { return get(this.w_coffeeCups); }
-  set coffeeCups(value) { this.w_coffeeCups.set(value); }
-  get waitingCustomers() { return get(this.w_waitingCustomers); }
-  set waitingCustomers(value) { this.w_waitingCustomers.set(value); }
-  
+  get money() {
+    return get(this.w_money);
+  }
+  set money(value) {
+    this.w_money.set(value);
+  }
+  get beans() {
+    return get(this.w_beans);
+  }
+  set beans(value) {
+    this.w_beans.set(value);
+  }
+  get groundCoffee() {
+    return get(this.w_groundCoffee);
+  }
+  set groundCoffee(value) {
+    this.w_groundCoffee.set(value);
+  }
+  get coffeeCups() {
+    return get(this.w_coffeeCups);
+  }
+  set coffeeCups(value) {
+    this.w_coffeeCups.set(value);
+  }
+  get waitingCustomers() {
+    return get(this.w_waitingCustomers);
+  }
+  set waitingCustomers(value) {
+    this.w_waitingCustomers.set(value);
+  }
+
   // stats
-  get appeal() { return get(this.w_appeal); }
-  set appeal(value) { this.w_appeal.set(value); }
-  get beanPrice() { return get(this.w_beanPrice); }
-  set beanPrice(value) { this.w_beanPrice.set(value); }
-  get grindProgress() { return get(this.w_grindProgress); }
-  set grindProgress(value) { this.w_grindProgress.set(value); }
+  get appeal() {
+    return get(this.w_appeal);
+  }
+  set appeal(value) {
+    this.w_appeal.set(value);
+  }
+  get beanPrice() {
+    return get(this.w_beanPrice);
+  }
+  set beanPrice(value) {
+    this.w_beanPrice.set(value);
+  }
+  get grindProgress() {
+    return get(this.w_grindProgress);
+  }
+  set grindProgress(value) {
+    this.w_grindProgress.set(value);
+  }
 
   constructor(timer: Observer) {
     timer.subscribe(this, "tick");
@@ -78,7 +109,7 @@ export class Preshop implements Subscriber {
     this.drawCustomers();
     this.decayAppeal();
   }
- 
+
   drawCustomers() {
     if (this.appeal > 0) {
       // customer generation
@@ -94,7 +125,6 @@ export class Preshop implements Subscriber {
     // appeal decay
     if (this.appeal > 0.00005) {
       this.appeal = this.appeal * (1 - this.appealDecay);
-
     } else {
       this.appeal = 0;
     }

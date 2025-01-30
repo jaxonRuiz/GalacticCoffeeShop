@@ -1,6 +1,6 @@
-import { Preshop } from "./preshop";
-import { UpgradeManager } from "./upgradeManager";
-import { Timer } from "./time";
+import { Preshop } from "./classes/preshop";
+import { UpgradeManager } from "./systems/upgradeManager";
+import { Timer } from "./systems/time";
 
 export class Tester {
   constructor() {

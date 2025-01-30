@@ -1,5 +1,5 @@
-import { Preshop } from "./preshop";
-import { UpgradeManager } from "./upgradeManager";
+import { Preshop } from "./classes/preshop";
+import { UpgradeManager } from "./systems/upgradeManager";
 import { Tester } from "./tester";
 
 let tester = new Tester();
