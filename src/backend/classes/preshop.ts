@@ -21,6 +21,8 @@ export class Preshop implements Subscriber {
   customerProgress: number = 0; // progress to next customer
   promotionEffectiveness: number = 0.1; // current rate of customer generation
   appealDecay: number = 0.05; // rate of decay of customer appeal
+  maxCustomers: number = 5;
+  maxAppeal: number = 0.7;
 
   // stat counters
   lifetimeGrindBeans: number = 0;
@@ -110,13 +112,13 @@ export class Preshop implements Subscriber {
     this.decayAppeal();
   }
 
-  // TODO make max customers 
   drawCustomers() {
     if (this.appeal > 0) {
       // customer generation
       this.customerProgress += this.appeal;
       if (this.customerProgress >= 1) {
         this.waitingCustomers += Math.floor(this.customerProgress);
+        this.waitingCustomers = Math.min(this.waitingCustomers, this.maxCustomers);
         this.customerProgress %= 1;
       }
     }
@@ -131,9 +133,10 @@ export class Preshop implements Subscriber {
     }
   }
 
-  // TODO make appeal diminishing effectiveness, make max appeal
+  // TODO make appeal diminishing effectiveness
   promoteShop() {
     this.appeal += this.promotionEffectiveness;
+    this.appeal = Math.min(this.appeal, this.maxAppeal);
   }
 
   sellCoffee() {
