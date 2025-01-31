@@ -7,7 +7,7 @@ export class Shop {
   w_emptyCups: Writable<number> = writable(0);
   w_coffeeCups: Writable<number> = writable(0); // sellable coffee
   w_waitingCustomers: Writable<number> = writable(0);
-  w_money: Writable<number> = writable(0);
+  w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
   w_appeal: Writable<number> = writable(0);
 
   // writable getters/setters
@@ -51,7 +51,7 @@ export class Shop {
   // is an object instead of map because fixed entries
   restockSheet: { [key: string]: number } = {
     beans: 0,
-    coffeeCups: 0,
+    emptyCups: 0,
   };
   workerRates: { [key: string]: number } = {
     baristaProductivity: 0.2,
@@ -60,17 +60,21 @@ export class Shop {
   progressTrackers: { [key: string]: number } = {
     serviceProgress: 0,
     coffeeProgress: 0,
-    promoteProgress: 0,
+    promotionProgress: 0,
+    customerProgress: 0
   };
 
   coffeePrice: number = 5;
+  beansPrice: number = 1;
+  cupsPrice: number = 1;
   roles: Map<string, Role> = new Map();
   totalWorkers: number = 0;
-  freeWorkers: number = 0;
   maxCustomers: number = 7;
   promotionEffectiveness: number = 0.2;
   minimumAppeal: number = 0.1;
   maxAppeal: number = 2;
+
+  upgrades: Map<string, number> = new Map();
 
   constructor() {
     // setting up default roles
@@ -113,18 +117,23 @@ export class Shop {
     });
 
     // (should have used map)
+    // may limit throughput to 1 thing per tick
     if (this.progressTrackers["coffeeProgress"] >= 1) {
       if (this.produceCoffee()) this.progressTrackers["coffeeProgress"] -= 1;
     }
     if (
-      this.progressTrackers["appealProgress"] >= 1 &&
+      this.progressTrackers["customerProgress"] >= 1 &&
       this.waitingCustomers < this.maxCustomers
     ) {
       this.waitingCustomers++;
-      this.progressTrackers["appealProgress"] -= 1;
+      this.progressTrackers["customerProgress"] -= 1;
     }
     if (this.progressTrackers["serviceProgress"] >= 1) {
       if (this.sellCoffee()) this.progressTrackers["serviceProgress"] -= 1;
+    }
+    if (this.progressTrackers["promotionProgress"] >= 1) {
+      this.promote();
+      this.progressTrackers["promotionProgress"] -= 1;
     }
   }
 
@@ -150,13 +159,49 @@ export class Shop {
   }
 
   promote() {
-
+    this.appeal += this.promotionEffectiveness;
   }
 
-  withdrawMoney() {
-    let money = this.money;
+  withdrawMoney(multiShop: MultiShop) {
+    multiShop.money += this.money;
     this.money = 0;
-    return money;
+  }
+
+  restock(multiShop: MultiShop) {
+    // !!! money is taken by getExpenses instead.
+    // multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
+    // multiShop.money -= this.restockSheet["emptyCups"] * this.cupsPrice;
+
+    this.beans += this.restockSheet["beans"];
+    this.emptyCups += this.restockSheet["emptyCups"];
+  }
+
+  getExpenses() {
+    let expenses = 0;
+    this.roles.forEach((role: Role) => {
+      expenses += role.numWorkers * role.wage;
+    });
+    expenses += this.beans * this.beansPrice;
+    expenses += this.emptyCups * this.cupsPrice;
+
+    return expenses;
+  }
+
+  addWorker(role: string, multiShop: MultiShop) {
+    if (!this.roles.has(role)) throw new Error("Role does not exist");
+    let roleObj = this.roles.get(role);
+    if (roleObj!.numWorkers < roleObj!.maxWorkers) {
+
+      roleObj!.numWorkers++;
+    }
+  }
+
+  removeWorker(role: string) {
+    if (!this.roles.has(role)) throw new Error("Role does not exist");
+    let roleObj = this.roles.get(role);
+    if (roleObj!.numWorkers > 0) {
+      roleObj!.numWorkers--;
+    }
   }
 
   // TODO frame to unlock new jobs
@@ -166,7 +211,7 @@ export class Shop {
       numWorkers: 0,
       maxWorkers: 1,
       wage: 100,
-      update: (owner: Shop) => {
+      update: (shop: Shop) => {
         console.log("supplier updated");
       },
     });
@@ -178,5 +223,5 @@ interface Role {
   numWorkers: number;
   maxWorkers: number;
   wage: number; // weekly
-  update: (owner: Shop) => void;
+  update: (shop: Shop) => void;
 }

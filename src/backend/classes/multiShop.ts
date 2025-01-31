@@ -5,6 +5,8 @@ import { Shop } from "./shop";
 export class MultiShop {
   // writable resources
   w_money: Writable<number> = writable(0);
+  w_selectedShop: Writable<Shop | null> = writable(null);
+  w_selectedShopIndex: Writable<number> = writable(-1);
 
   // writable getters/setters
   get money() {
@@ -13,10 +15,21 @@ export class MultiShop {
   set money(value) {
     this.w_money.set(value);
   }
+  get selectedShop() {
+    return get(this.w_selectedShop);
+  }
+  set selectedShop(value) {
+    this.w_selectedShop.set(value);
+  }
+  get selectedShopIndex() {
+    return get(this.w_selectedShopIndex);
+  }
+  set selectedShopIndex(value) {
+    this.w_selectedShopIndex.set(value);
+  }
 
-  // internals
+  // internal stats ////////////////////////////////////////////////////////////
   shops: Shop[] = []; // make into object for key referencing?
-  selectedShop: Shop | null = null;
   upgrades: Map<string, number> = new Map();
 
   constructor(timer: Observer) {
@@ -31,13 +44,16 @@ export class MultiShop {
     if (event === "tick") {
       this.tick();
     }
+    if (event === "week") {
+
+    }
   }
 
   tick() {
     this.shops.forEach((shop) => shop.tick(this));
   }
 
-  // multishop actions
+  // multishop actions /////////////////////////////////////////////////////////
   addShop() {
     this.shops.push(new Shop());
   }
@@ -50,7 +66,8 @@ export class MultiShop {
     this.selectedShop = null;
   }
 
-  // selected shop actions
+  // selected shop actions /////////////////////////////////////////////////////
+  // actions you can do at the selected shop
   localSellCoffee() {
     if (!this.selectedShop) return;
     this.selectedShop.sellCoffee();
@@ -68,6 +85,16 @@ export class MultiShop {
 
   localWithdrawMoney() {
     if (!this.selectedShop) return;
-    this.selectedShop.withdrawMoney();
+    this.selectedShop.withdrawMoney(this);
+  }
+
+  localAddWorker(role: string) {
+    if (!this.selectedShop) return;
+    this.selectedShop.addWorker(role, this);
+  }
+
+  localRemoveWorker(role: string) {
+    if (!this.selectedShop) return;
+    this.selectedShop.removeWorker(role);
   }
 }
