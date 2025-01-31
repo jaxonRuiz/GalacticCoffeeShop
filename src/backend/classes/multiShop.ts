@@ -14,9 +14,9 @@ export class MultiShop {
     this.w_money.set(value);
   }
 
-
   // internals
-  shops: Shop[] = [];
+  shops: Shop[] = []; // make into object for key referencing?
+  selectedShop: Shop | null = null;
   upgrades: Map<string, number> = new Map();
 
   constructor(timer: Observer) {
@@ -26,7 +26,7 @@ export class MultiShop {
     this.shops.push(new Shop());
   }
 
-  notify(event:string, data?: any) {
+  notify(event: string, data?: any) {
     // maybe optimize better :/ dont need to call every shop every tick
     if (event === "tick") {
       this.tick();
@@ -34,10 +34,40 @@ export class MultiShop {
   }
 
   tick() {
-    this.shops.forEach(shop => shop.tick(this));
+    this.shops.forEach((shop) => shop.tick(this));
   }
 
+  // multishop actions
   addShop() {
     this.shops.push(new Shop());
+  }
+
+  selectShop(shop: Shop) {
+    this.selectedShop = shop;
+  }
+
+  deselectShop() {
+    this.selectedShop = null;
+  }
+
+  // selected shop actions
+  localSellCoffee() {
+    if (!this.selectedShop) return;
+    this.selectedShop.sellCoffee();
+  }
+
+  localPromote() {
+    if (!this.selectedShop) return;
+    this.selectedShop.promote();
+  }
+
+  localProduceCoffee() {
+    if (!this.selectedShop) return;
+    this.selectedShop.produceCoffee();
+  }
+
+  localWithdrawMoney() {
+    if (!this.selectedShop) return;
+    this.selectedShop.withdrawMoney();
   }
 }
