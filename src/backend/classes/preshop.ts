@@ -110,6 +110,7 @@ export class Preshop implements Subscriber {
     this.decayAppeal();
   }
 
+  // TODO make max customers 
   drawCustomers() {
     if (this.appeal > 0) {
       // customer generation
@@ -130,6 +131,7 @@ export class Preshop implements Subscriber {
     }
   }
 
+  // TODO make appeal diminishing effectiveness, make max appeal
   promoteShop() {
     this.appeal += this.promotionEffectiveness;
   }
