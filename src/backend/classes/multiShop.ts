@@ -31,13 +31,14 @@ export class MultiShop {
   // internal stats ////////////////////////////////////////////////////////////
   shops: Shop[] = []; // make into object for key referencing?
   upgrades: Map<string, number> = new Map();
+  weeklyRecap: { [key: number]: ShopWeekReport } = {};
 
   constructor(timer: Observer) {
     timer.subscribe(this, "tick");
     timer.subscribe(this, "week");
 
-    this.shops.push(new Shop());
-  }
+    this.addShop();
+  };
 
   notify(event: string, data?: any) {
     // maybe optimize better :/ dont need to call every shop every tick
@@ -45,7 +46,12 @@ export class MultiShop {
       this.tick();
     }
     if (event === "week") {
+      this.withdrawAll();
+      this.applyExpenses();
 
+      if (this.money < 0) {
+        console.log("debt boy");
+      }
     }
   }
 
@@ -56,14 +62,42 @@ export class MultiShop {
   // multishop actions /////////////////////////////////////////////////////////
   addShop() {
     this.shops.push(new Shop());
+    this.weeklyRecap[this.shops.length - 1] = {
+      income: 0,
+      expenses: 0,
+    };
   }
 
   selectShop(shop: Shop) {
     this.selectedShop = shop;
+    this.selectedShopIndex = this.shops.indexOf(shop);
+  }
+
+  selectShopIndex(index: number) {
+    this.selectedShopIndex = index;
+    this.selectedShop = this.shops[index];
   }
 
   deselectShop() {
     this.selectedShop = null;
+    this.selectedShopIndex = -1;
+  }
+
+  applyExpenses() {
+    let shopIndex = 0;
+    this.shops.forEach((shop) => {
+      this.money -= shop.getExpenses();
+      this.weeklyRecap[shopIndex].expenses = shop.getExpenses();
+    });
+  }
+
+  withdrawAll() {
+    let shopIndex = 0;
+    this.shops.forEach((shop) => {
+      this.money += shop.money;
+      this.weeklyRecap[shopIndex].income = shop.money;
+      shop.money = 0;
+    });
   }
 
   // selected shop actions /////////////////////////////////////////////////////
@@ -85,7 +119,8 @@ export class MultiShop {
 
   localWithdrawMoney() {
     if (!this.selectedShop) return;
-    this.selectedShop.withdrawMoney(this);
+    this.money += this.selectedShop.money;
+    this.selectedShop.money = 0;
   }
 
   localAddWorker(role: string) {
@@ -97,4 +132,10 @@ export class MultiShop {
     if (!this.selectedShop) return;
     this.selectedShop.removeWorker(role);
   }
+}
+
+
+interface ShopWeekReport {
+  income: number;
+  expenses: number;
 }

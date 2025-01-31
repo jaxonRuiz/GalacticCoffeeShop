@@ -162,11 +162,6 @@ export class Shop {
     this.appeal += this.promotionEffectiveness;
   }
 
-  withdrawMoney(multiShop: MultiShop) {
-    multiShop.money += this.money;
-    this.money = 0;
-  }
-
   restock(multiShop: MultiShop) {
     // !!! money is taken by getExpenses instead.
     // multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
