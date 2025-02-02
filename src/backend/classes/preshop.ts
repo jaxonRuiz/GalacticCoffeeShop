@@ -23,6 +23,7 @@ export class Preshop implements Subscriber {
   appealDecay: number = 0.05; // rate of decay of customer appeal
   maxCustomers: number = 5;
   maxAppeal: number = 0.7;
+  coffeeQuantity: number = 1; // how many cups of coffee are made per run
 
   // stat counters
   lifetimeGrindBeans: number = 0;
@@ -177,9 +178,9 @@ export class Preshop implements Subscriber {
 
     console.log("making coffee");
     // possibly add cooldown or timer effect
-    this.groundCoffee--;
-    this.coffeeCups++;
-    this.lifetimeCoffeeMade++;
+    this.groundCoffee += this.coffeeQuantity;
+    this.coffeeCups += this.coffeeQuantity;
+    this.lifetimeCoffeeMade += this.coffeeQuantity;
   }
 
   buyBeans() {
