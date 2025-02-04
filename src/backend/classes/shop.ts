@@ -61,7 +61,7 @@ export class Shop {
     serviceProgress: 0,
     coffeeProgress: 0,
     promotionProgress: 0,
-    customerProgress: 0
+    customerProgress: 0,
   };
 
   coffeePrice: number = 5;
@@ -75,8 +75,10 @@ export class Shop {
   maxAppeal: number = 2;
 
   upgrades: Map<string, number> = new Map();
+  multiShop: MultiShop;
 
-  constructor() {
+  constructor(multiShop: MultiShop) {
+    this.multiShop = multiShop;
     // setting up default roles
     this.roles.set("barista", {
       name: "Barista",
@@ -137,6 +139,11 @@ export class Shop {
     }
   }
 
+  // TODO check
+  applyCost(cost: number) {
+    this.multiShop.money -= cost;
+  }
+
   // actions
   produceCoffee() {
     if (this.beans >= 1 && this.emptyCups >= 1) {
@@ -186,7 +193,6 @@ export class Shop {
     if (!this.roles.has(role)) throw new Error("Role does not exist");
     let roleObj = this.roles.get(role);
     if (roleObj!.numWorkers < roleObj!.maxWorkers) {
-
       roleObj!.numWorkers++;
     }
   }

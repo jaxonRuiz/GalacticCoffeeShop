@@ -8,7 +8,21 @@ export class UpgradeManager {
 
   applyUpgrade(id: string, shopObject: Shop) {
     this.allUpgrades[id].upgrade(shopObject, shopObject.upgrades.get(id) ?? 1);
+    shopObject.applyCost(this.getCost(id, shopObject));
     shopObject.upgrades.set(id, (shopObject.upgrades.get(id) ?? 0) + 1);
+  }
+
+  getCost(id: string, shopObject: Shop) {
+    if (shopObject.upgrades.get(id) === undefined)
+      return this.allUpgrades[id].cost;
+    // cost * (costMultiplier ^ level)
+    return (
+      this.allUpgrades[id].cost *
+      Math.pow(
+        this.allUpgrades[id].costMultiplier,
+        shopObject.upgrades.get(id) ?? 0
+      )
+    );
   }
 
   // returns all purchasable upgrades (AS ID KEYS) at shop
@@ -16,7 +30,10 @@ export class UpgradeManager {
     let unpurchasedUpgrades = Object.keys(this.allUpgrades).filter(
       (id: string) => {
         if (this.allUpgrades[id].maxLevel === undefined) return true;
-        else if ((shopObject.upgrades.get(id) ?? 0) < this.allUpgrades[id].maxLevel) return true;
+        else if (
+          (shopObject.upgrades.get(id) ?? 0) < this.allUpgrades[id].maxLevel
+        )
+          return true;
         return false;
       }
     );
@@ -69,6 +86,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
       cost: 13,
       costMultiplier: 1.15,
       image: "deluxe_coffee_pot.jpg",
-    }
+    },
   },
 };

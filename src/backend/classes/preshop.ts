@@ -203,4 +203,9 @@ export class Preshop implements Subscriber {
       Object.assign(this, JSON.parse(state));
     }
   }
+
+  applyCost(cost: number) {
+    // if (this.money < cost) return; // flag something? DEBT
+    this.money -= cost;
+  }
 }

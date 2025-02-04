@@ -61,7 +61,7 @@ export class MultiShop {
 
   // multishop actions /////////////////////////////////////////////////////////
   addShop() {
-    this.shops.push(new Shop());
+    this.shops.push(new Shop(this));
     this.weeklyRecap[this.shops.length - 1] = {
       income: 0,
       expenses: 0,
@@ -98,6 +98,10 @@ export class MultiShop {
       this.weeklyRecap[shopIndex].income = shop.money;
       shop.money = 0;
     });
+  }
+
+  applyCost(cost: number) {
+    this.money -= cost;
   }
 
   // selected shop actions /////////////////////////////////////////////////////
