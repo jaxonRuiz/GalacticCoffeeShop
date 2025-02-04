@@ -62,6 +62,7 @@
     <h1>selling coffee</h1>
     <p>customers waiting: {$waitingCustomers}</p>
     <button
+      disabled={$waitingCustomers > 0 ? false : true}
       onclick={() => {
         pshop.sellCoffee();
       }}>sell coffee</button
@@ -97,10 +98,10 @@
   </div>
 
   {#snippet upgrade(upgkey: string)}
-    <!-- disabled={$money < upgs[upgkey].cost ? true : false} -->
-    <!-- not enabling disable right now for testing purposes -->
     <button
+      disabled={$money < upgs[upgkey].cost ? true : false}
       onclick={() => {
+        console.log("clicked", upgkey);
         manager.applyUpgrade(upgkey, pshop);
         availableUpgrades = manager.checkUpgrade(pshop);
       }}
