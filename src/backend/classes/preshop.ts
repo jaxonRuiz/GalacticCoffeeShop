@@ -119,7 +119,10 @@ export class Preshop implements Subscriber {
       this.customerProgress += this.appeal;
       if (this.customerProgress >= 1) {
         this.waitingCustomers += Math.floor(this.customerProgress);
-        this.waitingCustomers = Math.min(this.waitingCustomers, this.maxCustomers);
+        this.waitingCustomers = Math.min(
+          this.waitingCustomers,
+          this.maxCustomers
+        );
         this.customerProgress %= 1;
       }
     }
@@ -178,7 +181,7 @@ export class Preshop implements Subscriber {
 
     console.log("making coffee");
     // possibly add cooldown or timer effect
-    this.groundCoffee += this.coffeeQuantity;
+    this.groundCoffee -= this.coffeeQuantity;
     this.coffeeCups += this.coffeeQuantity;
     this.lifetimeCoffeeMade += this.coffeeQuantity;
   }
