@@ -52,9 +52,23 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
         shop.grindTime -= 2;
       },
       maxLevel: 1,
-      cost: 50,
+      cost: 8,
       costMultiplier: 1,
       image: "crank_grinder.jpg",
     },
+    deluxe_coffee_pot: {
+      name: "Deluxe Coffee Pot",
+      description: "Increase coffee quantity",
+      unlock_condition: (_shop) => {
+        return true;
+      },
+      upgrade: (shop) => {
+        shop.coffeeQuantity += 1;
+      },
+      maxLevel: 3,
+      cost: 13,
+      costMultiplier: 1.15,
+      image: "deluxe_coffee_pot.jpg",
+    }
   },
 };
