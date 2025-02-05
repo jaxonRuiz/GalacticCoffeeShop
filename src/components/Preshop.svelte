@@ -26,6 +26,9 @@
   let waitingCustomers = pshop.w_waitingCustomers;
   let beanPrice = pshop.w_beanPrice;
   let grindProg = pshop.w_grindProgress;
+
+  // dropdowns (true = open, false = closed)
+  let dpdn_make = $state(true);
 </script>
 
 <main class="shop container">
@@ -41,25 +44,34 @@
   <div class="shop right row">
     <div class="col">
       <div class="col block">
-        <h1>making coffee</h1>
-        <p>beans: {$beans}</p>
-        <!-- button style to showcase how much more to grind -->
         <button
-          style="background: linear-gradient(90deg, #aa1a1a 0% {($grindProg /
-            pshop.grindTime) *
-            100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
-          disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
+          class="dpdn"
           onclick={() => {
-            pshop.grindBeans();
-          }}>grind beans</button
+            dpdn_make = !dpdn_make;
+          }}
         >
-        <p>grounded beans: {$groundedBeans}</p>
-        <button
-          disabled={$groundedBeans > 0 ? false : true}
-          onclick={() => {
-            pshop.makeCoffee();
-          }}>make coffee</button
-        >
+          <h1>making coffee</h1>
+        </button>
+        <div class="dpdn content col {dpdn_make ? 'open' : ''}">
+          <p>beans: {$beans}</p>
+          <!-- button style to showcase how much more to grind -->
+          <button
+            style="background: linear-gradient(90deg, #aa1a1a 0% {($grindProg /
+              pshop.grindTime) *
+              100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
+            disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
+            onclick={() => {
+              pshop.grindBeans();
+            }}>grind beans</button
+          >
+          <p>grounded beans: {$groundedBeans}</p>
+          <button
+            disabled={$groundedBeans > 0 ? false : true}
+            onclick={() => {
+              pshop.makeCoffee();
+            }}>make coffee</button
+          >
+        </div>
       </div>
 
       <div class="col block">
@@ -135,11 +147,22 @@
   }
 
   div.block,
-  button {
+  button:not(.dpdn) {
     margin: 20px;
   }
   div.block {
     margin-bottom: 0;
+  }
+
+  .dpdn {
+    transition: height 0.2s;
+    &.content {
+      height: 0;
+      overflow-y: hidden;
+      &.open {
+        height: fit-content;
+      }
+    }
   }
 
   .shop.right > div {
