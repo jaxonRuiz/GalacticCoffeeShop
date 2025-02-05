@@ -40,8 +40,10 @@
     background-color: #242424;
   }
   #tabs {
-    background-color: #111;
+    background-color: #000000aa;
     border: none;
     justify-content: space-around;
+    width: 100%;
+    position: fixed;
   }
 </style>
