@@ -1,3 +1,11 @@
+* {
+  transition: 0.2s linear;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .shop {
   &.container {
     display: flex;

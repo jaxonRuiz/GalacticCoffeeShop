@@ -4,6 +4,7 @@
   import { Preshop } from "../backend/classes/preshop";
   import { Timer } from "../backend/systems/time";
   import { UpgradeManager } from "../backend/systems/upgradeManager";
+  import Dropdown from "./Dropdown.svelte";
 
   let timer = new Timer();
   let pshop = new Preshop(timer.timeEvents);
@@ -31,6 +32,21 @@
   let dpdn_make = $state(true);
 </script>
 
+{#snippet upgrade(upgkey: string)}
+  <button
+    disabled={$money < upgs[upgkey].cost ? true : false}
+    onclick={() => {
+      console.log("clicked", upgkey);
+      manager.applyUpgrade(upgkey, pshop);
+      availableUpgrades = manager.checkUpgrade(pshop);
+    }}
+  >
+    <h3>{upgs[upgkey].name}</h3>
+    <p>{upgs[upgkey].description}</p>
+    <p>cost: ${upgs[upgkey].cost.toFixed(2)}</p>
+  </button>
+{/snippet}
+
 <main class="shop container">
   <div class="shop left col">
     <div class="col">
@@ -44,15 +60,7 @@
   <div class="shop right row">
     <div class="col">
       <div class="col block">
-        <button
-          class="dpdn"
-          onclick={() => {
-            dpdn_make = !dpdn_make;
-          }}
-        >
-          <h1>making coffee</h1>
-        </button>
-        <div class="dpdn content col {dpdn_make ? 'open' : ''}">
+        <Dropdown title="making coffee" classes={["col"]}>
           <p>beans: {$beans}</p>
           <!-- button style to showcase how much more to grind -->
           <button
@@ -71,39 +79,42 @@
               pshop.makeCoffee();
             }}>make coffee</button
           >
-        </div>
+        </Dropdown>
       </div>
 
       <div class="col block">
-        <h1>promoting coffee</h1>
-        <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
-        <button
-          onclick={() => {
-            pshop.promoteShop();
-          }}>promote</button
-        >
+        <Dropdown title="promoting coffee" classes={["col"]}>
+          <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
+          <button
+            onclick={() => {
+              pshop.promoteShop();
+            }}>promote</button
+          >
+        </Dropdown>
       </div>
 
       <div class="col block">
-        <h1>selling coffee</h1>
-        <p>customers waiting: {$waitingCustomers}</p>
-        <button
-          disabled={$waitingCustomers > 0 ? false : true}
-          onclick={() => {
-            pshop.sellCoffee();
-          }}>sell coffee</button
-        >
+        <Dropdown title="selling coffee" classes={["col"]}>
+          <p>customers waiting: {$waitingCustomers}</p>
+          <button
+            disabled={$waitingCustomers > 0 ? false : true}
+            onclick={() => {
+              pshop.sellCoffee();
+            }}>sell coffee</button
+          >
+        </Dropdown>
       </div>
 
       <div class="col block">
-        <h1>shop</h1>
-        <p>Bean Price: ${$beanPrice.toFixed(2)}</p>
-        <button
-          disabled={$money < $beanPrice ? true : false}
-          onclick={() => {
-            pshop.buyBeans();
-          }}>buy coffee beans</button
-        >
+        <Dropdown title="shop" classes={["col"]}>
+          <p>Bean Price: ${$beanPrice.toFixed(2)}</p>
+          <button
+            disabled={$money < $beanPrice ? true : false}
+            onclick={() => {
+              pshop.buyBeans();
+            }}>buy coffee beans</button
+          >
+        </Dropdown>
       </div>
     </div>
 
@@ -116,29 +127,9 @@
       </div>
     </div>
   </div>
-
-  {#snippet upgrade(upgkey: string)}
-    <button
-      disabled={$money < upgs[upgkey].cost ? true : false}
-      onclick={() => {
-        console.log("clicked", upgkey);
-        manager.applyUpgrade(upgkey, pshop);
-        availableUpgrades = manager.checkUpgrade(pshop);
-      }}
-    >
-      <h3>{upgs[upgkey].name}</h3>
-      <p>{upgs[upgkey].description}</p>
-      <p>cost: ${upgs[upgkey].cost.toFixed(2)}</p>
-    </button>
-  {/snippet}
 </main>
 
 <style>
-  /* main {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  } */
-
   h1,
   p {
     text-align: center;
@@ -147,22 +138,11 @@
   }
 
   div.block,
-  button:not(.dpdn) {
+  button {
     margin: 20px;
   }
   div.block {
     margin-bottom: 0;
-  }
-
-  .dpdn {
-    transition: height 0.2s;
-    &.content {
-      height: 0;
-      overflow-y: hidden;
-      &.open {
-        height: fit-content;
-      }
-    }
   }
 
   .shop.right > div {
