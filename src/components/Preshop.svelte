@@ -28,73 +28,81 @@
   let grindProg = pshop.w_grindProgress;
 </script>
 
-<main>
-  <div class="col">
-    <h1>Coffee Stats</h1>
-    <p>Money: ${$money.toFixed(2)}</p>
-    <p>Appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
-    <p>Sellable Coffee: {pshop.coffeeCups}</p>
+<main class="shop container">
+  <div class="shop left col">
+    <div class="col">
+      <h1>Coffee Stats</h1>
+      <p>Money: ${$money.toFixed(2)}</p>
+      <p>Appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
+      <p>Sellable Coffee: {pshop.coffeeCups}</p>
+    </div>
   </div>
 
-  <div class="col">
-    <h1>making coffee</h1>
-    <p>beans: {$beans}</p>
-    <!-- button style to showcase how much more to grind -->
-    <button
-      style="background: linear-gradient(90deg, #aa1a1a 0% {($grindProg /
-        pshop.grindTime) *
-        100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
-      disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
-      onclick={() => {
-        pshop.grindBeans();
-      }}>grind beans</button
-    >
-    <p>grounded beans: {$groundedBeans}</p>
-    <button
-    disabled={$groundedBeans > 0 ? false : true}
-      onclick={() => {
-        pshop.makeCoffee();
-      }}>make coffee</button
-    >
-  </div>
+  <div class="shop right row">
+    <div class="col">
+      <div class="col block">
+        <h1>making coffee</h1>
+        <p>beans: {$beans}</p>
+        <!-- button style to showcase how much more to grind -->
+        <button
+          style="background: linear-gradient(90deg, #aa1a1a 0% {($grindProg /
+            pshop.grindTime) *
+            100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
+          disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
+          onclick={() => {
+            pshop.grindBeans();
+          }}>grind beans</button
+        >
+        <p>grounded beans: {$groundedBeans}</p>
+        <button
+          disabled={$groundedBeans > 0 ? false : true}
+          onclick={() => {
+            pshop.makeCoffee();
+          }}>make coffee</button
+        >
+      </div>
 
-  <div class="col">
-    <h1>selling coffee</h1>
-    <p>customers waiting: {$waitingCustomers}</p>
-    <button
-      disabled={$waitingCustomers > 0 ? false : true}
-      onclick={() => {
-        pshop.sellCoffee();
-      }}>sell coffee</button
-    >
-  </div>
+      <div class="col block">
+        <h1>promoting coffee</h1>
+        <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
+        <button
+          onclick={() => {
+            pshop.promoteShop();
+          }}>promote</button
+        >
+      </div>
 
-  <div class="col">
-    <h1>promoting coffee</h1>
-    <p>appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
-    <button
-      onclick={() => {
-        pshop.promoteShop();
-      }}>promote</button
-    >
-  </div>
+      <div class="col block">
+        <h1>selling coffee</h1>
+        <p>customers waiting: {$waitingCustomers}</p>
+        <button
+          disabled={$waitingCustomers > 0 ? false : true}
+          onclick={() => {
+            pshop.sellCoffee();
+          }}>sell coffee</button
+        >
+      </div>
 
-  <div class="col">
-    <h1>upgrades</h1>
-    {#each availableUpgrades as upgkey}
-      {@render upgrade(upgkey)}
-    {/each}
-  </div>
+      <div class="col block">
+        <h1>shop</h1>
+        <p>Bean Price: ${$beanPrice.toFixed(2)}</p>
+        <button
+          disabled={$money < $beanPrice ? true : false}
+          onclick={() => {
+            pshop.buyBeans();
+          }}>buy coffee beans</button
+        >
+      </div>
+    </div>
 
-  <div class="col">
-    <h1>shop</h1>
-    <p>Bean Price: ${$beanPrice.toFixed(2)}</p>
-    <button
-      disabled={$money < $beanPrice ? true : false}
-      onclick={() => {
-        pshop.buyBeans();
-      }}>buy coffee beans</button
-    >
+    <div class="col">
+      <div class="col block">
+        <h1>upgrades</h1>
+        {#each availableUpgrades as upgkey}
+          {@render upgrade(upgkey)}
+        {/each}
+      </div>
+    </div>
   </div>
 
   {#snippet upgrade(upgkey: string)}
@@ -114,19 +122,27 @@
 </main>
 
 <style>
-  main {
+  /* main {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-  }
+  } */
 
   h1,
   p {
     text-align: center;
     margin: 10px 0;
+    width: 100%;
   }
 
-  div,
+  div.block,
   button {
     margin: 20px;
+  }
+  div.block {
+    margin-bottom: 0;
+  }
+
+  .shop.right > div {
+    width: 50%;
   }
 </style>
