@@ -9,6 +9,7 @@ export class Shop {
   w_waitingCustomers: Writable<number> = writable(0);
   w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
   w_appeal: Writable<number> = writable(0);
+  w_cleanness: Writable<number> = writable(1);
 
   // writable getters/setters
   get beans() {
@@ -47,6 +48,12 @@ export class Shop {
   set appeal(value) {
     this.w_appeal.set(value);
   }
+  get cleanness() {
+    return get(this.w_cleanness);
+  }
+  set cleanness(value) {
+    this.w_cleanness.set(value);
+  }
 
   // is an object instead of map because fixed entries
   restockSheet: { [key: string]: number } = {
@@ -73,6 +80,7 @@ export class Shop {
   promotionEffectiveness: number = 0.2;
   minimumAppeal: number = 0.1;
   maxAppeal: number = 2;
+  appealDecay: number = 0.05;
 
   upgrades: Map<string, number> = new Map();
 
@@ -111,13 +119,13 @@ export class Shop {
   }
 
   tick(owner: MultiShop) {
-    console.log("shop ticked");
     this.roles.forEach((role: Role) => {
       role.update(this);
     });
+    this.decayAppeal();
 
     // (should have used map)
-    // may limit throughput to 1 thing per tick
+    // may limit throughput to 1 thing per tick, maybe fix
     if (this.progressTrackers["coffeeProgress"] >= 1) {
       if (this.produceCoffee()) this.progressTrackers["coffeeProgress"] -= 1;
     }
@@ -137,7 +145,17 @@ export class Shop {
     }
   }
 
-  // actions
+  // TODO check
+  applyCost(cost: number) {
+    this.money -= cost;
+    if (this.money < 0) {
+      this.multiShop.applyCost(Math.abs(this.money));
+      this.money = 0;
+      // apply debt?
+    }
+  }
+
+  // actions ///////////////////////////////////////////////////////////
   produceCoffee() {
     if (this.beans >= 1 && this.emptyCups >= 1) {
       this.beans--;
@@ -160,8 +178,27 @@ export class Shop {
 
   promote() {
     this.appeal += this.promotionEffectiveness;
+    this.appeal = Math.min(this.appeal, this.maxAppeal);
   }
 
+  addWorker(role: string, multiShop: MultiShop) {
+    if (!this.roles.has(role)) throw new Error("Role does not exist");
+    let roleObj = this.roles.get(role);
+    if (roleObj!.numWorkers < roleObj!.maxWorkers) {
+      roleObj!.numWorkers++;
+      // this.applyCost(roleObj!.wage*2); // hiring cost?
+    }
+  }
+
+  removeWorker(role: string) {
+    if (!this.roles.has(role)) throw new Error("Role does not exist");
+    let roleObj = this.roles.get(role)!;
+    if (roleObj.numWorkers > 0) {
+      roleObj.numWorkers--;
+    }
+  }
+
+  // shop management //////////////////
   restock(multiShop: MultiShop) {
     // !!! money is taken by getExpenses instead.
     // multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
@@ -171,32 +208,29 @@ export class Shop {
     this.emptyCups += this.restockSheet["emptyCups"];
   }
 
-  getExpenses() {
-    let expenses = 0;
+  getTotalExpenses() {
+    let totalExpenses = 0;
     this.roles.forEach((role: Role) => {
-      expenses += role.numWorkers * role.wage;
+      totalExpenses += role.numWorkers * role.wage;
     });
-    expenses += this.beans * this.beansPrice;
-    expenses += this.emptyCups * this.cupsPrice;
+    totalExpenses += this.beans * this.beansPrice;
+    totalExpenses += this.emptyCups * this.cupsPrice;
 
-    return expenses;
+    return totalExpenses;
   }
 
-  addWorker(role: string, multiShop: MultiShop) {
-    if (!this.roles.has(role)) throw new Error("Role does not exist");
-    let roleObj = this.roles.get(role);
-    if (roleObj!.numWorkers < roleObj!.maxWorkers) {
-
-      roleObj!.numWorkers++;
+  // TODO make cleanness affect appeal decay
+  decayAppeal() {
+    // appeal decay
+    if (this.appeal > 0.00005) {
+      this.appeal = this.appeal * (1 - this.appealDecay);
+    } else {
+      this.appeal = 0;
     }
   }
 
-  removeWorker(role: string) {
-    if (!this.roles.has(role)) throw new Error("Role does not exist");
-    let roleObj = this.roles.get(role);
-    if (roleObj!.numWorkers > 0) {
-      roleObj!.numWorkers--;
-    }
+  deselectShop() {
+    this.multiShop.deselectShop();
   }
 
   // TODO frame to unlock new jobs

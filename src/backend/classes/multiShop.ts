@@ -38,7 +38,7 @@ export class MultiShop {
     timer.subscribe(this, "week");
 
     this.addShop();
-  };
+  }
 
   notify(event: string, data?: any) {
     // maybe optimize better :/ dont need to call every shop every tick
@@ -86,8 +86,8 @@ export class MultiShop {
   applyExpenses() {
     let shopIndex = 0;
     this.shops.forEach((shop) => {
-      this.money -= shop.getExpenses();
-      this.weeklyRecap[shopIndex].expenses = shop.getExpenses();
+      this.money -= shop.getTotalExpenses();
+      this.weeklyRecap[shopIndex].expenses = shop.getTotalExpenses();
     });
   }
 
@@ -98,6 +98,13 @@ export class MultiShop {
       this.weeklyRecap[shopIndex].income = shop.money;
       shop.money = 0;
     });
+  }
+
+  applyCost(cost: number) {
+    this.money -= cost;
+    if (this.money < 0) {
+      // apply debt?
+    }
   }
 
   // selected shop actions /////////////////////////////////////////////////////
@@ -133,7 +140,6 @@ export class MultiShop {
     this.selectedShop.removeWorker(role);
   }
 }
-
 
 interface ShopWeekReport {
   income: number;
