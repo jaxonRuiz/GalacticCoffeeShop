@@ -194,19 +194,105 @@ export class Preshop implements Subscriber {
     this.money -= this.beanPrice;
   }
 
-  saveState() {
-    localStorage.setItem("preshop", JSON.stringify(this));
-  }
-
-  loadState() {
-    const state = localStorage.getItem("preshop");
-    if (state) {
-      Object.assign(this, JSON.parse(state));
-    }
-  }
-
   applyCost(cost: number) {
     // if (this.money < cost) return; // flag something? DEBT
     this.money -= cost;
   }
+
+  // save/load ////////////////////////////////////////////////////////////
+  saveState() {
+    let saveObj: PreshopSave = {
+      money: this.money,
+      beans: this.beans,
+      groundCoffee: this.groundCoffee,
+      coffeeCups: this.coffeeCups,
+      waitingCustomers: this.waitingCustomers,
+      appeal: this.appeal,
+      beanPrice: this.beanPrice,
+      grindProgress: this.grindProgress,
+
+      coffeePrice: this.coffeePrice,
+      beansPerBuy: this.beansPerBuy,
+      coffeePerBean: this.coffeePerBean,
+      grindTime: this.grindTime,
+      promotionEffectiveness: this.promotionEffectiveness,
+      maxCustomers: this.maxCustomers,
+      maxAppeal: this.maxAppeal,
+      coffeeQuantity: this.coffeeQuantity,
+
+      lifetimeGrindBeans: this.lifetimeGrindBeans,
+      lifetimeCoffeeSold: this.lifetimeCoffeeSold,
+      lifetimeCoffeeMade: this.lifetimeCoffeeMade,
+
+      upgrades: {},
+    };
+
+    for (let [key, value] of this.upgrades) {
+      saveObj.upgrades[key] = value;
+    }
+
+    localStorage.setItem("preshop", JSON.stringify(saveObj));
+  }
+
+  loadState() {
+    const rawJSON = localStorage.getItem("preshop");
+
+    if (rawJSON === null) return;
+
+    const state: PreshopSave = JSON.parse(rawJSON);
+
+    this.upgrades = new Map(Object.entries(state.upgrades));
+    this.money = state.money;
+    this.beans = state.beans;
+    this.groundCoffee = state.groundCoffee;
+    this.coffeeCups = state.coffeeCups;
+    this.waitingCustomers = state.waitingCustomers;
+    this.appeal = state.appeal;
+    this.beanPrice = state.beanPrice;
+    this.grindProgress = state.grindProgress;
+
+    this.coffeePrice = state.coffeePrice;
+    this.beansPerBuy = state.beansPerBuy;
+    this.coffeePerBean = state.coffeePerBean;
+    this.grindTime = state.grindTime;
+    this.promotionEffectiveness = state.promotionEffectiveness;
+    this.maxCustomers = state.maxCustomers;
+    this.customerProgress = 0;
+    this.maxAppeal = state.maxAppeal;
+    this.coffeeQuantity = state.coffeeQuantity;
+
+    this.lifetimeGrindBeans = state.lifetimeGrindBeans;
+    this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
+    this.lifetimeCoffeeMade = state.lifetimeCoffeeMade;
+  }
+
+  clearState() {
+    localStorage.removeItem("preshop");
+  }
+}
+
+interface PreshopSave {
+  money: number;
+  beans: number;
+  groundCoffee: number;
+  coffeeCups: number;
+  waitingCustomers: number;
+  appeal: number;
+  beanPrice: number;
+  grindProgress: number;
+
+  coffeePrice: number;
+  beansPerBuy: number;
+  coffeePerBean: number;
+  grindTime: number;
+  promotionEffectiveness: number;
+  maxCustomers: number;
+  maxAppeal: number;
+  coffeeQuantity: number;
+
+  lifetimeGrindBeans: number;
+  lifetimeCoffeeSold: number;
+  lifetimeCoffeeMade: number;
+
+  upgrades: { [key: string]: number };
 }
