@@ -68,7 +68,7 @@ export class Shop {
     serviceProgress: 0,
     coffeeProgress: 0,
     promotionProgress: 0,
-    customerProgress: 0
+    customerProgress: 0,
   };
 
   coffeePrice: number = 5;
@@ -83,8 +83,10 @@ export class Shop {
   appealDecay: number = 0.05;
 
   upgrades: Map<string, number> = new Map();
+  multiShop: MultiShop;
 
-  constructor() {
+  constructor(multiShop: MultiShop) {
+    this.multiShop = multiShop;
     // setting up default roles
     this.roles.set("barista", {
       name: "Barista",

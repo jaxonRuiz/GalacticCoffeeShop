@@ -19,6 +19,7 @@ interface Shop {
   promotionEffectiveness: number;
   appealDecay: number;
   upgrades: Map<string, number>;
+  applyCost(cost: number): void;
   // upgrades: {[keys: string]: number};
   // writables
   money: number;

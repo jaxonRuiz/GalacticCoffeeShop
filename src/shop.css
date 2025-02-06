@@ -1,0 +1,24 @@
+* {
+  transition: 0.2s linear;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.shop {
+  &.container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+  }
+  &.left {
+    flex-grow: 1; /* use shop-right to edit size */
+    height: 100%;
+    background-color: #333;
+  }
+  &.right {
+    width: 60%;
+  }
+}
