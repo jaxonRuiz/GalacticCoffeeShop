@@ -179,7 +179,8 @@ export class Shop {
   }
 
   promote() {
-    this.appeal += this.promotionEffectiveness;
+    this.appeal +=
+      this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
     this.appeal = Math.min(this.appeal, this.maxAppeal);
   }
 
