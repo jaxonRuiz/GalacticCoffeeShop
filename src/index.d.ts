@@ -40,9 +40,11 @@ interface IShop {
   appeal: number;
   beanPrice: number;
   grindProgress: number;
-  minimumAppeal: number;
-  coffeeQuantity: number;
-  shops: IShop[];
+
+
+  minimumAppeal?: number;
+  coffeeQuantity?: number;
+  shops?: IShop[];
 }
 
 interface Subscriber {

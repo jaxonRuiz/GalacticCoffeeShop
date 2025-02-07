@@ -76,7 +76,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
         return true;
       },
       upgrade: (shop) => {
-        shop.coffeeQuantity += 1;
+        shop.coffeeQuantity! += 1;
       },
       maxLevel: 3,
       cost: 13,
@@ -94,9 +94,9 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
       },
       upgrade: (shop, level) => {
         let statLevels = [0, 1, 0.5, 0.5];
-        shop.minimumAppeal += statLevels[level];
+        shop.minimumAppeal! += statLevels[level];
         shop.appealDecay *= 0.97;
-        if (shop.appeal < shop.minimumAppeal) shop.appeal = shop.minimumAppeal;
+        if (shop.appeal < shop.minimumAppeal!) shop.appeal = shop.minimumAppeal!;
 
       },
       maxLevel: 3,
@@ -114,7 +114,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
         return multishop.shops!.length > 1; // maybe change to 2 later
       },
       upgrade: (shop) => {
-        shop.minimumAppeal += 0.2;
+        shop.minimumAppeal! += 0.2;
         shop.promotionEffectiveness += 0.1;
       },
       flags: ["applyToChildren"],
