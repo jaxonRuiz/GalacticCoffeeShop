@@ -9,14 +9,19 @@
   <p>lyssa testing</p>
   <div class="lyssa-testing">
     <grid>
-      {#each { length: 10 }, i}
-        {#each { length: 10 }, j}
-          <div class="cell">{i},{j}</div>
+      {#each { length: 5 }, i}
+        {#each { length: 5 }, j}
+          <div class="cell">
+            {#if i == 2 && j == 2}
+              <div class="wall">wall</div>
+            {:else}
+              {i},{j}
+            {/if}
+          </div>
         {/each}
       {/each}
     </grid>
   </div>
-  <div class="lyssa-testing"></div>
 </main>
 
 <style>
@@ -28,20 +33,29 @@
       position: absolute;
     }
   }
+
+  * {
+    transform-style: preserve-3d !important;
+  }
+
+  div.wall {
+    width: 100%;
+    height: 100%;
+  }
+
   grid {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     width: fit-content;
     height: fit-content;
 
     /* important */
     transform-origin: center;
     transform: rotateX(60deg) rotateY(0deg) rotateZ(45deg);
-
     div {
-      width: 50px;
-      height: 50px;
+      width: 80px;
+      height: 80px;
     }
   }
 </style>
