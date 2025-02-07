@@ -3,8 +3,8 @@
 interface Upgrade {
   name: string;
   description: string;
-  unlock_condition: (shop: ShopObject) => boolean;
-  upgrade: (shop: ShopObject, level: number) => void; // LEVELS USE 1 BASED INDEXING
+  unlock_condition: (shop: IShop) => boolean;
+  upgrade: (shop: IShop, level: number) => void; // LEVELS USE 1 BASED INDEXING
   maxLevel: number | undefined; // undefined means infinite upgrade
   cost: number;
   costMultiplier: number;
@@ -15,12 +15,12 @@ interface Upgrade {
 interface UpgradeManager {
   allUpgrades: { [key: string]: Upgrade };
 
-  applyUpgrade(id: string, shopObject: Shop): void;
-  getCost(id: string, shopObject: Shop): number;
-  checkUpgrade(shopObject: Shop): string[];
+  applyUpgrade(id: string, shopObject: IShop): void;
+  getCost(id: string, shopObject: IShop): number;
+  checkUpgrade(shopObject: IShop): string[];
 }
 
-interface Shop {
+interface IShop {
   coffeePrice: number;
   beansPerBuy: number;
   coffeePerBean: number;
@@ -42,10 +42,7 @@ interface Shop {
   grindProgress: number;
   minimumAppeal: number;
   coffeeQuantity: number;
-}
-
-interface ShopObject extends Shop {
-  shops?: Shop[];
+  shops: IShop[];
 }
 
 interface Subscriber {

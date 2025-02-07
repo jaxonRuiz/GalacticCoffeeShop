@@ -6,10 +6,10 @@ export class UpgradeManager {
     this.allUpgrades = upgradeJSON[subset];
   }
 
-  applyUpgrade(id: string, shopObject: ShopObject) {
+  applyUpgrade(id: string, shopObject: IShop) {
     // if multishop style
     if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
-      shopObject.shops!.forEach((shop: Shop) => {
+      shopObject.shops!.forEach((shop: IShop) => {
         this.allUpgrades[id].upgrade(shop, shop.upgrades.get(id) ?? 1);
       })
     } else { // if single shop style
@@ -19,7 +19,7 @@ export class UpgradeManager {
     }
   }
 
-  getCost(id: string, shopObject: Shop) {
+  getCost(id: string, shopObject: IShop) {
     if (shopObject.upgrades.get(id) === undefined)
       return this.allUpgrades[id].cost;
     // cost * (costMultiplier ^ level)
@@ -33,7 +33,7 @@ export class UpgradeManager {
   }
 
   // returns all purchasable upgrades (AS ID KEYS) at shop
-  checkUpgrade(shopObject: ShopObject) {
+  checkUpgrade(shopObject: IShop) {
     let unpurchasedUpgrades = Object.keys(this.allUpgrades).filter(
       (id: string) => {
         if (this.allUpgrades[id].maxLevel === undefined) return true;
