@@ -55,7 +55,7 @@ export class Shop {
     this.w_cleanness.set(value);
   }
 
-  // is an object instead of map because fixed entries
+  // variable containers ///////////////////////////////////////////////////////
   restockSheet: { [key: string]: number } = {
     beans: 0,
     emptyCups: 0,
@@ -71,10 +71,10 @@ export class Shop {
     customerProgress: 0,
   };
 
+  // stats /////////////////////////////////////////////////////////////////////
   coffeePrice: number = 5;
   beansPrice: number = 1;
   cupsPrice: number = 1;
-  roles: Map<string, Role> = new Map();
   totalWorkers: number = 0;
   maxCustomers: number = 7;
   promotionEffectiveness: number = 0.2;
@@ -82,6 +82,8 @@ export class Shop {
   maxAppeal: number = 2;
   appealDecay: number = 0.05;
 
+  // misc //////////////////////////////////////////////////////////////////////
+  roles: Map<string, Role> = new Map();
   upgrades: Map<string, number> = new Map();
   multiShop: MultiShop;
 
@@ -120,13 +122,17 @@ export class Shop {
     });
   }
 
+  // multishop utility /////////////////////////////////////////////////////////
+  tickCounter: number = 0;
   tick(owner: MultiShop) {
+    this.tickCounter += 1;
+    if (this.tickCounter >= Number.MAX_SAFE_INTEGER) this.tickCounter = 1;
     this.roles.forEach((role: Role) => {
-      role.update(this);
+      role.update(this, this.tickCounter);
     });
     this.decayAppeal();
 
-    // (should have used map)
+    // progress updaters
     // may limit throughput to 1 thing per tick, maybe fix
     if (this.progressTrackers["coffeeProgress"] >= 1) {
       if (this.produceCoffee()) this.progressTrackers["coffeeProgress"] -= 1;
@@ -147,6 +153,17 @@ export class Shop {
     }
   }
 
+  // TODO make cleanness affect appeal decay
+  decayAppeal() {
+    // appeal decay
+    if (this.appeal > this.minimumAppeal) {
+      this.appeal = this.appeal * (1 - this.appealDecay);
+    } else {
+      this.appeal = this.minimumAppeal;
+    }
+  }
+  
+
   // TODO check
   applyCost(cost: number) {
     this.money -= cost;
@@ -157,7 +174,31 @@ export class Shop {
     }
   }
 
-  // actions ///////////////////////////////////////////////////////////
+  restock(multiShop: MultiShop) {
+    // !!! money is taken by getExpenses instead.
+    // multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
+    // multiShop.money -= this.restockSheet["emptyCups"] * this.cupsPrice;
+
+    this.beans += this.restockSheet["beans"];
+    this.emptyCups += this.restockSheet["emptyCups"];
+  }
+
+  getTotalExpenses() {
+    let totalExpenses = 0;
+    this.roles.forEach((role: Role) => {
+      totalExpenses += role.numWorkers * role.wage;
+    });
+    totalExpenses += this.beans * this.beansPrice;
+    totalExpenses += this.emptyCups * this.cupsPrice;
+
+    return totalExpenses;
+  }
+
+  deselectShop() {
+    this.multiShop.deselectShop();
+  }
+
+  // player actions ////////////////////////////////////////////////////////////
   produceCoffee() {
     if (this.beans >= 1 && this.emptyCups >= 1) {
       this.beans--;
@@ -201,40 +242,7 @@ export class Shop {
     }
   }
 
-  // shop management //////////////////
-  restock(multiShop: MultiShop) {
-    // !!! money is taken by getExpenses instead.
-    // multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
-    // multiShop.money -= this.restockSheet["emptyCups"] * this.cupsPrice;
-
-    this.beans += this.restockSheet["beans"];
-    this.emptyCups += this.restockSheet["emptyCups"];
-  }
-
-  getTotalExpenses() {
-    let totalExpenses = 0;
-    this.roles.forEach((role: Role) => {
-      totalExpenses += role.numWorkers * role.wage;
-    });
-    totalExpenses += this.beans * this.beansPrice;
-    totalExpenses += this.emptyCups * this.cupsPrice;
-
-    return totalExpenses;
-  }
-
-  // TODO make cleanness affect appeal decay
-  decayAppeal() {
-    // appeal decay
-    if (this.appeal > 0.00005) {
-      this.appeal = this.appeal * (1 - this.appealDecay);
-    } else {
-      this.appeal = 0;
-    }
-  }
-
-  deselectShop() {
-    this.multiShop.deselectShop();
-  }
+  // upgrade functions /////////////////////////////////////////////////////////
 
   // TODO frame to unlock new jobs
   unlockSupplier() {
@@ -243,7 +251,7 @@ export class Shop {
       numWorkers: 0,
       maxWorkers: 1,
       wage: 100,
-      update: (shop: Shop) => {
+      update: (shop: Shop, tickCounter: number) => {
         console.log("supplier updated");
       },
     });
@@ -255,5 +263,5 @@ interface Role {
   numWorkers: number;
   maxWorkers: number;
   wage: number; // weekly
-  update: (shop: Shop) => void;
+  update: (shop: Shop, tickCounter: number) => void;
 }
