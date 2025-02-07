@@ -22,14 +22,12 @@
   // define variables
   let money = pshop.w_money;
   let beans = pshop.w_beans;
+  let coffee = pshop.w_coffeeCups;
   let appeal = pshop.w_appeal;
   let groundedBeans = pshop.w_groundCoffee;
   let waitingCustomers = pshop.w_waitingCustomers;
   let beanPrice = pshop.w_beanPrice;
   let grindProg = pshop.w_grindProgress;
-
-  // dropdowns (true = open, false = closed)
-  let dpdn_make = $state(true);
 </script>
 
 {#snippet upgrade(upgkey: string)}
@@ -53,7 +51,7 @@
       <h1>Coffee Stats</h1>
       <p>Money: ${$money.toFixed(2)}</p>
       <p>Appeal: {(100 * $appeal).toFixed(2) + "%"}</p>
-      <p>Sellable Coffee: {pshop.coffeeCups}</p>
+      <p>Sellable Coffee: {$coffee}</p>
     </div>
   </div>
 
@@ -97,7 +95,7 @@
         <Dropdown title="selling coffee" classes={["col"]}>
           <p>customers waiting: {$waitingCustomers}</p>
           <button
-            disabled={$waitingCustomers > 0 ? false : true}
+            disabled={$waitingCustomers > 0  &&  $coffee > 0 ? false : true}
             onclick={() => {
               pshop.sellCoffee();
             }}>sell coffee</button
@@ -130,21 +128,6 @@
 </main>
 
 <style>
-  h1,
-  p {
-    text-align: center;
-    margin: 10px 0;
-    width: 100%;
-  }
-
-  div.block,
-  button {
-    margin: 20px;
-  }
-  div.block {
-    margin-bottom: 0;
-  }
-
   .shop.right > div {
     width: 50%;
   }

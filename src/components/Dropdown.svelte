@@ -26,5 +26,9 @@
         max-height: 50vh;
       }
     }
+
+    button {
+      margin: 0;
+    }
   }
 </style>
