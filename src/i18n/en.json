@@ -17,5 +17,8 @@
   "beanPrice_stat": "Bean Price",
   "buyBeans_btn": "Buy Coffee Beans",
   "upgrades_title": "Upgrades",
-  "cost_stat": "Cost"
+  "cost_stat": "Cost",
+  "emptyCups_stat": "Empty Cups",
+  "cleaning_title": "Cleaning Shop",
+  "restocking_title": "Restocking"
 }
