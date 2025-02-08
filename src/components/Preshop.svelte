@@ -58,63 +58,55 @@
 
   <div class="shop right row">
     <div class="col">
-      <div class="col block">
-        <Dropdown title={$t("preshop_title")} classes={["col"]}>
-          <p>{$t("beans_stat")}: {$beans}</p>
-          <!-- button style to showcase how much more to grind -->
-          <button
-            style="background: linear-gradient(90deg, #aa1a1a 0% {($grindProg /
-              pshop.grindTime) *
-              100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
-            disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
-            onclick={() => {
-              pshop.grindBeans();
-            }}>{$t("grindBeans_btn")}</button
-          >
-          <p>{$t("groundedBeans_stat")}: {$groundedBeans}</p>
-          <button
-            disabled={$groundedBeans > 0 ? false : true}
-            onclick={() => {
-              pshop.makeCoffee();
-            }}>{$t("makeCoffee_btn")}</button
-          >
-        </Dropdown>
-      </div>
+      <Dropdown title={$t("preshop_title")}>
+        <p>{$t("beans_stat")}: {$beans}</p>
+        <!-- button style to showcase how much more to grind -->
+        <button
+          style="background: linear-gradient(90deg, #aa1a1a 0% {($grindProg /
+            pshop.grindTime) *
+            100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
+          disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
+          onclick={() => {
+            pshop.grindBeans();
+          }}>{$t("grindBeans_btn")}</button
+        >
+        <p>{$t("groundedBeans_stat")}: {$groundedBeans}</p>
+        <button
+          disabled={$groundedBeans > 0 ? false : true}
+          onclick={() => {
+            pshop.makeCoffee();
+          }}>{$t("makeCoffee_btn")}</button
+        >
+      </Dropdown>
 
-      <div class="col block">
-        <Dropdown title={$t("promoting_title")} classes={["col"]}>
-          <p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2) + "%"}</p>
-          <button
-            onclick={() => {
-              pshop.promoteShop();
-            }}>{$t("promote_btn")}</button
-          >
-        </Dropdown>
-      </div>
+      <Dropdown title={$t("promoting_title")}>
+        <p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2) + "%"}</p>
+        <button
+          onclick={() => {
+            pshop.promoteShop();
+          }}>{$t("promote_btn")}</button
+        >
+      </Dropdown>
 
-      <div class="col block">
-        <Dropdown title={$t("selling_title")} classes={["col"]}>
-          <p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
-          <button
-            disabled={$waitingCustomers > 0  &&  $coffee > 0 ? false : true}
-            onclick={() => {
-              pshop.sellCoffee();
-            }}>{$t("sellCoffee_btn")}</button
-          >
-        </Dropdown>
-      </div>
+      <Dropdown title={$t("selling_title")}>
+        <p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
+        <button
+          disabled={$waitingCustomers > 0 && $coffee > 0 ? false : true}
+          onclick={() => {
+            pshop.sellCoffee();
+          }}>{$t("sellCoffee_btn")}</button
+        >
+      </Dropdown>
 
-      <div class="col block">
-        <Dropdown title={$t("shop_title")} classes={["col"]}>
-          <p>{$t("beanPrice_stat")}: ${$beanPrice.toFixed(2)}</p>
-          <button
-            disabled={$money < $beanPrice ? true : false}
-            onclick={() => {
-              pshop.buyBeans();
-            }}>{$t("buyBeans_btn")}</button
-          >
-        </Dropdown>
-      </div>
+      <Dropdown title={$t("shop_title")}>
+        <p>{$t("beanPrice_stat")}: ${$beanPrice.toFixed(2)}</p>
+        <button
+          disabled={$money < $beanPrice ? true : false}
+          onclick={() => {
+            pshop.buyBeans();
+          }}>{$t("buyBeans_btn")}</button
+        >
+      </Dropdown>
     </div>
 
     <div class="col">

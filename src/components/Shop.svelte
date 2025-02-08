@@ -15,31 +15,26 @@
 
   <div class="shop right row">
     <div class="col">
-      <div class="col block">
-        <Dropdown title={$t("making_title")} classes={["col"]}>
-          <p>{$t("beans_stat")}: ##</p>
-          <p>{$t("emptyCups_stat")}: ##</p>
-          <button>{$t("makeCoffee_btn")}</button>
-        </Dropdown>
-      </div>
-      <div class="col block">
-        <Dropdown title={$t("selling_title")} classes={["col"]}>
-          <p>{$t("appeal_stat")}: ##</p>
-          <p>{$t("customersWaiting_stat")}: ##</p>
-          <button>{$t("promote_btn")}</button>
-          <button>{$t("sellCoffee_btn")}</button>
-        </Dropdown>
-      </div>
-      <div class="col block">
-        <Dropdown title={$t("cleaning_title")} classes={["col"]}>
-          <p>smth</p>
-        </Dropdown>
-      </div>
-      <div class="col block">
-        <Dropdown title={$t("restocking_title")} classes={["col"]}>
-          <p>smth</p>
-        </Dropdown>
-      </div>
+      <Dropdown title={$t("making_title")}>
+        <p>{$t("beans_stat")}: ##</p>
+        <p>{$t("emptyCups_stat")}: ##</p>
+        <button>{$t("makeCoffee_btn")}</button>
+      </Dropdown>
+
+      <Dropdown title={$t("selling_title")}>
+        <p>{$t("appeal_stat")}: ##</p>
+        <p>{$t("customersWaiting_stat")}: ##</p>
+        <button>{$t("promote_btn")}</button>
+        <button>{$t("sellCoffee_btn")}</button>
+      </Dropdown>
+
+      <Dropdown title={$t("cleaning_title")} classes={["col"]}>
+        <p>smth</p>
+      </Dropdown>
+
+      <Dropdown title={$t("restocking_title")} classes={["col"]}>
+        <p>smth</p>
+      </Dropdown>
     </div>
     <div class="col">
       <div class="col block">
