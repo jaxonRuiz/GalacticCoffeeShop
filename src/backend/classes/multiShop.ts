@@ -64,8 +64,6 @@ export class MultiShop {
     this.shops.forEach((shop) => shop.tick(this));
   }
 
-  applyUpgradeGlobally() {}
-
   // multishop actions /////////////////////////////////////////////////////////
   addShop(upgradeManager: IUpgradeManager) {
     this.shops.push(new Shop(this));
