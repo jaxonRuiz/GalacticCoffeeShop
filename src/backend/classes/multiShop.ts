@@ -31,14 +31,19 @@ export class MultiShop {
   // internal stats ////////////////////////////////////////////////////////////
   shops: Shop[] = []; // make into object for key referencing?
   upgrades: Map<string, number> = new Map();
+  upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
   weeklyRecap: { [key: number]: ShopWeekReport } = {};
 
   constructor(timer: Observer) {
     timer.subscribe(this, "tick");
     timer.subscribe(this, "week");
 
-    this.addShop();
-  };
+    this.shops.push(new Shop(this));
+    this.weeklyRecap[this.shops.length - 1] = {
+      income: 0,
+      expenses: 0,
+    };
+  }
 
   notify(event: string, data?: any) {
     // maybe optimize better :/ dont need to call every shop every tick
@@ -59,9 +64,18 @@ export class MultiShop {
     this.shops.forEach((shop) => shop.tick(this));
   }
 
+  applyUpgradeGlobally() {
+    
+  }
+
   // multishop actions /////////////////////////////////////////////////////////
-  addShop() {
+  addShop(upgradeManager: UpgradeManager) {
     this.shops.push(new Shop(this));
+    for (let key in this.upgrades) {
+      if (upgradeManager.allUpgrades[key].flags?.includes("applyToChildren")) {
+        this.upgrades.set(key, 1);
+      }
+    }
     this.weeklyRecap[this.shops.length - 1] = {
       income: 0,
       expenses: 0,
@@ -86,8 +100,8 @@ export class MultiShop {
   applyExpenses() {
     let shopIndex = 0;
     this.shops.forEach((shop) => {
-      this.money -= shop.getExpenses();
-      this.weeklyRecap[shopIndex].expenses = shop.getExpenses();
+      this.money -= shop.getTotalExpenses();
+      this.weeklyRecap[shopIndex].expenses = shop.getTotalExpenses();
     });
   }
 
@@ -102,6 +116,9 @@ export class MultiShop {
 
   applyCost(cost: number) {
     this.money -= cost;
+    if (this.money < 0) {
+      // apply debt?
+    }
   }
 
   // selected shop actions /////////////////////////////////////////////////////
@@ -137,7 +154,6 @@ export class MultiShop {
     this.selectedShop.removeWorker(role);
   }
 }
-
 
 interface ShopWeekReport {
   income: number;

@@ -6,13 +6,20 @@ export class UpgradeManager {
     this.allUpgrades = upgradeJSON[subset];
   }
 
-  applyUpgrade(id: string, shopObject: Shop) {
-    this.allUpgrades[id].upgrade(shopObject, shopObject.upgrades.get(id) ?? 1);
-    shopObject.applyCost(this.getCost(id, shopObject));
-    shopObject.upgrades.set(id, (shopObject.upgrades.get(id) ?? 0) + 1);
+  applyUpgrade(id: string, shopObject: IShop) {
+    // if multishop style
+    if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
+      shopObject.shops!.forEach((shop: IShop) => {
+        this.allUpgrades[id].upgrade(shop, shop.upgrades.get(id) ?? 1);
+      })
+    } else { // if single shop style
+      this.allUpgrades[id].upgrade(shopObject, shopObject.upgrades.get(id) ?? 1);
+      shopObject.applyCost(this.getCost(id, shopObject));
+      shopObject.upgrades.set(id, (shopObject.upgrades.get(id) ?? 0) + 1);
+    }
   }
 
-  getCost(id: string, shopObject: Shop) {
+  getCost(id: string, shopObject: IShop) {
     if (shopObject.upgrades.get(id) === undefined)
       return this.allUpgrades[id].cost;
     // cost * (costMultiplier ^ level)
@@ -26,7 +33,7 @@ export class UpgradeManager {
   }
 
   // returns all purchasable upgrades (AS ID KEYS) at shop
-  checkUpgrade(shopObject: Shop) {
+  checkUpgrade(shopObject: IShop) {
     let unpurchasedUpgrades = Object.keys(this.allUpgrades).filter(
       (id: string) => {
         if (this.allUpgrades[id].maxLevel === undefined) return true;
@@ -42,17 +49,6 @@ export class UpgradeManager {
       return this.allUpgrades[id].unlock_condition(shopObject);
     });
   }
-}
-
-interface Upgrade {
-  name: string;
-  description: string;
-  unlock_condition: (shop: Shop) => boolean;
-  upgrade: (shop: Shop, level: number) => void;
-  maxLevel: number | undefined; // undefined means infinite upgrade
-  cost: number;
-  costMultiplier: number;
-  image: string;
 }
 
 // need to have a
@@ -80,7 +76,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
         return true;
       },
       upgrade: (shop) => {
-        shop.coffeeQuantity += 1;
+        shop.coffeeQuantity! += 1;
       },
       maxLevel: 3,
       cost: 13,
@@ -88,4 +84,44 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
       image: "deluxe_coffee_pot.jpg",
     },
   },
+
+  localShop: {
+    flashy_sign: {
+      name: "Flashy Sign",
+      description: "Passively attract more customers to your storefront!",
+      unlock_condition: (_shop) => {
+        return true;
+      },
+      upgrade: (shop, level) => {
+        let statLevels = [0, 1, 0.5, 0.5];
+        shop.minimumAppeal! += statLevels[level];
+        shop.appealDecay *= 0.97;
+        if (shop.appeal < shop.minimumAppeal!) shop.appeal = shop.minimumAppeal!;
+
+      },
+      maxLevel: 3,
+      cost: 300,
+      costMultiplier: 1.2,
+      image: "flashy_sign.jpg",
+    }
+  },
+
+  multiShop: {
+    cohesive_branding: {
+      name: "Cohesive Branding",
+      description: "Increase appeal of all shops",
+      unlock_condition: (multishop) => {
+        return multishop.shops!.length > 1; // maybe change to 2 later
+      },
+      upgrade: (shop) => {
+        shop.minimumAppeal! += 0.2;
+        shop.promotionEffectiveness += 0.1;
+      },
+      flags: ["applyToChildren"],
+      maxLevel: undefined,
+      cost: 1000,
+      costMultiplier: 1.5,
+      image: "cohesive_branding.jpg",
+    }
+  }
 };

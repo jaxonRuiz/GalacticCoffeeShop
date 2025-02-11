@@ -88,12 +88,11 @@ export class Timer {
   }
 
   get numericDate() {
-    return [this.day, this.week, this.month, this.year];
+    return [this.hour, this.day, this.week, this.month, this.year];
   }
 
   get printableDate() {
-    return `${this.calanderDay}, ${this.monthDay + 1} ${this.month + 1}, ${
-      this.year
-    }`;
+    return `${this.calanderDay}, ${this.monthDay + 1} ${this.month + 1}, ${this.year
+      }`;
   }
 }
