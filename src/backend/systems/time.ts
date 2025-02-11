@@ -92,7 +92,8 @@ export class Timer {
   }
 
   get printableDate() {
-    return `${this.calanderDay}, ${this.monthDay + 1} ${this.month + 1}, ${this.year
-      }`;
+    return `${this.calanderDay}, ${this.monthDay + 1} ${this.month + 1}, ${
+      this.year
+    }`;
   }
 }

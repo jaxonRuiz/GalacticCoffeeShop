@@ -1,6 +1,6 @@
 // global interfaces, no enums
 
-interface Upgrade {
+interface IUpgrade {
   name: string;
   description: string;
   unlock_condition: (shop: IShop) => boolean;
@@ -12,8 +12,8 @@ interface Upgrade {
   image: string;
 }
 
-interface UpgradeManager {
-  allUpgrades: { [key: string]: Upgrade };
+interface IUpgradeManager {
+  allUpgrades: { [key: string]: IUpgrade };
 
   applyUpgrade(id: string, shopObject: IShop): void;
   getCost(id: string, shopObject: IShop): number;
@@ -47,7 +47,7 @@ interface IShop {
   shops?: IShop[];
 }
 
-interface Subscriber {
+interface ISubscriber {
   notify(event: string, data?: any): void;
 }
 /*

@@ -162,7 +162,6 @@ export class Shop {
       this.appeal = this.minimumAppeal;
     }
   }
-  
 
   // TODO check
   applyCost(cost: number) {

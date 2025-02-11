@@ -1,7 +1,7 @@
 import { Observer } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 
-export class Preshop implements Subscriber {
+export class Preshop implements ISubscriber {
   // resources (setting writable to interact with svelte)
   // not to be used in backend
   w_money: Writable<number> = writable(0);

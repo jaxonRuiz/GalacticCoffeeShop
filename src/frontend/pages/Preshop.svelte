@@ -1,11 +1,11 @@
 <script lang="ts">
   import { t } from "svelte-i18n";
-  import { upgradeJSON } from "../backend/systems/upgradeManager";
-  import { Observer } from "../backend/systems/observer";
-  import { Preshop } from "../backend/classes/preshop";
-  import { Timer } from "../backend/systems/time";
-  import { UpgradeManager } from "../backend/systems/upgradeManager";
-  import Dropdown from "./Dropdown.svelte";
+  import { upgradeJSON } from "../../backend/systems/upgradeManager";
+  import { Observer } from "../../backend/systems/observer";
+  import { Preshop } from "../../backend/classes/preshop";
+  import { Timer } from "../../backend/systems/time";
+  import { UpgradeManager } from "../../backend/systems/upgradeManager";
+  import Dropdown from "../components/Dropdown.svelte";
 
   let timer = new Timer();
   let pshop = new Preshop(timer.timeEvents);

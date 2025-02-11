@@ -64,12 +64,10 @@ export class MultiShop {
     this.shops.forEach((shop) => shop.tick(this));
   }
 
-  applyUpgradeGlobally() {
-    
-  }
+  applyUpgradeGlobally() {}
 
   // multishop actions /////////////////////////////////////////////////////////
-  addShop(upgradeManager: UpgradeManager) {
+  addShop(upgradeManager: IUpgradeManager) {
     this.shops.push(new Shop(this));
     for (let key in this.upgrades) {
       if (upgradeManager.allUpgrades[key].flags?.includes("applyToChildren")) {

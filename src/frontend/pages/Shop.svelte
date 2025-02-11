@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Dropdown from "./Dropdown.svelte";
+  import Dropdown from "../components/Dropdown.svelte";
   import { t } from "svelte-i18n";
 </script>
 
@@ -28,11 +28,11 @@
         <button>{$t("sellCoffee_btn")}</button>
       </Dropdown>
 
-      <Dropdown title={$t("cleaning_title")} classes={["col"]}>
+      <Dropdown title={$t("cleaning_title")}>
         <p>smth</p>
       </Dropdown>
 
-      <Dropdown title={$t("restocking_title")} classes={["col"]}>
+      <Dropdown title={$t("restocking_title")}>
         <p>smth</p>
       </Dropdown>
     </div>

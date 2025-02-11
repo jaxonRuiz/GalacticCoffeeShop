@@ -1,13 +1,10 @@
 <script lang="ts">
-  import Shop from "./components/Shop.svelte";
-  import PlanetInfo from "./components/PlanetInfo.svelte";
-  import Preshop from "./components/Preshop.svelte";
-  import ShopInfo1 from "./components/ShopInfo1.svelte";
-  import ShopInfo2 from "./components/ShopInfo2.svelte";
-  import Test from "./components/Test.svelte";
+  import Preshop from "./frontend/pages/Preshop.svelte";
+  import Shop from "./frontend/pages/Shop.svelte";
+  import Test from "./frontend/pages/Test.svelte";
 
-  let tabs = ["preshop", "shop", "test", "planet", "shop v1", "shop v2"];
-  let comps = [Preshop, Shop, Test, PlanetInfo, ShopInfo1, ShopInfo2];
+  let tabs = ["preshop", "shop", "test"];
+  let comps = [Preshop, Shop, Test];
   let currentTab = $state(0);
 </script>
 

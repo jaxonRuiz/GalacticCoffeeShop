@@ -1,6 +1,7 @@
 // will have diff upgrade manager for each subset (preshop, shop, etc)
 export class UpgradeManager {
-  allUpgrades: { [key: string]: Upgrade }; // updgrades of a specific subset (preshop, shop, etc)
+  // updgrades of a specific subset (preshop, shop, etc)
+  allUpgrades: { [key: string]: IUpgrade }; 
 
   constructor(subset: string) {
     this.allUpgrades = upgradeJSON[subset];
@@ -11,9 +12,13 @@ export class UpgradeManager {
     if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
       shopObject.shops!.forEach((shop: IShop) => {
         this.allUpgrades[id].upgrade(shop, shop.upgrades.get(id) ?? 1);
-      })
-    } else { // if single shop style
-      this.allUpgrades[id].upgrade(shopObject, shopObject.upgrades.get(id) ?? 1);
+      });
+    } else {
+      // if single shop style
+      this.allUpgrades[id].upgrade(
+        shopObject,
+        shopObject.upgrades.get(id) ?? 1
+      );
       shopObject.applyCost(this.getCost(id, shopObject));
       shopObject.upgrades.set(id, (shopObject.upgrades.get(id) ?? 0) + 1);
     }
@@ -53,7 +58,7 @@ export class UpgradeManager {
 
 // need to have a
 //  way to designate upgrade caps and single upgrades
-export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
+export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
   preshop: {
     crank_grinder: {
       name: "Crank Grinder",
@@ -96,14 +101,14 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
         let statLevels = [0, 1, 0.5, 0.5];
         shop.minimumAppeal! += statLevels[level];
         shop.appealDecay *= 0.97;
-        if (shop.appeal < shop.minimumAppeal!) shop.appeal = shop.minimumAppeal!;
-
+        if (shop.appeal < shop.minimumAppeal!)
+          shop.appeal = shop.minimumAppeal!;
       },
       maxLevel: 3,
       cost: 300,
       costMultiplier: 1.2,
       image: "flashy_sign.jpg",
-    }
+    },
   },
 
   multiShop: {
@@ -122,6 +127,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: Upgrade } } = {
       cost: 1000,
       costMultiplier: 1.5,
       image: "cohesive_branding.jpg",
-    }
-  }
+    },
+  },
 };
