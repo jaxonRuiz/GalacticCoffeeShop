@@ -13,7 +13,11 @@
         {#each { length: 5 }, j}
           <div class="cell">
             {#if i == 2 && j == 2}
-              <div class="wall">wall</div>
+              <div class="wall left">left wall</div>
+              <div class="wall right">right wall</div>
+              <div class="wall ceiling">ceiling</div>
+            {:else if i == 1 && j == 3}
+              <div class="sprite">front-facing sprite</div>
             {:else}
               {i},{j}
             {/if}
@@ -38,10 +42,31 @@
     transform-style: preserve-3d !important;
   }
 
+  div.sprite {
+    width: 80px;
+    height: 80px;
+    background-color: #fa0;
+    transform: rotateZ(-45deg) rotateX(-60deg);
+  }
+
   div.wall {
     width: 100%;
     height: 100%;
+    background-color: #111;
+
+    &.left {
+      transform-origin: bottom;
+      transform: rotateX(-90deg);
+    }
+    &.right {
+      transform-origin: bottom right;
+      transform: rotateX(-90deg) rotateY(90deg) translateX(80px);
+    }
+    &.ceiling {
+      transform: translateZ(80px);
+    }
   }
+
 
   grid {
     display: grid;
@@ -56,6 +81,11 @@
     div {
       width: 80px;
       height: 80px;
+      background-color : #ddd;
+      
+      & > * {
+        position: absolute;
+      }
     }
   }
 </style>
