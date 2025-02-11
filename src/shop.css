@@ -1,38 +1,38 @@
 * {
-  transition: 0.2s linear;
+	transition: 0.2s linear;
 }
 
 .hidden {
-  display: none !important;
+	display: none !important;
 }
 
 .shop {
-  &.container {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 100%;
-  }
-  &.left {
-    flex-grow: 1; /* use shop-right to edit size */
-    height: 100%;
-    background-color: #333;
-  }
-  &.right {
-    width: 60%;
-  }
+	&.container {
+		display: flex;
+		flex-direction: row;
+		height: 100%;
+		width: 100%;
+	}
+	&.left {
+		flex-grow: 1; /* use shop-right to edit size */
+		height: 100%;
+		background-color: #333;
+	}
+	&.right {
+		width: 60%;
+	}
 
-  h1, p {
-    text-align: center;
-    margin: 10px 0;
-    width: 100%;
-  }
+	h1, p {
+		text-align: center;
+		margin: 10px 0;
+		width: 100%;
+	}
 
-  div.block, button {
-    margin: 10px;
-  }
+	div.block, button {
+		margin: 10px;
+	}
 
-  div.block {
-    margin-bottom: 0;
-  }
+	div.block {
+		margin-bottom: 0;
+	}
 }

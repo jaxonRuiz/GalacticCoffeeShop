@@ -10,6 +10,6 @@ addMessages('en', en);
 
 // initialize i18n and language
 init({
-  fallbackLocale: 'en',
-  initialLocale: getLocaleFromNavigator(),
+	fallbackLocale: 'en',
+	initialLocale: getLocaleFromNavigator(),
 });
