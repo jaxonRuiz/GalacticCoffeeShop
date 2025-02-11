@@ -1,4 +1,5 @@
 import { mount } from 'svelte'
+import './i18n/i18n'
 import './app.css'
 import './shop.css'
 import App from './App.svelte'
