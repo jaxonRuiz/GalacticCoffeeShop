@@ -6,7 +6,7 @@
 
 	let tabs = ["preshop", "shop", "multishop", "test"];
 	let comps = [Preshop, Shop, Multishop, Test];
-	let currentTab = $state(3);
+	let currentTab = $state(0);
 </script>
 
 <main class="fl">
