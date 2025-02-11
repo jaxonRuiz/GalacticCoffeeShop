@@ -33,10 +33,12 @@ export class MultiShop {
   upgrades: Map<string, number> = new Map();
   upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
   weeklyRecap: { [key: number]: ShopWeekReport } = {};
+  sceneManager: Publisher;
 
-  constructor(timer: Publisher) {
+  constructor(timer: Publisher, sceneManager: Publisher) {
     timer.subscribe(this, "tick");
     timer.subscribe(this, "week");
+    this.sceneManager = sceneManager;
 
     this.shops.push(new Shop(this));
     this.weeklyRecap[this.shops.length - 1] = {
@@ -115,6 +117,11 @@ export class MultiShop {
     if (this.money < 0) {
       // apply debt?
     }
+  }
+
+  endScene() {
+    console.log("multishop endScene()");
+    this.sceneManager.emit("nextScene");
   }
 
   // selected shop actions /////////////////////////////////////////////////////

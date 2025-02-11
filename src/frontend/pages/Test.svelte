@@ -1,10 +1,22 @@
 <script lang="ts">
+  import { currentScene } from "../../backend/game";
+
+  // let cs = currentScene;
+  let cs = $state(currentScene);
 </script>
 
 <main>
-	<script type="module" src="/src/backend/game.ts"></script>
+	<!-- <script type="module" src="/src/backend/game.ts"></script> -->
 
 	<p>jaxon test ground</p>
+  <button
+    onclick={() => {
+      console.log("click");
+      cs.endScene();
+    }}>
+    TEST
+    <!-- cs.endScene(); -->
+  </button>
 
 	<p>lyssa testing</p>
 	<div class="lyssa-testing">

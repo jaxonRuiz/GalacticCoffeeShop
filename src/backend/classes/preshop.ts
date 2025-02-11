@@ -33,6 +33,8 @@ export class Preshop implements ISubscriber {
   // contains list of upgrades (IDs) and their levels
   upgrades: Map<string, number> = new Map();
 
+  sceneManager: Publisher;
+
   // abstracting svelte store from normal usage (allows use of writables in backend)
   // resources
   get money() {
@@ -86,10 +88,11 @@ export class Preshop implements ISubscriber {
     this.w_grindProgress.set(value);
   }
 
-  constructor(timer: Publisher) {
+  constructor(timer: Publisher, sceneManager: Publisher) {
     timer.subscribe(this, "tick");
     timer.subscribe(this, "hour");
     timer.subscribe(this, "week");
+    this.sceneManager = sceneManager;
   }
 
   notify(event: string, data?: any) {
@@ -193,6 +196,11 @@ export class Preshop implements ISubscriber {
   applyCost(cost: number) {
     // if (this.money < cost) return; // flag something? DEBT
     this.money -= cost;
+  }
+
+  endScene() {
+    console.log("preshop endScene()");
+    this.sceneManager.emit("nextScene");
   }
 
   // save/load ////////////////////////////////////////////////////////////
