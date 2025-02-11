@@ -1,4 +1,4 @@
-import { Observer } from "./observer";
+import { Publisher } from "./observer";
 
 const ticksPerHour = 16;
 
@@ -26,10 +26,10 @@ export class Timer {
   month = 1;
   year = 1999; // will have years of 336 days (i refuse to do leap years or async months ):<
   ticker: number;
-  timeEvents: Observer; // dont forget to subscribe relevant classes to this
+  timeEvents: Publisher; // dont forget to subscribe relevant classes to this
 
   constructor() {
-    this.timeEvents = new Observer([
+    this.timeEvents = new Publisher([
       "tick",
       "hour",
       "day",
@@ -92,8 +92,8 @@ export class Timer {
   }
 
   get printableDate() {
-    return `${this.calanderDay}, ${this.monthDay + 1} ${this.month + 1}, ${
-      this.year
-    }`;
+    return `${this.calanderDay}, ${this.monthDay + 1} ${
+      this.month + 1
+    }, ${this.year}`;
   }
 }

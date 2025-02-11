@@ -1,4 +1,4 @@
-import { Observer } from "../systems/observer";
+import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { Shop } from "./shop";
 
@@ -34,7 +34,7 @@ export class MultiShop {
   upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
   weeklyRecap: { [key: number]: ShopWeekReport } = {};
 
-  constructor(timer: Observer) {
+  constructor(timer: Publisher) {
     timer.subscribe(this, "tick");
     timer.subscribe(this, "week");
 

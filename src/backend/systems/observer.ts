@@ -1,4 +1,4 @@
-export class Observer {
+export class Publisher {
   subscribers: Map<string, ISubscriber[]> = new Map();
 
   constructor(eventTypes: string[]) {
@@ -6,23 +6,26 @@ export class Observer {
   }
 
   subscribe(subscriber: ISubscriber, event: string) {
-    if (!this.subscribers.get(event))
+    if (!this.subscribers.get(event)) {
       throw new Error("Event not found in event types");
+    }
     this.subscribers.get(event)!.push(subscriber);
   }
 
   unsubscribe(subscriber: ISubscriber, event: string) {
-    if (!this.subscribers.get(event))
+    if (!this.subscribers.get(event)) {
       throw new Error("Event not found in event types");
+    }
     this.subscribers.set(
       event,
-      this.subscribers.get(event)!.filter((s) => s !== subscriber)
+      this.subscribers.get(event)!.filter((s) => s !== subscriber),
     );
   }
 
   emit(event: string, data?: any) {
-    if (!this.subscribers.get(event))
+    if (!this.subscribers.get(event)) {
       throw new Error("Event not found in event types");
+    }
     this.subscribers
       .get(event)!
       .forEach((subscriber) => subscriber.notify(event, data));

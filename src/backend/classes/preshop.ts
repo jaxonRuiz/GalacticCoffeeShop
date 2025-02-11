@@ -1,4 +1,4 @@
-import { Observer } from "../systems/observer";
+import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 
 export class Preshop implements ISubscriber {
@@ -86,7 +86,7 @@ export class Preshop implements ISubscriber {
     this.w_grindProgress.set(value);
   }
 
-  constructor(timer: Observer) {
+  constructor(timer: Publisher) {
     timer.subscribe(this, "tick");
     timer.subscribe(this, "hour");
     timer.subscribe(this, "week");
@@ -121,7 +121,7 @@ export class Preshop implements ISubscriber {
         this.waitingCustomers += Math.floor(this.customerProgress);
         this.waitingCustomers = Math.min(
           this.waitingCustomers,
-          this.maxCustomers
+          this.maxCustomers,
         );
         this.customerProgress %= 1;
       }
@@ -139,8 +139,8 @@ export class Preshop implements ISubscriber {
 
   // TODO make appeal diminishing effectiveness
   promoteShop() {
-    this.appeal +=
-      this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
+    this.appeal += this.promotionEffectiveness *
+      (1 - this.appeal / this.maxAppeal);
     this.appeal = Math.min(this.appeal, this.maxAppeal);
   }
 
@@ -163,15 +163,11 @@ export class Preshop implements ISubscriber {
       this.groundCoffee += this.coffeePerBean;
       this.grindProgress = -1;
       this.lifetimeGrindBeans++;
-    }
-
-    // if not grinding yet
+    } // if not grinding yet
     else if (this.grindProgress === -1) {
       this.grindProgress = 1;
       this.beans--;
-    }
-
-    // if grinding
+    } // if grinding
     else {
       this.grindProgress++;
     }
