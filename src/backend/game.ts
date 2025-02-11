@@ -4,6 +4,7 @@ import { UpgradeManager } from "./systems/upgradeManager";
 import { Tester } from "./tester";
 import { Publisher } from "./systems/observer";
 import { MultiShop } from "./classes/multiShop";
+import { get, type Writable, writable } from "svelte/store";
 
 // let tester = new Tester();
 // tester.preshopTest01();
@@ -11,7 +12,7 @@ import { MultiShop } from "./classes/multiShop";
 let timer = new Timer();
 let sceneManager = new Publisher(["nextScene"]);
 
-export let currentScene: IScene;
+export let currentScene: Writable<IScene> = writable({} as IScene);
 let sceneWatcher: ISubscriber = {
   notify: (event: string, data?: any) => {
     console.log("default watcher");
@@ -31,7 +32,7 @@ function startPreshop(timer: Timer) {
   console.log("starting preshop");
   let preshopManager = new UpgradeManager("preshop");
   let preshop = new Preshop(timer.timeEvents, sceneManager);
-  currentScene = preshop;
+  currentScene.set(preshop);
 
   sceneManager.unsubscribe(sceneWatcher, "nextScene");
   let preshopWatcher = {
@@ -49,13 +50,12 @@ function startPreshop(timer: Timer) {
 function startMultishop() {
   console.log("multishop started");
   let multiShop = new MultiShop(timer.timeEvents, sceneManager);
-  currentScene = multiShop;
+  currentScene.set(multiShop);
 
   sceneManager.unsubscribe(sceneWatcher, "nextScene");
   let multiShopWatcher = {
     notify: (event: string, data?: any) => {
       if (event === "nextScene") {
-        
         console.log("game over");
       }
     },

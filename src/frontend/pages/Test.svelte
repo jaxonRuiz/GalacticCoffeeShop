@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { get } from "svelte/store";
   import { currentScene } from "../../backend/game";
 
   // let cs = currentScene;
-  let cs = $state(currentScene);
+  let cs = currentScene;
 </script>
 
 <main>
@@ -12,7 +13,7 @@
   <button
     onclick={() => {
       console.log("click");
-      cs.endScene();
+      get(cs).endScene();
     }}>
     TEST
     <!-- cs.endScene(); -->
