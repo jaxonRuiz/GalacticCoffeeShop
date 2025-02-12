@@ -4,7 +4,7 @@ import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
 
-export class SceneManager extends Publisher {
+export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
 
 	currentSceneIndex: number = 0;

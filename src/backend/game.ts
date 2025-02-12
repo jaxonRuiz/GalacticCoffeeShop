@@ -5,26 +5,26 @@ import { Tester } from "./tester";
 import { Publisher } from "./systems/observer";
 import { MultiShop } from "./classes/multiShop";
 import { get, type Writable, writable } from "svelte/store";
-import { SceneManager } from "./systems/sceneManager";
+import { StageManager } from "./systems/stageManager";
 
 // let tester = new Tester();
 // tester.preshopTest01();
 
 let timer = new Timer();
-export let sceneManager = new SceneManager(timer);
+export let sceneManager = new StageManager(timer);
 
 console.log("hello world");
 startGame();
 
 function startGame() {
-	console.log("starting game");
-	sceneManager.nextScene();
+  console.log("starting game");
+  sceneManager.nextScene();
 }
 
 function saveState() {
-	// save state to local storage
+  // save state to local storage
 }
 
 function loadState() {
-	// load state from local storage
+  // load state from local storage
 }

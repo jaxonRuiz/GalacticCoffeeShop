@@ -6,10 +6,10 @@
 	import { Timer } from "../../backend/systems/time";
 	import { UpgradeManager } from "../../backend/systems/upgradeManager";
 	import Dropdown from "../components/Dropdown.svelte";
-	import { SceneManager } from "../../backend/systems/sceneManager";
+	import { StageManager } from "../../backend/systems/sceneManager";
 
 	let timer = new Timer();
-	let smanager = new SceneManager(timer);
+	let smanager = new StageManager(timer);
 	let pshop = new Preshop(timer.timeEvents, smanager);
 	let umanager = new UpgradeManager("preshop");
 
