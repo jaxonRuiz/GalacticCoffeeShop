@@ -17,14 +17,14 @@ console.log("hello world");
 startGame();
 
 function startGame() {
-  console.log("starting game");
-  sceneManager.nextScene();
+	console.log("starting game");
+	sceneManager.nextScene();
 }
 
 function saveState() {
-  // save state to local storage
+	// save state to local storage
 }
 
 function loadState() {
-  // load state from local storage
+	// load state from local storage
 }
