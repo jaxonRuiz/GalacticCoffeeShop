@@ -1,294 +1,302 @@
 import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 
-export class Preshop implements ISubscriber {
-  // resources (setting writable to interact with svelte)
-  // not to be used in backend
-  w_money: Writable<number> = writable(0);
-  w_beans: Writable<number> = writable(5);
-  w_groundCoffee: Writable<number> = writable(0);
-  w_coffeeCups: Writable<number> = writable(0);
-  w_waitingCustomers: Writable<number> = writable(0);
-  w_appeal: Writable<number> = writable(0);
-  w_beanPrice: Writable<number> = writable(5.99);
-  w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
+export class Preshop implements ISubscriber, IScene {
+	// resources (setting writable to interact with svelte)
+	// not to be used in backend
+	w_money: Writable<number> = writable(0);
+	w_beans: Writable<number> = writable(5);
+	w_groundCoffee: Writable<number> = writable(0);
+	w_coffeeCups: Writable<number> = writable(0);
+	w_waitingCustomers: Writable<number> = writable(0);
+	w_appeal: Writable<number> = writable(0);
+	w_beanPrice: Writable<number> = writable(5.99);
+	w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
 
-  // internal stats
-  coffeePrice: number = 3.5;
-  beansPerBuy: number = 4; // how many beans are bought at a time
-  coffeePerBean: number = 5;
-  grindTime: number = 5; // number of times to click to grind a bean
-  customerProgress: number = 0; // progress to next customer
-  promotionEffectiveness: number = 0.1; // current rate of customer generation
-  appealDecay: number = 0.05; // rate of decay of customer appeal
-  maxCustomers: number = 5;
-  maxAppeal: number = 0.7;
-  coffeeQuantity: number = 1; // how many cups of coffee are made per run
+	// internal stats
+	coffeePrice: number = 3.5;
+	beansPerBuy: number = 4; // how many beans are bought at a time
+	coffeePerBean: number = 5;
+	grindTime: number = 5; // number of times to click to grind a bean
+	customerProgress: number = 0; // progress to next customer
+	promotionEffectiveness: number = 0.1; // current rate of customer generation
+	appealDecay: number = 0.05; // rate of decay of customer appeal
+	maxCustomers: number = 5;
+	maxAppeal: number = 0.7;
+	coffeeQuantity: number = 1; // how many cups of coffee are made per run
 
-  // stat counters
-  lifetimeGrindBeans: number = 0;
-  lifetimeCoffeeSold: number = 0;
-  lifetimeCoffeeMade: number = 0;
+	// stat counters
+	lifetimeGrindBeans: number = 0;
+	lifetimeCoffeeSold: number = 0;
+	lifetimeCoffeeMade: number = 0;
 
-  // contains list of upgrades (IDs) and their levels
-  upgrades: Map<string, number> = new Map();
+	// contains list of upgrades (IDs) and their levels
+	upgrades: Map<string, number> = new Map();
 
-  // abstracting svelte store from normal usage (allows use of writables in backend)
-  // resources
-  get money() {
-    return get(this.w_money);
-  }
-  set money(value) {
-    this.w_money.set(value);
-  }
-  get beans() {
-    return get(this.w_beans);
-  }
-  set beans(value) {
-    this.w_beans.set(value);
-  }
-  get groundCoffee() {
-    return get(this.w_groundCoffee);
-  }
-  set groundCoffee(value) {
-    this.w_groundCoffee.set(value);
-  }
-  get coffeeCups() {
-    return get(this.w_coffeeCups);
-  }
-  set coffeeCups(value) {
-    this.w_coffeeCups.set(value);
-  }
-  get waitingCustomers() {
-    return get(this.w_waitingCustomers);
-  }
-  set waitingCustomers(value) {
-    this.w_waitingCustomers.set(value);
-  }
+	sceneManager: Publisher;
 
-  // stats
-  get appeal() {
-    return get(this.w_appeal);
-  }
-  set appeal(value) {
-    this.w_appeal.set(value);
-  }
-  get beanPrice() {
-    return get(this.w_beanPrice);
-  }
-  set beanPrice(value) {
-    this.w_beanPrice.set(value);
-  }
-  get grindProgress() {
-    return get(this.w_grindProgress);
-  }
-  set grindProgress(value) {
-    this.w_grindProgress.set(value);
-  }
+	// abstracting svelte store from normal usage (allows use of writables in backend)
+	// resources
+	get money() {
+		return get(this.w_money);
+	}
+	set money(value) {
+		this.w_money.set(value);
+	}
+	get beans() {
+		return get(this.w_beans);
+	}
+	set beans(value) {
+		this.w_beans.set(value);
+	}
+	get groundCoffee() {
+		return get(this.w_groundCoffee);
+	}
+	set groundCoffee(value) {
+		this.w_groundCoffee.set(value);
+	}
+	get coffeeCups() {
+		return get(this.w_coffeeCups);
+	}
+	set coffeeCups(value) {
+		this.w_coffeeCups.set(value);
+	}
+	get waitingCustomers() {
+		return get(this.w_waitingCustomers);
+	}
+	set waitingCustomers(value) {
+		this.w_waitingCustomers.set(value);
+	}
 
-  constructor(timer: Publisher) {
-    timer.subscribe(this, "tick");
-    timer.subscribe(this, "hour");
-    timer.subscribe(this, "week");
-  }
+	// stats
+	get appeal() {
+		return get(this.w_appeal);
+	}
+	set appeal(value) {
+		this.w_appeal.set(value);
+	}
+	get beanPrice() {
+		return get(this.w_beanPrice);
+	}
+	set beanPrice(value) {
+		this.w_beanPrice.set(value);
+	}
+	get grindProgress() {
+		return get(this.w_grindProgress);
+	}
+	set grindProgress(value) {
+		this.w_grindProgress.set(value);
+	}
 
-  notify(event: string, data?: any) {
-    if (event === "tick") {
-      this.tick();
-    }
-    if (event === "hour") {
-      if (this.waitingCustomers > 0) {
-        this.waitingCustomers--;
-      }
-      // this.decayAppeal();
-    }
-    if (event === "week") {
-      console.log("week end", data);
-      // give weekly recap receipt
-    }
-  }
+	constructor(timer: Publisher, sceneManager: Publisher) {
+		timer.subscribe(this, "tick");
+		timer.subscribe(this, "hour");
+		timer.subscribe(this, "week");
+		this.sceneManager = sceneManager;
+	}
 
-  tick() {
-    this.drawCustomers();
-    this.decayAppeal();
-  }
+	notify(event: string, data?: any) {
+		if (event === "tick") {
+			this.tick();
+		}
+		if (event === "hour") {
+			if (this.waitingCustomers > 0) {
+				this.waitingCustomers--;
+			}
+			// this.decayAppeal();
+		}
+		if (event === "week") {
+			console.log("week end", data);
+			// give weekly recap receipt
+		}
+	}
 
-  drawCustomers() {
-    if (this.appeal > 0) {
-      // customer generation
-      this.customerProgress += this.appeal;
-      if (this.customerProgress >= 1) {
-        this.waitingCustomers += Math.floor(this.customerProgress);
-        this.waitingCustomers = Math.min(
-          this.waitingCustomers,
-          this.maxCustomers,
-        );
-        this.customerProgress %= 1;
-      }
-    }
-  }
+	tick() {
+		this.drawCustomers();
+		this.decayAppeal();
+	}
 
-  decayAppeal() {
-    // appeal decay
-    if (this.appeal > 0.00005) {
-      this.appeal = this.appeal * (1 - this.appealDecay);
-    } else {
-      this.appeal = 0;
-    }
-  }
+	drawCustomers() {
+		if (this.appeal > 0) {
+			// customer generation
+			this.customerProgress += this.appeal;
+			if (this.customerProgress >= 1) {
+				this.waitingCustomers += Math.floor(this.customerProgress);
+				this.waitingCustomers = Math.min(
+					this.waitingCustomers,
+					this.maxCustomers,
+				);
+				this.customerProgress %= 1;
+			}
+		}
+	}
 
-  // TODO make appeal diminishing effectiveness
-  promoteShop() {
-    this.appeal += this.promotionEffectiveness *
-      (1 - this.appeal / this.maxAppeal);
-    this.appeal = Math.min(this.appeal, this.maxAppeal);
-  }
+	decayAppeal() {
+		// appeal decay
+		if (this.appeal > 0.00005) {
+			this.appeal = this.appeal * (1 - this.appealDecay);
+		} else {
+			this.appeal = 0;
+		}
+	}
 
-  sellCoffee() {
-    if (this.coffeeCups <= 0) return;
+	// TODO make appeal diminishing effectiveness
+	promoteShop() {
+		this.appeal += this.promotionEffectiveness *
+			(1 - this.appeal / this.maxAppeal);
+		this.appeal = Math.min(this.appeal, this.maxAppeal);
+	}
 
-    if (this.waitingCustomers > 0) {
-      this.waitingCustomers--;
-      this.coffeeCups--;
-      this.money += this.coffeePrice;
-      this.lifetimeCoffeeSold++;
-    }
-  }
+	sellCoffee() {
+		if (this.coffeeCups <= 0) return;
 
-  grindBeans() {
-    if (this.beans <= 0 && this.grindProgress == -1) return;
+		if (this.waitingCustomers > 0) {
+			this.waitingCustomers--;
+			this.coffeeCups--;
+			this.money += this.coffeePrice;
+			this.lifetimeCoffeeSold++;
+		}
+	}
 
-    // if finished grinding
-    if (this.grindProgress >= this.grindTime) {
-      this.groundCoffee += this.coffeePerBean;
-      this.grindProgress = -1;
-      this.lifetimeGrindBeans++;
-    } // if not grinding yet
-    else if (this.grindProgress === -1) {
-      this.grindProgress = 1;
-      this.beans--;
-    } // if grinding
-    else {
-      this.grindProgress++;
-    }
-  }
+	grindBeans() {
+		if (this.beans <= 0 && this.grindProgress == -1) return;
 
-  makeCoffee() {
-    if (this.groundCoffee <= 0) return;
+		// if finished grinding
+		if (this.grindProgress >= this.grindTime) {
+			this.groundCoffee += this.coffeePerBean;
+			this.grindProgress = -1;
+			this.lifetimeGrindBeans++;
+		} // if not grinding yet
+		else if (this.grindProgress === -1) {
+			this.grindProgress = 1;
+			this.beans--;
+		} // if grinding
+		else {
+			this.grindProgress++;
+		}
+	}
 
-    console.log("making coffee");
-    // possibly add cooldown or timer effect
-    this.groundCoffee -= this.coffeeQuantity;
-    this.coffeeCups += this.coffeeQuantity;
-    this.lifetimeCoffeeMade += this.coffeeQuantity;
-  }
+	makeCoffee() {
+		if (this.groundCoffee <= 0) return;
 
-  buyBeans() {
-    // possibly make bean cost scale or change over time(?)
-    if (this.money < this.beanPrice) return;
-    this.beans += this.beansPerBuy;
-    this.money -= this.beanPrice;
-  }
+		console.log("making coffee");
+		// possibly add cooldown or timer effect
+		this.groundCoffee -= this.coffeeQuantity;
+		this.coffeeCups += this.coffeeQuantity;
+		this.lifetimeCoffeeMade += this.coffeeQuantity;
+	}
 
-  applyCost(cost: number) {
-    // if (this.money < cost) return; // flag something? DEBT
-    this.money -= cost;
-  }
+	buyBeans() {
+		// possibly make bean cost scale or change over time(?)
+		if (this.money < this.beanPrice) return;
+		this.beans += this.beansPerBuy;
+		this.money -= this.beanPrice;
+	}
 
-  // save/load ////////////////////////////////////////////////////////////
-  saveState() {
-    let saveObj: PreshopSave = {
-      money: this.money,
-      beans: this.beans,
-      groundCoffee: this.groundCoffee,
-      coffeeCups: this.coffeeCups,
-      waitingCustomers: this.waitingCustomers,
-      appeal: this.appeal,
-      beanPrice: this.beanPrice,
-      grindProgress: this.grindProgress,
+	applyCost(cost: number) {
+		// if (this.money < cost) return; // flag something? DEBT
+		this.money -= cost;
+	}
 
-      coffeePrice: this.coffeePrice,
-      beansPerBuy: this.beansPerBuy,
-      coffeePerBean: this.coffeePerBean,
-      grindTime: this.grindTime,
-      promotionEffectiveness: this.promotionEffectiveness,
-      maxCustomers: this.maxCustomers,
-      maxAppeal: this.maxAppeal,
-      coffeeQuantity: this.coffeeQuantity,
+	endScene() {
+		console.log("preshop endScene()");
+		this.sceneManager.emit("nextScene");
+	}
 
-      lifetimeGrindBeans: this.lifetimeGrindBeans,
-      lifetimeCoffeeSold: this.lifetimeCoffeeSold,
-      lifetimeCoffeeMade: this.lifetimeCoffeeMade,
+	// save/load ////////////////////////////////////////////////////////////
+	saveState() {
+		let saveObj: PreshopSave = {
+			money: this.money,
+			beans: this.beans,
+			groundCoffee: this.groundCoffee,
+			coffeeCups: this.coffeeCups,
+			waitingCustomers: this.waitingCustomers,
+			appeal: this.appeal,
+			beanPrice: this.beanPrice,
+			grindProgress: this.grindProgress,
 
-      upgrades: {},
-    };
+			coffeePrice: this.coffeePrice,
+			beansPerBuy: this.beansPerBuy,
+			coffeePerBean: this.coffeePerBean,
+			grindTime: this.grindTime,
+			promotionEffectiveness: this.promotionEffectiveness,
+			maxCustomers: this.maxCustomers,
+			maxAppeal: this.maxAppeal,
+			coffeeQuantity: this.coffeeQuantity,
 
-    for (let [key, value] of this.upgrades) {
-      saveObj.upgrades[key] = value;
-    }
+			lifetimeGrindBeans: this.lifetimeGrindBeans,
+			lifetimeCoffeeSold: this.lifetimeCoffeeSold,
+			lifetimeCoffeeMade: this.lifetimeCoffeeMade,
 
-    localStorage.setItem("preshop", JSON.stringify(saveObj));
-  }
+			upgrades: {},
+		};
 
-  loadState() {
-    const rawJSON = localStorage.getItem("preshop");
+		for (let [key, value] of this.upgrades) {
+			saveObj.upgrades[key] = value;
+		}
 
-    if (rawJSON === null) return;
+		localStorage.setItem("preshop", JSON.stringify(saveObj));
+	}
 
-    const state: PreshopSave = JSON.parse(rawJSON);
+	loadState() {
+		const rawJSON = localStorage.getItem("preshop");
 
-    this.upgrades = new Map(Object.entries(state.upgrades));
-    this.money = state.money;
-    this.beans = state.beans;
-    this.groundCoffee = state.groundCoffee;
-    this.coffeeCups = state.coffeeCups;
-    this.waitingCustomers = state.waitingCustomers;
-    this.appeal = state.appeal;
-    this.beanPrice = state.beanPrice;
-    this.grindProgress = state.grindProgress;
+		if (rawJSON === null) return;
 
-    this.coffeePrice = state.coffeePrice;
-    this.beansPerBuy = state.beansPerBuy;
-    this.coffeePerBean = state.coffeePerBean;
-    this.grindTime = state.grindTime;
-    this.promotionEffectiveness = state.promotionEffectiveness;
-    this.maxCustomers = state.maxCustomers;
-    this.customerProgress = 0;
-    this.maxAppeal = state.maxAppeal;
-    this.coffeeQuantity = state.coffeeQuantity;
+		const state: PreshopSave = JSON.parse(rawJSON);
 
-    this.lifetimeGrindBeans = state.lifetimeGrindBeans;
-    this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
-    this.lifetimeCoffeeMade = state.lifetimeCoffeeMade;
-  }
+		this.upgrades = new Map(Object.entries(state.upgrades));
+		this.money = state.money;
+		this.beans = state.beans;
+		this.groundCoffee = state.groundCoffee;
+		this.coffeeCups = state.coffeeCups;
+		this.waitingCustomers = state.waitingCustomers;
+		this.appeal = state.appeal;
+		this.beanPrice = state.beanPrice;
+		this.grindProgress = state.grindProgress;
 
-  clearState() {
-    localStorage.removeItem("preshop");
-  }
+		this.coffeePrice = state.coffeePrice;
+		this.beansPerBuy = state.beansPerBuy;
+		this.coffeePerBean = state.coffeePerBean;
+		this.grindTime = state.grindTime;
+		this.promotionEffectiveness = state.promotionEffectiveness;
+		this.maxCustomers = state.maxCustomers;
+		this.customerProgress = 0;
+		this.maxAppeal = state.maxAppeal;
+		this.coffeeQuantity = state.coffeeQuantity;
+
+		this.lifetimeGrindBeans = state.lifetimeGrindBeans;
+		this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
+		this.lifetimeCoffeeMade = state.lifetimeCoffeeMade;
+	}
+
+	clearState() {
+		localStorage.removeItem("preshop");
+	}
 }
 
 interface PreshopSave {
-  money: number;
-  beans: number;
-  groundCoffee: number;
-  coffeeCups: number;
-  waitingCustomers: number;
-  appeal: number;
-  beanPrice: number;
-  grindProgress: number;
+	money: number;
+	beans: number;
+	groundCoffee: number;
+	coffeeCups: number;
+	waitingCustomers: number;
+	appeal: number;
+	beanPrice: number;
+	grindProgress: number;
 
-  coffeePrice: number;
-  beansPerBuy: number;
-  coffeePerBean: number;
-  grindTime: number;
-  promotionEffectiveness: number;
-  maxCustomers: number;
-  maxAppeal: number;
-  coffeeQuantity: number;
+	coffeePrice: number;
+	beansPerBuy: number;
+	coffeePerBean: number;
+	grindTime: number;
+	promotionEffectiveness: number;
+	maxCustomers: number;
+	maxAppeal: number;
+	coffeeQuantity: number;
 
-  lifetimeGrindBeans: number;
-  lifetimeCoffeeSold: number;
-  lifetimeCoffeeMade: number;
+	lifetimeGrindBeans: number;
+	lifetimeCoffeeSold: number;
+	lifetimeCoffeeMade: number;
 
-  upgrades: { [key: string]: number };
+	upgrades: { [key: string]: number };
 }

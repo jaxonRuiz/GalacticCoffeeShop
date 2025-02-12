@@ -3,30 +3,28 @@ import { Timer } from "./systems/time";
 import { UpgradeManager } from "./systems/upgradeManager";
 import { Tester } from "./tester";
 import { Publisher } from "./systems/observer";
+import { MultiShop } from "./classes/multiShop";
+import { get, type Writable, writable } from "svelte/store";
+import { SceneManager } from "./systems/sceneManager";
 
-let tester = new Tester();
-tester.preshopTest01();
+// let tester = new Tester();
+// tester.preshopTest01();
+
 let timer = new Timer();
-let gameObserver = new Publisher(["nextScene"]);
-let currentScene: string;
+export let sceneManager = new SceneManager(timer);
+
+console.log("hello world");
+startGame();
 
 function startGame() {
-  currentScene = "preshop";
-  startPreshop(timer);
-}
-
-function startPreshop(timer: Timer) {
-  let preshop = new Preshop(timer.timeEvents);
-  let preshopManager = new UpgradeManager("preshop");
-}
-
-function startMultishop() {
+	console.log("starting game");
+	sceneManager.nextScene();
 }
 
 function saveState() {
-  // save state to local storage
+	// save state to local storage
 }
 
 function loadState() {
-  // load state from local storage
+	// load state from local storage
 }
