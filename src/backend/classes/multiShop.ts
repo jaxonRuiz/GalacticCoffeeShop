@@ -2,7 +2,7 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { Shop } from "./shop";
 
-export class MultiShop {
+export class MultiShop implements ISubscriber, IScene {
   // writable resources
   w_money: Writable<number> = writable(0);
   w_selectedShop: Writable<Shop | null> = writable(null);
