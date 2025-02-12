@@ -6,18 +6,26 @@
 	import { Timer } from "../../backend/systems/time";
 	import { UpgradeManager } from "../../backend/systems/upgradeManager";
 	import Dropdown from "../components/Dropdown.svelte";
+	import { SceneManager } from "../../backend/systems/sceneManager";
 
 	let timer = new Timer();
-	let pshop = new Preshop(timer.timeEvents);
-	let manager = new UpgradeManager("preshop");
+	let smanager = new SceneManager(timer);
+	let pshop = new Preshop(timer.timeEvents, smanager);
+	let umanager = new UpgradeManager("preshop");
 
 	// for upgrades
 	const upgs = upgradeJSON["preshop"];
+	const upgs_cost = $state(
+		Object.keys(upgs).reduce((costs: { [key: string]: number }, key) => {
+			costs[key] = upgs[key].cost;
+			return costs;
+		}, {})
+	);
 
 	// upgrade checker on interval
-	let availableUpgrades = $state(manager.checkUpgrade(pshop));
+	let availableUpgrades = $state(umanager.checkUpgrade(pshop));
 	setInterval(() => {
-		availableUpgrades = manager.checkUpgrade(pshop);
+		availableUpgrades = umanager.checkUpgrade(pshop);
 	}, 1000);
 
 	// define variables
@@ -33,16 +41,16 @@
 
 {#snippet upgrade(upgkey: string)}
 	<button
-		disabled={$money < upgs[upgkey].cost ? true : false}
+		disabled={$money < upgs_cost[upgkey] ? true : false}
 		onclick={() => {
-			console.log("clicked", upgkey);
-			manager.applyUpgrade(upgkey, pshop);
-			availableUpgrades = manager.checkUpgrade(pshop);
+			umanager.applyUpgrade(upgkey, pshop);
+			upgs_cost[upgkey] = umanager.getCost(upgkey, pshop);
+			availableUpgrades = umanager.checkUpgrade(pshop);
 		}}
 	>
 		<h3>{upgs[upgkey].name}</h3>
 		<p>{upgs[upgkey].description}</p>
-		<p>{$t("cost_stat")}: ${upgs[upgkey].cost.toFixed(2)}</p>
+		<p>{$t("cost_stat")}: ${upgs_cost[upgkey].toFixed(2)}</p>
 	</button>
 {/snippet}
 

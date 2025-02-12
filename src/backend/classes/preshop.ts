@@ -179,11 +179,11 @@ export class Preshop implements ISubscriber, IScene {
 	makeCoffee() {
 		if (this.groundCoffee <= 0) return;
 
-		console.log("making coffee");
 		// possibly add cooldown or timer effect
-		this.groundCoffee -= this.coffeeQuantity;
-		this.coffeeCups += this.coffeeQuantity;
-		this.lifetimeCoffeeMade += this.coffeeQuantity;
+		const bottleneck = Math.min(this.groundCoffee, this.coffeeQuantity);
+		this.groundCoffee -= bottleneck;
+		this.coffeeCups += bottleneck;
+		this.lifetimeCoffeeMade += bottleneck;
 	}
 
 	buyBeans() {
