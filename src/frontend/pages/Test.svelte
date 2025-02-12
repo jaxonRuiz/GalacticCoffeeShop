@@ -3,7 +3,7 @@
   import { sceneManager } from "../../backend/game";
 
   // let cs = currentScene;
-  let cs = sceneManager.w_currentScene;
+  // let cs = sceneManager.w_currentScene;
 </script>
 
 <main>
@@ -14,7 +14,7 @@
     onclick={() => {
       console.log("click");
 
-      get(cs).endScene();
+      // get(cs).endScene();
 
     }}>
     TEST

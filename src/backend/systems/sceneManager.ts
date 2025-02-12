@@ -5,13 +5,7 @@ import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
 
 export class SceneManager extends Publisher {
-  w_currentScene: Writable<IScene> = writable({} as IScene);
-  get currentScene() {
-    return get(this.w_currentScene);
-  }
-  set currentScene(value) {
-    this.w_currentScene.set(value);
-  }
+  currentScene: IScene = {} as IScene;
 
   currentSceneIndex: number = 0;
   timer: Timer;
