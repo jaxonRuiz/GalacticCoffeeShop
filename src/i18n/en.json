@@ -20,5 +20,6 @@
 	"cost_stat": "Cost",
 	"emptyCups_stat": "Empty Cups",
 	"cleaning_title": "Cleaning Shop",
-	"restocking_title": "Restocking"
+	"restocking_title": "Restocking",
+	"extractMoney_btn": "Extract Money from Shops"
 }
