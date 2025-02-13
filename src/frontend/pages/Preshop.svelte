@@ -6,7 +6,7 @@
 	import { Timer } from "../../backend/systems/time";
 	import { UpgradeManager } from "../../backend/systems/upgradeManager";
 	import Dropdown from "../components/Dropdown.svelte";
-	import { StageManager } from "../../backend/systems/sceneManager";
+	import { StageManager } from "../../backend/systems/stageManager";
 
 	let timer = new Timer();
 	let smanager = new StageManager(timer);
@@ -59,7 +59,7 @@
 		<div class="col">
 			<h1>{$t("preshop_title")}</h1>
 			<p>{$t("money_stat")}: ${$money.toFixed(2)}</p>
-			<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2) + "%"}</p>
+			<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 			<p>{$t("sellableCoffee_stat")}: {$coffee}</p>
 		</div>
 	</div>
@@ -88,7 +88,7 @@
 			</Dropdown>
 
 			<Dropdown title={$t("promoting_title")}>
-				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2) + "%"}</p>
+				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 				<button
 					onclick={() => {
 						pshop.promoteShop();
