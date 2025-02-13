@@ -5,7 +5,7 @@ import { Tester } from "./tester";
 import { Publisher } from "./systems/observer";
 import { MultiShop } from "./classes/multiShop";
 import { get, type Writable, writable } from "svelte/store";
-import { StageManager } from "./systems/sceneManager";
+import { StageManager } from "./systems/stageManager";
 
 // let tester = new Tester();
 // tester.preshopTest01();
