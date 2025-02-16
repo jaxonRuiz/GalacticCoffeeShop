@@ -190,7 +190,7 @@ export class Shop {
 		}
 	}
 
-	restock(multiShop: MultiShop) {
+	restock() {
 		// !!! money is taken by getExpenses instead.
 		// multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
 		// multiShop.money -= this.restockSheet["emptyCups"] * this.cupsPrice;
