@@ -3,8 +3,8 @@ import { get, type Writable, writable } from "svelte/store";
 
 export class Shop {
 	// writable resources
-	w_beans: Writable<number> = writable(0);
-	w_emptyCups: Writable<number> = writable(0);
+	w_beans: Writable<number> = writable(5);
+	w_emptyCups: Writable<number> = writable(5);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
@@ -56,10 +56,10 @@ export class Shop {
 	}
 
 	// variable containers ///////////////////////////////////////////////////////
-	restockSheet: { [key: string]: number } = {
+	restockSheet: Writable<{ [key: string]: number }> = writable({
 		beans: 0,
 		emptyCups: 0,
-	};
+	});
 	workerRates: { [key: string]: number } = {
 		baristaProductivity: 0.2,
 		serverProductivity: 0.5,
@@ -130,7 +130,9 @@ export class Shop {
 		this.roles.forEach((role: Role) => {
 			role.update(this, this.tickCounter);
 		});
+
 		this.decayAppeal();
+		this.drawCustomers();
 
 		// progress updaters
 		// may limit throughput to 1 thing per tick, maybe fix
@@ -163,6 +165,21 @@ export class Shop {
 		}
 	}
 
+	drawCustomers() {
+		if (this.appeal > 0) {
+			// customer generation
+			this.progressTrackers["customerProgress"] += this.appeal;
+			if (this.progressTrackers["customerProgress"] >= 1) {
+				this.waitingCustomers += Math.floor(this.progressTrackers["customerProgress"]);
+				this.waitingCustomers = Math.min(
+					this.waitingCustomers,
+					this.maxCustomers,
+				);
+				this.progressTrackers["customerProgress"] %= 1;
+			}
+		}
+	}
+
 	// TODO check
 	applyCost(cost: number) {
 		this.money -= cost;
@@ -178,8 +195,8 @@ export class Shop {
 		// multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
 		// multiShop.money -= this.restockSheet["emptyCups"] * this.cupsPrice;
 
-		this.beans += this.restockSheet["beans"];
-		this.emptyCups += this.restockSheet["emptyCups"];
+		this.beans += get(this.restockSheet)["beans"];
+		this.emptyCups += get(this.restockSheet)["emptyCups"];
 	}
 
 	getTotalExpenses() {

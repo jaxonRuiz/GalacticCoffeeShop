@@ -10,17 +10,17 @@
   let timer = new Timer();
   let smanager = new StageManager(timer);
   let mshop = new MultiShop(timer.timeEvents, smanager);
-  let sshop = new Shop(mshop);
+  let sshop = mshop.shops[0];
   let umanager = new UpgradeManager("shop"); //TODO
 
-	// define variables
-	let beans = sshop.w_beans;
-	let appeal = sshop.w_appeal;
-	let emptyCups = sshop.w_emptyCups;
-	let coffeeCups = sshop.w_coffeeCups;
-	let customers = sshop.w_waitingCustomers;
-	let money = sshop.w_money;
-	let cleanness = sshop.w_cleanness;
+  // define variables
+  let beans = sshop.w_beans;
+  let appeal = sshop.w_appeal;
+  let emptyCups = sshop.w_emptyCups;
+  let coffeeCups = sshop.w_coffeeCups;
+  let customers = sshop.w_waitingCustomers;
+  let money = sshop.w_money;
+  let cleanness = sshop.w_cleanness;
 </script>
 
 <main class="shop container">
@@ -62,11 +62,11 @@
 
       <Dropdown title={$t("cleaning_title")}>
         <p>{$t("cleanness_stat")}: {$cleanness}</p>
-				<button>{$t("clean_btn")}</button>
+        <button>{$t("clean_btn")}</button>
       </Dropdown>
 
       <Dropdown title={$t("restocking_title")}>
-				<!-- TODO -->
+        <!-- TODO -->
         <p>smth</p>
       </Dropdown>
     </div>
