@@ -247,7 +247,7 @@ export class Shop {
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
-	addWorker(role: string, multiShop: MultiShop) {
+	addWorker(role: string) {
 		if (!this.roles.has(role)) throw new Error("Role does not exist");
 		let roleObj = this.roles.get(role);
 		if (roleObj!.numWorkers < roleObj!.maxWorkers) {

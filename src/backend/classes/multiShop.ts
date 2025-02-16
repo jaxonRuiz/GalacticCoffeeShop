@@ -55,6 +55,8 @@ export class MultiShop implements ISubscriber, IScene {
 		if (event === "week") {
 			this.withdrawAll();
 			this.applyExpenses();
+			this.shops.forEach((shop) => shop.restock());
+
 
 			if (this.money < 0) {
 				console.log("debt boy");
@@ -149,7 +151,7 @@ export class MultiShop implements ISubscriber, IScene {
 
 	localAddWorker(role: string) {
 		if (!this.selectedShop) return;
-		this.selectedShop.addWorker(role, this);
+		this.selectedShop.addWorker(role);
 	}
 
 	localRemoveWorker(role: string) {
