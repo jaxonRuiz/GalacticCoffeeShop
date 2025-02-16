@@ -6,6 +6,7 @@
 	import { UpgradeManager } from "../../backend/systems/upgradeManager";
 	import Dropdown from "../components/Dropdown.svelte";
 	import { t } from "svelte-i18n";
+  import Worker from "../components/Worker.svelte";
 
 	let timer = new Timer();
 	let smanager = new StageManager(timer);
@@ -45,6 +46,7 @@
 						sshop.produceCoffee();
 					}}>{$t("makeCoffee_btn")}</button
 				>
+				<Worker worker="barista" {sshop} />
 			</Dropdown>
 
 			<Dropdown title={$t("selling_title")}>
@@ -61,6 +63,7 @@
 						sshop.sellCoffee();
 					}}>{$t("sellCoffee_btn")}</button
 				>
+				<Worker worker="server" {sshop} />
 			</Dropdown>
 
 			<Dropdown title={$t("cleaning_title")}>
@@ -88,5 +91,6 @@
 <style>
 	.shop.right > div {
 		width: 50%;
+		overflow-y: scroll;
 	}
 </style>

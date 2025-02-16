@@ -30,6 +30,6 @@
 	"hireWorker_btn": "Hire",
 	"fireWorker_btn": "Fire",
 
-	"server_worker": "Server",
-	"barista_worker": "Barista"
+	"server_worker": "Server(s)",
+	"barista_worker": "Barista(s)"
 }

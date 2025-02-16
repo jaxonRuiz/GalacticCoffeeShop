@@ -232,7 +232,7 @@ export class Shop {
 	}
 
 	sellCoffee() {
-		if (this.waitingCustomers >= 1) {
+		if (this.waitingCustomers >= 1 && this.coffeeCups >= 1) {
 			this.coffeeCups--;
 			this.waitingCustomers--;
 			this.money += this.coffeePrice;
