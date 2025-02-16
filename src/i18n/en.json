@@ -23,5 +23,6 @@
 	"restocking_title": "Restocking",
 	"extractMoney_btn": "Extract Money from Shops",
 	"clean_btn": "Clean Shop",
-	"cleanness_stat": "Cleanness"
+	"cleanness_stat": "Cleanness",
+	"restock_btn": "Restock"
 }

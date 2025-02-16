@@ -10,23 +10,28 @@
 	let testing = $state(false); // open testing window
 
 	function on_key_down(event: KeyboardEvent) {
-		console.log(event.key);
 		if (event.key === "t") {
 			testing = !testing;
 		}
 	}
 </script>
 
-<svelte:window
-	onkeydown={on_key_down}
-/>
+<svelte:window onkeydown={on_key_down} />
 
 <main class="fl">
 	<div id="test-window" style="display: {testing ? 'grid' : 'none'};">
 		<div id="tabs" class="col">
 			{#each tabs as tab, i}
 				<label class="tab">
-					<input type="radio" name="tab" value={i} bind:group={currentTab} />
+					<input
+						type="radio"
+						name="tab"
+						value={i}
+						bind:group={currentTab}
+						onclick={() => {
+							testing = false;
+						}}
+					/>
 					<p>{tab}</p>
 				</label>
 			{/each}
@@ -45,7 +50,7 @@
 	label:has(input:checked) {
 		background-color: #242424;
 	}
-	 
+
 	#test-window {
 		position: fixed;
 		background-color: #00000088;

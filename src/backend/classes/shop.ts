@@ -54,11 +54,17 @@ export class Shop {
 	set cleanness(value) {
 		this.w_cleanness.set(value);
 	}
+	set restockSheet(value: { [key: string]: number }) {
+		this.w_restockSheet.set(value);
+	}
+	get restockSheet() {
+		return get(this.w_restockSheet);
+	}
 
 	// variable containers ///////////////////////////////////////////////////////
-	restockSheet: Writable<{ [key: string]: number }> = writable({
-		beans: 0,
-		emptyCups: 0,
+	w_restockSheet: Writable<{ [key: string]: number }> = writable({
+		beans: 5,
+		emptyCups: 5,
 	});
 	workerRates: { [key: string]: number } = {
 		baristaProductivity: 0.2,
@@ -195,8 +201,8 @@ export class Shop {
 		// multiShop.money -= this.restockSheet["beans"] * this.beansPrice;
 		// multiShop.money -= this.restockSheet["emptyCups"] * this.cupsPrice;
 
-		this.beans += get(this.restockSheet)["beans"];
-		this.emptyCups += get(this.restockSheet)["emptyCups"];
+		this.beans += this.restockSheet["beans"];
+		this.emptyCups += this.restockSheet["emptyCups"];
 	}
 
 	getTotalExpenses() {
