@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { slide } from 'svelte/transition';
   let { children, title, classes = []} = $props();
 
   // true = open, false = closed
@@ -9,9 +10,11 @@
   <button class="dpdn" onclick={() => (s = !s)}>
     <h1>{title} <span>{s? '^':'v'}</span></h1>
   </button>
-  <div class="dpdn content col {s ? 'open' : ''} {classes.join(' ')}">
-    {@render children()}
-  </div>
+  {#if s}
+    <div transition:slide class="dpdn content col {classes.join(' ')}">
+      {@render children()}
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -20,11 +23,7 @@
     /* covered in shop.css */
     /* transition: max-height 0.2s linear; */
     &.content {
-      max-height: 0;
       overflow-y: hidden;
-      &.open {
-        max-height: 50vh;
-      }
     }
 
     button {
