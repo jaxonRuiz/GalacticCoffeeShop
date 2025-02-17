@@ -80,7 +80,7 @@
 				>
 				<p>{$t("groundedBeans_stat")}: {$groundedBeans}</p>
 				<button
-					disabled={$groundedBeans > 0 ? false : true}
+					disabled={$groundedBeans > 1 ? false : true}
 					onclick={() => {
 						pshop.makeCoffee();
 					}}>{$t("makeCoffee_btn")}</button
