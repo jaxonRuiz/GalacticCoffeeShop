@@ -4,7 +4,7 @@ import { get, type Writable, writable } from "svelte/store";
 export class Preshop implements ISubscriber, IScene {
 	// resources (setting writable to interact with svelte)
 	// not to be used in backend
-	w_money: Writable<number> = writable(0);
+	w_money: Writable<number> = writable(100000);
 	w_beans: Writable<number> = writable(5);
 	w_groundCoffee: Writable<number> = writable(0);
 	w_coffeeCups: Writable<number> = writable(0);
@@ -15,8 +15,9 @@ export class Preshop implements ISubscriber, IScene {
 
 	// internal stats
 	coffeePrice: number = 3.5;
-	beansPerBuy: number = 4; // how many beans are bought at a time
-	coffeePerBean: number = 5;
+	beansPerBuy: number = 1; // how many beans are bought at a time
+	coffeePerBean: number = 2.5;
+	grindQuantity: number = 1; // how many beans are ground at a time
 	grindTime: number = 5; // number of times to click to grind a bean
 	customerProgress: number = 0; // progress to next customer
 	promotionEffectiveness: number = 0.1; // current rate of customer generation
@@ -163,13 +164,13 @@ export class Preshop implements ISubscriber, IScene {
 
 		// if finished grinding
 		if (this.grindProgress >= this.grindTime) {
-			this.groundCoffee += this.coffeePerBean;
+			this.groundCoffee += this.coffeePerBean * this.grindQuantity;
 			this.grindProgress = -1;
 			this.lifetimeGrindBeans++;
 		} // if not grinding yet
 		else if (this.grindProgress === -1) {
 			this.grindProgress = 1;
-			this.beans--;
+			this.beans -= 1 * this.grindQuantity;
 		} // if grinding
 		else {
 			this.grindProgress++;
@@ -177,7 +178,7 @@ export class Preshop implements ISubscriber, IScene {
 	}
 
 	makeCoffee() {
-		if (this.groundCoffee <= 0) return;
+		if (this.groundCoffee < 1) return;
 
 		// possibly add cooldown or timer effect
 		const bottleneck = Math.min(this.groundCoffee, this.coffeeQuantity);

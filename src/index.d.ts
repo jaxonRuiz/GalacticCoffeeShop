@@ -43,7 +43,12 @@ interface IShop {
 
   minimumAppeal?: number;
   coffeeQuantity?: number;
+  grindQuantity: number;
+  lifetimeCoffeeSold: number;
+  lifetimeCoffeeMade: number;
+  lifetimeGrindBeans: number;
   shops?: IShop[];
+  endScene(): void;
 }
 
 interface IScene {
