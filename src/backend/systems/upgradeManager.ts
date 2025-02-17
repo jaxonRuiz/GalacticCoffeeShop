@@ -74,14 +74,16 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.5,
 			image: "crank_grinder.jpg",
 		},
+
 		deluxe_coffee_pot: {
 			name: "Deluxe Coffee Pot",
-			description: "Make more sellable coffee at once",
+			description: "Make more sellable coffee at once, at the cost of longer time to make",
 			unlock_condition: (_shop) => {
 				return true;
 			},
 			upgrade: (shop) => {
-				shop.coffeeQuantity! += 1;
+				shop.coffeeQuantity! += 0.5;
+				shop.makeCoffeeCooldown += 500;
 			},
 			maxLevel: 3,
 			cost: 13,
@@ -95,11 +97,11 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 1;
 			},
 			upgrade: (shop) => {
-				shop.coffeePerBean += 1;
+				shop.coffeePerBean += 0.5;
 			},
-			maxLevel: 2,
-			cost: 10,
-			costMultiplier: 1.2,
+			maxLevel: 3,
+			cost: 15,
+			costMultiplier: 1.7,
 			image: "coffee_grind_catcher.jpg",
 		},
 		multi_grinder: {
@@ -138,17 +140,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		stand_sign: {
 			name: "Stand Sign",
-			description: "Invest in a sigh for your coffee stand. Passively draw customer interest!",
+			description: "Invest in a sigh for your coffee stand. Passively draw customer interest, and increase maximum appeal!",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold >= 10;
 			},
 			upgrade: (shop) => {
 				let level = (shop.upgrades.get("stand_sign") ?? 0);
 				let minAppeal = [0.1, 0.2, 0.3];
-				shop.minimumAppeal = minAppeal[level];
+				shop.minAppeal = minAppeal[level];
+				shop.maxAppeal! += 0.2;
 			},
 			maxLevel: 3,
-			cost: 40,
+			cost: 60,
 			costMultiplier: 1.5,
 			image: "stand_sign.jpg",
 		},
@@ -156,7 +159,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			name: "Promotional Posters",
 			description: "Attract more customers per promotion with promotional posters",
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 10;
+				return _shop.lifetimeCoffeeSold >= 1;
 			},
 			upgrade: (shop) => {
 				shop.promotionEffectiveness += 0.08;
@@ -166,61 +169,88 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.3,
 			image: "promotional_posters.jpg",
 		},
-
+		express_coffee_maker: {
+			name: "Express Coffee Maker",
+			description: "Speed up the production time of coffee",
+			unlock_condition: (_shop) => {
+				return _shop.lifetimeCoffeeMade >= 10;
+			},
+			upgrade: (shop) => {
+				shop.makeCoffeeCooldown -= 500;
+			},
+			maxLevel: 3,
+			cost: 40,
+			costMultiplier: 1.2,
+			image: "express_coffee_maker.jpg",
+		},
+		additional_coffee_drips: {
+			name: "Additional Coffee Drips",
+			description: "Make more cups of sellable coffee per session, without increasing production time",
+			unlock_condition: (_shop) => {
+				return _shop.lifetimeCoffeeSold >= 5;
+			},
+			upgrade: (shop) => {
+				shop.coffeeQuantity! += 1;
+			},
+			maxLevel: 2,
+			cost: 100,
+			costMultiplier: 1.3,
+			image: "additional_coffee_drips.jpg",
+		},
 
 		buy_coffee_shop: {
-				name: "Buy Coffee Shop",
-				description: "Rent land to start a proper coffee shop! Open new managerial options and coffee creation options!",
-				unlock_condition: (_shop) => {
-					return true;
-				},
-				upgrade: (shop) => {
-					shop.endScene();
-				},
-				maxLevel: 1,
-				cost: 100,
-				costMultiplier: 1,
-				image: "buy_coffee_shop.jpg",
-			}
-		},
-
-		localShop: {
-			flashy_sign: {
-				name: "Flashy Sign",
-				description: "Passively attract more customers to your storefront!",
-				unlock_condition: (_shop) => {
-					return true;
-				},
-				upgrade: (shop, level) => {
-					let statLevels = [0, 1, 0.5, 0.5];
-					shop.minimumAppeal! += statLevels[level];
-					shop.appealDecay *= 0.97;
-					if (shop.appeal < shop.minimumAppeal!)
-						shop.appeal = shop.minimumAppeal!;
-				},
-				maxLevel: 3,
-				cost: 300,
-				costMultiplier: 1.2,
-				image: "flashy_sign.jpg",
+			name: "Buy Coffee Shop",
+			description: "Rent land to start a proper coffee shop! Open new managerial options and coffee creation options!",
+			unlock_condition: (_shop) => {
+				return true;
 			},
-		},
-
-		multiShop: {
-			cohesive_branding: {
-				name: "Cohesive Branding",
-				description: "Increase appeal of all shops",
-				unlock_condition: (multishop) => {
-					return multishop.shops!.length > 1; // maybe change to 2 later
-				},
-				upgrade: (shop) => {
-					shop.minimumAppeal! += 0.2;
-					shop.promotionEffectiveness += 0.1;
-				},
-				flags: ["applyToChildren"],
-				maxLevel: undefined,
-				cost: 1000,
-				costMultiplier: 1.5,
-				image: "cohesive_branding.jpg",
+			upgrade: (shop) => {
+				shop.endScene();
 			},
+			maxLevel: 1,
+			cost: 100,
+			costMultiplier: 1,
+			image: "buy_coffee_shop.jpg",
+		}
+	},
+
+	localShop: {
+		flashy_sign: {
+			name: "Flashy Sign",
+			description: "Passively attract more customers to your storefront!",
+			unlock_condition: (_shop) => {
+				return true;
+			},
+			upgrade: (shop, level) => {
+				let statLevels = [0, 1, 0.5, 0.5];
+				shop.minAppeal! += statLevels[level];
+				shop.appealDecay *= 0.97;
+				if (shop.appeal < shop.minAppeal!)
+					shop.appeal = shop.minAppeal!;
+			},
+			maxLevel: 3,
+			cost: 300,
+			costMultiplier: 1.2,
+			image: "flashy_sign.jpg",
 		},
-	};
+	},
+
+	multiShop: {
+		cohesive_branding: {
+			name: "Cohesive Branding",
+			description: "Increase appeal of all shops",
+			unlock_condition: (multishop) => {
+				return multishop.shops!.length > 1; // maybe change to 2 later
+			},
+			upgrade: (shop) => {
+				shop.minAppeal! += 0.2;
+				shop.promotionEffectiveness += 0.1;
+			},
+			flags: ["applyToChildren"],
+			maxLevel: undefined,
+			cost: 1000,
+			costMultiplier: 1.5,
+			image: "cohesive_branding.jpg",
+		},
+	},
+};

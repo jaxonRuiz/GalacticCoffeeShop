@@ -84,7 +84,7 @@ export class Shop {
 	totalWorkers: number = 0;
 	maxCustomers: number = 7;
 	promotionEffectiveness: number = 0.2;
-	minimumAppeal: number = 0.1;
+	minAppeal: number = 0.1;
 	maxAppeal: number = 2;
 	appealDecay: number = 0.05;
 
@@ -164,10 +164,10 @@ export class Shop {
 	// TODO make cleanness affect appeal decay
 	decayAppeal() {
 		// appeal decay
-		if (this.appeal > this.minimumAppeal) {
+		if (this.appeal > this.minAppeal) {
 			this.appeal = this.appeal * (1 - this.appealDecay);
 		} else {
-			this.appeal = this.minimumAppeal;
+			this.appeal = this.minAppeal;
 		}
 	}
 

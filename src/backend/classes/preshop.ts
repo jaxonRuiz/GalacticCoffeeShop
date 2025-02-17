@@ -1,5 +1,6 @@
 import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
+import { msPerTick } from "../systems/time";
 
 export class Preshop implements ISubscriber, IScene {
 	// resources (setting writable to interact with svelte)
@@ -12,6 +13,8 @@ export class Preshop implements ISubscriber, IScene {
 	w_appeal: Writable<number> = writable(0);
 	w_beanPrice: Writable<number> = writable(5.99);
 	w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
+	w_canMakeCoffee: Writable<boolean> = writable(true);
+	w_makeCoffeeTime: Writable<number> = writable(0);
 
 	// internal stats
 	coffeePrice: number = 3.5;
@@ -25,6 +28,8 @@ export class Preshop implements ISubscriber, IScene {
 	maxCustomers: number = 5;
 	maxAppeal: number = 0.7;
 	coffeeQuantity: number = 1; // how many cups of coffee are made per run
+	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
+
 
 	// stat counters
 	lifetimeGrindBeans: number = 0;
@@ -88,6 +93,18 @@ export class Preshop implements ISubscriber, IScene {
 	set grindProgress(value) {
 		this.w_grindProgress.set(value);
 	}
+	get canMakeCoffee() {
+		return get(this.w_canMakeCoffee);
+	}
+	set canMakeCoffee(value) {
+		this.w_canMakeCoffee.set(value);
+	}
+	get makeCoffeeTime() {
+		return get(this.w_makeCoffeeTime);
+	}
+	set makeCoffeeTime(value) {
+		this.w_makeCoffeeTime.set(value);
+	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		timer.subscribe(this, "tick");
@@ -115,6 +132,10 @@ export class Preshop implements ISubscriber, IScene {
 	tick() {
 		this.drawCustomers();
 		this.decayAppeal();
+		if (!this.canMakeCoffee) {
+			this.makeCoffeeTimedown();
+		}
+
 	}
 
 	drawCustomers() {
@@ -141,6 +162,14 @@ export class Preshop implements ISubscriber, IScene {
 		}
 	}
 
+	makeCoffeeTimedown() {
+		this.makeCoffeeTime += msPerTick;
+		if (this.makeCoffeeTime > this.makeCoffeeCooldown) {
+			this.makeCoffeeTime = 0;
+			this.canMakeCoffee = true;
+		}
+	}
+
 	// TODO make appeal diminishing effectiveness
 	promoteShop() {
 		this.appeal += this.promotionEffectiveness *
@@ -159,32 +188,41 @@ export class Preshop implements ISubscriber, IScene {
 		}
 	}
 
+	beansToGrind: number = 0;
 	grindBeans() {
 		if (this.beans <= 0 && this.grindProgress == -1) return;
 
-		// if finished grinding
-		if (this.grindProgress >= this.grindTime) {
-			this.groundCoffee += this.coffeePerBean * this.grindQuantity;
-			this.grindProgress = -1;
-			this.lifetimeGrindBeans++;
-		} // if not grinding yet
-		else if (this.grindProgress === -1) {
+		// if not grinding yet
+		if (this.grindProgress === -1) {
 			this.grindProgress = 1;
-			this.beans -= 1 * this.grindQuantity;
+			this.beansToGrind = Math.min(this.grindQuantity, this.beans);
+			this.beans -= this.beansToGrind;
+			if (this.beans < 0) this.beans = 0;
 		} // if grinding
 		else {
 			this.grindProgress++;
 		}
+
+		// if finished grinding
+		if (this.grindProgress > this.grindTime) {
+			this.groundCoffee += this.coffeePerBean * this.beansToGrind;
+			this.grindProgress = -1;
+			this.lifetimeGrindBeans++;
+		}
 	}
 
+	coffeeToMake: number = 0;
 	makeCoffee() {
 		if (this.groundCoffee < 1) return;
+		if (!this.canMakeCoffee) return;
 
 		// possibly add cooldown or timer effect
-		const bottleneck = Math.min(this.groundCoffee, this.coffeeQuantity);
-		this.groundCoffee -= bottleneck;
-		this.coffeeCups += bottleneck;
-		this.lifetimeCoffeeMade += bottleneck;
+		this.coffeeToMake = Math.min(this.groundCoffee, this.coffeeQuantity);
+		this.groundCoffee -= this.coffeeToMake;
+		this.coffeeCups += this.coffeeToMake;
+		this.lifetimeCoffeeMade += this.coffeeToMake;
+		this.canMakeCoffee = false;
+		this.makeCoffeeTime = 0;
 	}
 
 	buyBeans() {

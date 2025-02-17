@@ -1,5 +1,4 @@
 // global interfaces, no enums
-
 interface IUpgrade {
   name: string;
   description: string;
@@ -40,8 +39,10 @@ interface IShop {
   appeal: number;
   beanPrice: number;
   grindProgress: number;
+  makeCoffeeCooldown: number;
 
-  minimumAppeal?: number;
+  minAppeal?: number;
+  maxAppeal?: number;
   coffeeQuantity?: number;
   grindQuantity: number;
   lifetimeCoffeeSold: number;

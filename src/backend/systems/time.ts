@@ -1,6 +1,7 @@
 import { Publisher } from "./observer";
 
-const ticksPerHour = 16;
+export const ticksPerHour = 16;
+export const msPerTick = 250;
 
 // currently mostly exists to track time
 // also contains an observer object, so can use Timer.timeEvents.subscribe()
@@ -37,7 +38,7 @@ export class Timer {
 			"month",
 			"year",
 		]);
-		this.ticker = setInterval(() => this.tick(), 250);
+		this.ticker = setInterval(() => this.tick(), msPerTick);
 	}
 
 	tick() {
@@ -92,8 +93,7 @@ export class Timer {
 	}
 
 	get printableDate() {
-		return `${this.calanderDay}, ${this.monthDay + 1} ${
-			this.month + 1
-		}, ${this.year}`;
+		return `${this.calanderDay}, ${this.monthDay + 1} ${this.month + 1
+			}, ${this.year}`;
 	}
 }

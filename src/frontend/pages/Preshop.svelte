@@ -37,6 +37,8 @@
   let waitingCustomers = pshop.w_waitingCustomers;
   let beanPrice = pshop.w_beanPrice;
   let grindProg = pshop.w_grindProgress;
+  let canMakeCoffee = pshop.w_canMakeCoffee;
+  let makeCoffeeTime = pshop.w_makeCoffeeTime;
 </script>
 
 {#snippet upgrade(upgkey: string)}
@@ -80,7 +82,11 @@
         >
         <p>{$t("groundedBeans_stat")}: {$groundedBeans}</p>
         <button
-          disabled={$groundedBeans >= 1 ? false : true}
+          style="background: linear-gradient(90deg, #aa1a1a 0% {($makeCoffeeTime /
+            pshop.makeCoffeeCooldown) *
+            100}%, #1a1a1a {($makeCoffeeTime / pshop.makeCoffeeCooldown) *
+            100}% 100%);"
+          disabled={$canMakeCoffee && $groundedBeans >= 1 ? false : true}
           onclick={() => {
             pshop.makeCoffee();
           }}>{$t("makeCoffee_btn")}</button
