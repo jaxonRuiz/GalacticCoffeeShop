@@ -79,7 +79,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			name: "Deluxe Coffee Pot",
 			description: "Make more sellable coffee at once, at the cost of longer time to make",
 			unlock_condition: (_shop) => {
-				return true;
+				return _shop.lifetimeCoffeeMade > 0;
 			},
 			upgrade: (shop) => {
 				shop.coffeeQuantity! += 0.5;
@@ -114,7 +114,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				shop.grindQuantity += 1;
 			},
 			maxLevel: 2,
-			cost: 15,
+			cost: 22,
 			costMultiplier: 1.2,
 			image: "multi_grinder.jpg",
 		},
@@ -131,7 +131,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				let beanPrice = [15.99, 22.99, 49.99, 82.99];
 				let beanAmount = [3, 5, 10, 20];
 				shop.beanPrice = beanPrice[level];
-				shop.beans = beanAmount[level];
+				shop.beansPerBuy = beanAmount[level];
 			},
 			maxLevel: 4,
 			cost: 40,
@@ -142,7 +142,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			name: "Stand Sign",
 			description: "Invest in a sigh for your coffee stand. Passively draw customer interest, and increase maximum appeal!",
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 10;
+				return _shop.lifetimeCoffeeSold >= 20;
 			},
 			upgrade: (shop) => {
 				let level = (shop.upgrades.get("stand_sign") ?? 0);
@@ -159,7 +159,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			name: "Promotional Posters",
 			description: "Attract more customers per promotion with promotional posters",
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 1;
+				return _shop.lifetimeCoffeeSold >= 5;
 			},
 			upgrade: (shop) => {
 				shop.promotionEffectiveness += 0.08;
@@ -173,7 +173,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			name: "Express Coffee Maker",
 			description: "Speed up the production time of coffee",
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade >= 10;
+				return _shop.lifetimeCoffeeMade >= 15;
 			},
 			upgrade: (shop) => {
 				shop.makeCoffeeCooldown -= 500;
@@ -187,7 +187,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			name: "Additional Coffee Drips",
 			description: "Make more cups of sellable coffee per session, without increasing production time",
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 5;
+				return _shop.lifetimeCoffeeSold >= 25;
 			},
 			upgrade: (shop) => {
 				shop.coffeeQuantity! += 1;
