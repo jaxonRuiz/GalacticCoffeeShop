@@ -178,7 +178,7 @@ export class Preshop implements ISubscriber, IScene {
 	}
 
 	sellCoffee() {
-		if (this.coffeeCups <= 0) return;
+		if (this.coffeeCups < 1) return;
 
 		if (this.waitingCustomers > 0) {
 			this.waitingCustomers--;
