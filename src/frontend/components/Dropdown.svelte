@@ -8,7 +8,7 @@
 
 <div class="dpdn col block">
   <button class="dpdn" onclick={() => (s = !s)}>
-    <h1>{title} <span>{s? '^':'v'}</span></h1>
+    <h1>{title} <span>{s? '-':'+'}</span></h1>
   </button>
   {#if s}
     <div transition:slide class="dpdn content col {classes.join(' ')}">

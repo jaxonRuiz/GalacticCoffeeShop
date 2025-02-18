@@ -1,3 +1,7 @@
+:root {
+	--accent: #aa1a1a;
+}
+
 * {
 	transition: 0.2s linear;
 }

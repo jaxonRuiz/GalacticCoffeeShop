@@ -216,7 +216,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				shop.endScene();
 			},
 			maxLevel: 1,
-			cost: 100,
+			cost: 1000,
 			costMultiplier: 1,
 			image: "buy_coffee_shop.jpg",
 		},

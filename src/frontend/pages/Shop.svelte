@@ -35,7 +35,7 @@
 			<h1>shop name</h1>
 			<p>{$t("money_stat")}: ${$money.toFixed(2)}</p>
 			<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
-			<p>{$t("sellableCoffee_stat")}: {$coffee}</p>
+			<p>{$t("sellableCoffee_stat")}: {Math.floor($coffee)}</p>
 		</div>
 	</div>
 

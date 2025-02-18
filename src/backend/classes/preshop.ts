@@ -5,7 +5,7 @@ import { msPerTick } from "../systems/time";
 export class Preshop implements ISubscriber, IScene {
 	// resources (setting writable to interact with svelte)
 	// not to be used in backend
-	w_money: Writable<number> = writable(100);
+	w_money: Writable<number> = writable(0);
 	w_beans: Writable<number> = writable(5);
 	w_groundCoffee: Writable<number> = writable(0);
 	w_coffeeCups: Writable<number> = writable(0);
