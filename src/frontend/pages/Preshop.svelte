@@ -8,9 +8,13 @@
   import Dropdown from "../components/Dropdown.svelte";
   import { StageManager } from "../../backend/systems/stageManager";
 
+  // base
   let timer = new Timer();
   let smanager = new StageManager(timer);
-  let pshop = new Preshop(timer.timeEvents, smanager);
+  const mockpshop = new Preshop(timer.timeEvents, smanager);
+
+  let { wshop: pshop = mockpshop } = $props();
+
   let umanager = new UpgradeManager("preshop");
 
   // for upgrades

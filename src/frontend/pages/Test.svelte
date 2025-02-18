@@ -1,9 +1,9 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { sceneManager } from "../../backend/game";
+  import { stageManager } from "../../backend/game";
 
   // let cs = currentScene;
-  // let cs = sceneManager.w_currentScene;
+  let cs = stageManager.currentScene;
 </script>
 
 <main>
@@ -14,7 +14,7 @@
     onclick={() => {
       console.log("click");
 
-      // get(cs).endScene();
+      cs.endScene();
 
     }}>
     TEST

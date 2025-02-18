@@ -8,9 +8,13 @@
 	import { t } from "svelte-i18n";
   import Worker from "../components/Worker.svelte";
 
+	// base
 	let timer = new Timer();
-	let smanager = new StageManager(timer);
-	let mshop = new MultiShop(timer.timeEvents, smanager);
+	const smanager = new StageManager(timer);
+	const mockmshop = new MultiShop(timer.timeEvents, smanager);
+
+	let { wshop: mshop = mockmshop } = $props();
+
 	let sshop = mshop.shops[0];
 	let umanager = new UpgradeManager("shop"); //TODO
 

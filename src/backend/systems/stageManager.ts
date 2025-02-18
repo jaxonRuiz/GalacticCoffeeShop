@@ -7,7 +7,14 @@ import { MultiShop } from "../classes/multiShop";
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
 
-	currentSceneIndex: number = 0;
+	w_currentSceneIndex: Writable<number> = writable(0);
+	get currentSceneIndex() {
+		return get(this.w_currentSceneIndex);
+	}
+	set currentSceneIndex(value) {
+		this.w_currentSceneIndex.set(value);
+	}
+
 	timer: Timer;
 
 	constructor(timer: Timer) {

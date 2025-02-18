@@ -11,14 +11,14 @@ import { StageManager } from "./systems/stageManager";
 // tester.preshopTest01();
 
 let timer = new Timer();
-export let sceneManager = new StageManager(timer);
+export let stageManager = new StageManager(timer);
 
 console.log("hello world");
 startGame();
 
 function startGame() {
 	console.log("starting game");
-	sceneManager.nextScene();
+	stageManager.nextScene();
 }
 
 function saveState() {

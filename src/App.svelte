@@ -3,9 +3,10 @@
 	import Shop from "./frontend/pages/Shop.svelte";
 	import Test from "./frontend/pages/Test.svelte";
 	import Multishop from "./frontend/pages/Multishop.svelte";
+  import Game from "./frontend/pages/Game.svelte";
 
-	let tabs = ["preshop", "shop", "multishop", "test"];
-	let comps = [Preshop, Shop, Multishop, Test];
+	let tabs = ["game", "preshop", "shop", "multishop", "test"];
+	let comps = [Game, Preshop, Shop, Multishop, Test];
 	let currentTab = $state(0);
 	let testing = $state(false); // open testing window
 
@@ -37,7 +38,10 @@
 			{/each}
 		</div>
 	</div>
-	<svelte:component this={comps[currentTab]} />
+	{#if currentTab > -1}
+		{@const Comp = comps[currentTab]}
+		<Comp />
+	{/if}
 </main>
 
 <style>

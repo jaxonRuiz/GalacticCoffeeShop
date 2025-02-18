@@ -3,9 +3,13 @@
 	import { MultiShop } from "../../backend/classes/multiShop";
 	import { Timer } from "../../backend/systems/time";
 	import { upgradeJSON } from "../../backend/systems/upgradeManager";
+  import { StageManager } from "../../backend/systems/stageManager";
 
 	let timer = new Timer();
-	// let mshop = new MultiShop(timer.timeEvents, );
+	const smanager = new StageManager(timer);
+	const mockmshop = new MultiShop(timer.timeEvents, smanager);
+
+	let { wshop: mshop = mockmshop } = $props();
 
 	// upgrades
 	const upgs = upgradeJSON["multishop"];
