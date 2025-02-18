@@ -17,7 +17,7 @@ export class UpgradeManager {
 			// if single shop style
 			this.allUpgrades[id].upgrade(
 				shopObject,
-				shopObject.upgrades.get(id) ?? 1
+				shopObject.upgrades.get(id) ?? 1,
 			);
 			shopObject.applyCost(this.getCost(id, shopObject));
 			shopObject.upgrades.set(id, (shopObject.upgrades.get(id) ?? 0) + 1);
@@ -25,14 +25,15 @@ export class UpgradeManager {
 	}
 
 	getCost(id: string, shopObject: IShop) {
-		if (shopObject.upgrades.get(id) === undefined)
+		if (shopObject.upgrades.get(id) === undefined) {
 			return this.allUpgrades[id].cost;
+		}
 		// cost * (costMultiplier ^ level)
 		return (
 			this.allUpgrades[id].cost *
 			Math.pow(
 				this.allUpgrades[id].costMultiplier,
-				shopObject.upgrades.get(id) ?? 0
+				shopObject.upgrades.get(id) ?? 0,
 			)
 		);
 	}
@@ -44,10 +45,11 @@ export class UpgradeManager {
 				if (this.allUpgrades[id].maxLevel === undefined) return true;
 				else if (
 					(shopObject.upgrades.get(id) ?? 0) < this.allUpgrades[id].maxLevel
-				)
+				) {
 					return true;
+				}
 				return false;
-			}
+			},
 		);
 
 		return unpurchasedUpgrades.filter((id: string) => {
@@ -77,7 +79,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		deluxe_coffee_pot: {
 			name: "Deluxe Coffee Pot",
-			description: "Make more sellable coffee at once, at the cost of longer time to make",
+			description:
+				"Make more sellable coffee at once, at the cost of longer time to make",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeMade > 0;
 			},
@@ -120,32 +123,34 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		bulk_bean_deal: {
 			name: "Bulk Bean Deal",
-			description: "Arrange for a better bulk bean buying deal. Purchase more beans at once for a bulk discount",
+			description:
+				"Arrange for a better bulk bean buying deal. Purchase more beans at once for a bulk discount",
 			unlock_condition: (_shop) => {
-				let level = (_shop.upgrades.get("bulk_bean_deal") ?? 0);
+				let level = _shop.upgrades.get("bulk_bean_deal") ?? 0;
 				let condition = [5, 10, 20, 40];
 				return _shop.lifetimeGrindBeans >= condition[level];
 			},
 			upgrade: (shop) => {
-				let level = (shop.upgrades.get("bulk_bean_deal") ?? 0);
-				let beanPrice = [15.99, 22.99, 49.99, 82.99];
-				let beanAmount = [3, 5, 10, 20];
+				let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
+				let beanPrice = [22.99, 49.99, 82.99, 150.99];
+				let beanAmount = [5, 10, 20, 40];
 				shop.beanPrice = beanPrice[level];
 				shop.beansPerBuy = beanAmount[level];
 			},
 			maxLevel: 4,
-			cost: 40,
-			costMultiplier: 1.7,
+			cost: 25,
+			costMultiplier: 2,
 			image: "bulk_bean_deal.jpg",
 		},
 		stand_sign: {
 			name: "Stand Sign",
-			description: "Invest in a sigh for your coffee stand. Passively draw customer interest, and increase maximum appeal!",
+			description:
+				"Invest in a sigh for your coffee stand. Passively draw customer interest, and increase maximum appeal!",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold >= 20;
 			},
 			upgrade: (shop) => {
-				let level = (shop.upgrades.get("stand_sign") ?? 0);
+				let level = shop.upgrades.get("stand_sign") ?? 0;
 				let minAppeal = [0.1, 0.2, 0.3];
 				shop.minAppeal = minAppeal[level];
 				shop.maxAppeal! += 0.2;
@@ -157,7 +162,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		promotional_posters: {
 			name: "Promotional Posters",
-			description: "Attract more customers per promotion with promotional posters",
+			description:
+				"Attract more customers per promotion with promotional posters",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold >= 5;
 			},
@@ -185,7 +191,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		additional_coffee_drips: {
 			name: "Additional Coffee Drips",
-			description: "Make more cups of sellable coffee per session, without increasing production time",
+			description:
+				"Make more cups of sellable coffee per session, without increasing production time",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold >= 25;
 			},
@@ -200,7 +207,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		buy_coffee_shop: {
 			name: "Buy Coffee Shop",
-			description: "Rent land to start a proper coffee shop! Open new managerial options and coffee creation options!",
+			description:
+				"Rent land to start a proper coffee shop! Open new managerial options and coffee creation options!",
 			unlock_condition: (_shop) => {
 				return true;
 			},
@@ -211,7 +219,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 100,
 			costMultiplier: 1,
 			image: "buy_coffee_shop.jpg",
-		}
+		},
 	},
 
 	localShop: {
@@ -225,8 +233,9 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				let statLevels = [0, 1, 0.5, 0.5];
 				shop.minAppeal! += statLevels[level];
 				shop.appealDecay *= 0.97;
-				if (shop.appeal < shop.minAppeal!)
+				if (shop.appeal < shop.minAppeal!) {
 					shop.appeal = shop.minAppeal!;
+				}
 			},
 			maxLevel: 3,
 			cost: 300,

@@ -18,7 +18,7 @@ export class Preshop implements ISubscriber, IScene {
 
 	// internal stats
 	coffeePrice: number = 3.5;
-	beansPerBuy: number = 1; // how many beans are bought at a time
+	beansPerBuy: number = 3; // how many beans are bought at a time
 	coffeePerBean: number = 2.5;
 	grindQuantity: number = 1; // how many beans are ground at a time
 	grindTime: number = 5; // number of times to click to grind a bean
