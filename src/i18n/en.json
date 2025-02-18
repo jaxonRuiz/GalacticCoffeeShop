@@ -10,6 +10,7 @@
 	"restocking_title": "Restocking",
 
 	"money_stat": "Money",
+	"mshopMoney_stat": "Money (in Multishop)",
 	"appeal_stat": "Appeal",
 	"sellableCoffee_stat": "Sellable Coffee",
 	"beans_stat": "Beans",
@@ -33,5 +34,9 @@
 	"choresForBeans_btn": "Chores for Beans...",
 
 	"server_worker": "Server(s)",
-	"barista_worker": "Barista(s)"
+	"barista_worker": "Barista(s)",
+
+	"restockSheet_text": "Restock Sheet",
+	"beans_text": "Beans",
+	"emptyCups_text": "Empty Cups"
 }

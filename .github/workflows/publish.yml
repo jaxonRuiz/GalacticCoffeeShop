@@ -1,7 +1,7 @@
 name: Deploy static content to Pages
 on:
-  # push:
-  #   branches: ["main"]
+  push:
+    branches: ["main"]
   workflow_dispatch:
   schedule:
     - cron: "0 8 * * *"  # in UTC time
