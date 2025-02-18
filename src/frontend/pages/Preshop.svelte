@@ -72,7 +72,7 @@
 
   <div class="shop right row">
     <div class="col">
-      <Dropdown title={$t("preshop_title")}>
+      <Dropdown title={$t("stats_title")}>
         <p>{$t("beans_stat")}: {$beans}</p>
         <!-- button style to showcase how much more to grind -->
         <button
