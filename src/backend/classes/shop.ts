@@ -67,8 +67,8 @@ export class Shop {
 		emptyCups: 5,
 	});
 	workerRates: { [key: string]: number } = {
-		baristaProductivity: 0.2,
-		serverProductivity: 0.5,
+		baristaProductivity: 0.1,
+		serverProductivity: 0.05,
 	};
 	progressTrackers: { [key: string]: number } = {
 		serviceProgress: 0,
@@ -176,7 +176,9 @@ export class Shop {
 			// customer generation
 			this.progressTrackers["customerProgress"] += this.appeal;
 			if (this.progressTrackers["customerProgress"] >= 1) {
-				this.waitingCustomers += Math.floor(this.progressTrackers["customerProgress"]);
+				this.waitingCustomers += Math.floor(
+					this.progressTrackers["customerProgress"],
+				);
 				this.waitingCustomers = Math.min(
 					this.waitingCustomers,
 					this.maxCustomers,
@@ -242,8 +244,8 @@ export class Shop {
 	}
 
 	promote() {
-		this.appeal +=
-			this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
+		this.appeal += this.promotionEffectiveness *
+			(1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
