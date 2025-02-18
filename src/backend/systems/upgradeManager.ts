@@ -132,7 +132,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			},
 			upgrade: (shop) => {
 				let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
-				let beanPrice = [22.99, 49.99, 82.99, 150.99];
+				let beanPrice = [8.99, 17.99, 35.99, 69.99];
 				let beanAmount = [5, 10, 20, 40];
 				shop.beanPrice = beanPrice[level];
 				shop.beansPerBuy = beanAmount[level];
