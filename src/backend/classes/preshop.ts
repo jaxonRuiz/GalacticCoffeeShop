@@ -231,6 +231,9 @@ export class Preshop implements ISubscriber, IScene {
 		this.beans += this.beansPerBuy;
 		this.money -= this.beanPrice;
 	}
+	choresForBeans() {
+		this.beans += 0.5;
+	}
 
 	applyCost(cost: number) {
 		// if (this.money < cost) return; // flag something? DEBT
