@@ -4,6 +4,7 @@
 
 * {
 	transition: 0.2s linear;
+	user-select: none;
 }
 
 .hidden {
@@ -32,7 +33,7 @@
 		width: 100%;
 	}
 
-	div.block, button {
+	div.block, .button {
 		margin: 10px;
 	}
 

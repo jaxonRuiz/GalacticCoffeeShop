@@ -1,12 +1,13 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
+  import { pointerStyle } from './Styles.svetle';
   let { children, title, classes = []} = $props();
 
   // true = open, false = closed
   let s = $state(true);
 </script>
 
-<div class="dpdn col block">
+<div class="dpdn col block" style={pointerStyle}>
   <button class="dpdn" onclick={() => (s = !s)}>
     <h1>{title} <span>{s? '-':'+'}</span></h1>
   </button>
@@ -32,6 +33,7 @@
       border-radius: 0;
       border-bottom: 1px solid white;
       background-color: #242424;
+      cursor: var(--cpointer), pointer;
       &:hover {
         background-color: #1a1a1a;
       }

@@ -3,7 +3,9 @@
 	import Shop from "./frontend/pages/Shop.svelte";
 	import Test from "./frontend/pages/Test.svelte";
 	import Multishop from "./frontend/pages/Multishop.svelte";
-  import Game from "./frontend/pages/Game.svelte";
+	import Game from "./frontend/pages/Game.svelte";
+	import "@fontsource/syne-mono";
+  import { pointerStyle } from "./frontend/components/Styles.svetle";
 
 	let tabs = ["game", "preshop", "shop", "multishop", "test"];
 	let comps = [Game, Preshop, Shop, Multishop, Test];
@@ -19,7 +21,7 @@
 
 <svelte:window onkeydown={on_key_down} />
 
-<main class="fl">
+<main class="fl" style={pointerStyle}>
 	<div id="test-window" style="display: {testing ? 'grid' : 'none'};">
 		<div id="tabs" class="col">
 			{#each tabs as tab, i}
@@ -48,6 +50,8 @@
 	main {
 		width: 100vw;
 		height: 100vh;
+		font-family: "Syne Mono", monospace;
+		cursor: var(--cdefault), default;
 	}
 
 	/* temporary stuffs */
