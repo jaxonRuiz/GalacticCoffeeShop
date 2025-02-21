@@ -5,21 +5,32 @@
 	import Multishop from "./frontend/pages/Multishop.svelte";
 	import Game from "./frontend/pages/Game.svelte";
 	import "@fontsource/syne-mono";
-  import { pointerStyle } from "./frontend/components/Styles.svetle";
+  import { pointerStyle } from "./frontend/components/Styles.svelte";
+  import { booped, boops } from "./frontend/components/Boops";
+  import Boops from "./frontend/components/Boops.svelte";
 
 	let tabs = ["game", "preshop", "shop", "multishop", "test"];
 	let comps = [Game, Preshop, Shop, Multishop, Test];
 	let currentTab = $state(0);
 	let testing = $state(false); // open testing window
 
-	function on_key_down(event: KeyboardEvent) {
+	function onKeyDown(event: KeyboardEvent) {
 		if (event.key === "t") {
 			testing = !testing;
 		}
 	}
+
+	function onMouseDown(event: MouseEvent) {
+		let type = "default";
+		if (event.target instanceof HTMLButtonElement) {
+			type = "button";
+			console.log(event.target?.dataset.btn);
+		}
+		booped(event.clientX, event.clientY, type);
+	}
 </script>
 
-<svelte:window onkeydown={on_key_down} />
+<svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
 
 <main class="fl" style={pointerStyle}>
 	<div id="test-window" style="display: {testing ? 'grid' : 'none'};">
@@ -40,6 +51,11 @@
 			{/each}
 		</div>
 	</div>
+	<div id="mouse-effects">
+		{#each $boops as b (b.id)}
+			<Boops x={b.x} y={b.y} type={b.type} />
+		{/each}
+	</div>
 	{#if currentTab > -1}
 		{@const Comp = comps[currentTab]}
 		<Comp />
@@ -57,6 +73,14 @@
 	/* temporary stuffs */
 	label:has(input:checked) {
 		background-color: #242424;
+	}
+
+	#mouse-effects {
+		position: fixed;
+		z-index: 500;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
 	}
 
 	#test-window {

@@ -7,7 +7,7 @@
 	import { StageManager } from "../../backend/systems/stageManager";
 	import Dropdown from "../components/Dropdown.svelte";
 	import Button from "../components/Button.svelte";
-	import { pointerStyle } from "../components/Styles.svetle";
+  import { pointerStyle } from "../components/Styles.svelte";
 
 	// base
 	let timer = new Timer();
@@ -48,6 +48,7 @@
 
 {#snippet upgrade(upgkey: string)}
 	<Button
+		data-btn="upgrade"
 		disabled={$money < upgs_cost[upgkey] ? true : false}
 		onclick={() => {
 			umanager.applyUpgrade(upgkey, pshop);
@@ -80,9 +81,10 @@
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<!-- button style to showcase how much more to grind -->
 				<Button
+					data-btn="grind"
 					style="background: linear-gradient(90deg, var(--accent) 0% {($grindProg /
 						pshop.grindTime) *
-						100}%, #1a1a1a {($grindProg / pshop.grindTime) * 100}% 100%);"
+						100}%, var(--btnbg) {($grindProg / pshop.grindTime) * 100}% 100%);"
 					disabled={$beans > 0 ? false : $grindProg > -1 ? false : true}
 					onclick={() => {
 						pshop.grindBeans();
@@ -90,10 +92,12 @@
 				>
 				<p>{$t("groundedBeans_stat")}: {$groundedBeans}</p>
 				<Button
+					data-btn="make-coffee"
 					style="background: linear-gradient(90deg, var(--accent) 0% {($makeCoffeeTime /
 						pshop.makeCoffeeCooldown) *
-						100}%, #1a1a1a {($makeCoffeeTime / pshop.makeCoffeeCooldown) *
-						100}% 100%);"
+						100}%, var(--btnbg) {($makeCoffeeTime / pshop.makeCoffeeCooldown) *
+						100}% 100%);
+						{!$canMakeCoffee ? 'cursor: var(--cwait), wait' : ''}"
 					disabled={$canMakeCoffee && $groundedBeans >= 1 ? false : true}
 					onclick={() => {
 						pshop.makeCoffee();
@@ -104,6 +108,7 @@
 			<Dropdown title={$t("promoting_title")}>
 				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 				<Button
+					data-btn="promote"
 					onclick={() => {
 						pshop.promoteShop();
 					}}>{$t("promote_btn")}</Button
@@ -114,6 +119,7 @@
 				<p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
 				<p>{$t("sellableCoffee_stat")}: {Math.floor($coffee)}</p>
 				<Button
+				 	data-btn="sell-coffee"
 					disabled={$waitingCustomers > 0 && $coffee > 0 ? false : true}
 					onclick={() => {
 						pshop.sellCoffee();
@@ -124,6 +130,7 @@
 			<Dropdown title={$t("shop_title")}>
 				<p>{$t("beanPrice_stat")}: ${$beanPrice.toFixed(2)}</p>
 				<Button
+					data-btn="buy-beans"
 					disabled={$money < $beanPrice ? true : false}
 					onclick={() => {
 						pshop.buyBeans();
@@ -131,6 +138,7 @@
 				>
 				{#if $money < $beanPrice && $beans < 2 && $groundedBeans < 1}
 					<Button
+						data-btn="chores-for-beans"
 						onclick={() => {
 							pshop.choresForBeans();
 						}}>{$t("choresForBeans_btn")}</Button

@@ -1,18 +1,20 @@
 <script lang="ts">
+  import { pointerStyle } from "./Styles.svelte";
+
 	let {
 		children,
+		"data-btn": dataBtn = "",
 		style = "",
 		onclick = (() => {}),
 		disabled = false,
 		classes = [],
 	} = $props();
 
-	const pointer = `
-	`;
 </script>
 
 <button
-	style={`${pointer} ${style}`}
+	style={`${pointerStyle} ${style}`}
+	data-btn={dataBtn}
 	{onclick}
 	{disabled}
 	class="button ${classes.join(' ')}"
@@ -23,8 +25,8 @@
 <style>
 	button {
 		cursor: var(--cpointer), pointer;
-	}
-	button:disabled {
-		cursor: var(--cno), not-allowed;
+		&:disabled {
+			cursor: var(--cno), not-allowed;
+		}
 	}
 </style>

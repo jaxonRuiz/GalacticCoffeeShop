@@ -1,5 +1,9 @@
 :root {
 	--accent: #aa1a1a;
+	--accent2: #7bdbe8;
+	--btnbg: #333;
+	--bg1: #111;
+	--bg2: #1a1a1a;
 }
 
 * {
@@ -21,7 +25,7 @@
 	&.left {
 		flex-grow: 1; /* use shop-right to edit size */
 		height: 100%;
-		background-color: #333;
+		background-color: var(--bg1);
 	}
 	&.right {
 		width: 60%;

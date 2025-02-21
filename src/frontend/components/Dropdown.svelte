@@ -1,6 +1,6 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
-  import { pointerStyle } from './Styles.svetle';
+  import { pointerStyle } from './Styles.svelte';
   let { children, title, classes = []} = $props();
 
   // true = open, false = closed
@@ -32,11 +32,8 @@
       border: none;
       border-radius: 0;
       border-bottom: 1px solid white;
-      background-color: #242424;
+      background-color: var(--bg2);
       cursor: var(--cpointer), pointer;
-      &:hover {
-        background-color: #1a1a1a;
-      }
     }
   }
 </style>
