@@ -166,6 +166,8 @@ export class Preshop implements ISubscriber, IScene {
 		this.makeCoffeeTime += msPerTick;
 		if (this.makeCoffeeTime > this.makeCoffeeCooldown) {
 			this.makeCoffeeTime = 0;
+			this.lifetimeCoffeeMade += this.coffeeToMake;
+			this.coffeeCups += this.coffeeToMake;
 			this.canMakeCoffee = true;
 		}
 	}
@@ -219,8 +221,6 @@ export class Preshop implements ISubscriber, IScene {
 		// possibly add cooldown or timer effect
 		this.coffeeToMake = Math.min(this.groundCoffee, this.coffeeQuantity);
 		this.groundCoffee -= this.coffeeToMake;
-		this.coffeeCups += this.coffeeToMake;
-		this.lifetimeCoffeeMade += this.coffeeToMake;
 		this.canMakeCoffee = false;
 		this.makeCoffeeTime = 0;
 	}
