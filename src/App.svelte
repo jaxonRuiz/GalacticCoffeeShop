@@ -22,9 +22,10 @@
 
 	function onMouseDown(event: MouseEvent) {
 		let type = "default";
-		if (event.target instanceof HTMLButtonElement) {
-			type = "button";
-			console.log(event.target?.dataset.btn);
+		const b = (event.target as HTMLElement).closest("button");
+		if (b) {
+			type = b.dataset.btn ?? "button";
+			console.log(b.dataset.btn);
 		}
 		booped(event.clientX, event.clientY, type);
 	}
