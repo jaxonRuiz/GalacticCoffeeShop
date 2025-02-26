@@ -29,6 +29,8 @@ export class Preshop implements ISubscriber, IScene {
 	maxAppeal: number = 0.7;
 	coffeeQuantity: number = 1; // how many cups of coffee are made per run
 	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
+	makeCoffeeAmount: number = 2; // how many cups of coffee are made per run
+	makeCoffeeCount: number = 0; // how many cups of coffee are made per run
 
 
 	// stat counters
@@ -165,10 +167,20 @@ export class Preshop implements ISubscriber, IScene {
 	makeCoffeeTimedown() {
 		this.makeCoffeeTime += msPerTick;
 		if (this.makeCoffeeTime > this.makeCoffeeCooldown) {
-			this.makeCoffeeTime = 0;
+			this.makeCoffeeCount -= 1;
 			this.lifetimeCoffeeMade += this.coffeeToMake;
 			this.coffeeCups += this.coffeeToMake;
-			this.canMakeCoffee = true;
+			this.makeCoffeeTime = 0;
+
+
+			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1) {
+				console.log("finished making coffee");
+				this.makeCoffeeTime = 0;
+				this.canMakeCoffee = true;
+			} else {
+				console.log("starting new coffee");
+				this.makeCoffee();
+			}
 		}
 	}
 
@@ -216,12 +228,19 @@ export class Preshop implements ISubscriber, IScene {
 	coffeeToMake: number = 0;
 	makeCoffee() {
 		if (this.groundCoffee < 1) return;
-		if (!this.canMakeCoffee) return;
+		// if (!this.canMakeCoffee) return;
 
+		// start coffee batch
+		if (this.canMakeCoffee) {
+			console.log("new coffee batch");
+			this.canMakeCoffee = false;
+			this.makeCoffeeCount = this.makeCoffeeAmount;
+		}
+
+		console.log("making coffee", this.coffeeToMake);
 		// possibly add cooldown or timer effect
 		this.coffeeToMake = Math.min(this.groundCoffee, this.coffeeQuantity);
 		this.groundCoffee -= this.coffeeToMake;
-		this.canMakeCoffee = false;
 		this.makeCoffeeTime = 0;
 	}
 
