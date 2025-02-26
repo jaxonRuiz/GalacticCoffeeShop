@@ -93,6 +93,37 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.15,
 			image: "deluxe_coffee_pot.jpg",
 		},
+
+		makeshift_coffee_refiller: {
+			name: "Makeshift Coffee Refiller",
+			description: "Automatically starts a second coffee batch after the first is done, as long as there's enough beans",
+			unlock_condition: (_shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				shop.makeCoffeeAmount += 1;
+			},
+			maxLevel: 1,
+			cost: 30,
+			costMultiplier: 1,
+			image: "automatic_coffee_refiller.jpg",
+		},
+
+		automatic_coffee_refiller: {
+			name: "Makeshift Coffee Refiller",
+			description: "Upgrade the amount of coffee batches you can make by a single click!",
+			unlock_condition: (_shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				shop.makeCoffeeAmount += 2;
+			},
+			maxLevel: 5,
+			cost: 100,
+			costMultiplier: 1.3,
+			image: "automatic_coffee_refiller.jpg",
+		},
+
 		efficient_grinding: {
 			name: "Bean Grinding Efficiency",
 			description: "Extract more coffee per bean",

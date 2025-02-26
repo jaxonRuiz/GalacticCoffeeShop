@@ -5,7 +5,7 @@ import { msPerTick } from "../systems/time";
 export class Preshop implements ISubscriber, IScene {
 	// resources (setting writable to interact with svelte)
 	// not to be used in backend
-	w_money: Writable<number> = writable(0);
+	w_money: Writable<number> = writable(100000);
 	w_beans: Writable<number> = writable(5);
 	w_groundCoffee: Writable<number> = writable(0);
 	w_coffeeCups: Writable<number> = writable(0);
@@ -15,6 +15,7 @@ export class Preshop implements ISubscriber, IScene {
 	w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
 	w_canMakeCoffee: Writable<boolean> = writable(true);
 	w_makeCoffeeTime: Writable<number> = writable(0);
+	w_makeCoffeeCount: Writable<number> = writable(0);
 
 	// internal stats
 	coffeePrice: number = 3.5;
@@ -29,8 +30,7 @@ export class Preshop implements ISubscriber, IScene {
 	maxAppeal: number = 0.7;
 	coffeeQuantity: number = 1; // how many cups of coffee are made per run
 	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
-	makeCoffeeAmount: number = 2; // how many cups of coffee are made per run
-	makeCoffeeCount: number = 0; // how many cups of coffee are made per run
+	makeCoffeeAmount: number = 1; // how many cups of coffee are made per run
 
 
 	// stat counters
@@ -107,6 +107,12 @@ export class Preshop implements ISubscriber, IScene {
 	set makeCoffeeTime(value) {
 		this.w_makeCoffeeTime.set(value);
 	}
+	get makeCoffeeCount() {
+		return get(this.w_makeCoffeeCount);
+	}
+	set makeCoffeeCount(value) {
+		this.w_makeCoffeeCount.set(value);
+	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		timer.subscribe(this, "tick");
@@ -176,6 +182,7 @@ export class Preshop implements ISubscriber, IScene {
 			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1) {
 				console.log("finished making coffee");
 				this.makeCoffeeTime = 0;
+				this.makeCoffeeCount = 0;
 				this.canMakeCoffee = true;
 			} else {
 				console.log("starting new coffee");

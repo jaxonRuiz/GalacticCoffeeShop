@@ -40,6 +40,7 @@ interface IShop {
   beanPrice: number;
   grindProgress: number;
   makeCoffeeCooldown: number;
+  makeCoffeeAmount: number;
 
   minAppeal?: number;
   maxAppeal?: number;
