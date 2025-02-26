@@ -61,12 +61,12 @@
     }}
   >
     <h3>
-      {upgs[upgkey].name}{upgs[upgkey].maxLevel != 1
+      {$t(`${upgkey}_upgName`)}{upgs[upgkey].maxLevel != 1
         ? ` LVL${(pshop.upgrades.get(upgkey) ?? 0) + 1}`
         : ""}
     </h3>
 
-    <p>{upgs[upgkey].description}</p>
+    <p>{$t(`${upgkey}_upgDesc`)}</p>
     <p>{$t("cost_stat")}: ${upgs_cost[upgkey].toFixed(2)}</p>
   </Button>
 {/snippet}

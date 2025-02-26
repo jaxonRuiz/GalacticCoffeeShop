@@ -63,8 +63,6 @@ export class UpgradeManager {
 export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	preshop: {
 		crank_grinder: {
-			name: "Crank Grinder",
-			description: "Make bean grinding process easier",
 			unlock_condition: (_shop) => {
 				return true;
 			},
@@ -78,9 +76,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		deluxe_coffee_pot: {
-			name: "Deluxe Coffee Pot",
-			description:
-				"Make more sellable coffee at once, at the cost of longer time to make",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeMade > 0;
 			},
@@ -95,8 +90,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		makeshift_coffee_refiller: {
-			name: "Makeshift Coffee Refiller",
-			description: "Automatically starts a second coffee batch after the first is done, as long as there's enough beans",
 			unlock_condition: (_shop) => {
 				return true;
 			},
@@ -110,8 +103,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		automatic_coffee_refiller: {
-			name: "Makeshift Coffee Refiller",
-			description: "Upgrade the amount of coffee batches you can make by a single click!",
 			unlock_condition: (_shop) => {
 				return true;
 			},
@@ -125,8 +116,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		efficient_grinding: {
-			name: "Bean Grinding Efficiency",
-			description: "Extract more coffee per bean",
 			unlock_condition: (_shop) => {
 				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 1;
 			},
@@ -139,8 +128,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "coffee_grind_catcher.jpg",
 		},
 		multi_grinder: {
-			name: "Multi Grinder",
-			description: "Grind multiple beans at once!",
 			unlock_condition: (_shop) => {
 				return (_shop.upgrades.get("efficient_grinding") ?? 0) >= 1;
 			},
@@ -153,9 +140,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "multi_grinder.jpg",
 		},
 		bulk_bean_deal: {
-			name: "Bulk Bean Deal",
-			description:
-				"Arrange for a better bulk bean buying deal. Purchase more beans at once for a bulk discount",
 			unlock_condition: (_shop) => {
 				let level = _shop.upgrades.get("bulk_bean_deal") ?? 0;
 				let condition = [5, 10, 20, 40];
@@ -174,9 +158,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "bulk_bean_deal.jpg",
 		},
 		stand_sign: {
-			name: "Stand Sign",
-			description:
-				"Invest in a sigh for your coffee stand. Passively draw customer interest, and increase maximum appeal!",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold >= 20;
 			},
@@ -192,9 +173,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "stand_sign.jpg",
 		},
 		promotional_posters: {
-			name: "Promotional Posters",
-			description:
-				"Attract more customers per promotion with promotional posters",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold >= 5;
 			},
@@ -207,8 +185,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "promotional_posters.jpg",
 		},
 		express_coffee_maker: {
-			name: "Express Coffee Maker",
-			description: "Speed up the production time of coffee",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeMade >= 15;
 			},
@@ -221,9 +197,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "express_coffee_maker.jpg",
 		},
 		additional_coffee_drips: {
-			name: "Additional Coffee Drips",
-			description:
-				"Make more cups of sellable coffee per session, without increasing production time",
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold >= 25;
 			},
@@ -237,9 +210,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		buy_coffee_shop: {
-			name: "Buy Coffee Shop",
-			description:
-				"Rent land to start a proper coffee shop! Open new managerial options and coffee creation options!",
 			unlock_condition: (_shop) => {
 				return true;
 			},
@@ -255,8 +225,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 	localShop: {
 		flashy_sign: {
-			name: "Flashy Sign",
-			description: "Passively attract more customers to your storefront!",
 			unlock_condition: (_shop) => {
 				return true;
 			},
@@ -277,8 +245,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 	multiShop: {
 		cohesive_branding: {
-			name: "Cohesive Branding",
-			description: "Increase appeal of all shops",
 			unlock_condition: (multishop) => {
 				return multishop.shops!.length > 1; // maybe change to 2 later
 			},

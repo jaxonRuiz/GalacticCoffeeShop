@@ -6,12 +6,6 @@
 	import { Preshop as IPreshop } from "../../backend/classes/preshop";
 	import { MultiShop as IMultishop } from "../../backend/classes/multiShop";
 
-	const scenes = [
-		Multishop, // make a start game page mayhaps
-		Preshop,
-		Shop,
-		Multishop,
-	];
 	const smanager = stageManager;
 
 	const stage = smanager.w_currentSceneIndex;

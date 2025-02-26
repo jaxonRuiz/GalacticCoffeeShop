@@ -1,7 +1,5 @@
 // global interfaces, no enums
 interface IUpgrade {
-  name: string;
-  description: string;
   unlock_condition: (shop: IShop) => boolean;
   upgrade: (shop: IShop, level: number) => void; // LEVELS USE 1 BASED INDEXING
   maxLevel: number | undefined; // undefined means infinite upgrade
