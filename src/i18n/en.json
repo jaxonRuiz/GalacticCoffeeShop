@@ -40,8 +40,9 @@
 	"beans_text": "Beans",
 	"emptyCups_text": "Empty Cups",
 
-	"makeCoffee_tooltip": "making coffee tooltip",
-	"sellCoffee_tooltip": "selling coffee tooltip",
-	"promote_tooltip": "promote tooltip",
-	"shop_tooltip": "shop tooltip"
+	"makeCoffee1_tooltip": "Grind raw coffee beans to get grounded beans to make sellable coffee.",
+	"makeCoffee2_tooltip": "Grinding requires multiple clicks and making coffee takes time.",
+	"sellCoffee_tooltip": "Sell available coffee to waiting customers",
+	"promote_tooltip": "Promote your coffee stand to attract customers",
+	"shop_tooltip": "Buy raw coffee beans from the market"
 }
