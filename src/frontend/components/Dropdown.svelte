@@ -31,7 +31,7 @@
       margin: 0;
       border: none;
       border-radius: 0;
-      border-bottom: 1px solid white;
+      border-bottom: 3px solid white;
       background-color: var(--bg2);
       cursor: var(--cpointer), pointer;
     }

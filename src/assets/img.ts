@@ -7,4 +7,5 @@ export const img: { [key: string] : string } = {
 	boop_minusOne: new URL('./img/clickEffects/minusOne.svg', import.meta.url).href,
 	boop_coin: new URL('./img/clickEffects/coin.svg', import.meta.url).href,
 	boop_bean: new URL('./img/clickEffects/bean.svg', import.meta.url).href,
+	tooltip: new URL('./img/tooltip.svg', import.meta.url).href,
 };

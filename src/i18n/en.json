@@ -38,5 +38,10 @@
 
 	"restockSheet_text": "Restock Sheet",
 	"beans_text": "Beans",
-	"emptyCups_text": "Empty Cups"
+	"emptyCups_text": "Empty Cups",
+
+	"makeCoffee_tooltip": "making coffee tooltip",
+	"sellCoffee_tooltip": "selling coffee tooltip",
+	"promote_tooltip": "promote tooltip",
+	"shop_tooltip": "shop tooltip"
 }

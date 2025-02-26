@@ -8,6 +8,7 @@
 	import Dropdown from "../components/Dropdown.svelte";
 	import Button from "../components/Button.svelte";
 	import { pointerStyle } from "../components/Styles.svelte";
+  import Tooltip from "../components/Tooltip.svelte";
 
 	// base
 	let timer = new Timer();
@@ -86,6 +87,9 @@
 	<div class="shop right row">
 		<div class="col">
 			<Dropdown title={$t("making_title")}>
+				<div class="tooltip">
+					<Tooltip type="right" text={['makeCoffee_tooltip']} />
+				</div>
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<!-- button style to showcase how much more to grind -->
 				<Button
@@ -114,6 +118,9 @@
 			</Dropdown>
 
 			<Dropdown title={$t("promoting_title")}>
+				<div class="tooltip">
+					<Tooltip type="right" text={['promote_tooltip']} />
+				</div>
 				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 				<Button
 					data-btn="promote"
@@ -124,10 +131,13 @@
 			</Dropdown>
 
 			<Dropdown title={$t("selling_title")}>
+				<div class="tooltip">
+					<Tooltip type="right" text={['sellCoffee_tooltip']} />
+				</div>
 				<p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
 				<p>{$t("sellableCoffee_stat")}: {Math.floor($coffee)}</p>
 				<Button
-					data-btn="sell-coffee"
+					data-btn="minusOne"
 					disabled={$waitingCustomers > 0 && $coffee > 0 ? false : true}
 					onclick={() => {
 						pshop.sellCoffee();
@@ -136,9 +146,12 @@
 			</Dropdown>
 
 			<Dropdown title={$t("shop_title")}>
+				<div class="tooltip">
+					<Tooltip type="right" text={['shop_tooltip']} />
+				</div>
 				<p>{$t("beanPrice_stat")}: ${$beanPrice.toFixed(2)}</p>
 				<Button
-					data-btn="buy-beans"
+					data-btn="coin"
 					disabled={$money < $beanPrice ? true : false}
 					onclick={() => {
 						pshop.buyBeans();
@@ -172,5 +185,12 @@
 	.shop.right > div {
 		width: 50%;
 		overflow-y: scroll;
+	}
+	.tooltip {
+		width: 0;
+		height: 0;
+		margin-left: auto;
+		display: flex;
+		flex-direction: row-reverse;
 	}
 </style>
