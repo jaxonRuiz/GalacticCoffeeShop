@@ -38,9 +38,10 @@ export class Preshop implements ISubscriber, IScene {
 
 
 	// stat counters
-	lifetimeGrindBeans: number = 0;
-	lifetimeCoffeeSold: number = 0;
-	lifetimeCoffeeMade: number = 0;
+	w_lifetimeGrindBeans: Writable<number> = writable(0);
+	w_lifetimeCoffeeSold: Writable<number> = writable(0);
+	w_lifetimeCoffeeMade: Writable<number> = writable(0);
+
 
 	// contains list of upgrades (IDs) and their levels
 	upgrades: Map<string, number> = new Map();
@@ -116,6 +117,25 @@ export class Preshop implements ISubscriber, IScene {
 	}
 	set makeCoffeeCount(value) {
 		this.w_makeCoffeeCount.set(value);
+	}
+	// stat counters
+	get lifetimeGrindBeans() {
+		return get(this.w_lifetimeGrindBeans);
+	}
+	set lifetimeGrindBeans(value) {
+		this.w_lifetimeGrindBeans.set(value);
+	}
+	get lifetimeCoffeeSold() {
+		return get(this.w_lifetimeCoffeeSold);
+	}
+	set lifetimeCoffeeSold(value) {
+		this.w_lifetimeCoffeeSold.set(value);
+	}
+	get lifetimeCoffeeMade() {
+		return get(this.w_lifetimeCoffeeMade);
+	}
+	set lifetimeCoffeeMade(value) {
+		this.w_lifetimeCoffeeMade.set(value);
 	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
