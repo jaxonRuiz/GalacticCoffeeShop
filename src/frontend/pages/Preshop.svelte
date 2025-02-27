@@ -56,7 +56,7 @@
 
 {#snippet upgrade(upgkey: string, purchased: boolean)}
 	<Button
-		data-btn="coin"
+		data-btn={purchased ? "" : "coin"}
 		disabled={$money < upgs_cost[upgkey] ? true : false}
 		onclick={() => {
 			umanager.applyUpgrade(upgkey, pshop);
@@ -178,6 +178,7 @@
 
 		<div class="col block fixed">
 			<h1>{$t("upgrades_title")}</h1>
+			<p>{$t("money_stat")}: {fMoney($money)}</p>
 			<div class="row">
 				<label class="tab">
 					<input
