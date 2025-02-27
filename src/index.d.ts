@@ -46,6 +46,7 @@ interface IShop {
   makeCoffeeQuantity?: number;
   grindQuantity: number;
   autogrindingEnabled: boolean;
+  autosellEnabled: boolean;
   lifetimeCoffeeSold: number;
   lifetimeCoffeeMade: number;
   lifetimeGrindBeans: number;

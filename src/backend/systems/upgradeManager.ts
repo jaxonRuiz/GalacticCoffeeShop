@@ -204,6 +204,19 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "automatic_coffee_refiller.jpg",
 		},
 
+		hire_neighborhood_kid: {
+			unlock_condition: (_shop) => {
+				return _shop.lifetimeCoffeeMade > 50;
+			},
+			upgrade: (shop) => {
+				shop.autosellEnabled = true;
+			},
+			maxLevel: 1,
+			cost: 200,
+			costMultiplier: 1.5,
+			image: "hire_neighborhood_kid.jpg",
+		},
+
 		nicer_coffee: {
 			unlock_condition: (_shop) => {
 				return _shop.lifetimeCoffeeSold > 20;

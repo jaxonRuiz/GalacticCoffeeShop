@@ -32,10 +32,14 @@ export class Preshop implements ISubscriber, IScene {
 	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
 	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
 	makeCoffeeBatches: number = 1; // how many cups of coffee are made per run
+
 	autogrindingEnabled: boolean = false; // whether or not to grind automatically
 	autogrindInterval: number = 10;
 	autogrindCounter: number = 0;
 
+	autosellEnabled: boolean = false; // whether or not to sell automatically
+	autosellInterval: number = 15;
+	autosellCounter: number = 0;
 
 	// stat counters
 	w_lifetimeGrindBeans: Writable<number> = writable(0);
@@ -174,6 +178,13 @@ export class Preshop implements ISubscriber, IScene {
 				this.autogrindCounter = 0;
 			}
 		}
+		if (this.autosellEnabled) {
+			this.autosellCounter++;
+			if (this.autosellCounter >= this.autosellInterval) {
+				this.sellCoffee();
+				this.autosellCounter = 0;
+			}
+		}
 
 	}
 
@@ -232,7 +243,7 @@ export class Preshop implements ISubscriber, IScene {
 	sellCoffee() {
 		if (this.coffeeCups < 1) return;
 
-		if (this.waitingCustomers > 0) {
+		if (this.waitingCustomers >= 1) {
 			this.waitingCustomers--;
 			this.coffeeCups--;
 			this.money += this.coffeePrice;
