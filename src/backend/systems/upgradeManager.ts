@@ -64,24 +64,26 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	preshop: {
 		crank_grinder: {
 			unlock_condition: (_shop) => {
-				return true;
+				let level = _shop.upgrades.get("crank_grinder") ?? 0;
+				let condition = [2, 10];
+				return _shop.lifetimeGrindBeans > 2;
 			},
 			upgrade: (shop) => {
 				shop.grindTime -= 2;
 			},
 			maxLevel: 2,
 			cost: 8,
-			costMultiplier: 1.5,
+			costMultiplier: 2.5,
 			image: "crank_grinder.jpg",
 		},
 
 		deluxe_coffee_pot: {
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade > 0;
+				return _shop.lifetimeCoffeeMade > 8;
 			},
 			upgrade: (shop) => {
-				shop.coffeeQuantity! += 0.5;
-				shop.makeCoffeeCooldown += 500;
+				shop.makeCoffeeQuantity! += 3;
+				shop.makeCoffeeCooldown += 1000;
 			},
 			maxLevel: 3,
 			cost: 13,
@@ -89,12 +91,41 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "deluxe_coffee_pot.jpg",
 		},
 
-		makeshift_coffee_refiller: {
+		word_of_mouth: {
 			unlock_condition: (_shop) => {
-				return true;
+				return _shop.lifetimeCoffeeSold >= 20;
 			},
 			upgrade: (shop) => {
-				shop.makeCoffeeAmount += 1;
+				shop.minAppeal! += 0.05;
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "word_of_mouth.jpg",
+		},
+
+		promotional_posters: {
+			unlock_condition: (_shop) => {
+				return _shop.lifetimeCoffeeSold >= 10 && _shop.upgrades.get("word_of_mouth")! >= 1;
+			},
+			upgrade: (shop) => {
+				shop.promotionEffectiveness += 0.08;
+				shop.minAppeal! += 0.05;
+				shop.maxAppeal! += 0.1;
+				shop.maxCustomers! += 1;
+			},
+			maxLevel: 3,
+			cost: 30,
+			costMultiplier: 1.3,
+			image: "promotional_posters.jpg",
+		},
+
+		makeshift_coffee_refiller: {
+			unlock_condition: (_shop) => {
+				return _shop.lifetimeCoffeeMade > 15;
+			},
+			upgrade: (shop) => {
+				shop.makeCoffeeBatches += 1;
 			},
 			maxLevel: 1,
 			cost: 30,
@@ -102,31 +133,32 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "automatic_coffee_refiller.jpg",
 		},
 
-		automatic_coffee_refiller: {
+		enlist_younger_sibling: {
 			unlock_condition: (_shop) => {
-				return true;
+				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2;
 			},
 			upgrade: (shop) => {
-				shop.makeCoffeeAmount += 2;
+				shop.autogrindingEnabled = true;
 			},
-			maxLevel: 5,
-			cost: 100,
-			costMultiplier: 1.3,
-			image: "automatic_coffee_refiller.jpg",
+			maxLevel: 1,
+			cost: 50,
+			costMultiplier: 1,
+			image: "enlist_sibling.jpg",
 		},
 
 		efficient_grinding: {
 			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 1;
+				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 && _shop.lifetimeGrindBeans > 40;
 			},
 			upgrade: (shop) => {
-				shop.coffeePerBean += 0.5;
+				shop.coffeePerBean += 2;
 			},
-			maxLevel: 3,
-			cost: 15,
+			maxLevel: 1,
+			cost: 100,
 			costMultiplier: 1.7,
 			image: "coffee_grind_catcher.jpg",
 		},
+
 		multi_grinder: {
 			unlock_condition: (_shop) => {
 				return (_shop.upgrades.get("efficient_grinding") ?? 0) >= 1;
@@ -139,79 +171,68 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.2,
 			image: "multi_grinder.jpg",
 		},
+
 		bulk_bean_deal: {
 			unlock_condition: (_shop) => {
 				let level = _shop.upgrades.get("bulk_bean_deal") ?? 0;
-				let condition = [5, 10, 20, 40];
+				let condition = [70, 200, 400];
 				return _shop.lifetimeGrindBeans >= condition[level];
 			},
 			upgrade: (shop) => {
 				let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
-				let beanPrice = [8.99, 17.99, 35.99, 69.99];
-				let beanAmount = [5, 10, 20, 40];
+				let beanPrice = [17.99, 35.99, 69.99];
+				let beanAmount = [10, 20, 40];
 				shop.beanPrice = beanPrice[level];
 				shop.beansPerBuy = beanAmount[level];
 			},
-			maxLevel: 4,
+			maxLevel: 3,
 			cost: 25,
 			costMultiplier: 2,
 			image: "bulk_bean_deal.jpg",
 		},
-		stand_sign: {
+
+		automatic_coffee_refiller: {
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 20;
+				return _shop.lifetimeCoffeeMade > 40 && (_shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
 			},
 			upgrade: (shop) => {
-				let level = shop.upgrades.get("stand_sign") ?? 0;
-				let minAppeal = [0.1, 0.2, 0.3];
-				shop.minAppeal = minAppeal[level];
-				shop.maxAppeal! += 0.2;
+				shop.makeCoffeeBatches += 2;
 			},
 			maxLevel: 3,
-			cost: 60,
-			costMultiplier: 1.5,
-			image: "stand_sign.jpg",
-		},
-		promotional_posters: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 5;
-			},
-			upgrade: (shop) => {
-				shop.promotionEffectiveness += 0.08;
-			},
-			maxLevel: 3,
-			cost: 30,
-			costMultiplier: 1.3,
-			image: "promotional_posters.jpg",
-		},
-		express_coffee_maker: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade >= 15;
-			},
-			upgrade: (shop) => {
-				shop.makeCoffeeCooldown -= 500;
-			},
-			maxLevel: 3,
-			cost: 40,
-			costMultiplier: 1.2,
-			image: "express_coffee_maker.jpg",
-		},
-		additional_coffee_drips: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 25;
-			},
-			upgrade: (shop) => {
-				shop.coffeeQuantity! += 1;
-			},
-			maxLevel: 2,
 			cost: 100,
 			costMultiplier: 1.3,
-			image: "additional_coffee_drips.jpg",
+			image: "automatic_coffee_refiller.jpg",
+		},
+
+		nicer_coffee: {
+			unlock_condition: (_shop) => {
+				return _shop.lifetimeCoffeeSold > 20;
+			},
+			upgrade: (shop) => {
+				shop.coffeePrice += 0.7;
+			},
+			maxLevel: 10,
+			cost: 20,
+			costMultiplier: 1.23,
+			image: "better_coffee.jpg",
+		},
+
+		express_coffee_maker: {
+			unlock_condition: (_shop) => {
+				return _shop.lifetimeCoffeeMade >= 15 && (_shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 3;
+			},
+			upgrade: (shop) => {
+				shop.makeCoffeeCooldown -= 3500;
+			},
+			maxLevel: 1,
+			cost: 140,
+			costMultiplier: 1.2,
+			image: "express_coffee_maker.jpg",
 		},
 
 		buy_coffee_shop: {
 			unlock_condition: (_shop) => {
-				return true;
+				return _shop.lifetimeCoffeeSold >= 200;
 			},
 			upgrade: (shop) => {
 				shop.endScene();

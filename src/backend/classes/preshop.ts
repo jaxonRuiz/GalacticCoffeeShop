@@ -5,8 +5,8 @@ import { msPerTick } from "../systems/time";
 export class Preshop implements ISubscriber, IScene {
 	// resources (setting writable to interact with svelte)
 	// not to be used in backend
-	w_money: Writable<number> = writable(100000);
-	w_beans: Writable<number> = writable(5);
+	w_money: Writable<number> = writable(20);
+	w_beans: Writable<number> = writable(20);
 	w_groundCoffee: Writable<number> = writable(0);
 	w_coffeeCups: Writable<number> = writable(0);
 	w_waitingCustomers: Writable<number> = writable(0);
@@ -28,9 +28,13 @@ export class Preshop implements ISubscriber, IScene {
 	appealDecay: number = 0.05; // rate of decay of customer appeal
 	maxCustomers: number = 5;
 	maxAppeal: number = 0.7;
-	coffeeQuantity: number = 1; // how many cups of coffee are made per run
+	minAppeal: number = 0; // minimum appeal (after decay)
+	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
 	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
-	makeCoffeeAmount: number = 1; // how many cups of coffee are made per run
+	makeCoffeeBatches: number = 1; // how many cups of coffee are made per run
+	autogrindingEnabled: boolean = false; // whether or not to grind automatically
+	autogrindInterval: number = 10;
+	autogrindCounter: number = 0;
 
 
 	// stat counters
@@ -143,6 +147,13 @@ export class Preshop implements ISubscriber, IScene {
 		if (!this.canMakeCoffee) {
 			this.makeCoffeeTimedown();
 		}
+		if (this.autogrindingEnabled) {
+			this.autogrindCounter++;
+			if (this.autogrindCounter >= this.autogrindInterval) {
+				this.grindBeans();
+				this.autogrindCounter = 0;
+			}
+		}
 
 	}
 
@@ -163,10 +174,10 @@ export class Preshop implements ISubscriber, IScene {
 
 	decayAppeal() {
 		// appeal decay
-		if (this.appeal > 0.00005) {
+		if (this.appeal > this.minAppeal) {
 			this.appeal = this.appeal * (1 - this.appealDecay);
 		} else {
-			this.appeal = 0;
+			this.appeal = this.minAppeal;
 		}
 	}
 
@@ -194,7 +205,7 @@ export class Preshop implements ISubscriber, IScene {
 	// TODO make appeal diminishing effectiveness
 	promoteShop() {
 		this.appeal += this.promotionEffectiveness *
-			(1 - this.appeal / this.maxAppeal);
+			(1 - ((this.minAppeal + this.appeal) / (this.minAppeal + this.maxAppeal)));
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
@@ -241,12 +252,12 @@ export class Preshop implements ISubscriber, IScene {
 		if (this.canMakeCoffee) {
 			console.log("new coffee batch");
 			this.canMakeCoffee = false;
-			this.makeCoffeeCount = this.makeCoffeeAmount;
+			this.makeCoffeeCount = this.makeCoffeeBatches;
 		}
 
 		console.log("making coffee", this.coffeeToMake);
 		// possibly add cooldown or timer effect
-		this.coffeeToMake = Math.min(this.groundCoffee, this.coffeeQuantity);
+		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity);
 		this.groundCoffee -= this.coffeeToMake;
 		this.makeCoffeeTime = 0;
 	}
@@ -268,6 +279,7 @@ export class Preshop implements ISubscriber, IScene {
 
 	endScene() {
 		console.log("preshop endScene()");
+
 		this.sceneManager.emit("nextScene");
 	}
 
@@ -290,7 +302,7 @@ export class Preshop implements ISubscriber, IScene {
 			promotionEffectiveness: this.promotionEffectiveness,
 			maxCustomers: this.maxCustomers,
 			maxAppeal: this.maxAppeal,
-			coffeeQuantity: this.coffeeQuantity,
+			coffeeQuantity: this.makeCoffeeQuantity,
 
 			lifetimeGrindBeans: this.lifetimeGrindBeans,
 			lifetimeCoffeeSold: this.lifetimeCoffeeSold,
@@ -331,7 +343,7 @@ export class Preshop implements ISubscriber, IScene {
 		this.maxCustomers = state.maxCustomers;
 		this.customerProgress = 0;
 		this.maxAppeal = state.maxAppeal;
-		this.coffeeQuantity = state.coffeeQuantity;
+		this.makeCoffeeQuantity = state.coffeeQuantity;
 
 		this.lifetimeGrindBeans = state.lifetimeGrindBeans;
 		this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;

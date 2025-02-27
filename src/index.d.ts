@@ -38,15 +38,18 @@ interface IShop {
   beanPrice: number;
   grindProgress: number;
   makeCoffeeCooldown: number;
-  makeCoffeeAmount: number;
+  makeCoffeeBatches: number;
 
   minAppeal?: number;
   maxAppeal?: number;
-  coffeeQuantity?: number;
+  maxCustomers?: number;
+  makeCoffeeQuantity?: number;
   grindQuantity: number;
+  autogrindingEnabled: boolean;
   lifetimeCoffeeSold: number;
   lifetimeCoffeeMade: number;
   lifetimeGrindBeans: number;
+
   shops?: IShop[];
   endScene(): void;
 }
