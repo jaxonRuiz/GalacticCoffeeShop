@@ -2,7 +2,7 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { msPerTick } from "../systems/time";
 
-const PLAYTEST_MULTIPLIER = 3;
+const PLAYTEST_MULTIPLIER = 2.3;
 
 export class Preshop implements ISubscriber, IScene {
 	// resources (setting writable to interact with svelte)

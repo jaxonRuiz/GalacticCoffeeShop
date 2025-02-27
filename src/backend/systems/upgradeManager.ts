@@ -245,7 +245,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		buy_coffee_shop: {
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 200;
+				return _shop.lifetimeCoffeeSold >= 125;
 			},
 			upgrade: (shop) => {
 				shop.endScene();
