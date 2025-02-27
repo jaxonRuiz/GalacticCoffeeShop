@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Tooltip from './../components/Tooltip.svelte';
+	import Tooltip from "./../components/Tooltip.svelte";
 	import { t } from "svelte-i18n";
 	import { upgradeJSON } from "../../backend/systems/upgradeManager";
 	import { Preshop } from "../../backend/classes/preshop";
@@ -8,7 +8,12 @@
 	import { StageManager } from "../../backend/systems/stageManager";
 	import Dropdown from "../components/Dropdown.svelte";
 	import Button from "../components/Button.svelte";
-	import { fMoney, fAppeal, fSellableCoffee, pointerStyle } from "../components/Styles.svelte";
+	import {
+		fMoney,
+		fAppeal,
+		fSellableCoffee,
+		pointerStyle,
+	} from "../components/Styles.svelte";
 
 	// base
 	let timer = new Timer();
@@ -21,6 +26,7 @@
 
 	// for upgrades
 	let rupgs = $state(false);
+	let upgPage = $state(0);
 	const upgs = upgradeJSON["preshop"];
 	const upgs_cost = $state(
 		Object.keys(upgs).reduce((costs: { [key: string]: number }, key) => {
@@ -48,7 +54,7 @@
 	let makeCoffeeTime = pshop.w_makeCoffeeTime;
 </script>
 
-{#snippet upgrade(upgkey: string)}
+{#snippet upgrade(upgkey: string, purchased: boolean)}
 	<Button
 		data-btn="coin"
 		disabled={$money < upgs_cost[upgkey] ? true : false}
@@ -61,17 +67,19 @@
 	>
 		<h3>
 			{$t(`${upgkey}_upgName`)}{upgs[upgkey].maxLevel != 1
-				? ` LVL${(pshop.upgrades.get(upgkey) ?? 0) + 1}`
+				? ` LVL${(pshop.upgrades.get(upgkey) ?? 0) + (purchased ? 0 : 1)}`
 				: ""}
 		</h3>
 
 		<p>{$t(`${upgkey}_upgDesc`)}</p>
-		<p>{$t("cost_stat")}: {fMoney(upgs_cost[upgkey])}</p>
+		{#if !purchased}
+			<p>{$t("cost_stat")}: {fMoney(upgs_cost[upgkey])}</p>
+		{/if}
 	</Button>
 {/snippet}
 
 <main class="shop container" style={pointerStyle}>
-	<div class="shop left col">
+	<div class="shop left col fixed">
 		<div class="col">
 			<h1>{$t("preshop_title")}</h1>
 			<p>{$t("money_stat")}: {fMoney($money)}</p>
@@ -87,14 +95,12 @@
 		<div class="col">
 			<Dropdown title={$t("making_title")}>
 				<div class="tooltip">
-					<Tooltip
-						text={["makeCoffee1_tooltip", "makeCoffee2_tooltip"]}
-					/>
+					<Tooltip text={["makeCoffee1_tooltip", "makeCoffee2_tooltip"]} />
 				</div>
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<!-- button style to showcase how much more to grind -->
 				<Button
-					data-btn={$grindProg == pshop.grindTime ? "plusOne" : ""}
+					data-btn={$grindProg == pshop.grindTime ? "plus" : ""}
 					style="background: linear-gradient(90deg, var(--accent) 0% {($grindProg /
 						pshop.grindTime) *
 						100}%, var(--btnbg) {($grindProg / pshop.grindTime) * 100}% 100%);"
@@ -105,7 +111,7 @@
 				>
 				<p>{$t("groundedBeans_stat")}: {$groundedBeans}</p>
 				<Button
-					data-btn="plusOne"
+					data-btn="plus"
 					style="background: linear-gradient(90deg, var(--accent) 0% {($makeCoffeeTime /
 						pshop.makeCoffeeCooldown) *
 						100}%, var(--btnbg) {($makeCoffeeTime / pshop.makeCoffeeCooldown) *
@@ -124,7 +130,7 @@
 				</div>
 				<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
 				<Button
-					data-btn="promote"
+					data-btn="star"
 					onclick={() => {
 						pshop.promoteShop();
 					}}>{$t("promote_btn")}</Button
@@ -138,7 +144,7 @@
 				<p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
 				<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
 				<Button
-					data-btn="minusOne"
+					data-btn="plus"
 					classes={["green"]}
 					disabled={$waitingCustomers >= 1 && $coffee >= 1 ? false : true}
 					onclick={() => {
@@ -170,24 +176,52 @@
 			</Dropdown>
 		</div>
 
-		<div class="col">
-			<div class="col block">
-				<h1>{$t("upgrades_title")}</h1>
-				{#key rupgs}
-					{#each availableUpgrades as upgkey (upgkey)}
-						{@render upgrade(upgkey)}
+		<div class="col block fixed">
+			<h1>{$t("upgrades_title")}</h1>
+			<div class="row">
+				<label class="tab">
+					<input
+						checked
+						type="radio"
+						name="upgPage"
+						value={0}
+						bind:group={upgPage}
+					/>
+					<p>{$t("upgUnpurchased_btn")}</p>
+				</label>
+				<label class="tab">
+					<input type="radio" name="upgPage" value={1} bind:group={upgPage} />
+					<p>{$t("upgPurchased_btn")}</p>
+				</label>
+			</div>
+			<div class="col" id="upgrades">
+				{#if upgPage == 0}
+					{#key rupgs}
+						{#each availableUpgrades as upgkey (upgkey)}
+							{@render upgrade(upgkey, false)}
+						{/each}
+					{/key}
+				{:else if upgPage === 1}
+					{#each [...pshop.upgrades.keys()] as upgkey (upgkey)}
+						{@render upgrade(upgkey, true)}
 					{/each}
-				{/key}
+				{/if}
 			</div>
 		</div>
 	</div>
 </main>
 
 <style>
+	.fixed {
+		position: sticky;
+		top: 0;
+	}
 	.shop.right > div {
 		width: 50%;
-		overflow-y: auto;
-		overflow-x: hidden;
+		height: 100%;
+		/* &:first-child {
+			overflow: visible;
+		} */
 	}
 	.tooltip {
 		width: 0;
@@ -195,5 +229,32 @@
 		margin-left: auto;
 		display: flex;
 		flex-direction: row-reverse;
+	}
+
+	.tab {
+		cursor: var(--cpointer), pointer;
+		padding-bottom: 0.7em;
+		input {
+			display: none;
+		}
+		p {
+			padding: 0.5rem 1rem;
+			margin: 0;
+			border-radius: 0.5rem;
+			border: transparent solid var(--borderW);
+			box-sizing: border-box;
+		}
+		input:checked + p {
+			border-color: white;
+		}
+	}
+
+	div:has(> .tab) {
+		justify-content: space-evenly;
+	}
+
+	#upgrades {
+		flex-grow: 1;
+		overflow-y: auto;
 	}
 </style>

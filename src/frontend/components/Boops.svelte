@@ -16,6 +16,8 @@
 		<img src={img.boop_plusOne} alt="+1" />
 	{:else if type === "minusOne"}
 		<img src={img.boop_minusOne} alt="-1" />
+	{:else if ["plus", "minus", "star"].includes(type)}
+		<img src={img[`boop_${type}`]} alt={type} />
 	{:else if type === "coin"}
 		{#each { length: 5 } as _}
 			<img
@@ -42,7 +44,11 @@
 			top: 0;
 			left: 0;
 		}
-		&.plusOne > img, &.minusOne > img {
+		&.plusOne > img,
+		&.minusOne > img,
+		&.plus > img,
+		&.minus > img,
+		&.star > img {
 			animation: boop 0.5s ease-out forwards;
 		}
 		&.coin > img.left {
@@ -69,10 +75,10 @@
 		0% {
 			transform: translate(0);
 		}
-		7% {
+		17% {
 			transform: translate(calc(-0.5 * var(--s)), calc(-0.5 * var(--s)));
 		}
-		10% {
+		25% {
 			transform: translate(calc(-0.7 * var(--s)), calc(-0.3 * var(--s)));
 		}
 		75% {
@@ -87,10 +93,10 @@
 		0% {
 			transform: translate(0);
 		}
-		7% {
+		17% {
 			transform: translate(calc(0.5 * var(--s)), calc(-0.5 * var(--s)));
 		}
-		10% {
+		25% {
 			transform: translate(calc(0.7 * var(--s)), calc(-0.3 * var(--s)));
 		}
 		75% {
