@@ -74,8 +74,8 @@
 	<div class="shop left col">
 		<div class="col">
 			<h1>{$t("preshop_title")}</h1>
-			<p>{$t("money_stat")}: ${fMoney($money)}</p>
-			<p>{$t("appeal_stat")}: {fAppeal($appeal)}%</p>
+			<p>{$t("money_stat")}: {fMoney($money)}</p>
+			<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
 			<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
 		</div>
 		<div style="height: 5rem;"></div>
@@ -122,7 +122,7 @@
 				<div class="tooltip">
 					<Tooltip text={["promote_tooltip"]} />
 				</div>
-				<p>{$t("appeal_stat")}: {fAppeal($appeal)}%</p>
+				<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
 				<Button
 					data-btn="promote"
 					onclick={() => {
