@@ -22,7 +22,7 @@
 	data-btn={dataBtn}
 	{onclick}
 	{disabled}
-	class="button ${classes.join(' ')}"
+	class="button {classes.join(' ')}"
 >
 	{@render children()}
 </button>

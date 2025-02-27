@@ -14,9 +14,8 @@ let timer = new Timer();
 export let stageManager = new StageManager(timer);
 
 console.log("hello world");
-startGame();
 
-function startGame() {
+export function startGame() {
 	console.log("starting game");
 	stageManager.nextScene();
 }

@@ -8,6 +8,8 @@
   import { pointerStyle } from "./frontend/components/Styles.svelte";
   import { booped, boops } from "./frontend/components/Boops";
   import Boops from "./frontend/components/Boops.svelte";
+  import { tooltips } from "./frontend/components/Tooltip";
+  import TooltipContent from "./frontend/components/TooltipContent.svelte";
 
 	let tabs = ["game", "preshop", "shop", "multishop", "test"];
 	let comps = [Game, Preshop, Shop, Multishop, Test];
@@ -55,6 +57,11 @@
 	<div id="mouse-effects">
 		{#each $boops as b (b.id)}
 			<Boops x={b.x} y={b.y} type={b.type} />
+		{/each}
+		{#each $tooltips as t (t.id)}
+		 	{#if t.visible && t.content.length > 0}
+		 		<TooltipContent x={t.x} y={t.y} text={t.content}/>
+		 	{/if}
 		{/each}
 	</div>
 	{#if currentTab > -1}

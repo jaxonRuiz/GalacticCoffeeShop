@@ -4,7 +4,7 @@
 	import { img } from "../../assets/img";
 	import { pointerStyle } from "./Styles.svelte";
 
-	const { type = "top", text } = $props();
+	const { type = "left", text } = $props();
 	let open = $state(false);
 </script>
 
@@ -32,7 +32,7 @@
 		--bg: #000;
 		--s: 1rem;
 		--b: 2.5rem;
-		position: absolute;
+		position: relative;
 		width: var(--b);
 		height: var(--b);
 		display: flex;
@@ -65,6 +65,7 @@
 		height: var(--b);
 		padding: 0.2rem;
 		background-color: transparent;
+		flex-shrink: 0;
 		&:hover {
 			border: transparent solid 1px;
 			background-color: transparent;

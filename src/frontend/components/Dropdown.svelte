@@ -24,7 +24,8 @@
     /* covered in shop.css */
     /* transition: max-height 0.2s linear; */
     &.content {
-      overflow-y: hidden;
+      /* overflow-y: hidden; */
+      overflow: visible;
     }
 
     button {

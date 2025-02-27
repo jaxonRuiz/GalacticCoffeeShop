@@ -4,6 +4,8 @@
 	--btnbg: #333;
 	--bg1: #111;
 	--bg2: #1a1a1a;
+	--borderW: 3px;
+	--green: #4cd649;
 }
 
 * {
@@ -43,5 +45,12 @@
 
 	div.block {
 		margin-bottom: 0;
+	}
+}
+
+button.green {
+	border-color: var(--green);
+	&:disabled {
+		border-color: transparent;
 	}
 }
