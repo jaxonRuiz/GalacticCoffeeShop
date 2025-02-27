@@ -135,7 +135,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		enlist_younger_sibling: {
 			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2;
+				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 && _shop.lifetimeGrindBeans > 20;
 			},
 			upgrade: (shop) => {
 				shop.autogrindingEnabled = true;
@@ -148,7 +148,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		efficient_grinding: {
 			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 && _shop.lifetimeGrindBeans > 40;
+				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 && _shop.lifetimeGrindBeans > 50;
 			},
 			upgrade: (shop) => {
 				shop.coffeePerBean += 2;
