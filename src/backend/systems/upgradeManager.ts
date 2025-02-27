@@ -62,6 +62,18 @@ export class UpgradeManager {
 //  way to designate upgrade caps and single upgrades
 export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	preshop: {
+		play_tester_mode: {
+			unlock_condition: (_shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				shop.moneyMultiplier = 2.3;
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "play_tester_mode.jpg",
+		},
 		crank_grinder: {
 			unlock_condition: (_shop) => {
 				let level = _shop.upgrades.get("crank_grinder") ?? 0;

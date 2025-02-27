@@ -84,5 +84,7 @@
 	"flashy_sign_upgName": "Flashy Sign",
 	"flashy_sign_upgDesc": "Passively attract more customers to your storefront!",
 	"cohesive_branding_upgName": "Cohesive Branding",
-	"cohesive_branding_upgDesc": "Increase appeal of all shops"
+	"cohesive_branding_upgDesc": "Increase appeal of all shops",
+	"play_tester_mode_upgName": "Play Tester Mode",
+	"play_tester_mode_upgDesc": "make game go fast"
 }

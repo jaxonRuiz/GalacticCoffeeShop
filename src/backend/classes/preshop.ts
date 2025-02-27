@@ -2,9 +2,9 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { msPerTick } from "../systems/time";
 
-const PLAYTEST_MULTIPLIER = 2.3;
-
 export class Preshop implements ISubscriber, IScene {
+	moneyMultiplier: number = 1;
+
 	// resources (setting writable to interact with svelte)
 	// not to be used in backend
 	w_money: Writable<number> = writable(20);
@@ -248,7 +248,7 @@ export class Preshop implements ISubscriber, IScene {
 		if (this.waitingCustomers >= 1) {
 			this.waitingCustomers--;
 			this.coffeeCups--;
-			this.money += this.coffeePrice * PLAYTEST_MULTIPLIER;
+			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
 		}
 	}
