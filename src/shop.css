@@ -18,6 +18,19 @@
 	display: none !important;
 }
 
+.scroll {
+	overflow: auto;
+	/* IE and Edge */
+	-ms-overflow-style: none;
+	/* Firefox */
+	scrollbar-width: none;
+
+	/* Chrome, Safari, and Opera */
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
 .shop {
 	&.container {
 		display: flex;
@@ -25,22 +38,27 @@
 		height: 100%;
 		width: 100%;
 	}
+
 	&.left {
-		flex-grow: 1; /* use shop-right to edit size */
+		flex-grow: 1;
+		/* use shop-right to edit size */
 		height: 100%;
 		background-color: var(--bg1);
 	}
+
 	&.right {
 		width: 60%;
 	}
 
-	h1, p {
+	h1,
+	p {
 		text-align: center;
 		margin: 10px 0;
 		width: 100%;
 	}
 
-	div.block, .button {
+	div.block,
+	.button {
 		margin: 10px;
 	}
 
@@ -51,6 +69,7 @@
 
 button.green {
 	border-color: var(--green);
+
 	&:disabled {
 		border-color: transparent;
 	}
