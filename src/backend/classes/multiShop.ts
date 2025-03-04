@@ -1,6 +1,6 @@
 import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
-import { Shop } from "./shop";
+import { type LocalShopSave, Shop } from "./shop";
 
 export class MultiShop implements ISubscriber, IScene {
 	// writable resources
@@ -56,7 +56,6 @@ export class MultiShop implements ISubscriber, IScene {
 			this.withdrawAll();
 			this.applyExpenses();
 			this.shops.forEach((shop) => shop.restock());
-
 
 			if (this.money < 0) {
 				console.log("debt boy");
@@ -158,9 +157,33 @@ export class MultiShop implements ISubscriber, IScene {
 		if (!this.selectedShop) return;
 		this.selectedShop.removeWorker(role);
 	}
+
+	saveState() {
+		let saveObj: MultishopSave = {
+			money: this.money,
+		};
+
+		for (let [key, value] of this.upgrades) {
+			saveObj.upgrades[key] = value;
+		}
+
+		localStorage.setItem("preshop", JSON.stringify(saveObj));
+	}
+
+	loadState() {
+	}
+
+	clearState() {
+	}
 }
 
 interface ShopWeekReport {
 	income: number;
 	expenses: number;
+}
+
+interface MultishopSave {
+	money: number;
+	upgrades: { [key: string]: number };
+	shops: LocalShopSave[];
 }

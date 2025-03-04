@@ -280,6 +280,12 @@ export class Shop {
 			},
 		});
 	}
+
+	saveState() {
+	}
+
+	loadState() {
+	}
 }
 
 interface Role {
@@ -288,4 +294,9 @@ interface Role {
 	maxWorkers: number;
 	wage: number; // weekly
 	update: (shop: Shop, tickCounter: number) => void;
+}
+
+export interface LocalShopSave {
+	money: number;
+	upgrades: { [key: string]: number };
 }

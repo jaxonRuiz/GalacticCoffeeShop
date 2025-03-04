@@ -15,15 +15,26 @@ export let stageManager = new StageManager(timer);
 
 console.log("hello world");
 
+// make sure startGame is only called on a new save
 export function startGame() {
 	console.log("starting game");
 	stageManager.nextScene();
+	// stageManager.loadStage(2);
 }
 
 function saveState() {
-	// save state to local storage
+	let saveData: SaveData = {
+		currentStageIndex: stageManager.currentSceneIndex,
+	};
+
+	localStorage.setItem("GameSaveData", JSON.stringify(saveData));
 }
 
 function loadState() {
-	// load state from local storage
+	let saveData = JSON.parse(localStorage.getItem("GameSaveData")!);
+	stageManager.loadStage(saveData.currentStageIndex);
+}
+
+interface SaveData {
+	currentStageIndex: number;
 }

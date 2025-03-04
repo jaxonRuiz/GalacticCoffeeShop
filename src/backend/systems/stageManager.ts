@@ -23,6 +23,29 @@ export class StageManager extends Publisher {
 		this.subscribe(this.sceneWatcher, "nextScene");
 	}
 
+	loadStage(stageIndex: number) {
+		this.currentSceneIndex = stageIndex;
+
+		switch (this.currentSceneIndex) {
+			case 0:
+				console.log("beginning of game reload");
+				break;
+			case 1:
+				this.currentScene = new Preshop(this.timer.timeEvents, this);
+				break;
+			case 2:
+				this.currentScene = new MultiShop(this.timer.timeEvents, this);
+				break;
+			case 3:
+				console.log("game over reload");
+				break;
+			default:
+				console.log("game is over relaod");
+		}
+
+		this.currentScene.loadState();
+	}
+
 	sceneWatcher: ISubscriber = {
 		notify: (event: string, data?: any) => {
 			console.log("triggering next scene");
@@ -31,22 +54,16 @@ export class StageManager extends Publisher {
 	};
 
 	nextScene() {
-		console.log("ending scene index: ", this.currentSceneIndex);
-
 		switch (this.currentSceneIndex) {
 			case 0: // start game to preshop
 				console.log("setting preshop");
 				this.currentScene = new Preshop(this.timer.timeEvents, this);
-				// let tempPreshop = new Preshop(this.timer.timeEvents, this);
-				// this.w_currentScene.set(tempPreshop);
 				this.currentSceneIndex = 1;
 				break;
 
 			case 1: // preshop to multishop
 				console.log("preshop to multishop");
 				this.currentScene = new MultiShop(this.timer.timeEvents, this);
-				// let tempMultishop = new MultiShop(this.timer.timeEvents, this);
-				// this.w_currentScene.set(tempMultishop);
 				this.currentSceneIndex = 2;
 				break;
 

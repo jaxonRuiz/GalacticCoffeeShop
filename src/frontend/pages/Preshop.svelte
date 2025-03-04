@@ -5,7 +5,7 @@
   import { Preshop } from "../../backend/classes/preshop";
   import { Timer } from "../../backend/systems/time";
   import { UpgradeManager } from "../../backend/systems/upgradeManager";
-  import { StageManager } from "../../backend/systems/stageManager";
+  import { stageManager } from "../../backend/game";
   import Dropdown from "../components/Dropdown.svelte";
   import Button from "../components/Button.svelte";
   import {
@@ -17,8 +17,8 @@
 
   // base
   let timer = new Timer();
-  let smanager = new StageManager(timer);
-  const mockpshop = new Preshop(timer.timeEvents, smanager);
+  let smanager = stageManager;
+  const mockpshop: Preshop = smanager.currentScene; //new Preshop(timer.timeEvents, smanager);
 
   let { wshop: pshop = mockpshop } = $props();
 

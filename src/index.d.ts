@@ -57,6 +57,8 @@ interface IShop {
 
 interface IScene {
   endScene(): void;
+  saveState(): void;
+  loadState(): void;
 }
 
 interface ISubscriber {
