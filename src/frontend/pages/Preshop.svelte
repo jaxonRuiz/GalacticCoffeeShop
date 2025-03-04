@@ -52,6 +52,8 @@
   let grindProg = pshop.w_grindProgress;
   let canMakeCoffee = pshop.w_canMakeCoffee;
   let makeCoffeeTime = pshop.w_makeCoffeeTime;
+  let coffeePrice = pshop.w_coffeePrice;
+  let beansPerBuy = pshop.w_beansPerBuy;
 </script>
 
 {#snippet upgrade(upgkey: string, purchased: boolean)}
@@ -144,6 +146,7 @@
         </div>
         <p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
         <p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
+        <p>{$t("coffeePrice_stat")}: {fMoney($coffeePrice)}</p>
         <Button
           data-btn="plus"
           classes={["green"]}
@@ -159,6 +162,7 @@
           <Tooltip text={["shop_tooltip"]} />
         </div>
         <p>{$t("beanPrice_stat")}: {fMoney($beanPrice)}</p>
+        <p>{$t("beansPerBuy_stat")}: {$beansPerBuy}</p>
         <Button
           data-btn="coin"
           disabled={$money < $beanPrice ? true : false}

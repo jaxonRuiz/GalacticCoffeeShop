@@ -62,18 +62,18 @@ export class UpgradeManager {
 //  way to designate upgrade caps and single upgrades
 export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	preshop: {
-		play_tester_mode: {
-			unlock_condition: (_shop) => {
-				return true;
-			},
-			upgrade: (shop) => {
-				shop.moneyMultiplier = 2.3;
-			},
-			maxLevel: 1,
-			cost: 0,
-			costMultiplier: 1,
-			image: "play_tester_mode.jpg",
-		},
+		// play_tester_mode: {
+		// 	unlock_condition: (_shop) => {
+		// 		return true;
+		// 	},
+		// 	upgrade: (shop) => {
+		// 		shop.moneyMultiplier = 2.3;
+		// 	},
+		// 	maxLevel: 1,
+		// 	cost: 0,
+		// 	costMultiplier: 1,
+		// 	image: "play_tester_mode.jpg",
+		// },
 		crank_grinder: {
 			unlock_condition: (_shop) => {
 				let level = _shop.upgrades.get("crank_grinder") ?? 0;
@@ -118,7 +118,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		promotional_posters: {
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 10 && _shop.upgrades.get("word_of_mouth")! >= 1;
+				return _shop.lifetimeCoffeeSold >= 10 &&
+					_shop.upgrades.get("word_of_mouth")! >= 1;
 			},
 			upgrade: (shop) => {
 				shop.promotionEffectiveness += 0.08;
@@ -147,7 +148,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		enlist_younger_sibling: {
 			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 && _shop.lifetimeGrindBeans > 20;
+				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
+					_shop.lifetimeGrindBeans > 20;
 			},
 			upgrade: (shop) => {
 				shop.autogrindingEnabled = true;
@@ -160,7 +162,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		efficient_grinding: {
 			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 && _shop.lifetimeGrindBeans > 50;
+				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
+					_shop.lifetimeGrindBeans > 50;
 			},
 			upgrade: (shop) => {
 				shop.coffeePerBean += 2;
@@ -205,7 +208,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		automatic_coffee_refiller: {
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade > 40 && (_shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
+				return _shop.lifetimeCoffeeMade > 40 &&
+					(_shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
 			},
 			upgrade: (shop) => {
 				shop.makeCoffeeBatches += 2;
@@ -231,10 +235,12 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		nicer_coffee: {
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold > 20;
+				let thresholds = [20, 30, 50, 80, 100, 150, 170, 200, 220, 250];
+				let level = _shop.upgrades.get("nicer_coffee") ?? 0;
+				return _shop.lifetimeCoffeeSold >= thresholds[level];
 			},
 			upgrade: (shop) => {
-				shop.coffeePrice += 0.7;
+				shop.coffeePrice += 0.35;
 			},
 			maxLevel: 10,
 			cost: 20,
@@ -244,7 +250,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		express_coffee_maker: {
 			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade >= 15 && (_shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 3;
+				return _shop.lifetimeCoffeeMade >= 15 &&
+					(_shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 3;
 			},
 			upgrade: (shop) => {
 				shop.makeCoffeeCooldown -= 3500;

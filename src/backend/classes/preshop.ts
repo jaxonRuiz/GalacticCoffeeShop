@@ -18,10 +18,10 @@ export class Preshop implements ISubscriber, IScene {
 	w_canMakeCoffee: Writable<boolean> = writable(true);
 	w_makeCoffeeTime: Writable<number> = writable(0);
 	w_makeCoffeeCount: Writable<number> = writable(0);
+	w_beansPerBuy: Writable<number> = writable(3);
+	w_coffeePrice: Writable<number> = writable(3.5);
 
 	// internal stats
-	coffeePrice: number = 3.5;
-	beansPerBuy: number = 3; // how many beans are bought at a time
 	coffeePerBean: number = 2.5;
 	grindQuantity: number = 1; // how many beans are ground at a time
 	grindTime: number = 5; // number of times to click to grind a bean
@@ -47,7 +47,6 @@ export class Preshop implements ISubscriber, IScene {
 	w_lifetimeGrindBeans: Writable<number> = writable(0);
 	w_lifetimeCoffeeSold: Writable<number> = writable(0);
 	w_lifetimeCoffeeMade: Writable<number> = writable(0);
-
 
 	// contains list of upgrades (IDs) and their levels
 	upgrades: Map<string, number> = new Map();
@@ -124,6 +123,19 @@ export class Preshop implements ISubscriber, IScene {
 	set makeCoffeeCount(value) {
 		this.w_makeCoffeeCount.set(value);
 	}
+	get beansPerBuy() {
+		return get(this.w_beansPerBuy);
+	}
+	set beansPerBuy(value) {
+		this.w_beansPerBuy.set(value);
+	}
+	get coffeePrice() {
+		return get(this.w_coffeePrice);
+	}
+	set coffeePrice(value) {
+		this.w_coffeePrice.set(value);
+	}
+
 	// stat counters
 	get lifetimeGrindBeans() {
 		return get(this.w_lifetimeGrindBeans);
@@ -187,7 +199,6 @@ export class Preshop implements ISubscriber, IScene {
 				this.autosellCounter = 0;
 			}
 		}
-
 	}
 
 	drawCustomers() {
@@ -222,7 +233,6 @@ export class Preshop implements ISubscriber, IScene {
 			this.coffeeCups += this.coffeeToMake;
 			this.makeCoffeeTime = 0;
 
-
 			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1) {
 				console.log("finished making coffee");
 				this.makeCoffeeTime = 0;
@@ -238,7 +248,8 @@ export class Preshop implements ISubscriber, IScene {
 	// TODO make appeal diminishing effectiveness
 	promoteShop() {
 		this.appeal += this.promotionEffectiveness *
-			(1 - ((this.minAppeal + this.appeal) / (this.minAppeal + this.maxAppeal)));
+			(1 -
+				((this.minAppeal + this.appeal) / (this.minAppeal + this.maxAppeal)));
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
