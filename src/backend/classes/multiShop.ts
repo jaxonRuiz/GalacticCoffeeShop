@@ -185,6 +185,7 @@ export class MultiShop implements ISubscriber, IScene {
 		if (rawJSON === null) return;
 
 		const state: MultiShopSave = JSON.parse(rawJSON);
+		
 
 		// check that multishop upgrades work fine loading in like this
 		this.upgrades = new Map(Object.entries(state.upgrades));

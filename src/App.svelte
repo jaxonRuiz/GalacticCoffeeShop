@@ -8,6 +8,7 @@
   import { pointerStyle } from "./frontend/components/Styles.svelte";
   import { booped, boops } from "./frontend/components/Boops";
   import Boops from "./frontend/components/Boops.svelte";
+	import { saveState, loadState } from "./backend/game";
 
 	let tabs = ["game", "preshop", "shop", "multishop", "test"];
 	let comps = [Game, Preshop, Shop, Multishop, Test];
@@ -17,6 +18,14 @@
 	function onKeyDown(event: KeyboardEvent) {
 		if (event.key === "t") {
 			testing = !testing;
+		}
+		if (event.key === "p") {
+			console.log("app loading");
+			loadState();
+		}
+		if (event.key === "o") {
+			console.log("app saving");
+			saveState();
 		}
 	}
 

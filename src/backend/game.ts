@@ -22,15 +22,17 @@ export function startGame() {
 	// stageManager.loadStage(2);
 }
 
-function saveState() {
+export function saveState() {
+	console.log("game saving state");
 	let saveData: SaveData = {
 		currentStageIndex: stageManager.currentSceneIndex,
 	};
-
+	stageManager.currentScene.saveState();
 	localStorage.setItem("GameSaveData", JSON.stringify(saveData));
 }
 
-function loadState() {
+export function loadState() {
+	console.log("game loading state");
 	let saveData = JSON.parse(localStorage.getItem("GameSaveData")!);
 	stageManager.loadStage(saveData.currentStageIndex);
 }

@@ -31,9 +31,11 @@ export class StageManager extends Publisher {
 				console.log("beginning of game reload");
 				break;
 			case 1:
+				console.log("loading preshop");
 				this.currentScene = new Preshop(this.timer.timeEvents, this);
 				break;
 			case 2:
+				console.log("loading multishop");
 				this.currentScene = new MultiShop(this.timer.timeEvents, this);
 				break;
 			case 3:
@@ -43,6 +45,7 @@ export class StageManager extends Publisher {
 				console.log("game is over relaod");
 		}
 
+		console.log("loading current scene state");
 		this.currentScene.loadState();
 	}
 

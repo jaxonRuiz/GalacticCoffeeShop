@@ -329,6 +329,7 @@ export class Preshop implements ISubscriber, IScene {
 
 	// save/load ////////////////////////////////////////////////////////////
 	saveState() {
+		console.log("preshop save state");
 		let saveObj: PreshopSave = {
 			money: this.money,
 			beans: this.beans,
@@ -363,6 +364,7 @@ export class Preshop implements ISubscriber, IScene {
 	}
 
 	loadState() {
+		console.log("preshop load state");
 		const rawJSON = localStorage.getItem("preshop");
 
 		if (rawJSON === null) return;
