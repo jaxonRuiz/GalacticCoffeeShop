@@ -74,6 +74,21 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		// 	costMultiplier: 1,
 		// 	image: "play_tester_mode.jpg",
 		// },
+
+		buy_coffee_shop: {
+			unlock_condition: (_shop) => {
+				return true;
+				return _shop.lifetimeCoffeeSold >= 125;
+			},
+			upgrade: (shop) => {
+				shop.endScene();
+			},
+			maxLevel: 1,
+			cost: 1,
+			costMultiplier: 1,
+			image: "buy_coffee_shop.jpg",
+		},
+
 		crank_grinder: {
 			unlock_condition: (_shop) => {
 				let level = _shop.upgrades.get("crank_grinder") ?? 0;
@@ -260,19 +275,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 140,
 			costMultiplier: 1.2,
 			image: "express_coffee_maker.jpg",
-		},
-
-		buy_coffee_shop: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 125;
-			},
-			upgrade: (shop) => {
-				shop.endScene();
-			},
-			maxLevel: 1,
-			cost: 1000,
-			costMultiplier: 1,
-			image: "buy_coffee_shop.jpg",
 		},
 	},
 

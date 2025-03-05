@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { MultiShop } from "../../backend/classes/multiShop";
 	import { Shop } from "../../backend/classes/shop";
-	import { StageManager } from "../../backend/systems/stageManager";
+  import { stageManager } from "../../backend/game";
 	import { Timer } from "../../backend/systems/time";
 	import { UpgradeManager } from "../../backend/systems/upgradeManager";
 	import Dropdown from "../components/Dropdown.svelte";
 	import { t } from "svelte-i18n";
 	import Worker from "../components/Worker.svelte";
+  import Multishop from "./Multishop.svelte";
 
 	// base
 	let timer = new Timer();
-	const smanager = new StageManager(timer);
-	const mockmshop = new MultiShop(timer.timeEvents, smanager);
+	const smanager = stageManager;
+	const mockmshop: MultiShop = smanager.currentScene; //new MultiShop(timer.timeEvents, smanager);
 
 	let { wshop: mshop = mockmshop } = $props();
 

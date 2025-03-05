@@ -280,6 +280,32 @@ export class Shop {
 			},
 		});
 	}
+
+	getSaveState(): LocalShopSave {
+		let saveObj: LocalShopSave = {
+			money: this.money,
+			beans: this.beans,
+			emptyCups: this.emptyCups,
+			coffeeCups: this.coffeeCups,
+			waitingCustomers: this.waitingCustomers,
+			upgrades: {},
+		};
+
+		for (let [key, value] of this.upgrades) {
+			saveObj.upgrades[key] = value;
+		}
+
+		return saveObj;
+	}
+
+	loadLocalState(state: LocalShopSave) {
+		this.money = state.money;
+		this.beans = state.beans;
+		this.emptyCups = state.emptyCups;
+		this.coffeeCups = state.coffeeCups;
+		this.waitingCustomers = state.waitingCustomers;
+		this.upgrades = new Map(Object.entries(state.upgrades));
+	}
 }
 
 interface Role {
@@ -288,4 +314,13 @@ interface Role {
 	maxWorkers: number;
 	wage: number; // weekly
 	update: (shop: Shop, tickCounter: number) => void;
+}
+
+export interface LocalShopSave {
+	money: number;
+	beans: number;
+	emptyCups: number;
+	coffeeCups: number;
+	waitingCustomers: number;
+	upgrades: { [key: string]: number };
 }

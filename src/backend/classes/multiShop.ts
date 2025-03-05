@@ -1,6 +1,6 @@
 import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
-import { Shop } from "./shop";
+import { type LocalShopSave, Shop } from "./shop";
 
 export class MultiShop implements ISubscriber, IScene {
 	// writable resources
@@ -56,7 +56,6 @@ export class MultiShop implements ISubscriber, IScene {
 			this.withdrawAll();
 			this.applyExpenses();
 			this.shops.forEach((shop) => shop.restock());
-
 
 			if (this.money < 0) {
 				console.log("debt boy");
@@ -158,9 +157,60 @@ export class MultiShop implements ISubscriber, IScene {
 		if (!this.selectedShop) return;
 		this.selectedShop.removeWorker(role);
 	}
+
+	// save state ////////////////////////////////////////////////////////////////
+
+	saveState() {
+		let saveObj: MultiShopSave = {
+			money: this.money,
+
+			upgrades: {},
+			shops: [],
+		};
+
+		for (let [key, value] of this.upgrades) {
+			saveObj.upgrades[key] = value;
+		}
+
+		for (let shop of this.shops) {
+			saveObj.shops.push(shop.getSaveState());
+		}
+
+		localStorage.setItem("preshop", JSON.stringify(saveObj));
+	}
+
+	loadState() {
+		const rawJSON = localStorage.getItem("preshop");
+
+		if (rawJSON === null) return;
+
+		const state: MultiShopSave = JSON.parse(rawJSON);
+		
+
+		// check that multishop upgrades work fine loading in like this
+		this.upgrades = new Map(Object.entries(state.upgrades));
+
+		for (let i = 0; i < state.shops.length; i++) {
+			// only add new shop if shops > 1
+			if (i > 0) {
+				let shop = new Shop(this);
+				this.shops.push(shop);
+			}
+			this.shops[i].loadLocalState(state.shops[i]);
+		}
+	}
+
+	clearState() {
+	}
 }
 
 interface ShopWeekReport {
 	income: number;
 	expenses: number;
+}
+
+interface MultiShopSave {
+	money: number;
+	upgrades: { [key: string]: number };
+	shops: LocalShopSave[];
 }
