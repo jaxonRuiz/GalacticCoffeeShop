@@ -23,30 +23,34 @@ export class StageManager extends Publisher {
 		this.subscribe(this.sceneWatcher, "nextScene");
 	}
 
-	loadStage(stageIndex: number) {
-		this.currentSceneIndex = stageIndex;
-
-		switch (this.currentSceneIndex) {
-			case 0:
-				console.log("beginning of game reload");
-				break;
-			case 1:
-				console.log("loading preshop");
-				this.currentScene = new Preshop(this.timer.timeEvents, this);
-				break;
-			case 2:
-				console.log("loading multishop");
-				this.currentScene = new MultiShop(this.timer.timeEvents, this);
-				break;
-			case 3:
-				console.log("game over reload");
-				break;
-			default:
-				console.log("game is over relaod");
+	loadStage(stageIndex: number, loadState: boolean = true) {
+		// if changing stages necessary
+		if (stageIndex != this.currentSceneIndex) {
+			this.currentSceneIndex = stageIndex;
+			switch (this.currentSceneIndex) {
+				case 0:
+					console.log("beginning of game reload");
+					break;
+				case 1:
+					console.log("loading preshop");
+					this.currentScene = new Preshop(this.timer.timeEvents, this);
+					break;
+				case 2:
+					console.log("loading multishop");
+					this.currentScene = new MultiShop(this.timer.timeEvents, this);
+					break;
+				case 3:
+					console.log("game over reload");
+					break;
+				default:
+					console.log("game is over relaod");
+			}
 		}
 
-		console.log("loading current scene state");
-		this.currentScene.loadState();
+		if (loadState) {
+			console.log("loading current scene state");
+			this.currentScene.loadState();
+		}
 	}
 
 	sceneWatcher: ISubscriber = {
