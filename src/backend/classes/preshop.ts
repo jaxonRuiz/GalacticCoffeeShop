@@ -339,15 +339,31 @@ export class Preshop implements ISubscriber, IScene {
 			appeal: this.appeal,
 			beanPrice: this.beanPrice,
 			grindProgress: this.grindProgress,
-
+			canMakeCoffee: this.canMakeCoffee,
+			makeCoffeeTime: this.makeCoffeeTime,
+			makeCoffeeCount: this.makeCoffeeCount,
 			coffeePrice: this.coffeePrice,
 			beansPerBuy: this.beansPerBuy,
+
 			coffeePerBean: this.coffeePerBean,
 			grindTime: this.grindTime,
+			grindQuantity: this.grindQuantity,
 			promotionEffectiveness: this.promotionEffectiveness,
 			maxCustomers: this.maxCustomers,
 			maxAppeal: this.maxAppeal,
-			coffeeQuantity: this.makeCoffeeQuantity,
+			minAppeal: this.minAppeal,
+			appealDecay: this.appealDecay,
+			makeCoffeeQuantity: this.makeCoffeeQuantity,
+			makeCoffeeCooldown: this.makeCoffeeCooldown,
+			makeCoffeeBatches: this.makeCoffeeBatches,
+
+			autogrindingEnabled: this.autogrindingEnabled,
+			autogrindInterval: this.autogrindInterval,
+			autogrindCounter: this.autogrindCounter,
+
+			autosellEnabled: this.autosellEnabled,
+			autosellInterval: this.autosellInterval,
+			autosellCounter: this.autosellCounter,
 
 			lifetimeGrindBeans: this.lifetimeGrindBeans,
 			lifetimeCoffeeSold: this.lifetimeCoffeeSold,
@@ -380,16 +396,32 @@ export class Preshop implements ISubscriber, IScene {
 		this.appeal = state.appeal;
 		this.beanPrice = state.beanPrice;
 		this.grindProgress = state.grindProgress;
-
+		this.canMakeCoffee = state.canMakeCoffee;
+		this.makeCoffeeTime = state.makeCoffeeTime;
+		this.makeCoffeeCount = state.makeCoffeeCount;
 		this.coffeePrice = state.coffeePrice;
 		this.beansPerBuy = state.beansPerBuy;
+
 		this.coffeePerBean = state.coffeePerBean;
 		this.grindTime = state.grindTime;
+		this.grindQuantity = state.grindQuantity;
 		this.promotionEffectiveness = state.promotionEffectiveness;
 		this.maxCustomers = state.maxCustomers;
+		this.minAppeal = state.minAppeal;
+		this.appealDecay = state.appealDecay;
 		this.customerProgress = 0;
 		this.maxAppeal = state.maxAppeal;
-		this.makeCoffeeQuantity = state.coffeeQuantity;
+		this.makeCoffeeQuantity = state.makeCoffeeQuantity;
+		this.makeCoffeeCooldown = state.makeCoffeeCooldown;
+		this.makeCoffeeBatches = state.makeCoffeeBatches;
+
+		this.autogrindingEnabled = state.autogrindingEnabled;
+		this.autogrindInterval = state.autogrindInterval;
+		this.autogrindCounter = state.autogrindCounter;
+
+		this.autosellEnabled = state.autosellEnabled;
+		this.autosellInterval = state.autosellInterval;
+		this.autosellCounter = state.autosellCounter;
 
 		this.lifetimeGrindBeans = state.lifetimeGrindBeans;
 		this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
@@ -410,15 +442,31 @@ interface PreshopSave {
 	appeal: number;
 	beanPrice: number;
 	grindProgress: number;
-
+	canMakeCoffee: boolean;
+	makeCoffeeTime: number;
+	makeCoffeeCount: number;
 	coffeePrice: number;
 	beansPerBuy: number;
+
 	coffeePerBean: number;
 	grindTime: number;
+	grindQuantity: number;
 	promotionEffectiveness: number;
 	maxCustomers: number;
 	maxAppeal: number;
-	coffeeQuantity: number;
+	minAppeal: number;
+	appealDecay: number;
+	makeCoffeeQuantity: number;
+	makeCoffeeCooldown: number;
+	makeCoffeeBatches: number;
+
+	autogrindingEnabled: boolean;
+	autogrindInterval: number;
+	autogrindCounter: number;
+
+	autosellEnabled: boolean;
+	autosellInterval: number;
+	autosellCounter: number;
 
 	lifetimeGrindBeans: number;
 	lifetimeCoffeeSold: number;
