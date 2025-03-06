@@ -3,8 +3,8 @@ import { get, type Writable, writable } from "svelte/store";
 
 export class Shop implements ILocalShop {
 	// writable resources
-	w_beans: Writable<number> = writable(5);
-	w_emptyCups: Writable<number> = writable(5);
+	w_beans: Writable<number> = writable(500);
+	w_emptyCups: Writable<number> = writable(500);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
@@ -105,7 +105,7 @@ export class Shop implements ILocalShop {
 		this.roles.set("barista", {
 			name: "Barista",
 			numWorkers: 0,
-			maxWorkers: 1,
+			maxWorkers: 2,
 			wage: 50,
 			update: (shop: Shop) => {
 				let barista = shop.roles.get("barista")!;
@@ -149,21 +149,29 @@ export class Shop implements ILocalShop {
 		// progress updaters
 		// may limit throughput to 1 thing per tick, maybe fix
 		if (this.progressTrackers["coffeeProgress"] >= 1) {
-			if (this.produceCoffee()) this.progressTrackers["coffeeProgress"] -= 1;
+			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
+			if (this.produceCoffee(amount)) {
+				this.progressTrackers["coffeeProgress"] -= amount;
+			}
 		}
 		if (
 			this.progressTrackers["customerProgress"] >= 1 &&
 			this.waitingCustomers < this.maxCustomers
 		) {
-			this.waitingCustomers++;
-			this.progressTrackers["customerProgress"] -= 1;
+			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
+			this.waitingCustomers += amount;
+			this.progressTrackers["customerProgress"] -= amount;
 		}
 		if (this.progressTrackers["serviceProgress"] >= 1) {
-			if (this.sellCoffee()) this.progressTrackers["serviceProgress"] -= 1;
+			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
+			if (this.sellCoffee(amount)) {
+				this.progressTrackers["serviceProgress"] -= amount;
+			}
 		}
 		if (this.progressTrackers["promotionProgress"] >= 1) {
-			this.promote();
-			this.progressTrackers["promotionProgress"] -= 1;
+			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
+			for (let i = 0; i < amount; i++) this.promote();
+			this.progressTrackers["promotionProgress"] -= amount;
 		}
 	}
 
@@ -229,21 +237,23 @@ export class Shop implements ILocalShop {
 	}
 
 	// player actions ////////////////////////////////////////////////////////////
-	produceCoffee() {
-		if (this.beans >= 1 && this.emptyCups >= 1) {
-			this.beans--;
-			this.emptyCups--;
-			this.coffeeCups++;
+	produceCoffee(amount: number = 1) {
+		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
+		if (this.beans >= numToMake && this.emptyCups >= numToMake) {
+			this.beans -= numToMake;
+			this.emptyCups -= numToMake;
+			this.coffeeCups += numToMake;
 			return true;
 		}
 		return false;
 	}
 
-	sellCoffee() {
-		if (this.waitingCustomers >= 1 && this.coffeeCups >= 1) {
-			this.coffeeCups--;
-			this.waitingCustomers--;
-			this.money += this.coffeePrice;
+	sellCoffee(amount: number = 1) {
+		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
+		if (this.waitingCustomers >= numToMake && this.coffeeCups >= numToMake) {
+			this.coffeeCups -= numToMake;
+			this.waitingCustomers -= numToMake;
+			this.money += this.coffeePrice * numToMake;
 			return true;
 		}
 		return false;
