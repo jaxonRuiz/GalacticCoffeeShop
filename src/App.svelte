@@ -34,6 +34,10 @@
 		const b = (event.target as HTMLElement).closest("button");
 		if (b) {
 			type = b.dataset.btn ?? "button";
+			if (type === "num") {
+				booped(event.clientX, event.clientY, type, b.dataset.num!);
+				return;
+			}
 		}
 		booped(event.clientX, event.clientY, type);
 	}
@@ -62,7 +66,7 @@
 	</div>
 	<div id="mouse-effects">
 		{#each $boops as b (b.id)}
-			<Boops x={b.x} y={b.y} type={b.type} />
+			<Boops x={b.x} y={b.y} type={b.type} numerical={b.num} />
 		{/each}
 	</div>
 	{#if currentTab > -1}

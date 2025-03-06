@@ -5,6 +5,7 @@
 	let {
 		children,
 		"data-btn": dataBtn = "",
+		"data-num": dataNum = "",
 		style = "",
 		onclick = (() => {}),
 		disabled = false,
@@ -20,6 +21,7 @@
 	}}
 	style={`${pointerStyle} ${style}`}
 	data-btn={dataBtn}
+	data-num={dataNum}
 	{onclick}
 	{disabled}
 	class="button {classes.join(' ')}"
