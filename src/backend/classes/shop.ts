@@ -9,7 +9,6 @@ export class Shop implements ILocalShop {
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
 	w_appeal: Writable<number> = writable(0);
-	w_cleanness: Writable<number> = writable(1);
 	w_coffeePrice: Writable<number> = writable(5);
 
 	// writable getters/setters
@@ -48,12 +47,6 @@ export class Shop implements ILocalShop {
 	}
 	set appeal(value) {
 		this.w_appeal.set(value);
-	}
-	get cleanness() {
-		return get(this.w_cleanness);
-	}
-	set cleanness(value) {
-		this.w_cleanness.set(value);
 	}
 	set restockSheet(value: { [key: string]: number }) {
 		this.w_restockSheet.set(value);

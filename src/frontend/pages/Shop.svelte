@@ -156,10 +156,7 @@
 				<Worker worker="server" {sshop} />
 			</Dropdown>
 
-			<Dropdown title={$t("cleaning_title")}>
-				<p>{$t("cleanness_stat")}: {$cleanness}</p>
-				<Button>{$t("clean_btn")}</Button>
-			</Dropdown>
+
 
 			<Dropdown title={$t("restocking_title")}>
 				<p>{$t("restockSheet_text")}</p>
