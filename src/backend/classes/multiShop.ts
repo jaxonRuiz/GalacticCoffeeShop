@@ -34,6 +34,8 @@ export class MultiShop implements ISubscriber, IScene {
 	upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
 	weeklyRecap: { [key: number]: ShopWeekReport } = {};
 	sceneManager: Publisher;
+	minAppeal: number = 0;
+	promotionEffectiveness: number = 0;
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		timer.subscribe(this, "tick");

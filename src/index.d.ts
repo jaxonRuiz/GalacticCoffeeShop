@@ -1,7 +1,7 @@
 // global interfaces, no enums
 interface IUpgrade {
-  unlock_condition: (shop: IShop) => boolean;
-  upgrade: (shop: IShop, level: number) => void; // LEVELS USE 1 BASED INDEXING
+  unlock_condition: (shop: IShop | IMultiShop | IPreshop | ILocalShop) => boolean;
+  upgrade: (shop: IShop | IMultiShop | IPreshop | ILocalShop, level: number) => void; // LEVELS USE 1 BASED INDEXING
   maxLevel: number | undefined; // undefined means infinite upgrade
   cost: number;
   costMultiplier: number;
@@ -18,17 +18,20 @@ interface IUpgradeManager {
 }
 
 interface IShop {
-  coffeePrice: number;
-  beansPerBuy: number;
-  coffeePerBean: number;
-  grindTime: number;
-  customerProgress: number;
-  promotionEffectiveness: number;
-  appealDecay: number;
+
+
   upgrades: Map<string, number>;
   applyCost(cost: number): void;
+
   // upgrades: {[keys: string]: number};
   // writables
+
+
+  shops?: IShop[];
+  endScene(): void;
+}
+
+interface IPreshop extends IShop {
   money: number;
   beans: number;
   groundCoffee: number;
@@ -39,6 +42,13 @@ interface IShop {
   grindProgress: number;
   makeCoffeeCooldown: number;
   makeCoffeeBatches: number;
+  coffeePrice: number;
+  beansPerBuy: number;
+  coffeePerBean: number;
+  grindTime: number;
+  customerProgress: number;
+  promotionEffectiveness: number;
+  appealDecay: number;
 
   minAppeal?: number;
   maxAppeal?: number;
@@ -50,9 +60,33 @@ interface IShop {
   lifetimeCoffeeSold: number;
   lifetimeCoffeeMade: number;
   lifetimeGrindBeans: number;
+}
 
-  shops?: IShop[];
-  endScene(): void;
+interface IMultiShop extends IShop {
+  money: number;
+  minAppeal: number;
+  promotionEffectiveness: number;
+}
+
+interface ILocalShop extends IShop {
+  money: number;
+  appeal: number;
+  restockSheet: { [key: string]: number };
+  workerRates: { [key: string]: number };
+  progressTrackers: { [key: string]: number };
+  minAppeal: number;
+  maxAppeal: number;
+  appealDecay: number;
+
+  coffeePrice: number;
+  beansPrice: number;
+  cupsPrice: number;
+  totalWorkers: number;
+  maxCustomers: number;
+  promotionEffectiveness: number;
+  appealDecay: number;
+
+  roles: Map<string, Role>;
 }
 
 interface IScene {

@@ -76,9 +76,9 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		// },
 
 		buy_coffee_shop: {
-			unlock_condition: (_shop) => {
+			unlock_condition: (shop) => {
 				return true;
-				return _shop.lifetimeCoffeeSold >= 125;
+				return (shop as IPreshop).lifetimeCoffeeSold >= 125;
 			},
 			upgrade: (shop) => {
 				shop.endScene();
@@ -90,13 +90,13 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		crank_grinder: {
-			unlock_condition: (_shop) => {
-				let level = _shop.upgrades.get("crank_grinder") ?? 0;
+			unlock_condition: (shop) => {
+				let level = (shop as IPreshop).upgrades.get("crank_grinder") ?? 0;
 				let condition = [2, 10];
-				return _shop.lifetimeGrindBeans > 2;
+				return (shop as IPreshop).lifetimeGrindBeans > 2;
 			},
 			upgrade: (shop) => {
-				shop.grindTime -= 2;
+				(shop as IPreshop).grindTime -= 2;
 			},
 			maxLevel: 2,
 			cost: 8,
@@ -105,12 +105,12 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		deluxe_coffee_pot: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade > 8;
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade > 8;
 			},
 			upgrade: (shop) => {
-				shop.makeCoffeeQuantity! += 3;
-				shop.makeCoffeeCooldown += 1000;
+				(shop as IPreshop).makeCoffeeQuantity! += 3;
+				(shop as IPreshop).makeCoffeeCooldown += 1000;
 			},
 			maxLevel: 3,
 			cost: 13,
@@ -119,11 +119,11 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		word_of_mouth: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 20;
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeSold >= 20;
 			},
 			upgrade: (shop) => {
-				shop.minAppeal! += 0.05;
+				(shop as IPreshop).minAppeal! += 0.05;
 			},
 			maxLevel: 1,
 			cost: 0,
@@ -132,15 +132,15 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		promotional_posters: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeSold >= 10 &&
-					_shop.upgrades.get("word_of_mouth")! >= 1;
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeSold >= 10 &&
+				(shop as IPreshop).upgrades.get("word_of_mouth")! >= 1;
 			},
 			upgrade: (shop) => {
-				shop.promotionEffectiveness += 0.08;
-				shop.minAppeal! += 0.05;
-				shop.maxAppeal! += 0.1;
-				shop.maxCustomers! += 1;
+				(shop as IPreshop).promotionEffectiveness += 0.08;
+				(shop as IPreshop).minAppeal! += 0.05;
+				(shop as IPreshop).maxAppeal! += 0.1;
+				(shop as IPreshop).maxCustomers! += 1;
 			},
 			maxLevel: 3,
 			cost: 30,
@@ -149,11 +149,11 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		makeshift_coffee_refiller: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade > 15;
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade > 15;
 			},
 			upgrade: (shop) => {
-				shop.makeCoffeeBatches += 1;
+				(shop as IPreshop).makeCoffeeBatches += 1;
 			},
 			maxLevel: 1,
 			cost: 30,
@@ -162,12 +162,12 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		enlist_younger_sibling: {
-			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
-					_shop.lifetimeGrindBeans > 20;
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
+				(shop as IPreshop).lifetimeGrindBeans > 20;
 			},
 			upgrade: (shop) => {
-				shop.autogrindingEnabled = true;
+				(shop as IPreshop).autogrindingEnabled = true;
 			},
 			maxLevel: 1,
 			cost: 50,
@@ -176,12 +176,12 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		efficient_grinding: {
-			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
-					_shop.lifetimeGrindBeans > 50;
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
+				(shop as IPreshop).lifetimeGrindBeans > 50;
 			},
 			upgrade: (shop) => {
-				shop.coffeePerBean += 2;
+				(shop as IPreshop).coffeePerBean += 2;
 			},
 			maxLevel: 1,
 			cost: 100,
@@ -190,11 +190,11 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		multi_grinder: {
-			unlock_condition: (_shop) => {
-				return (_shop.upgrades.get("efficient_grinding") ?? 0) >= 1;
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("efficient_grinding") ?? 0) >= 1;
 			},
 			upgrade: (shop) => {
-				shop.grindQuantity += 1;
+				(shop as IPreshop).grindQuantity += 1;
 			},
 			maxLevel: 2,
 			cost: 22,
@@ -203,17 +203,17 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		bulk_bean_deal: {
-			unlock_condition: (_shop) => {
-				let level = _shop.upgrades.get("bulk_bean_deal") ?? 0;
+			unlock_condition: (shop) => {
+				let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
 				let condition = [70, 200, 400];
-				return _shop.lifetimeGrindBeans >= condition[level];
+				return (shop as IPreshop).lifetimeGrindBeans >= condition[level];
 			},
 			upgrade: (shop) => {
 				let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
 				let beanPrice = [17.99, 35.99, 69.99];
 				let beanAmount = [10, 20, 40];
-				shop.beanPrice = beanPrice[level];
-				shop.beansPerBuy = beanAmount[level];
+				(shop as IPreshop).beanPrice = beanPrice[level];
+				(shop as IPreshop).beansPerBuy = beanAmount[level];
 			},
 			maxLevel: 3,
 			cost: 25,
@@ -222,12 +222,12 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		automatic_coffee_refiller: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade > 40 &&
-					(_shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade > 40 &&
+					(shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
 			},
 			upgrade: (shop) => {
-				shop.makeCoffeeBatches += 2;
+				(shop as IPreshop).makeCoffeeBatches += 2;
 			},
 			maxLevel: 3,
 			cost: 100,
@@ -236,11 +236,11 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		hire_neighborhood_kid: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade > 50;
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade > 50;
 			},
 			upgrade: (shop) => {
-				shop.autosellEnabled = true;
+				(shop as IPreshop).autosellEnabled = true;
 			},
 			maxLevel: 1,
 			cost: 200,
@@ -249,13 +249,13 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		nicer_coffee: {
-			unlock_condition: (_shop) => {
+			unlock_condition: (shop) => {
 				let thresholds = [20, 30, 50, 80, 100, 150, 170, 200, 220, 250];
-				let level = _shop.upgrades.get("nicer_coffee") ?? 0;
-				return _shop.lifetimeCoffeeSold >= thresholds[level];
+				let level = shop.upgrades.get("nicer_coffee") ?? 0;
+				return (shop as IPreshop).lifetimeCoffeeSold >= thresholds[level];
 			},
 			upgrade: (shop) => {
-				shop.coffeePrice += 0.35;
+				(shop as IPreshop).coffeePrice += 0.35;
 			},
 			maxLevel: 10,
 			cost: 20,
@@ -264,12 +264,12 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 
 		express_coffee_maker: {
-			unlock_condition: (_shop) => {
-				return _shop.lifetimeCoffeeMade >= 15 &&
-					(_shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 3;
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade >= 15 &&
+					(shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 3;
 			},
 			upgrade: (shop) => {
-				shop.makeCoffeeCooldown -= 3500;
+				(shop as IPreshop).makeCoffeeCooldown -= 3500;
 			},
 			maxLevel: 1,
 			cost: 140,
@@ -280,15 +280,15 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 	localShop: {
 		flashy_sign: {
-			unlock_condition: (_shop) => {
+			unlock_condition: (shop) => {
 				return true;
 			},
 			upgrade: (shop, level) => {
 				let statLevels = [0, 1, 0.5, 0.5];
-				shop.minAppeal! += statLevels[level];
-				shop.appealDecay *= 0.97;
-				if (shop.appeal < shop.minAppeal!) {
-					shop.appeal = shop.minAppeal!;
+				(shop as ILocalShop).minAppeal! += statLevels[level];
+				(shop as ILocalShop).appealDecay *= 0.97;
+				if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
+					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
 				}
 			},
 			maxLevel: 3,
@@ -304,8 +304,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return multishop.shops!.length > 1; // maybe change to 2 later
 			},
 			upgrade: (shop) => {
-				shop.minAppeal! += 0.2;
-				shop.promotionEffectiveness += 0.1;
+				(shop as IMultiShop).minAppeal! += 0.2;
+				(shop as IMultiShop).promotionEffectiveness += 0.1;
 			},
 			flags: ["applyToChildren"],
 			maxLevel: undefined,
