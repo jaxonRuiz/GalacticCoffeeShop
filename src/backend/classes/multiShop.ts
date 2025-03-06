@@ -139,8 +139,8 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	loadTransferData(data: any): void {
-		this.money = data.money;
-		this.shops[0].beans = data.beans;
+		this.money += data.money;
+		this.shops[0].beans += data.beans;
 		if (data.hasBarista) {
 			this.shops[0].addWorker("barista");
 		}
