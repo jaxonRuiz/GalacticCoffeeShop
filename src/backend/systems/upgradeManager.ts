@@ -163,7 +163,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		enlist_younger_sibling: {
 			unlock_condition: (shop) => {
-				return (shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
+				return (shop.upgrades.get("crank_grinder") ?? 0) >= 1 &&
 				(shop as IPreshop).lifetimeGrindBeans > 20;
 			},
 			upgrade: (shop) => {
@@ -173,6 +173,19 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 50,
 			costMultiplier: 1,
 			image: "enlist_sibling.jpg",
+		},
+
+		sibling_incentive: {
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("enlist_younger_sibling") ?? 0) >= 1;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).autogrindInterval -= 2;
+			},
+			maxLevel: 3,
+			cost: 50,
+			costMultiplier: 1.7,
+			image: "sibling_incentive.jpg",
 		},
 
 		efficient_grinding: {
@@ -246,6 +259,19 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 200,
 			costMultiplier: 1.5,
 			image: "hire_neighborhood_kid.jpg",
+		},
+		
+		neighborhood_kid_incentive: {
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("hire_neighborhood_kid") ?? 0) >= 1;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).autosellInterval -= 3;
+			},
+			maxLevel: 4,
+			cost: 100,
+			costMultiplier: 1.6,
+			image: "neighborhood_kid_incentive.jpg",
 		},
 
 		nicer_coffee: {

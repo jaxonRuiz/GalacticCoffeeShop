@@ -56,7 +56,9 @@ interface IPreshop extends IShop {
   makeCoffeeQuantity?: number;
   grindQuantity: number;
   autogrindingEnabled: boolean;
+  autogrindInterval: number;
   autosellEnabled: boolean;
+  autosellInterval: number;
   lifetimeCoffeeSold: number;
   lifetimeCoffeeMade: number;
   lifetimeGrindBeans: number;
