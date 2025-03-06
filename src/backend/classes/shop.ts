@@ -86,6 +86,8 @@ export class Shop implements ILocalShop {
 	minAppeal: number = 0.1;
 	maxAppeal: number = 2;
 	appealDecay: number = 0.05;
+	runTutorial: boolean = true;
+
 
 	// misc //////////////////////////////////////////////////////////////////////
 	roles: Map<string, Role> = new Map();

@@ -34,6 +34,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
 	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
 	makeCoffeeBatches: number = 1; // how many cups of coffee are made per run
+	runTutorial: boolean = true;
 
 	autogrindingEnabled: boolean = false; // whether or not to grind automatically
 	autogrindInterval: number = 10;

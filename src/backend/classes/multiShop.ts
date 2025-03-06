@@ -36,6 +36,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	sceneManager: Publisher;
 	minAppeal: number = 0;
 	promotionEffectiveness: number = 0;
+	runTutorial: boolean = true;
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		timer.subscribe(this, "tick");
