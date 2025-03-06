@@ -54,6 +54,12 @@ export class Shop implements ILocalShop {
 	get restockSheet() {
 		return get(this.w_restockSheet);
 	}
+	get progressTrackers() {
+		return get(this.w_progressTrackers);
+	}
+	set progressTrackers(value: { [key: string]: number }) {
+		this.w_progressTrackers.set(value);
+	}
 	get coffeePrice() {
 		return get(this.w_coffeePrice);
 	}
@@ -70,12 +76,12 @@ export class Shop implements ILocalShop {
 		baristaProductivity: 0.1,
 		serverProductivity: 0.05,
 	};
-	progressTrackers: { [key: string]: number } = {
+	w_progressTrackers: Writable<{ [key: string]: number }> = writable({
 		serviceProgress: 0,
 		coffeeProgress: 0,
 		promotionProgress: 0,
 		customerProgress: 0,
-	};
+	});
 
 	// stats /////////////////////////////////////////////////////////////////////
 	beansPrice: number = 1;
@@ -87,7 +93,6 @@ export class Shop implements ILocalShop {
 	maxAppeal: number = 2;
 	appealDecay: number = 0.05;
 	runTutorial: boolean = true;
-
 
 	// misc //////////////////////////////////////////////////////////////////////
 	roles: Map<string, Role> = new Map();
