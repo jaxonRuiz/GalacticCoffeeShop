@@ -212,41 +212,4 @@
 </main>
 
 <style>
-	.shop.right > div {
-		width: 50%;
-		height: 100%;
-	}
-	.tooltip {
-		width: 0;
-		height: 0;
-		margin-left: auto;
-		display: flex;
-		flex-direction: row-reverse;
-	}
-
-	.tab {
-		cursor: var(--cpointer), pointer;
-		padding-bottom: 0.7em;
-		input {
-			display: none;
-		}
-		p {
-			padding: 0.5rem 1rem;
-			margin: 0;
-			border-radius: 0.5rem;
-			border: transparent solid var(--borderW);
-			box-sizing: border-box;
-		}
-		input:checked + p {
-			border-color: white;
-		}
-	}
-
-	div:has(> .tab) {
-		justify-content: space-evenly;
-	}
-
-	#upgrades {
-		flex-grow: 1;
-	}
 </style>
