@@ -1,7 +1,7 @@
 import { MultiShop } from "./multiShop";
 import { get, type Writable, writable } from "svelte/store";
 
-export class Shop {
+export class Shop implements ILocalShop {
 	// writable resources
 	w_beans: Writable<number> = writable(5);
 	w_emptyCups: Writable<number> = writable(5);

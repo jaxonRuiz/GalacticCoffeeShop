@@ -1,7 +1,12 @@
 // global interfaces, no enums
 interface IUpgrade {
-  unlock_condition: (shop: IShop | IMultiShop | IPreshop | ILocalShop) => boolean;
-  upgrade: (shop: IShop | IMultiShop | IPreshop | ILocalShop, level: number) => void; // LEVELS USE 1 BASED INDEXING
+  unlock_condition: (
+    shop: IShop | IMultiShop | IPreshop | ILocalShop,
+  ) => boolean;
+  upgrade: (
+    shop: IShop | IMultiShop | IPreshop | ILocalShop | IScene, 
+    level: number,
+  ) => void; // LEVELS USE 1 BASED INDEXING; IScene only used for endScene upgrades
   maxLevel: number | undefined; // undefined means infinite upgrade
   cost: number;
   costMultiplier: number;
@@ -18,17 +23,13 @@ interface IUpgradeManager {
 }
 
 interface IShop {
-
-
   upgrades: Map<string, number>;
   applyCost(cost: number): void;
 
   // upgrades: {[keys: string]: number};
   // writables
 
-
   shops?: IShop[];
-  endScene(): void;
 }
 
 interface IPreshop extends IShop {

@@ -81,7 +81,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as IPreshop).lifetimeCoffeeSold >= 125;
 			},
 			upgrade: (shop) => {
-				shop.endScene();
+				(shop as IScene).endScene();
 			},
 			maxLevel: 1,
 			cost: 1,
@@ -134,7 +134,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		promotional_posters: {
 			unlock_condition: (shop) => {
 				return (shop as IPreshop).lifetimeCoffeeSold >= 10 &&
-				(shop as IPreshop).upgrades.get("word_of_mouth")! >= 1;
+					(shop as IPreshop).upgrades.get("word_of_mouth")! >= 1;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).promotionEffectiveness += 0.08;
@@ -164,7 +164,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		enlist_younger_sibling: {
 			unlock_condition: (shop) => {
 				return (shop.upgrades.get("crank_grinder") ?? 0) >= 1 &&
-				(shop as IPreshop).lifetimeGrindBeans > 20;
+					(shop as IPreshop).lifetimeGrindBeans > 20;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).autogrindingEnabled = true;
@@ -191,7 +191,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		efficient_grinding: {
 			unlock_condition: (shop) => {
 				return (shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
-				(shop as IPreshop).lifetimeGrindBeans > 50;
+					(shop as IPreshop).lifetimeGrindBeans > 50;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).coffeePerBean += 2;
@@ -222,7 +222,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as IPreshop).lifetimeGrindBeans >= condition[level];
 			},
 			upgrade: (shop) => {
-				let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
+				let level = (shop as IPreshop).upgrades.get("bulk_bean_deal") ?? 0;
 				let beanPrice = [17.99, 35.99, 69.99];
 				let beanAmount = [10, 20, 40];
 				(shop as IPreshop).beanPrice = beanPrice[level];
@@ -260,7 +260,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.5,
 			image: "hire_neighborhood_kid.jpg",
 		},
-		
+
 		neighborhood_kid_incentive: {
 			unlock_condition: (shop) => {
 				return (shop.upgrades.get("hire_neighborhood_kid") ?? 0) >= 1;

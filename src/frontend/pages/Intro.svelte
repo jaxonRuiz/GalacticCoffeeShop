@@ -1,7 +1,7 @@
 <script lang="ts">
   import { t } from "svelte-i18n";
   import { fade } from "svelte/transition";
-  import { startGame } from "../../backend/game";
+  import { startNewGame } from "../../backend/game";
   import { pointerStyle } from "../components/Styles.svelte";
   import Button from "../components/Button.svelte";
 
@@ -17,7 +17,7 @@
     if (!title) {
       text++;
       if (text >= script.length) {
-        startGame();
+        startNewGame();
       }
 		}
   }}
@@ -31,7 +31,7 @@
         onclick={() => {
           title = false;
           if (!tutorial) {
-            startGame();
+            startNewGame();
           } else {
 						setTimeout(() => {
 							text++;

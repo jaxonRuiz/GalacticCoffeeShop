@@ -2,7 +2,7 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { type LocalShopSave, Shop } from "./shop";
 
-export class MultiShop implements ISubscriber, IScene {
+export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// writable resources
 	w_money: Writable<number> = writable(0);
 	w_selectedShop: Writable<Shop | null> = writable(null);
@@ -208,7 +208,6 @@ export class MultiShop implements ISubscriber, IScene {
 		if (rawJSON === null) return;
 
 		const state: MultiShopSave = JSON.parse(rawJSON);
-
 
 		// check that multishop upgrades work fine loading in like this
 		this.upgrades = new Map(Object.entries(state.upgrades));

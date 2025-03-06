@@ -2,7 +2,7 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { msPerTick } from "../systems/time";
 
-export class Preshop implements ISubscriber, IScene {
+export class Preshop implements ISubscriber, IScene, IPreshop {
 	moneyMultiplier: number = 1;
 
 	// resources (setting writable to interact with svelte)
@@ -333,7 +333,7 @@ export class Preshop implements ISubscriber, IScene {
 			beans: this.beans,
 			hasBarista: this.autogrindingEnabled,
 			hasCashier: this.autosellEnabled,
-		}
+		};
 	}
 
 	loadTransferData(data: any): void {
