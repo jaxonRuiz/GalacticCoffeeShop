@@ -20,7 +20,8 @@
 	"restocking_title": "Restocking",
 
 	"money_stat": "Money",
-	"mshopMoney_stat": "Money (in Multishop)",
+	"mshopMoney_stat": "Saved Money",
+	"lshopMoney_stat": "Money in Cash Register",
 	"appeal_stat": "Appeal",
 	"sellableCoffee_stat": "Sellable Coffee",
 	"beans_stat": "Beans",
