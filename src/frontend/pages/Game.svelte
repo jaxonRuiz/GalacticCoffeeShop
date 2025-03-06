@@ -11,6 +11,8 @@
 
 	const stage = smanager.w_currentSceneIndex;
 
+	let tutorial = $state(true);
+
 	function on_key_down(event: KeyboardEvent) {
 		console.log(event.key);
 	}
@@ -19,7 +21,7 @@
 <svelte:window onkeydown={on_key_down} />
 
 {#if $stage == 0}
-	<Intro />
+	<Intro {tutorial} />
 {:else if $stage == 1}
 	<Preshop wshop={smanager.currentScene as IPreshop} />
 {:else if $stage == 2}

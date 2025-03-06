@@ -1,23 +1,24 @@
 <script lang="ts">
-	import { MultiShop } from "../../backend/classes/multiShop";
-	import { Shop } from "../../backend/classes/shop";
-  import { stageManager } from "../../backend/game";
-	import { Timer } from "../../backend/systems/time";
-	import { UpgradeManager } from "../../backend/systems/upgradeManager";
-	import Dropdown from "../components/Dropdown.svelte";
 	import { t } from "svelte-i18n";
+	import { MultiShop } from "../../backend/classes/multiShop";
+	import { stageManager } from "../../backend/game";
+	import {
+		upgradeJSON,
+		UpgradeManager,
+	} from "../../backend/systems/upgradeManager";
+	import { fMoney } from "../components/Styles.svelte";
+	import Dropdown from "../components/Dropdown.svelte";
 	import Worker from "../components/Worker.svelte";
-  import Multishop from "./Multishop.svelte";
+	import Upgrade from "../components/Upgrade.svelte";
 
 	// base
-	let timer = new Timer();
 	const smanager = stageManager;
-	const mockmshop: MultiShop = smanager.currentScene; //new MultiShop(timer.timeEvents, smanager);
+	const mockmshop: MultiShop = smanager.currentScene as MultiShop; //new MultiShop(timer.timeEvents, smanager);
 
 	let { wshop: mshop = mockmshop } = $props();
 
 	let sshop = mshop.shops[0];
-	let umanager = new UpgradeManager("shop"); //TODO
+	let umanager = new UpgradeManager("localShop");
 
 	// define variables
 	let mshopMoney = mshop.w_money;
@@ -30,6 +31,24 @@
 	let cleanness = sshop.w_cleanness;
 	let restockSheet = sshop.w_restockSheet;
 
+	// for upgrades
+	let upgPage = $state(0);
+	let rupg = $state(false);
+	const upgs = upgradeJSON["localShop"];
+	const upgs_cost = $state(
+		Object.keys(upgs).reduce((costs: { [key: string]: number }, key) => {
+			costs[key] = upgs[key].cost;
+			return costs;
+		}, {})
+	);
+
+	// upgrade checker on interval
+	let availableUpgrades = $state(umanager.checkUpgrade(sshop));
+	setInterval(() => {
+		availableUpgrades = umanager.checkUpgrade(sshop);
+	}, 1000);
+
+	// for restock
 	function updateRestock(key: string, count: number) {
 		restockSheet.update((state) => {
 			return {
@@ -95,7 +114,7 @@
 	</div>
 
 	<div class="shop right row">
-		<div class="col">
+		<div class="col scroll">
 			<Dropdown title={$t("making_title")}>
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<p>{$t("emptyCups_stat")}: {$emptyCups}</p>
@@ -148,19 +167,64 @@
 			</Dropdown>
 		</div>
 		<div class="col">
-			<div class="col block">
+			<div class="col block fixed">
 				<h1>{$t("upgrades_title")}</h1>
+				<p>{$t("money_stat")}: {fMoney($money)}</p>
+				<div class="row">
+					<label class="tab">
+						<input
+							checked
+							type="radio"
+							name="upgPage"
+							value={0}
+							bind:group={upgPage}
+						/>
+						<p>{$t("upgUnpurchased_btn")}</p>
+					</label>
+					<label class="tab">
+						<input type="radio" name="upgPage" value={1} bind:group={upgPage} />
+						<p>{$t("upgPurchased_btn")}</p>
+					</label>
+				</div>
+				<div class="col scroll" id="upgrades">
+					{#if upgPage == 0}
+						{#key rupg}
+							{#each availableUpgrades as upgkey (upgkey)}
+								<Upgrade
+									purchased={false}
+									item={upgs[upgkey]}
+									key={upgkey}
+									{money}
+									cost={upgs_cost[upgkey]}
+									level={sshop.upgrades.get(upgkey) ?? 0}
+									onclick={() => {
+										umanager.applyUpgrade(upgkey, sshop);
+										upgs_cost[upgkey] = umanager.getCost(upgkey, sshop);
+										availableUpgrades = umanager.checkUpgrade(sshop);
+										rupg = !rupg;
+									}}
+								/>
+							{/each}
+						{/key}
+					{:else if upgPage === 1}
+						{#each [...sshop.upgrades.keys()] as upgkey (upgkey)}
+							<Upgrade
+								purchased={true}
+								item={upgs[upgkey]}
+								key={upgkey}
+								{money}
+								cost={upgs_cost[upgkey]}
+								level={sshop.upgrades.get(upgkey) ?? 0}
+							/>
+						{/each}
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>
 </main>
 
 <style>
-	.shop.right > div {
-		width: 50%;
-		overflow-y: scroll;
-	}
-
 	.restock {
 		align-items: center;
 		button {
