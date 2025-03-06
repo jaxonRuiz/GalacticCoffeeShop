@@ -11,6 +11,7 @@ import { StageManager } from "./systems/stageManager";
 // tester.preshopTest01();
 
 let timer = new Timer();
+export let firstTime = true;
 export let stageManager = new StageManager(timer);
 
 console.log("hello world");
