@@ -6,10 +6,11 @@
 		upgradeJSON,
 		UpgradeManager,
 	} from "../../backend/systems/upgradeManager";
-	import { fMoney } from "../components/Styles.svelte";
+	import { fMoney, pointerStyle } from "../components/Styles.svelte";
 	import Dropdown from "../components/Dropdown.svelte";
 	import Worker from "../components/Worker.svelte";
 	import Upgrade from "../components/Upgrade.svelte";
+  import Button from "../components/Button.svelte";
 
 	// base
 	const smanager = stageManager;
@@ -30,6 +31,7 @@
 	let money = sshop.w_money;
 	let cleanness = sshop.w_cleanness;
 	let restockSheet = sshop.w_restockSheet;
+	let coffeePrice = sshop.w_coffeePrice;
 
 	// for upgrades
 	let upgPage = $state(0);
@@ -60,10 +62,11 @@
 </script>
 
 {#snippet restockItem(key: string)}
-	<div class="row restock">
+	<div class="row restock" style={pointerStyle}>
 		<p>{$t(`${key}_text`)}</p>
 		<!-- <input type="number" min="0" step="1" value={`${$restockSheet.beans}`} /> -->
 		<button
+			data-btn="minus"
 			hidden={true}
 			disabled={$restockSheet[key] >= 10 ? false : true}
 			onclick={() => {
@@ -71,12 +74,14 @@
 			}}>-10</button
 		>
 		<button
+			data-btn="minus"
 			disabled={$restockSheet[key] >= 5 ? false : true}
 			onclick={() => {
 				updateRestock(key, -5);
 			}}>-5</button
 		>
 		<button
+			data-btn="minus"
 			disabled={$restockSheet[key] >= 1 ? false : true}
 			onclick={() => {
 				updateRestock(key, -1);
@@ -84,16 +89,19 @@
 		>
 		<p>{$restockSheet[key]}</p>
 		<button
+			data-btn="plus"
 			onclick={() => {
 				updateRestock(key, 1);
 			}}>+1</button
 		>
 		<button
+			data-btn="plus"
 			onclick={() => {
 				updateRestock(key, 5);
 			}}>+5</button
 		>
 		<button
+			data-btn="plus"
 			hidden={true}
 			onclick={() => {
 				updateRestock(key, 10);
@@ -118,11 +126,12 @@
 			<Dropdown title={$t("making_title")}>
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<p>{$t("emptyCups_stat")}: {$emptyCups}</p>
-				<button
+				<Button
+					data-btn="plus"
 					disabled={$beans > 0 && $emptyCups > 0 ? false : true}
 					onclick={() => {
 						sshop.produceCoffee();
-					}}>{$t("makeCoffee_btn")}</button
+					}}>{$t("makeCoffee_btn")}</Button
 				>
 				<Worker worker="barista" {sshop} />
 			</Dropdown>
@@ -130,23 +139,26 @@
 			<Dropdown title={$t("selling_title")}>
 				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 				<p>{$t("customersWaiting_stat")}: {$customers}</p>
-				<button
+				<Button
+					data-btn="star"
 					onclick={() => {
 						sshop.promote();
-					}}>{$t("promote_btn")}</button
+					}}>{$t("promote_btn")}</Button
 				>
-				<button
+				<Button
+					data-btn="num"
+					data-num={`${$coffeePrice.toFixed(2)}`}
 					disabled={$customers > 0 && $coffee > 0 ? false : true}
 					onclick={() => {
 						sshop.sellCoffee();
-					}}>{$t("sellCoffee_btn")}</button
+					}}>{$t("sellCoffee_btn")}</Button
 				>
 				<Worker worker="server" {sshop} />
 			</Dropdown>
 
 			<Dropdown title={$t("cleaning_title")}>
 				<p>{$t("cleanness_stat")}: {$cleanness}</p>
-				<button>{$t("clean_btn")}</button>
+				<Button>{$t("clean_btn")}</Button>
 			</Dropdown>
 
 			<Dropdown title={$t("restocking_title")}>
@@ -154,7 +166,8 @@
 				{#each Object.keys($restockSheet) as key}
 					{@render restockItem(key)}
 				{/each}
-				<button
+				<Button
+					data-btn="coin"
 					disabled={$restockSheet.beans * sshop.beansPrice +
 						$restockSheet.emptyCups * sshop.cupsPrice >
 					$mshopMoney + $money
@@ -162,7 +175,7 @@
 						: false}
 					onclick={() => {
 						sshop.restock();
-					}}>{$t("restock_btn")}</button
+					}}>{$t("restock_btn")}</Button
 				>
 			</Dropdown>
 		</div>
@@ -230,6 +243,7 @@
 		button {
 			margin-left: 0;
 			margin-right: 0;
+			cursor: var(--cpointer), pointer;
 		}
 	}
 </style>

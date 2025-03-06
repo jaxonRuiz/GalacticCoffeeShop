@@ -10,12 +10,13 @@
 		onclick = (() => {}),
 		disabled = false,
 		classes = [],
+		static: move = false,
 	} = $props();
 
 </script>
 
 <button
-	transition:fly
+	transition:fly={move ? {} : { duration: 0 }}
 	onintrostart={() => {
 		console.log('introstart');
 	}}

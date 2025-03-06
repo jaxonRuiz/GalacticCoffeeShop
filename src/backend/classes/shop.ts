@@ -10,6 +10,7 @@ export class Shop {
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
 	w_appeal: Writable<number> = writable(0);
 	w_cleanness: Writable<number> = writable(1);
+	w_coffeePrice: Writable<number> = writable(5);
 
 	// writable getters/setters
 	get beans() {
@@ -60,6 +61,12 @@ export class Shop {
 	get restockSheet() {
 		return get(this.w_restockSheet);
 	}
+	get coffeePrice() {
+		return get(this.w_coffeePrice);
+	}
+	set coffeePrice(value) {
+		this.w_coffeePrice.set(value);
+	}
 
 	// variable containers ///////////////////////////////////////////////////////
 	w_restockSheet: Writable<{ [key: string]: number }> = writable({
@@ -78,7 +85,6 @@ export class Shop {
 	};
 
 	// stats /////////////////////////////////////////////////////////////////////
-	coffeePrice: number = 5;
 	beansPrice: number = 1;
 	cupsPrice: number = 1;
 	totalWorkers: number = 0;
