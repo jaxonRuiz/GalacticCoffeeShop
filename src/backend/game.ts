@@ -33,6 +33,9 @@ export function saveState() {
 
 export function loadState() {
 	console.log("game loading state");
+	if (!localStorage.getItem("GameSaveData")) {
+		console.error("No save data found");
+	}
 	let saveData = JSON.parse(localStorage.getItem("GameSaveData")!);
 	stageManager.loadStage(saveData.currentStageIndex);
 }
