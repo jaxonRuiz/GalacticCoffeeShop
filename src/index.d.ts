@@ -59,6 +59,8 @@ interface IScene {
   endScene(): void;
   saveState(): void;
   loadState(): void;
+  getTransferData(): any;
+  loadTransferData(data: any): void;
 }
 
 interface ISubscriber {

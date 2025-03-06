@@ -327,6 +327,19 @@ export class Preshop implements ISubscriber, IScene {
 		this.sceneManager.emit("nextScene");
 	}
 
+	getTransferData() {
+		return {
+			money: this.money,
+			beans: this.beans,
+			hasBarista: this.autogrindingEnabled,
+			hasCashier: this.autosellEnabled,
+		}
+	}
+
+	loadTransferData(data: any): void {
+		// pass
+	}
+
 	// save/load ////////////////////////////////////////////////////////////
 	saveState() {
 		console.log("preshop save state");

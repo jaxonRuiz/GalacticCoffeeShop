@@ -120,9 +120,30 @@ export class MultiShop implements ISubscriber, IScene {
 		}
 	}
 
+	// end scene /////////////////////////////////////////////////////////////////
+
 	endScene() {
 		console.log("multishop endScene()");
 		this.sceneManager.emit("nextScene");
+	}
+
+	getTransferData() {
+		return {
+			money: this.money,
+			upgrades: this.upgrades,
+			numShops: this.shops.length,
+		};
+	}
+
+	loadTransferData(data: any): void {
+		this.money = data.money;
+		this.shops[0].beans = data.beans;
+		if (data.hasBarista) {
+			this.shops[0].addWorker("barista");
+		}
+		if (data.hasCashier) {
+			this.shops[0].addWorker("cashier");
+		}
 	}
 
 	// selected shop actions /////////////////////////////////////////////////////
@@ -176,16 +197,16 @@ export class MultiShop implements ISubscriber, IScene {
 			saveObj.shops.push(shop.getSaveState());
 		}
 
-		localStorage.setItem("preshop", JSON.stringify(saveObj));
+		localStorage.setItem("multishop", JSON.stringify(saveObj));
 	}
 
 	loadState() {
-		const rawJSON = localStorage.getItem("preshop");
+		const rawJSON = localStorage.getItem("multishop");
 
 		if (rawJSON === null) return;
 
 		const state: MultiShopSave = JSON.parse(rawJSON);
-		
+
 
 		// check that multishop upgrades work fine loading in like this
 		this.upgrades = new Map(Object.entries(state.upgrades));

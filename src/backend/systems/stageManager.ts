@@ -23,6 +23,7 @@ export class StageManager extends Publisher {
 		this.subscribe(this.sceneWatcher, "nextScene");
 	}
 
+	// specifically handles loading stages from save state
 	loadStage(stageIndex: number, loadState: boolean = true) {
 		// if changing stages necessary
 		if (stageIndex != this.currentSceneIndex) {
@@ -60,6 +61,7 @@ export class StageManager extends Publisher {
 		},
 	};
 
+	// specifically handles transitioning from one scene to another
 	nextScene() {
 		switch (this.currentSceneIndex) {
 			case 0: // start game to preshop
@@ -70,7 +72,9 @@ export class StageManager extends Publisher {
 
 			case 1: // preshop to multishop
 				console.log("preshop to multishop");
+				let transferData = this.currentScene.getTransferData();
 				this.currentScene = new MultiShop(this.timer.timeEvents, this);
+				this.currentScene.loadTransferData(transferData);
 				this.currentSceneIndex = 2;
 				break;
 
