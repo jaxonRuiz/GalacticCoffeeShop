@@ -29,7 +29,6 @@
 	let coffee = sshop.w_coffeeCups;
 	let customers = sshop.w_waitingCustomers;
 	let money = sshop.w_money;
-	let cleanness = sshop.w_cleanness;
 	let restockSheet = sshop.w_restockSheet;
 	let coffeePrice = sshop.w_coffeePrice;
 
@@ -114,7 +113,7 @@
 	<div class="shop left col">
 		<div class="col">
 			<h1>Coffee Shop</h1>
-			<p>{$t("money_stat")}: ${$money.toFixed(2)}</p>
+			<p>{$t("lshopMoney_stat")}: ${$money.toFixed(2)}</p>
 			<p>{$t("mshopMoney_stat")}: ${$mshopMoney.toFixed(2)}</p>
 			<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 			<p>{$t("sellableCoffee_stat")}: {Math.floor($coffee)}</p>
