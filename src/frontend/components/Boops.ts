@@ -3,8 +3,9 @@ import { get, type Writable, writable } from "svelte/store";
 export let boops: Writable<Boop[]> = writable([]);
 const maxBoopDuration = 1000;
 
-export function booped(x: number, y: number, type: string) {
-	boops.set([...get(boops), { x, y, type, id: Date.now() }]);
+export function booped(x: number, y: number, type: string, num?: string) {
+	num = num || "";
+	boops.set([...get(boops), { x, y, type, id: Date.now(), num }]);
 
 	setTimeout(() => {
 		boops.update((boops) => {
@@ -18,5 +19,6 @@ interface Boop {
 	x: number;
 	y: number;
 	type: string;
+	num?: string;
 	id: number;
 }

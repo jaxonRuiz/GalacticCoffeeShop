@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { img } from "../../assets/img";
 
-	let { x, y, type } = $props();
+	let { x, y, type, numerical } = $props();
 
 	const style = `
 		position: absolute;
@@ -18,6 +18,13 @@
 		<img src={img.boop_minusOne} alt="-1" />
 	{:else if ["plus", "minus", "star"].includes(type)}
 		<img src={img[`boop_${type}`]} alt={type} />
+	{:else if type === "num"}
+		<div>
+			<img src={img[`boop_numPlus`]} alt="+" />
+			{#each numerical as n}
+				<img src={img[`boop_num${n == '.' ? 'Dec' : n}`]} alt={n} />
+			{/each}
+		</div>
 	{:else if type === "coin"}
 		{#each { length: 5 } as _}
 			<img
@@ -57,6 +64,23 @@
 		&.coin > img.right {
 			animation: fallR 0.5s linear forwards;
 		}
+		&.num {
+			& > div {
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				top: 0;
+				left: 0;
+				display: flex;
+				flex-direction: row;
+				animation: boop 0.5s ease-out forwards;
+				& > img {
+					position: relative;
+					height: 100%;
+					width: auto;
+				}
+			}
+			}
 	}
 	/* animations */
 	@keyframes boop {

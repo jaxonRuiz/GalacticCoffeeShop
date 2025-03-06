@@ -120,9 +120,9 @@
 				</div>
 				<p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
 				<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
-				<p>{$t("coffeePrice_stat")}: {fMoney($coffeePrice)}</p>
 				<Button
-					data-btn="plus"
+					data-btn="num"
+					data-num={`${$coffeePrice.toFixed(2)}`}
 					classes={["green"]}
 					disabled={$waitingCustomers >= 1 && $coffee >= 1 ? false : true}
 					onclick={() => {
