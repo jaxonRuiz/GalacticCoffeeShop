@@ -4,7 +4,7 @@ interface IUpgrade {
     shop: IShop | IMultiShop | IPreshop | ILocalShop,
   ) => boolean;
   upgrade: (
-    shop: IShop | IMultiShop | IPreshop | ILocalShop | IScene, 
+    shop: IShop | IMultiShop | IPreshop | ILocalShop | IScene,
     level: number,
   ) => void; // LEVELS USE 1 BASED INDEXING; IScene only used for endScene upgrades
   maxLevel: number | undefined; // undefined means infinite upgrade
@@ -75,8 +75,8 @@ interface ILocalShop extends IShop {
   money: number;
   appeal: number;
   restockSheet: { [key: string]: number };
-  workerRates: { [key: string]: number };
-  progressTrackers: { [key: string]: number };
+  workerStats: { [key: string]: number };
+  roles: Map<string, Role>;
   minAppeal: number;
   maxAppeal: number;
   appealDecay: number;
@@ -90,6 +90,8 @@ interface ILocalShop extends IShop {
   appealDecay: number;
 
   roles: Map<string, Role>;
+  unlockPromoter(): void;
+  unlockSupplier(): void;
 }
 
 interface IScene {
