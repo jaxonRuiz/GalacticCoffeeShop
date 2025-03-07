@@ -17,7 +17,7 @@ export class UpgradeManager {
 			// if single shop style
 			this.allUpgrades[id].upgrade(
 				shopObject,
-				shopObject.upgrades.get(id) ?? 1,
+				shopObject.upgrades.get(id) ?? 0,
 			);
 			shopObject.applyCost(this.getCost(id, shopObject));
 			shopObject.upgrades.set(id, (shopObject.upgrades.get(id) ?? 0) + 1);
@@ -305,12 +305,32 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	},
 
 	localShop: {
+		unlock_promoter: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).roles.set("promoter", {
+					name: "Promoter",
+					numWorkers: 0,
+					maxWorkers: 1,
+					wage: 100,
+					update: (shop: ILocalShop, tickCounter: number) => {
+						shop.unlockPromoter();
+					},
+				});
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "unlock_promoter.jpg",
+		},
 		flashy_sign: {
 			unlock_condition: (shop) => {
 				return true;
 			},
 			upgrade: (shop, level) => {
-				let statLevels = [0, 1, 0.5, 0.5];
+				let statLevels = [0.2, 0.25, 0.3];
 				(shop as ILocalShop).minAppeal! += statLevels[level];
 				(shop as ILocalShop).appealDecay *= 0.97;
 				if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
@@ -333,6 +353,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 100,
 			costMultiplier: 1.5,
 			image: "expand_cashier_counter.jpg",
+		},
+		additional_promotion_materials: {
+			unlock_condition: (shop) => {
+				return shop.upgrades.get("unlock_promoter")! >= 1;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).roles.get("barista")!.maxWorkers += 1;
+			},
+			maxLevel: 3,
+			cost: 100,
+			costMultiplier: 1.5,
+			image: "additional_promotion_materials.jpg",
 		},
 		expand_coffee_bar: {
 			unlock_condition: (shop) => {
@@ -393,6 +425,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 30,
 			costMultiplier: 1.15,
 			image: "upgrade_barista_tools.jpg",
+		},
+		promoter_effectiveness: {
+			unlock_condition: (shop) => {
+				return shop.upgrades.get("unlock_promoter")! >= 1;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.promoterProductivity! += 0.05;
+			},
+			maxLevel: 3,
+			cost: 100,
+			costMultiplier: 1.3,
+			image: "promoter_effectiveness.jpg",
 		},
 	},
 

@@ -90,6 +90,8 @@ interface ILocalShop extends IShop {
   appealDecay: number;
 
   roles: Map<string, Role>;
+  unlockPromoter(): void;
+  unlockSupplier(): void;
 }
 
 interface IScene {

@@ -10,6 +10,8 @@ export class Shop implements ILocalShop {
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
 	w_appeal: Writable<number> = writable(0);
 	w_coffeePrice: Writable<number> = writable(5);
+	w_promoterUnlocked: Writable<boolean> = writable(false);
+	w_supplierUnlocked: Writable<boolean> = writable(false);
 
 	// writable getters/setters
 	get beans() {
@@ -115,7 +117,7 @@ export class Shop implements ILocalShop {
 				let barista = shop.roles.get("barista")!;
 				if (shop.beans >= 1 && shop.emptyCups >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
-						((shop.workerStats["baristaProductivity"] *
+						((shop.workerStats["baristaBaseProductivity"] *
 							shop.workerStats["baristaCumulativeProductivity"]) +
 							shop.workerStats["baristaFlatProductivity"]) * barista.numWorkers;
 				}
@@ -131,7 +133,7 @@ export class Shop implements ILocalShop {
 				let server = shop.roles.get("server")!;
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
-						((shop.workerStats["serverProductivity"] *
+						((shop.workerStats["serverBaseProductivity"] *
 							shop.workerStats["serverCumulativeProductivity"]) +
 							shop.workerStats["serverFlatProductivity"]) * server.numWorkers;
 				}
@@ -290,6 +292,19 @@ export class Shop implements ILocalShop {
 	// upgrade functions /////////////////////////////////////////////////////////
 
 	// TODO frame to unlock new jobs
+	unlockPromoter() {
+		this.roles.set("promoter", {
+			name: "Promoter",
+			numWorkers: 0,
+			maxWorkers: 1,
+			wage: 100,
+			update: (shop: Shop) => {
+				shop.progressTrackers["promotionProgress"] += 0.03;
+			},
+		});
+		this.w_promoterUnlocked.set(true);
+	}
+
 	unlockSupplier() {
 		this.roles.set("supplier", {
 			name: "Supplier",
@@ -300,6 +315,7 @@ export class Shop implements ILocalShop {
 				console.log("supplier updated");
 			},
 		});
+		this.w_supplierUnlocked.set(true);
 	}
 
 	getSaveState(): LocalShopSave {
