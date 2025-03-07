@@ -115,7 +115,9 @@ export class Shop implements ILocalShop {
 				let barista = shop.roles.get("barista")!;
 				if (shop.beans >= 1 && shop.emptyCups >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
-						shop.workerStats["baristaProductivity"] * barista.numWorkers;
+						((shop.workerStats["baristaProductivity"] *
+							shop.workerStats["baristaCumulativeProductivity"]) +
+							shop.workerStats["baristaFlatProductivity"]) * barista.numWorkers;
 				}
 			},
 		});
@@ -129,10 +131,9 @@ export class Shop implements ILocalShop {
 				let server = shop.roles.get("server")!;
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
-						shop.workerStats["serverProductivity"] * server.numWorkers;
-				}
-				if (shop.progressTrackers["serviceProgress"] >= 1) {
-					shop.sellCoffee();
+						((shop.workerStats["serverProductivity"] *
+							shop.workerStats["serverCumulativeProductivity"]) +
+							shop.workerStats["serverFlatProductivity"]) * server.numWorkers;
 				}
 			},
 		});

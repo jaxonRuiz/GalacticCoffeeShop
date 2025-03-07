@@ -355,9 +355,45 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			},
 			maxLevel: 10,
 			cost: 30,
-			costMultiplier: 1.5,
+			costMultiplier: 1.15,
 			image: "upgrade_cash_register.jpg",
-		}
+		},
+		increase_customer_flow: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.1;
+			},
+			maxLevel: 10,
+			cost: 50,
+			costMultiplier: 1.2,
+			image: "increase_customer_flow.jpg",
+		},
+		better_coffee_machine: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
+			},
+			maxLevel: 5,
+			cost: 100,
+			costMultiplier: 1.4,
+			image: "better_coffee_machine.jpg",
+		},
+		upgrade_barista_tools: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.05;
+			},
+			maxLevel: 10,
+			cost: 30,
+			costMultiplier: 1.15,
+			image: "upgrade_barista_tools.jpg",
+		},
 	},
 
 	multiShop: {
