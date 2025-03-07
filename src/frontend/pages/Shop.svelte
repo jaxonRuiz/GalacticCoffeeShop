@@ -11,6 +11,7 @@
 	import Worker from "../components/Worker.svelte";
 	import Upgrade from "../components/Upgrade.svelte";
   import Button from "../components/Button.svelte";
+  import Tooltip from "../components/Tooltip.svelte";
 
 	// base
 	const smanager = stageManager;
@@ -123,6 +124,9 @@
 	<div class="shop right row">
 		<div class="col scroll">
 			<Dropdown title={$t("making_title")}>
+				<div class="tooltip">
+					<Tooltip text={["makeCoffee3_tooltip"]} />
+				</div>
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<p>{$t("emptyCups_stat")}: {$emptyCups}</p>
 				<Button
@@ -136,6 +140,9 @@
 			</Dropdown>
 
 			<Dropdown title={$t("selling_title")}>
+				<div class="tooltip">
+					<Tooltip text={["promote_tooltip", "sellCoffee_tooltip"]} />
+				</div>
 				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 				<p>{$t("customersWaiting_stat")}: {$customers}</p>
 				<Button
@@ -155,9 +162,10 @@
 				<Worker worker="server" {sshop} />
 			</Dropdown>
 
-
-
 			<Dropdown title={$t("restocking_title")}>
+				<div class="tooltip">
+					<Tooltip text={["restock_tooltip"]} />
+				</div>
 				<p>{$t("restockSheet_text")}</p>
 				{#each Object.keys($restockSheet) as key}
 					{@render restockItem(key)}

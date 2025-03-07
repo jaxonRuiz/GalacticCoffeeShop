@@ -76,7 +76,7 @@
 				animation: boop 0.5s ease-out forwards;
 				& > img {
 					position: relative;
-					height: 100%;
+					height: 75%;
 					width: auto;
 				}
 			}

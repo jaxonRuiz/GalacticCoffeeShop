@@ -1,6 +1,7 @@
 {
 	"gameTitle": "Galactic Coffee Shop",
-	"startGame_btn": "Start Game",
+	"startGame_btn": "Continue Game",
+	"newGame_btn": "New Game",
 	"upgPurchased_btn": "Purchased",
 	"upgUnpurchased_btn": "Unpurchased",
 
@@ -55,9 +56,11 @@
 
 	"makeCoffee1_tooltip": "Grind raw coffee beans to get grounded beans to make sellable coffee.",
 	"makeCoffee2_tooltip": "Grinding requires multiple clicks and making coffee takes time.",
+	"makeCoffee3_tooltip": "Making coffee requires grounded beans and empty cups.",
 	"sellCoffee_tooltip": "Sell available coffee to waiting customers",
 	"promote_tooltip": "Promote your coffee stand to attract customers",
 	"shop_tooltip": "Buy raw coffee beans from the market",
+	"restock_tooltip": "Restock beans and empty cups weekly, or on demand for a fee.",
 
 	"crank_grinder_upgName": "Crank Grinder",
 	"crank_grinder_upgDesc": "Make bean grinding process faster",
