@@ -322,6 +322,42 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.2,
 			image: "flashy_sign.jpg",
 		},
+		expand_cashier_counter: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).roles.get("cashier")!.maxWorkers += 1;
+			},
+			maxLevel: 3,
+			cost: 100,
+			costMultiplier: 1.5,
+			image: "expand_cashier_counter.jpg",
+		},
+		expand_coffee_bar: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).roles.get("barista")!.maxWorkers += 1;
+			},
+			maxLevel: 3,
+			cost: 100,
+			costMultiplier: 1.5,
+			image: "expand_coffee_bar.jpg",
+		},
+		upgrade_cash_register: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.05;
+			},
+			maxLevel: 10,
+			cost: 30,
+			costMultiplier: 1.5,
+			image: "upgrade_cash_register.jpg",
+		}
 	},
 
 	multiShop: {

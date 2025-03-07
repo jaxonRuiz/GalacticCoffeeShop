@@ -72,9 +72,13 @@ export class Shop implements ILocalShop {
 		beans: 5,
 		emptyCups: 5,
 	});
-	workerRates: { [key: string]: number } = {
-		baristaProductivity: 0.1,
-		serverProductivity: 0.05,
+	workerStats: { [key: string]: number } = {
+		baristaBaseProductivity: 0.1,
+		serverBaseProductivity: 0.05,
+		baristaCumulativeProductivity: 1,
+		serverCumulativeProductivity: 1,
+		baristaFlatProductivity: 0,
+		serverFlatProductivity: 0,
 	};
 	w_progressTrackers: Writable<{ [key: string]: number }> = writable({
 		serviceProgress: 0,
@@ -111,7 +115,7 @@ export class Shop implements ILocalShop {
 				let barista = shop.roles.get("barista")!;
 				if (shop.beans >= 1 && shop.emptyCups >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
-						shop.workerRates["baristaProductivity"] * barista.numWorkers;
+						shop.workerStats["baristaProductivity"] * barista.numWorkers;
 				}
 			},
 		});
@@ -125,7 +129,7 @@ export class Shop implements ILocalShop {
 				let server = shop.roles.get("server")!;
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
-						shop.workerRates["serverProductivity"] * server.numWorkers;
+						shop.workerStats["serverProductivity"] * server.numWorkers;
 				}
 				if (shop.progressTrackers["serviceProgress"] >= 1) {
 					shop.sellCoffee();
