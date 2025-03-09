@@ -53,6 +53,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	upgrades: Map<string, number> = new Map();
 
 	sceneManager: Publisher;
+	sounds: Map<string, HTMLAudioElement> = new Map();
 
 	// abstracting svelte store from normal usage (allows use of writables in backend)
 	// resources
@@ -162,6 +163,18 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		timer.subscribe(this, "hour");
 		timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
+
+		// setting up audio
+		this.sounds.set("boil", new Audio("src/assets/sfx/boiling.flac"));
+		this.sounds.get("boil")!.loop = true;
+		this.sounds.set("crowd", new Audio("src/assets/sfx/crowd2.wav"));
+		this.sounds.get("crowd")!.loop = true;
+		this.sounds.get("crowd")!.volume = 0;
+		this.sounds.get("crowd")!.play();
+		this.sounds.set("bgm", new Audio("src/assets/music/Squirm Worm - TrackTribe.mp3"));
+		this.sounds.get("bgm")!.loop = true;
+		this.sounds.get("bgm")!.volume = 0.5;
+		this.sounds.get("bgm")!.play();
 	}
 
 	notify(event: string, data?: any) {
@@ -181,6 +194,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 
 	tick() {
+		if (this.waitingCustomers < 1) {
+			this.sounds.get("crowd")!.volume = 0;
+		}
 		this.drawCustomers();
 		this.decayAppeal();
 		if (!this.canMakeCoffee) {
@@ -213,6 +229,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 					this.maxCustomers,
 				);
 				this.customerProgress %= 1;
+				this.sounds.get("crowd")!.volume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
 			}
 		}
 	}
@@ -235,12 +252,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.makeCoffeeTime = 0;
 
 			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1) {
-				console.log("finished making coffee");
+				// finished making coffee
+				this.sounds.get("boil")!.pause();
+				this.sounds.get("boil")!.currentTime = 0;
 				this.makeCoffeeTime = 0;
 				this.makeCoffeeCount = 0;
 				this.canMakeCoffee = true;
 			} else {
-				console.log("starting new coffee");
+				// next coffee batch
 				this.makeCoffee();
 			}
 		}
@@ -248,6 +267,8 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	// TODO make appeal diminishing effectiveness
 	promoteShop() {
+		let audio = new Audio("src/assets/sfx/papers.wav");
+		audio.play();
 		this.appeal += this.promotionEffectiveness *
 			(1 -
 				((this.minAppeal + this.appeal) / (this.minAppeal + this.maxAppeal)));
@@ -256,7 +277,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	sellCoffee() {
 		if (this.coffeeCups < 1) return;
-
+		let audio = new Audio("src/assets/sfx/ding.wav")
+		audio.volume = 0.8;
+		audio.play();
 		if (this.waitingCustomers >= 1) {
 			this.waitingCustomers--;
 			this.coffeeCups--;
@@ -268,7 +291,8 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	beansToGrind: number = 0;
 	grindBeans() {
 		if (this.beans <= 0 && this.grindProgress == -1) return;
-
+		let audio = new Audio("src/assets/sfx/grind1.wav");
+		audio.play();
 		// if not grinding yet
 		if (this.grindProgress === -1) {
 			this.grindProgress = 1;
@@ -278,10 +302,13 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		} // if grinding
 		else {
 			this.grindProgress++;
+
 		}
 
 		// if finished grinding
 		if (this.grindProgress > this.grindTime) {
+			let grind2 = new Audio("src/assets/sfx/grind2.wav");
+			grind2.play();
 			this.groundCoffee += this.coffeePerBean * this.beansToGrind;
 			this.grindProgress = -1;
 			this.lifetimeGrindBeans++;
@@ -295,12 +322,11 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 		// start coffee batch
 		if (this.canMakeCoffee) {
-			console.log("new coffee batch");
 			this.canMakeCoffee = false;
+			this.sounds.get("boil")!.play();
 			this.makeCoffeeCount = this.makeCoffeeBatches;
 		}
 
-		console.log("making coffee", this.coffeeToMake);
 		// possibly add cooldown or timer effect
 		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity);
 		this.groundCoffee -= this.coffeeToMake;
@@ -309,6 +335,10 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	buyBeans() {
 		// possibly make bean cost scale or change over time(?)
+
+		let audio = new Audio("src/assets/sfx/cashRegister.wav");
+		audio.volume = 0.7;
+		audio.play();
 		if (this.money < this.beanPrice) return;
 		this.beans += this.beansPerBuy;
 		this.money -= this.beanPrice;
