@@ -53,7 +53,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	upgrades: Map<string, number> = new Map();
 
 	sceneManager: Publisher;
-	sounds: Map<string, HTMLAudioElement> = new Map();
+	audio: Map<string, HTMLAudioElement> = new Map();
 
 	// abstracting svelte store from normal usage (allows use of writables in backend)
 	// resources
@@ -165,16 +165,16 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.sceneManager = sceneManager;
 
 		// setting up audio
-		this.sounds.set("boil", new Audio("src/assets/sfx/boiling.flac"));
-		this.sounds.get("boil")!.loop = true;
-		this.sounds.set("crowd", new Audio("src/assets/sfx/crowd.mp3"));
-		this.sounds.get("crowd")!.loop = true;
-		this.sounds.get("crowd")!.volume = 0;
-		this.sounds.get("crowd")!.play();
-		this.sounds.set("bgm", new Audio("src/assets/music/Squirm Worm - TrackTribe.mp3"));
-		this.sounds.get("bgm")!.loop = true;
-		this.sounds.get("bgm")!.volume = 0.5;
-		this.sounds.get("bgm")!.play();
+		this.audio.set("boil", new Audio("src/assets/sfx/boiling.flac"));
+		this.audio.get("boil")!.loop = true;
+		this.audio.set("crowd", new Audio("src/assets/sfx/crowd.mp3"));
+		this.audio.get("crowd")!.loop = true;
+		this.audio.get("crowd")!.volume = 0;
+		this.audio.get("crowd")!.play();
+		this.audio.set("bgm", new Audio("src/assets/music/Squirm Worm - TrackTribe.mp3"));
+		this.audio.get("bgm")!.loop = true;
+		this.audio.get("bgm")!.volume = 0.5;
+		this.audio.get("bgm")!.play();
 	}
 
 	notify(event: string, data?: any) {
@@ -195,7 +195,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	tick() {
 		if (this.waitingCustomers < 1) {
-			this.sounds.get("crowd")!.volume = 0;
+			this.audio.get("crowd")!.volume = 0;
 		}
 		this.drawCustomers();
 		this.decayAppeal();
@@ -229,7 +229,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 					this.maxCustomers,
 				);
 				this.customerProgress %= 1;
-				this.sounds.get("crowd")!.volume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
+				this.audio.get("crowd")!.volume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
 			}
 		}
 	}
@@ -253,8 +253,8 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1) {
 				// finished making coffee
-				this.sounds.get("boil")!.pause();
-				this.sounds.get("boil")!.currentTime = 0;
+				this.audio.get("boil")!.pause();
+				this.audio.get("boil")!.currentTime = 0;
 				this.makeCoffeeTime = 0;
 				this.makeCoffeeCount = 0;
 				this.canMakeCoffee = true;
@@ -323,7 +323,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		// start coffee batch
 		if (this.canMakeCoffee) {
 			this.canMakeCoffee = false;
-			this.sounds.get("boil")!.play();
+			this.audio.get("boil")!.play();
 			this.makeCoffeeCount = this.makeCoffeeBatches;
 		}
 
@@ -354,9 +354,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	endScene() {
 		console.log("preshop endScene()");
-		this.sounds.get("boil")!.pause();
-		this.sounds.get("crowd")!.pause();
-		this.sounds.get("bgm")!.pause();
+		this.audio.get("boil")!.pause();
+		this.audio.get("crowd")!.pause();
+		this.audio.get("bgm")!.pause();
 		this.sceneManager.emit("nextScene");
 	}
 
