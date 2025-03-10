@@ -10,7 +10,7 @@ export class UpgradeManager {
 	applyUpgrade(id: string, shopObject: IShop) {
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
-			(shopObject as IMultiShopStyle).upgradeFunctions.push(
+			(shopObject as IContainerShop).upgradeFunctions.push(
 				this.allUpgrades[id].upgrade.bind(this.allUpgrades[id])); // really unsure if this works
 
 			shopObject.shops!.forEach((shop: IShop) => {
@@ -308,6 +308,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	},
 
 	localShop: {
+		unlock_multishop: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).multiShopUnlocked = true;
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "unlock_multishop.jpg",
+		},
 		unlock_promoter: {
 			unlock_condition: (shop) => {
 				return true;
@@ -464,7 +476,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return true;
 			},
 			upgrade: (shop) => {
-				(shop as IMultiShopStyle).addShop();
+				(shop as IContainerShop).addShop();
 			},
 			maxLevel: undefined,
 			cost: 1000,

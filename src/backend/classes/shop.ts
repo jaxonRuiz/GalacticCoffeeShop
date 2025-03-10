@@ -12,6 +12,7 @@ export class Shop implements ILocalShop {
 	w_coffeePrice: Writable<number> = writable(5);
 	w_promoterUnlocked: Writable<boolean> = writable(false);
 	w_supplierUnlocked: Writable<boolean> = writable(false);
+	w_multiShopUnlocked: Writable<boolean> = writable(false);
 
 	// writable getters/setters
 	get beans() {
@@ -67,6 +68,24 @@ export class Shop implements ILocalShop {
 	}
 	set coffeePrice(value) {
 		this.w_coffeePrice.set(value);
+	}
+	get promoterUnlocked() {
+		return get(this.w_promoterUnlocked);
+	}
+	set promoterUnlocked(value) {
+		this.w_promoterUnlocked.set(value);
+	}
+	get supplierUnlocked() {
+		return get(this.w_supplierUnlocked);
+	}
+	set supplierUnlocked(value) {
+		this.w_supplierUnlocked.set(value);
+	}
+	get multiShopUnlocked() {
+		return get(this.w_multiShopUnlocked);
+	}
+	set multiShopUnlocked(value) {
+		this.w_multiShopUnlocked.set(value);
 	}
 
 	// variable containers ///////////////////////////////////////////////////////
