@@ -132,6 +132,7 @@ export class Shop implements ILocalShop {
 			update: (shop: Shop) => {
 				let server = shop.roles.get("server")!;
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
+					console.log("server update", shop.progressTrackers["serviceProgress"]);
 					shop.progressTrackers["serviceProgress"] +=
 						((shop.workerStats["serverBaseProductivity"] *
 							shop.workerStats["serverCumulativeProductivity"]) +
@@ -165,18 +166,18 @@ export class Shop implements ILocalShop {
 			this.progressTrackers["customerProgress"] >= 1 &&
 			this.waitingCustomers < this.maxCustomers
 		) {
-			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
+			let amount = Math.floor(this.progressTrackers["customerProgress"]);
 			this.waitingCustomers += amount;
 			this.progressTrackers["customerProgress"] -= amount;
 		}
 		if (this.progressTrackers["serviceProgress"] >= 1) {
-			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
+			let amount = Math.floor(this.progressTrackers["serviceProgress"]);
 			if (this.sellCoffee(amount)) {
 				this.progressTrackers["serviceProgress"] -= amount;
 			}
 		}
 		if (this.progressTrackers["promotionProgress"] >= 1) {
-			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
+			let amount = Math.floor(this.progressTrackers["promotionProgress"]);
 			for (let i = 0; i < amount; i++) this.promote();
 			this.progressTrackers["promotionProgress"] -= amount;
 		}
@@ -256,11 +257,11 @@ export class Shop implements ILocalShop {
 	}
 
 	sellCoffee(amount: number = 1) {
-		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
-		if (this.waitingCustomers >= numToMake && this.coffeeCups >= numToMake) {
-			this.coffeeCups -= numToMake;
-			this.waitingCustomers -= numToMake;
-			this.money += this.coffeePrice * numToMake;
+		let numToSell = Math.floor(Math.min(amount, this.waitingCustomers, this.coffeeCups));
+		if (this.waitingCustomers >= numToSell && this.coffeeCups >= numToSell) {
+			this.coffeeCups -= numToSell;
+			this.waitingCustomers -= numToSell;
+			this.money += this.coffeePrice * numToSell;
 			return true;
 		}
 		return false;
