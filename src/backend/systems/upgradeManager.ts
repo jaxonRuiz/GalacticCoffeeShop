@@ -10,8 +10,11 @@ export class UpgradeManager {
 	applyUpgrade(id: string, shopObject: IShop) {
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
+			(shopObject as IMultiShopStyle).upgradeFunctions.push(
+				this.allUpgrades[id].upgrade.bind(this.allUpgrades[id])); // really unsure if this works
+
 			shopObject.shops!.forEach((shop: IShop) => {
-				this.allUpgrades[id].upgrade(shop, shop.upgrades.get(id) ?? 1);
+				this.allUpgrades[id].upgrade(shop, shop.upgrades.get(id) ?? 0);
 			});
 		} else {
 			// if single shop style
@@ -446,14 +449,27 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return multishop.shops!.length > 1; // maybe change to 2 later
 			},
 			upgrade: (shop) => {
-				(shop as IMultiShop).minAppeal! += 0.2;
-				(shop as IMultiShop).promotionEffectiveness += 0.1;
+				console.log("applying upgrade to local shop");
+				(shop as ILocalShop).minAppeal! += 0.2;
+				(shop as ILocalShop).promotionEffectiveness += 0.1;
 			},
 			flags: ["applyToChildren"],
 			maxLevel: undefined,
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "cohesive_branding.jpg",
+		},
+		add_new_shop: {
+			unlock_condition: (multishop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as IMultiShopStyle).addShop();
+			},
+			maxLevel: undefined,
+			cost: 1000,
+			costMultiplier: 1.5,
+			image: "add_new_shop.jpg",
 		},
 	},
 };

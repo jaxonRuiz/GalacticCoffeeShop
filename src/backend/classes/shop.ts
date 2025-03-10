@@ -132,7 +132,6 @@ export class Shop implements ILocalShop {
 			update: (shop: Shop) => {
 				let server = shop.roles.get("server")!;
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
-					console.log("server update", shop.progressTrackers["serviceProgress"]);
 					shop.progressTrackers["serviceProgress"] +=
 						((shop.workerStats["serverBaseProductivity"] *
 							shop.workerStats["serverCumulativeProductivity"]) +

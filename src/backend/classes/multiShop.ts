@@ -71,13 +71,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	// multishop actions /////////////////////////////////////////////////////////
-	addShop(upgradeManager: IUpgradeManager) {
-		this.shops.push(new Shop(this));
-		for (let key in this.upgrades) {
-			if (upgradeManager.allUpgrades[key].flags?.includes("applyToChildren")) {
-				this.upgrades.set(key, 1);
-			}
+	addShop() {
+		let newShop = new Shop(this);
+		for (let key in this.upgradeFunctions) {
+			this.upgradeFunctions[key](newShop, this.upgrades.get(key) || 0);
 		}
+		this.shops.push(newShop);
+
 		this.weeklyRecap[this.shops.length - 1] = {
 			income: 0,
 			expenses: 0,

@@ -167,7 +167,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		// setting up audio
 		this.sounds.set("boil", new Audio("src/assets/sfx/boiling.flac"));
 		this.sounds.get("boil")!.loop = true;
-		this.sounds.set("crowd", new Audio("src/assets/sfx/crowd2.wav"));
+		this.sounds.set("crowd", new Audio("src/assets/sfx/crowd.mp3"));
 		this.sounds.get("crowd")!.loop = true;
 		this.sounds.get("crowd")!.volume = 0;
 		this.sounds.get("crowd")!.play();
@@ -354,7 +354,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	endScene() {
 		console.log("preshop endScene()");
-
+		this.sounds.get("boil")!.pause();
+		this.sounds.get("crowd")!.pause();
+		this.sounds.get("bgm")!.pause();
 		this.sceneManager.emit("nextScene");
 	}
 

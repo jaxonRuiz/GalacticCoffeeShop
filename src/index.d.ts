@@ -1,7 +1,7 @@
 // global interfaces, no enums
 interface IUpgrade {
   unlock_condition: (
-    shop: IShop | IMultiShop | IPreshop | ILocalShop,
+    shop: IShop | IMultiShop | IPreshop | ILocalShop | IMultiShopStyle
   ) => boolean;
   upgrade: (
     shop: IShop | IMultiShop | IPreshop | ILocalShop | IScene,
@@ -65,10 +65,17 @@ interface IPreshop extends IShop {
   lifetimeGrindBeans: number;
 }
 
-interface IMultiShop extends IShop {
+// for classes which act as container to multiple shops
+interface IMultiShopStyle extends IShop {
+  upgradeFunctions: ((shop: Shop, level: number) => void)[];
+  shops: IShop[];
+  addShop(): void;
+}
+
+interface IMultiShop extends IMultiShopStyle {
   money: number;
-  minAppeal: number;
-  promotionEffectiveness: number;
+
+
 }
 
 interface ILocalShop extends IShop {
