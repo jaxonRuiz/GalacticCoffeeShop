@@ -478,7 +478,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as IContainerShop).addShop();
 			},
-			maxLevel: undefined,
+			maxLevel: 6,
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "add_new_shop.jpg",
