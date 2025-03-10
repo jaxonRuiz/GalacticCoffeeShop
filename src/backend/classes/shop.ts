@@ -386,6 +386,8 @@ export class Shop implements ILocalShop {
 			coffeeCups: this.coffeeCups,
 			waitingCustomers: this.waitingCustomers,
 			upgrades: {},
+			multiShopUnlocked: this.multiShopUnlocked,
+			promoterUnlocked: this.promoterUnlocked,
 		};
 
 		for (let [key, value] of this.upgrades) {
@@ -402,6 +404,8 @@ export class Shop implements ILocalShop {
 		this.coffeeCups = state.coffeeCups;
 		this.waitingCustomers = state.waitingCustomers;
 		this.upgrades = new Map(Object.entries(state.upgrades));
+		this.multiShopUnlocked = state.multiShopUnlocked;
+		this.promoterUnlocked = state.promoterUnlocked;
 	}
 }
 
@@ -420,4 +424,6 @@ export interface LocalShopSave {
 	coffeeCups: number;
 	waitingCustomers: number;
 	upgrades: { [key: string]: number };
+	multiShopUnlocked: boolean;
+	promoterUnlocked: boolean;
 }
