@@ -8,6 +8,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	w_selectedShop: Writable<Shop | null> = writable(null);
 	w_selectedShopIndex: Writable<number> = writable(-1);
 	w_shops: Writable<Shop[]> = writable([]);
+	w_finishedFirstShop: Writable<boolean> = writable(false);
 
 	// writable getters/setters
 	get money() {
@@ -33,6 +34,12 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 	set shops(value) {
 		this.w_shops.set(value);
+	}
+	get finishedFirstShop() {
+		return get(this.w_finishedFirstShop);
+	}
+	set finishedFirstShop(value) {
+		this.w_finishedFirstShop.set(value);
 	}
 
 	// internal stats ////////////////////////////////////////////////////////////
@@ -79,6 +86,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// multishop actions /////////////////////////////////////////////////////////
 	addShop() {
 		let newShop = new Shop(this);
+		if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
 		for (let key in this.upgradeFunctions) {
 			this.upgradeFunctions[key](newShop, this.upgrades.get(key) || 0);
 		}
@@ -102,7 +110,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	deselectShop() {
 		this.selectedShop = null;
-
 		this.selectedShopIndex = -1;
 	}
 

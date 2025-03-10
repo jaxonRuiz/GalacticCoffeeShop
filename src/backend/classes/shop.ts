@@ -162,7 +162,10 @@ export class Shop implements ILocalShop {
 			},
 		});
 
-		this.audio.set("bgm", new Audio("src/assets/music/Duraznito - Quincas Moreira.mp3"));
+		this.audio.set(
+			"bgm",
+			new Audio("src/assets/music/Duraznito - Quincas Moreira.mp3"),
+		);
 		this.audio.get("bgm")!.loop = true;
 		this.audio.get("bgm")!.volume = 0.3;
 		this.audio.get("bgm")!.play();
@@ -195,8 +198,10 @@ export class Shop implements ILocalShop {
 		}
 
 		// crowd noise
-		this.audio.get("crowd")!.volume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
-
+		this.audio.get("crowd")!.volume = Math.min(
+			this.waitingCustomers / this.maxCustomers,
+			1,
+		);
 
 		// progress updaters
 		// may limit throughput to 1 thing per tick, maybe fix
@@ -289,7 +294,9 @@ export class Shop implements ILocalShop {
 	}
 
 	deselectShop() {
+		console.log("deselecting shop");
 		this.multiShop.deselectShop();
+		this.multiShop.finishedFirstShop = true;
 	}
 
 	// player actions ////////////////////////////////////////////////////////////
@@ -311,10 +318,12 @@ export class Shop implements ILocalShop {
 	}
 
 	sellCoffee(amount: number = 1) {
-		let audio = new Audio("src/assets/sfx/ding.wav")
+		let audio = new Audio("src/assets/sfx/ding.wav");
 		audio.volume = 0.4;
 		audio.play();
-		let numToSell = Math.floor(Math.min(amount, this.waitingCustomers, this.coffeeCups));
+		let numToSell = Math.floor(
+			Math.min(amount, this.waitingCustomers, this.coffeeCups),
+		);
 		if (this.waitingCustomers >= numToSell && this.coffeeCups >= numToSell) {
 			this.coffeeCups -= numToSell;
 			this.waitingCustomers -= numToSell;

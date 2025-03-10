@@ -39,6 +39,7 @@
 	let coffeePrice = sshop.w_coffeePrice;
 	let promoterBool = sshop.w_promoterUnlocked;
 	let supplierBool = sshop.w_supplierUnlocked;
+	let multiShopUnlocked = sshop.w_multiShopUnlocked;
 
 	// for upgrades
 	let upgPage = $state(0);
@@ -118,12 +119,16 @@
 {/snippet}
 
 <main class="shop container">
-	<button
-		onclick={() => {
-			sshopInd = -1;
-		}}
-		id="return">{$t("toMultishop_btn")}</button
-	>
+	 
+	{#if $multiShopUnlocked}
+		<button 
+			onclick={() => {
+				sshopInd = -1;
+				sshop.deselectShop();
+			}}
+			id="return">{$t("toMultishop_btn")}</button
+		>
+	{/if}
 
 	<div class="shop left col">
 		<div class="col">
