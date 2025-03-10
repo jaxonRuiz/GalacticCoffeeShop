@@ -96,7 +96,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	deselectShop() {
 		this.selectedShop = null;
-		
+
 		this.selectedShopIndex = -1;
 	}
 
@@ -128,7 +128,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	endScene() {
 		console.log("multishop endScene()");
-		
+
 		this.sceneManager.emit("nextScene");
 	}
 
@@ -212,7 +212,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 		const state: MultiShopSave = JSON.parse(rawJSON);
 
-		// check that multishop upgrades work fine loading in like this
+		// check that multishop upgrades work fine loading in like this, especially "apply to all" upgrades
 		this.upgrades = new Map(Object.entries(state.upgrades));
 
 		for (let i = 0; i < state.shops.length; i++) {
@@ -223,6 +223,8 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			}
 			this.shops[i].loadLocalState(state.shops[i]);
 		}
+
+		this.money = state.money;
 	}
 
 	clearState() {
