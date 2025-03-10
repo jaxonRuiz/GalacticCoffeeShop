@@ -7,6 +7,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	w_money: Writable<number> = writable(0);
 	w_selectedShop: Writable<Shop | null> = writable(null);
 	w_selectedShopIndex: Writable<number> = writable(-1);
+	w_shops: Writable<Shop[]> = writable([]);
 
 	// writable getters/setters
 	get money() {
@@ -27,9 +28,14 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	set selectedShopIndex(value) {
 		this.w_selectedShopIndex.set(value);
 	}
+	get shops() {
+		return get(this.w_shops);
+	}
+	set shops(value) {
+		this.w_shops.set(value);
+	}
 
 	// internal stats ////////////////////////////////////////////////////////////
-	shops: Shop[] = []; // make into object for key referencing?
 	upgrades: Map<string, number> = new Map();
 	upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
 	weeklyRecap: { [key: number]: ShopWeekReport } = {};
