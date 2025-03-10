@@ -17,8 +17,9 @@ export function fSellableCoffee(num: number) {
 }
 
 export function fMoney(num: number) {
-	return (currencySymbol[getLocaleFromNavigator() ?? "en"] ?? "$") +
-		num.toFixed(2);
+	return (num < 0 ? "-" : "") +
+		(currencySymbol[getLocaleFromNavigator() ?? "en"] ?? "$") +
+		Math.abs(num).toFixed(2);
 }
 
 export function fAppeal(num: number) {

@@ -6,20 +6,25 @@
 		upgradeJSON,
 		UpgradeManager,
 	} from "../../backend/systems/upgradeManager";
-	import { fMoney, pointerStyle } from "../components/Styles.svelte";
+	import {
+		fAppeal,
+		fMoney,
+		fSellableCoffee,
+		pointerStyle,
+	} from "../components/Styles.svelte";
 	import Dropdown from "../components/Dropdown.svelte";
 	import Worker from "../components/Worker.svelte";
 	import Upgrade from "../components/Upgrade.svelte";
-  import Button from "../components/Button.svelte";
-  import Tooltip from "../components/Tooltip.svelte";
+	import Button from "../components/Button.svelte";
+	import Tooltip from "../components/Tooltip.svelte";
 
 	// base
 	const smanager = stageManager;
 	const mockmshop: MultiShop = smanager.currentScene as MultiShop; //new MultiShop(timer.timeEvents, smanager);
 
-	let { wshop: mshop = mockmshop } = $props();
+	let { mshop = mockmshop, sshopInd = $bindable() } = $props();
 
-	let sshop = mshop.shops[0];
+	let sshop = mshop.shops[sshopInd];
 	let umanager = new UpgradeManager("localShop");
 
 	// define variables
@@ -32,6 +37,8 @@
 	let money = sshop.w_money;
 	let restockSheet = sshop.w_restockSheet;
 	let coffeePrice = sshop.w_coffeePrice;
+	let promoterBool = sshop.w_promoterUnlocked;
+	let supplierBool = sshop.w_supplierUnlocked;
 
 	// for upgrades
 	let upgPage = $state(0);
@@ -111,13 +118,20 @@
 {/snippet}
 
 <main class="shop container">
+	<button
+		onclick={() => {
+			sshopInd = -1;
+		}}
+		id="return">{$t("toMultishop_btn")}</button
+	>
+
 	<div class="shop left col">
 		<div class="col">
 			<h1>Coffee Shop</h1>
-			<p>{$t("lshopMoney_stat")}: ${$money.toFixed(2)}</p>
-			<p>{$t("mshopMoney_stat")}: ${$mshopMoney.toFixed(2)}</p>
-			<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
-			<p>{$t("sellableCoffee_stat")}: {Math.floor($coffee)}</p>
+			<p>{$t("lshopMoney_stat")}: {fMoney($money)}</p>
+			<p>{$t("mshopMoney_stat")}: {fMoney($mshopMoney)}</p>
+			<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
+			<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
 		</div>
 	</div>
 
@@ -136,7 +150,9 @@
 						sshop.produceCoffee();
 					}}>{$t("makeCoffee_btn")}</Button
 				>
-				<Worker worker="barista" {sshop} />
+				{#if true}
+					<Worker worker="barista" {sshop} />
+				{/if}
 			</Dropdown>
 
 			<Dropdown title={$t("selling_title")}>
@@ -159,7 +175,12 @@
 						sshop.sellCoffee();
 					}}>{$t("sellCoffee_btn")}</Button
 				>
-				<Worker worker="server" {sshop} />
+				{#if $promoterBool}
+					<Worker worker="promoter" {sshop} />
+				{/if}
+				{#if true}
+					<Worker worker="server" {sshop} />
+				{/if}
 			</Dropdown>
 
 			<Dropdown title={$t("restocking_title")}>
@@ -183,59 +204,57 @@
 				>
 			</Dropdown>
 		</div>
-		<div class="col">
-			<div class="col block fixed">
-				<h1>{$t("upgrades_title")}</h1>
-				<p>{$t("money_stat")}: {fMoney($money)}</p>
-				<div class="row">
-					<label class="tab">
-						<input
-							checked
-							type="radio"
-							name="upgPage"
-							value={0}
-							bind:group={upgPage}
-						/>
-						<p>{$t("upgUnpurchased_btn")}</p>
-					</label>
-					<label class="tab">
-						<input type="radio" name="upgPage" value={1} bind:group={upgPage} />
-						<p>{$t("upgPurchased_btn")}</p>
-					</label>
-				</div>
-				<div class="col scroll" id="upgrades">
-					{#if upgPage == 0}
-						{#key rupg}
-							{#each availableUpgrades as upgkey (upgkey)}
-								<Upgrade
-									purchased={false}
-									item={upgs[upgkey]}
-									key={upgkey}
-									{money}
-									cost={upgs_cost[upgkey]}
-									level={sshop.upgrades.get(upgkey) ?? 0}
-									onclick={() => {
-										umanager.applyUpgrade(upgkey, sshop);
-										upgs_cost[upgkey] = umanager.getCost(upgkey, sshop);
-										availableUpgrades = umanager.checkUpgrade(sshop);
-										rupg = !rupg;
-									}}
-								/>
-							{/each}
-						{/key}
-					{:else if upgPage === 1}
-						{#each [...sshop.upgrades.keys()] as upgkey (upgkey)}
+		<div class="col block fixed">
+			<h1>{$t("upgrades_title")}</h1>
+			<p>{$t("money_stat")}: {fMoney($money)}</p>
+			<div class="row">
+				<label class="tab">
+					<input
+						checked
+						type="radio"
+						name="upgPage"
+						value={0}
+						bind:group={upgPage}
+					/>
+					<p>{$t("upgUnpurchased_btn")}</p>
+				</label>
+				<label class="tab">
+					<input type="radio" name="upgPage" value={1} bind:group={upgPage} />
+					<p>{$t("upgPurchased_btn")}</p>
+				</label>
+			</div>
+			<div class="col scroll" id="upgrades">
+				{#if upgPage == 0}
+					{#key rupg}
+						{#each availableUpgrades as upgkey (upgkey)}
 							<Upgrade
-								purchased={true}
+								purchased={false}
 								item={upgs[upgkey]}
 								key={upgkey}
 								{money}
 								cost={upgs_cost[upgkey]}
 								level={sshop.upgrades.get(upgkey) ?? 0}
+								onclick={() => {
+									umanager.applyUpgrade(upgkey, sshop);
+									upgs_cost[upgkey] = umanager.getCost(upgkey, sshop);
+									availableUpgrades = umanager.checkUpgrade(sshop);
+									rupg = !rupg;
+								}}
 							/>
 						{/each}
-					{/if}
-				</div>
+					{/key}
+				{:else if upgPage === 1}
+					{#each [...sshop.upgrades.keys()] as upgkey (upgkey)}
+						<Upgrade
+							purchased={true}
+							item={upgs[upgkey]}
+							key={upgkey}
+							{money}
+							cost={upgs_cost[upgkey]}
+							level={sshop.upgrades.get(upgkey) ?? 0}
+						/>
+					{/each}
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -249,5 +268,12 @@
 			margin-right: 0;
 			cursor: var(--cpointer), pointer;
 		}
+	}
+
+	#return {
+		position: absolute;
+		top: 0;
+		left: 0;
+		cursor: var(--cpointer), pointer;
 	}
 </style>

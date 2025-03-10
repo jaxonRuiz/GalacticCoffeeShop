@@ -1,48 +1,131 @@
 <script lang="ts">
 	import { t } from "svelte-i18n";
 	import { MultiShop } from "../../backend/classes/multiShop";
-	import { Timer } from "../../backend/systems/time";
-	import { upgradeJSON } from "../../backend/systems/upgradeManager";
-  import { stageManager } from "../../backend/game";
+	import {
+		upgradeJSON,
+		UpgradeManager,
+	} from "../../backend/systems/upgradeManager";
+	import { stageManager } from "../../backend/game";
+	import Shop from "./Shop.svelte";
+	import Upgrade from "../components/Upgrade.svelte";
+	import { fMoney } from "../components/Styles.svelte";
 
-	let timer = new Timer();
-	const smanager = stageManager;
-	const mockmshop = stageManager.currentScene //new MultiShop(timer.timeEvents, smanager);
+	const mockmshop = stageManager.currentScene as MultiShop;
+	let umanager = new UpgradeManager("multiShop");
 
 	let { wshop: mshop = mockmshop } = $props();
 
 	// upgrades
-	const upgs = upgradeJSON["multishop"];
+	let upgPage = $state(0);
+	let rupg = $state(false);
+	const upgs = upgradeJSON["multiShop"];
+	const upgs_cost = $state(
+		Object.keys(upgs).reduce((costs: { [key: string]: number }, key) => {
+			costs[key] = upgs[key].cost;
+			return costs;
+		}, {})
+	);
+
+	// upgrade checker on interval
+	let availableUpgrades = $state(umanager.checkUpgrade(mshop));
+	setInterval(() => {
+		availableUpgrades = umanager.checkUpgrade(mshop);
+	}, 1000);
+
+	// using shops
+	let sshopInd = $state(0);
 
 	// define variables
-	// let money = mshop.w_money;
+	let money = mshop.w_money;
+	let shops = mshop.w_shops;
 </script>
 
-<main class="row shop">
-	<div class="col left">
-		<div class="row top">
-			<div class="col stats">
-				<h1>multishop</h1>
-				<p>{$t("money_stat")}: {"money"}</p>
-				<button>{$t("extractMoney_btn")}</button>
+{#if sshopInd < 0}
+	<main class="row shop">
+		<div class="col left">
+			<div class="row top">
+				<div class="col stats">
+					<h1>multishop</h1>
+					<p>{$t("money_stat")}: {fMoney($money)}</p>
+					<button>{$t("extractMoney_btn")}</button>
+				</div>
+				<div>imagine graphics here</div>
 			</div>
-			<div> imagine graphics here </div>
+
+			<div class="row shop-cards scroll">
+				{#each $shops as _shop, ind (ind)}
+					{@render card(ind)}
+				{/each}
+			</div>
 		</div>
 
-		<div class="row shop-cards">
-			{@render card()}
+		<div class="col right">
+			<div class="col block fixed">
+				<h1>{$t("upgrades_title")}</h1>
+				<p>{$t("money_stat")}: {fMoney($money)}</p>
+				<div class="row">
+					<label class="tab">
+						<input
+							checked
+							type="radio"
+							name="upgPage"
+							value={0}
+							bind:group={upgPage}
+						/>
+						<p>{$t("upgUnpurchased_btn")}</p>
+					</label>
+					<label class="tab">
+						<input type="radio" name="upgPage" value={1} bind:group={upgPage} />
+						<p>{$t("upgPurchased_btn")}</p>
+					</label>
+				</div>
+				<div class="col scroll" id="upgrades">
+					{#if upgPage == 0}
+						{#key rupg}
+							{#each availableUpgrades as upgkey (upgkey)}
+								<Upgrade
+									purchased={false}
+									item={upgs[upgkey]}
+									key={upgkey}
+									{money}
+									cost={upgs_cost[upgkey]}
+									level={mshop.upgrades.get(upgkey) ?? 0}
+									onclick={() => {
+										umanager.applyUpgrade(upgkey, mshop);
+										upgs_cost[upgkey] = umanager.getCost(upgkey, mshop);
+										availableUpgrades = umanager.checkUpgrade(mshop);
+										rupg = !rupg;
+									}}
+								/>
+							{/each}
+						{/key}
+					{:else if upgPage === 1}
+						{#each [...mshop.upgrades.keys()] as upgkey (upgkey)}
+							<Upgrade
+								purchased={true}
+								item={upgs[upgkey]}
+								key={upgkey}
+								{money}
+								cost={upgs_cost[upgkey]}
+								level={mshop.upgrades.get(upgkey) ?? 0}
+							/>
+						{/each}
+					{/if}
+				</div>
+			</div>
 		</div>
-	</div>
+	</main>
+{:else}
+	<Shop {mshop} bind:sshopInd />
+{/if}
 
-	<div class="col right">
-		<div class="col block">
-			<h1>{$t("upgrades_title")}</h1>
-		</div>
-	</div>
-</main>
-
-{#snippet card()}
-	<button class="card col">
+{#snippet card(ind: number)}
+	<button
+		class="card col"
+		onclick={() => {
+			sshopInd = ind;
+		}}
+	>
 		<h1>shop name</h1>
 		<p>amount of money</p>
 	</button>
@@ -55,7 +138,7 @@
 
 		.left {
 			width: 70%;
-			background-color: #333;
+			background-color: var(--bg1);
 		}
 		.right {
 			flex-grow: 1;
@@ -63,11 +146,6 @@
 	}
 
 	.shop .left {
-		.shop-cards {
-			flex-wrap: wrap;
-			height: 40%;
-		}
-
 		.top {
 			flex-grow: 1;
 
@@ -82,8 +160,13 @@
 	}
 
 	.shop-cards {
+		flex-wrap: nowrap;
+		height: 40%;
 		.card {
+			margin: 0.5rem;
+			flex-shrink: 0;
 			justify-content: space-evenly;
+			box-sizing: border-box;
 		}
 	}
 </style>

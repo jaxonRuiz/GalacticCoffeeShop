@@ -2,7 +2,6 @@
   import { stageManager } from "../../backend/game";
   import Multishop from "./Multishop.svelte";
   import Preshop from "./Preshop.svelte";
-  import Shop from "./Shop.svelte";
   import Intro from "./Intro.svelte";
 	import { Preshop as IPreshop } from "../../backend/classes/preshop";
 	import { MultiShop as IMultishop } from "../../backend/classes/multiShop";
@@ -25,6 +24,6 @@
 {:else if $stage == 1}
 	<Preshop wshop={smanager.currentScene as IPreshop} />
 {:else if $stage == 2}
-	<Shop wshop={smanager.currentScene as IMultishop} />
+	<Multishop wshop={smanager.currentScene as IMultishop} />
 {/if}
 

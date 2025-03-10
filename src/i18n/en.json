@@ -46,9 +46,12 @@
 	"hireWorker_btn": "Hire",
 	"fireWorker_btn": "Fire",
 	"choresForBeans_btn": "Chores for Beans...",
+	"toMultishop_btn": "All Shops",
+	"addShop_btn": "Buy New Shop",
 
 	"server_worker": "Server(s)",
 	"barista_worker": "Barista(s)",
+	"promoter_worker": "Promoter(s)",
 
 	"restockSheet_text": "Restock Sheet",
 	"beans_text": "Beans",

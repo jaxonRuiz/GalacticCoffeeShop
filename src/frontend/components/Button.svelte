@@ -10,6 +10,7 @@
 		onclick = (() => {}),
 		disabled = false,
 		classes = [],
+		"class" : _class = "",
 		static: move = false,
 	} = $props();
 
@@ -25,7 +26,7 @@
 	data-num={dataNum}
 	{onclick}
 	{disabled}
-	class="button {classes.join(' ')}"
+	class="button {classes.join(' ')} {_class}"
 >
 	{@render children()}
 </button>

@@ -20,6 +20,9 @@
 
 .scroll {
 	overflow: auto;
+}
+
+.disableScrollBar {
 	/* IE and Edge */
 	-ms-overflow-style: none;
 	/* Firefox */
