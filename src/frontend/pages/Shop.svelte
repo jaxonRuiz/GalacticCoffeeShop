@@ -69,55 +69,6 @@
 	}
 </script>
 
-{#snippet restockItem(key: string)}
-	<div class="row restock" style={pointerStyle}>
-		<p>{$t(`${key}_text`)}</p>
-		<!-- <input type="number" min="0" step="1" value={`${$restockSheet.beans}`} /> -->
-		<button
-			data-btn="minus"
-			hidden={true}
-			disabled={$restockSheet[key] >= 10 ? false : true}
-			onclick={() => {
-				updateRestock(key, -10);
-			}}>-10</button
-		>
-		<button
-			data-btn="minus"
-			disabled={$restockSheet[key] >= 5 ? false : true}
-			onclick={() => {
-				updateRestock(key, -5);
-			}}>-5</button
-		>
-		<button
-			data-btn="minus"
-			disabled={$restockSheet[key] >= 1 ? false : true}
-			onclick={() => {
-				updateRestock(key, -1);
-			}}>-1</button
-		>
-		<p>{$restockSheet[key]}</p>
-		<button
-			data-btn="plus"
-			onclick={() => {
-				updateRestock(key, 1);
-			}}>+1</button
-		>
-		<button
-			data-btn="plus"
-			onclick={() => {
-				updateRestock(key, 5);
-			}}>+5</button
-		>
-		<button
-			data-btn="plus"
-			hidden={true}
-			onclick={() => {
-				updateRestock(key, 10);
-			}}>+10</button
-		>
-	</div>
-{/snippet}
-
 <main class="shop container">
 	 
 	{#if $multiShopUnlocked}
@@ -132,7 +83,7 @@
 
 	<div class="shop left col">
 		<div class="col">
-			<h1>Coffee Shop</h1>
+			<h1>{$t("localShop_title")} {sshopInd + 1}</h1>
 			<p>{$t("lshopMoney_stat")}: {fMoney($money)}</p>
 			<p>{$t("mshopMoney_stat")}: {fMoney($mshopMoney)}</p>
 			<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
@@ -264,6 +215,55 @@
 		</div>
 	</div>
 </main>
+
+{#snippet restockItem(key: string)}
+	<div class="row restock" style={pointerStyle}>
+		<p>{$t(`${key}_text`)}</p>
+		<!-- <input type="number" min="0" step="1" value={`${$restockSheet.beans}`} /> -->
+		<button
+			data-btn="minus"
+			hidden={true}
+			disabled={$restockSheet[key] >= 10 ? false : true}
+			onclick={() => {
+				updateRestock(key, -10);
+			}}>-10</button
+		>
+		<button
+			data-btn="minus"
+			disabled={$restockSheet[key] >= 5 ? false : true}
+			onclick={() => {
+				updateRestock(key, -5);
+			}}>-5</button
+		>
+		<button
+			data-btn="minus"
+			disabled={$restockSheet[key] >= 1 ? false : true}
+			onclick={() => {
+				updateRestock(key, -1);
+			}}>-1</button
+		>
+		<p>{$restockSheet[key]}</p>
+		<button
+			data-btn="plus"
+			onclick={() => {
+				updateRestock(key, 1);
+			}}>+1</button
+		>
+		<button
+			data-btn="plus"
+			onclick={() => {
+				updateRestock(key, 5);
+			}}>+5</button
+		>
+		<button
+			data-btn="plus"
+			hidden={true}
+			onclick={() => {
+				updateRestock(key, 10);
+			}}>+10</button
+		>
+	</div>
+{/snippet}
 
 <style>
 	.restock {

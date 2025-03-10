@@ -8,7 +8,7 @@
 	import { stageManager } from "../../backend/game";
 	import Shop from "./Shop.svelte";
 	import Upgrade from "../components/Upgrade.svelte";
-	import { fMoney } from "../components/Styles.svelte";
+	import { fMoney, pointerStyle } from "../components/Styles.svelte";
 
 	const mockmshop = stageManager.currentScene as MultiShop;
 	let umanager = new UpgradeManager("multiShop");
@@ -32,6 +32,16 @@
 		availableUpgrades = umanager.checkUpgrade(mshop);
 	}, 1000);
 
+	// shop money checker on interval
+	let shopMoney = $state([mshop.shops[0].money]);
+	setInterval(() => {
+		let hold: number[] = [];
+		mshop.shops.forEach((shop, ind) => {
+			hold[ind] = shop.money;
+		});
+		shopMoney = hold;
+	}, 500);
+
 	// using shops
 	let sshopInd = $state(0);
 
@@ -41,11 +51,11 @@
 </script>
 
 {#if sshopInd < 0}
-	<main class="row shop">
+	<main class="row shop" style="{pointerStyle}">
 		<div class="col left">
 			<div class="row top">
 				<div class="col stats">
-					<h1>multishop</h1>
+					<h1>{$t("multishop_title")}</h1>
 					<p>{$t("money_stat")}: {fMoney($money)}</p>
 					<button>{$t("extractMoney_btn")}</button>
 				</div>
@@ -124,18 +134,21 @@
 		class="card col"
 		onclick={() => {
 			sshopInd = ind;
+			mshop.selectShopIndex(ind);
 		}}
 	>
-		<h1>shop name</h1>
-		<p>amount of money</p>
+		<h1>{$t("shop_title")} {ind + 1}</h1>
+		<p>{$t("money_stat")}: {fMoney(shopMoney[ind] ?? 0)}</p>
 	</button>
 {/snippet}
 
 <style>
+	button {
+		cursor: var(--cpointer), pointer;
+	}
 	.shop {
 		height: 100%;
 		width: 100%;
-
 		.left {
 			width: 70%;
 			background-color: var(--bg1);

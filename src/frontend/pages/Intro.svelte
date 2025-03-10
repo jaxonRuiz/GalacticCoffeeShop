@@ -23,7 +23,7 @@
 	}}
 />
 
-<main class="fl col {title ? 'title' : ''} {pointerStyle}" transition:fade>
+<main class="fl col {title ? 'title' : ''}" style="{pointerStyle}" transition:fade>
 	{#if title}
 		<div transition:fade class="col">
 			<h1>{$t("gameTitle")}</h1>
@@ -59,14 +59,14 @@
 </main>
 
 <style>
-	main, .col {
+	.col, main {
 		align-items: center;
 		justify-content: center;
 		width: 100%;
 		height: 100%;
-		&:not(.title) {
-			cursor: var(--cpointer), pointer;
-		}
+	}
+	main:not(.title) {
+		cursor: var(--cpointer), pointer;
 	}
 
 	.intro {
