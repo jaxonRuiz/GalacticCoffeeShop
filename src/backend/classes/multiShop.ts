@@ -4,7 +4,7 @@ import { type LocalShopSave, Shop } from "./shop";
 
 export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// writable resources
-	w_money: Writable<number> = writable(0);
+	w_money: Writable<number> = writable(10000);
 	w_selectedShop: Writable<Shop | null> = writable(null);
 	w_selectedShopIndex: Writable<number> = writable(-1);
 	w_shops: Writable<Shop[]> = writable([]);

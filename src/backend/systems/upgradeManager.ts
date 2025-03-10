@@ -11,7 +11,8 @@ export class UpgradeManager {
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
 			(shopObject as IContainerShop).upgradeFunctions.push(
-				this.allUpgrades[id].upgrade.bind(this.allUpgrades[id])); // really unsure if this works
+				this.allUpgrades[id].upgrade.bind(this.allUpgrades[id]),
+			); // really unsure if this works
 
 			shopObject.shops!.forEach((shop: IShop) => {
 				this.allUpgrades[id].upgrade(shop, shop.upgrades.get(id) ?? 0);
@@ -466,7 +467,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).promotionEffectiveness += 0.1;
 			},
 			flags: ["applyToChildren"],
-			maxLevel: undefined,
+			maxLevel: 3,
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "cohesive_branding.jpg",
