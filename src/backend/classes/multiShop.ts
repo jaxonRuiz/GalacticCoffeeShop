@@ -1,10 +1,11 @@
 import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { type LocalShopSave, Shop } from "./shop";
+import { UpgradeManager } from "../systems/upgradeManager";
 
 export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// writable resources
-	w_money: Writable<number> = writable(10000);
+	w_money: Writable<number> = writable(100000);
 	w_selectedShop: Writable<Shop | null> = writable(null);
 	w_selectedShopIndex: Writable<number> = writable(-1);
 	w_shops: Writable<Shop[]> = writable([]);
@@ -44,12 +45,15 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	// internal stats ////////////////////////////////////////////////////////////
 	upgrades: Map<string, number> = new Map();
-	upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
+	// upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
 	weeklyRecap: { [key: number]: ShopWeekReport } = {};
 	sceneManager: Publisher;
 	minAppeal: number = 0;
 	promotionEffectiveness: number = 0;
 	runTutorial: boolean = true;
+
+	multiShopUgradeManager: UpgradeManager = new UpgradeManager("multiShop");
+	localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		timer.subscribe(this, "tick");
@@ -84,11 +88,26 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	// multishop actions /////////////////////////////////////////////////////////
-	addShop() {
+	addShop(applyUpgrades: boolean = true) {
 		let newShop = new Shop(this);
 		if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
-		for (let key in this.upgradeFunctions) {
-			this.upgradeFunctions[key](newShop, this.upgrades.get(key) || 0);
+		if (applyUpgrades) {
+			this.upgrades.forEach((value, key) => {
+				console.log(key);
+				if (
+					this.multiShopUgradeManager.allUpgrades[key].flags?.includes(
+						"applyToChildren",
+					)
+				) {
+					// pain peko
+					for (let i = 0; i < value; i++) {
+						this.multiShopUgradeManager.allUpgrades[key].upgrade(
+							newShop,
+							value - 1,
+						);
+					}
+				}
+			});
 		}
 		this.shops.push(newShop);
 
@@ -202,7 +221,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	saveState() {
 		let saveObj: MultiShopSave = {
 			money: this.money,
-
+			selectedShopIndex: this.selectedShopIndex,
 			upgrades: {},
 			shops: [],
 		};
@@ -228,11 +247,15 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		// check that multishop upgrades work fine loading in like this, especially "apply to all" upgrades
 		this.upgrades = new Map(Object.entries(state.upgrades));
 
+		// this.upgradeFunctions = state.upgradeFunctions;
+		this.selectedShopIndex = state.selectedShopIndex;
+
 		for (let i = 0; i < state.shops.length; i++) {
 			// only add new shop if shops > 1
-			if (i > 0) {
-				let shop = new Shop(this);
-				this.shops.push(shop);
+			if (i >= this.shops.length) {
+				this.addShop(false);
+				// let shop = new Shop(this);
+				// this.shops.push(shop);
 			}
 			this.shops[i].loadLocalState(state.shops[i]);
 		}
@@ -251,6 +274,7 @@ interface ShopWeekReport {
 
 interface MultiShopSave {
 	money: number;
+	selectedShopIndex: number;
 	upgrades: { [key: string]: number };
 	shops: LocalShopSave[];
 }

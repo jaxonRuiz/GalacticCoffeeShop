@@ -10,13 +10,12 @@ export class UpgradeManager {
 	applyUpgrade(id: string, shopObject: IShop) {
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
-			(shopObject as IContainerShop).upgradeFunctions.push(
-				this.allUpgrades[id].upgrade.bind(this.allUpgrades[id]),
-			); // really unsure if this works
-
+			// maybe set it up so multishop upgrades show up in local shops?
 			shopObject.shops!.forEach((shop: IShop) => {
-				this.allUpgrades[id].upgrade(shop, shop.upgrades.get(id) ?? 0);
-			});
+				this.allUpgrades[id].upgrade(shop, shopObject.upgrades.get(id) ?? 0);
+			}); // uses level of multishop
+			shopObject.applyCost(this.getCost(id, shopObject));
+			shopObject.upgrades.set(id, (shopObject.upgrades.get(id) ?? 0) + 1);
 		} else {
 			// if single shop style
 			this.allUpgrades[id].upgrade(
@@ -311,7 +310,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	localShop: {
 		unlock_multishop: {
 			unlock_condition: (shop) => {
-				return true;
+				return !(shop as ILocalShop).multiShopUnlocked;
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).multiShopUnlocked = true;
@@ -326,15 +325,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return true;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).roles.set("promoter", {
-					name: "Promoter",
-					numWorkers: 0,
-					maxWorkers: 1,
-					wage: 100,
-					update: (shop: ILocalShop, tickCounter: number) => {
-						shop.unlockPromoter();
-					},
-				});
+				(shop as ILocalShop).unlockPromoter();
 			},
 			maxLevel: 1,
 			cost: 0,
@@ -461,7 +452,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			unlock_condition: (multishop) => {
 				return multishop.shops!.length > 1; // maybe change to 2 later
 			},
-			upgrade: (shop) => {
+			upgrade: (shop, level) => {
 				console.log("applying upgrade to local shop");
 				(shop as ILocalShop).minAppeal! += 0.2;
 				(shop as ILocalShop).promotionEffectiveness += 0.1;

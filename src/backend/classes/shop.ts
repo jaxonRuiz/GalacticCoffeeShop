@@ -360,8 +360,8 @@ export class Shop implements ILocalShop {
 
 	// upgrade functions /////////////////////////////////////////////////////////
 
-	// TODO frame to unlock new jobs
 	unlockPromoter() {
+		this.promoterUnlocked = true;
 		this.roles.set("promoter", {
 			name: "Promoter",
 			numWorkers: 0,
@@ -375,6 +375,7 @@ export class Shop implements ILocalShop {
 	}
 
 	unlockSupplier() {
+		this.supplierUnlocked = true;
 		this.roles.set("supplier", {
 			name: "Supplier",
 			numWorkers: 0,
@@ -394,6 +395,10 @@ export class Shop implements ILocalShop {
 			emptyCups: this.emptyCups,
 			coffeeCups: this.coffeeCups,
 			waitingCustomers: this.waitingCustomers,
+			minAppeal: this.minAppeal,
+			maxAppeal: this.maxAppeal,
+			promotionEffectiveness: this.promotionEffectiveness,
+			appealDecay: this.appealDecay,
 			upgrades: {},
 			multiShopUnlocked: this.multiShopUnlocked,
 			promoterUnlocked: this.promoterUnlocked,
@@ -411,10 +416,18 @@ export class Shop implements ILocalShop {
 		this.beans = state.beans;
 		this.emptyCups = state.emptyCups;
 		this.coffeeCups = state.coffeeCups;
+		this.minAppeal = state.minAppeal;
+		this.maxAppeal = state.maxAppeal;
+		this.promotionEffectiveness = state.promotionEffectiveness;
+		this.appealDecay = state.appealDecay;
 		this.waitingCustomers = state.waitingCustomers;
 		this.upgrades = new Map(Object.entries(state.upgrades));
 		this.multiShopUnlocked = state.multiShopUnlocked;
 		this.promoterUnlocked = state.promoterUnlocked;
+
+		if (this.promoterUnlocked) {
+			this.unlockPromoter();
+		}
 	}
 }
 
@@ -432,6 +445,10 @@ export interface LocalShopSave {
 	emptyCups: number;
 	coffeeCups: number;
 	waitingCustomers: number;
+	minAppeal: number;
+	maxAppeal: number;
+	promotionEffectiveness: number;
+	appealDecay: number;
 	upgrades: { [key: string]: number };
 	multiShopUnlocked: boolean;
 	promoterUnlocked: boolean;
