@@ -104,6 +104,9 @@ export class Shop implements ILocalShop {
 	roles: Map<string, Role> = new Map();
 	upgrades: Map<string, number> = new Map();
 	multiShop: MultiShop;
+	audio: Map<string, HTMLAudioElement> = new Map();
+	boilTimer: number = 0;
+	playBoiler: boolean = false;
 
 	constructor(multiShop: MultiShop) {
 		this.multiShop = multiShop;
@@ -139,6 +142,17 @@ export class Shop implements ILocalShop {
 				}
 			},
 		});
+
+		this.audio.set("bgm", new Audio("src/assets/music/Duraznito - Quincas Moreira.mp3"));
+		this.audio.get("bgm")!.loop = true;
+		this.audio.get("bgm")!.volume = 0.3;
+		this.audio.get("bgm")!.play();
+		this.audio.set("boiling", new Audio("src/assets/sfx/boiling.flac"));
+		this.audio.get("boiling")!.loop = true;
+		this.audio.set("crowd", new Audio("src/assets/sfx/crowd.mp3"));
+		this.audio.get("crowd")!.loop = true;
+		this.audio.get("crowd")!.volume = 0;
+		this.audio.get("crowd")!.play();
 	}
 
 	// multishop utility /////////////////////////////////////////////////////////
@@ -152,6 +166,18 @@ export class Shop implements ILocalShop {
 
 		this.decayAppeal();
 		this.drawCustomers();
+
+		// boil audio effect
+		if (this.boilTimer > 0) {
+			this.boilTimer -= 1;
+		} else {
+			this.playBoiler = false;
+			this.audio.get("boiling")!.pause();
+		}
+
+		// crowd noise
+		this.audio.get("crowd")!.volume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
+
 
 		// progress updaters
 		// may limit throughput to 1 thing per tick, maybe fix
@@ -226,6 +252,10 @@ export class Shop implements ILocalShop {
 
 		this.beans += this.restockSheet["beans"];
 		this.emptyCups += this.restockSheet["emptyCups"];
+
+		let audio = new Audio("src/assets/sfx/cashRegister.wav");
+		audio.volume = 0.7;
+		audio.play();
 	}
 
 	getTotalExpenses() {
@@ -245,6 +275,12 @@ export class Shop implements ILocalShop {
 
 	// player actions ////////////////////////////////////////////////////////////
 	produceCoffee(amount: number = 1) {
+		if (this.boilTimer === 0) {
+			this.playBoiler = true;
+			this.audio.get("boiling")!.play();
+			this.boilTimer += 7;
+		}
+
 		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
 		if (this.beans >= numToMake && this.emptyCups >= numToMake) {
 			this.beans -= numToMake;
@@ -256,6 +292,9 @@ export class Shop implements ILocalShop {
 	}
 
 	sellCoffee(amount: number = 1) {
+		let audio = new Audio("src/assets/sfx/ding.wav")
+		audio.volume = 0.4;
+		audio.play();
 		let numToSell = Math.floor(Math.min(amount, this.waitingCustomers, this.coffeeCups));
 		if (this.waitingCustomers >= numToSell && this.coffeeCups >= numToSell) {
 			this.coffeeCups -= numToSell;
@@ -267,6 +306,8 @@ export class Shop implements ILocalShop {
 	}
 
 	promote() {
+		let audio = new Audio("src/assets/sfx/papers.wav");
+		audio.play();
 		this.appeal += this.promotionEffectiveness *
 			(1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);

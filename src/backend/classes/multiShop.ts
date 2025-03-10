@@ -96,6 +96,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	deselectShop() {
 		this.selectedShop = null;
+		
 		this.selectedShopIndex = -1;
 	}
 
@@ -127,6 +128,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	endScene() {
 		console.log("multishop endScene()");
+		
 		this.sceneManager.emit("nextScene");
 	}
 
