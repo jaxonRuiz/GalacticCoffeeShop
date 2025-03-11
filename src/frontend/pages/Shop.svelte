@@ -16,7 +16,8 @@
 	import Upgrade from "../components/Upgrade.svelte";
 	import Button from "../components/Button.svelte";
 	import Tooltip from "../components/Tooltip.svelte";
-  import Worker from "../components/Worker.svelte";
+	import Worker from "../components/Worker.svelte";
+	import { derived } from "svelte/store";
 
 	// base
 	const smanager = stageManager;
@@ -40,6 +41,10 @@
 	let promoterBool = sshop.w_promoterUnlocked;
 	let supplierBool = sshop.w_supplierUnlocked;
 	let multiShopUnlocked = sshop.w_multiShopUnlocked;
+	let totalMoney = derived(
+		[money, mshopMoney],
+		([$money, $mshopMoney]) => $money + $mshopMoney
+	);
 
 	// for upgrades
 	let upgPage = $state(0);
@@ -76,10 +81,9 @@
 </script>
 
 <main class="shop container">
-	 
 	{#if $multiShopUnlocked}
-		<button 
-		 	class="green"
+		<button
+			class="green"
 			onclick={() => {
 				sshopInd = -1;
 				sshop.deselectShop();
@@ -194,7 +198,7 @@
 								purchased={false}
 								item={upgs[upgkey]}
 								key={upgkey}
-								{money}
+								money={totalMoney}
 								cost={upgs_cost[upgkey]}
 								level={sshop.upgrades.get(upgkey) ?? 0}
 								onclick={() => {
@@ -215,7 +219,6 @@
 							purchased={true}
 							item={upgs[upgkey]}
 							key={upgkey}
-							{money}
 							cost={upgs_cost[upgkey]}
 							level={sshop.upgrades.get(upgkey) ?? 0}
 						/>

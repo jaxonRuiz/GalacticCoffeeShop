@@ -2,6 +2,7 @@
 	import { t } from "svelte-i18n";
 	import Button from "./Button.svelte";
 	import { fMoney } from "./Styles.svelte";
+  import { writable } from "svelte/store";
 
 	let {
 		item,
@@ -9,7 +10,7 @@
 		purchased,
 		cost,
 		level,
-		money,
+		money = writable(0),
 		onclick = () => {},
 	} = $props();
 </script>

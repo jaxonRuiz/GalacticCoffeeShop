@@ -203,7 +203,6 @@
 							purchased={true}
 							item={upgs[upgkey]}
 							key={upgkey}
-							{money}
 							cost={upgs_cost[upgkey]}
 							level={pshop.upgrades.get(upgkey) ?? 0}
 						/>
