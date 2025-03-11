@@ -129,5 +129,7 @@
 	"upgrade_barista_tools_upgName": "Upgrade Barista Tools",
 	"upgrade_barista_tools_upgDesc": "Gain a straight boost to barista speed",
 	"promoter_effectiveness_upgName": "Promoter Effectiveness",
-	"promoter_effectiveness_upgDesc": "Increase the effectiveness of your promoters"
+	"promoter_effectiveness_upgDesc": "Increase the effectiveness of your promoters",
+	"local_shop_nicer_coffee_upgName": "Nicer Coffee",
+	"local_shop_nicer_coffee_upgDesc": "Put even more love into your coffee and charge more for it!"
 }

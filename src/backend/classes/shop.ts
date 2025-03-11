@@ -120,8 +120,8 @@ export class Shop implements ILocalShop {
 		supplierCurrent: 0,
 		baristaMax: 2,
 		serverMax: 1,
-		promotersMax: 1,
-		suppliersMax: 1,
+		promoterMax: 1,
+		supplierMax: 1,
 	});
 
 	lifetimeStats: { [key: string]: number } = {
