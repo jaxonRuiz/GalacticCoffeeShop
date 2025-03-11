@@ -131,8 +131,8 @@ export class Shop implements ILocalShop {
 	};
 
 	// stats /////////////////////////////////////////////////////////////////////
-	beansPrice: number = 1;
-	cupsPrice: number = 1;
+	beansPrice: number = 2.5;
+	cupsPrice: number = 0.1;
 	totalWorkers: number = 0;
 	maxCustomers: number = 7;
 	promotionEffectiveness: number = 0.2;
@@ -388,6 +388,11 @@ export class Shop implements ILocalShop {
 		if (this.workerAmounts[role + "Current"] > 0) {
 			this.workerAmounts[role + "Current"]--;
 		}
+	}
+
+	choresForBeans() {
+		this.emptyCups += 1;
+		this.beans += 1;
 	}
 
 	// upgrade functions /////////////////////////////////////////////////////////
