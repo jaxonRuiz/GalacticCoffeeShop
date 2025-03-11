@@ -43,6 +43,12 @@ export function loadState() {
 export function resetState() {
 	console.log("game reset state");
 	localStorage.removeItem("GameSaveData");
+	localStorage.removeItem("multishop");
+	localStorage.removeItem("preshop");
+	firstTime = true;
+	timer = new Timer();
+	stageManager = new StageManager(timer);
+
 }
 
 interface SaveData {
