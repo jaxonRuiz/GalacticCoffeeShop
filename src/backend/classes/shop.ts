@@ -294,6 +294,11 @@ export class Shop implements ILocalShop {
 		}
 	}
 
+	getRestockPrice() {
+		return this.restockSheet["beans"] * this.beansPrice +
+			this.restockSheet["emptyCups"] * this.cupsPrice;
+	}
+
 	restock() {
 		// !!! money is taken by getExpenses instead.
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
