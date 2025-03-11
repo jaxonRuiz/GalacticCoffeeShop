@@ -4,8 +4,9 @@
 	--btnbg: #333;
 	--bg1: #111;
 	--bg2: #1a1a1a;
-	--borderW: 3px;
+	--borderW: 0.25rem;
 	--green: #4cd649;
+	--yellow: #f2c144;
 }
 
 * {
@@ -111,6 +112,14 @@
 
 button.green {
 	border-color: var(--green);
+
+	&:disabled {
+		border-color: transparent;
+	}
+}
+
+button.yellow {
+	border-color: var(--yellow);
 
 	&:disabled {
 		border-color: transparent;

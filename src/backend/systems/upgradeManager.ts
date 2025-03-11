@@ -94,6 +94,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 600,
 			costMultiplier: 1,
 			image: "buy_coffee_shop.jpg",
+			flags: ["yellow"],
 		},
 
 		crank_grinder: {
@@ -323,6 +324,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 500,
 			costMultiplier: 1,
 			image: "unlock_multishop.jpg",
+			flags: ["yellow"],
 		},
 		unlock_promoter: {
 			unlock_condition: (shop) => {

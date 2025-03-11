@@ -86,7 +86,7 @@
 <main class="shop container">
 	{#if $multiShopUnlocked}
 		<button
-			class="green"
+			class="yellow"
 			onclick={() => {
 				sshopInd = -1;
 				sshop.deselectShop();
@@ -211,6 +211,7 @@
 								money={totalMoney}
 								cost={upgs_cost[upgkey]}
 								level={sshop.upgrades.get(upgkey) ?? 0}
+								flags={upgs[upgkey].flags ?? []}
 								onclick={() => {
 									umanager.applyUpgrade(upgkey, sshop);
 									upgs_cost[upgkey] = umanager.getCost(upgkey, sshop);

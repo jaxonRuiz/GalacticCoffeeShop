@@ -192,6 +192,7 @@
 								{money}
 								cost={upgs_cost[upgkey]}
 								level={pshop.upgrades.get(upgkey) ?? 0}
+								flags={upgs[upgkey].flags ?? []}
 								onclick={() => {
 									umanager.applyUpgrade(upgkey, pshop);
 									upgs_cost[upgkey] = umanager.getCost(upgkey, pshop);

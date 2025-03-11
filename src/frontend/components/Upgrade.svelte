@@ -10,6 +10,7 @@
 		purchased,
 		cost,
 		level,
+		flags = [],
 		money = writable(0),
 		onclick = () => {},
 	} = $props();
@@ -19,7 +20,8 @@
 	data-btn={purchased ? "" : "coin"}
 	disabled={purchased || $money < cost ? true : false}
 	{onclick}
-	classes={purchased ? ["purchased-upg"] : []}
+	class={purchased ? "purchased-upg" : ""}
+	classes={flags}
 >
 	<h3>
 		{$t(`${key}_upgName`)}{item.maxLevel != 1
