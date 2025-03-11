@@ -4,16 +4,19 @@
 	let { worker, sshop } = $props();
 
 	let trig = $state(false);
+	let WA = sshop.w_workerAmounts;
+	let numWorkers = sshop.w_workerAmounts[worker + "Current"];
+	let maxWorkers = sshop.w_workerAmounts[worker + "Max"];
 </script>
 
 <div class="row worker {worker}">
 	{#key trig}
-		<p>{$t(`${worker}_worker`)}: {sshop.roles.get(worker).numWorkers}</p>
+		<p>{$t(`${worker}_worker`)}: {`${$WA[worker + "Current"]} / ${$WA[worker + "Max"]}`}</p>
 		<Button
 			move={false}
 			data-btn="plusOne"
-			disabled={sshop.roles.get(worker).maxWorkers ==
-				sshop.roles.get(worker).numWorkers}
+			disabled={$WA[worker + "Current"] ==
+				$WA[worker + "Max"]}
 			onclick={() => {
 				sshop.addWorker(worker);
 				trig = !trig;
@@ -22,7 +25,7 @@
 		<Button
 			move={false}
 			data-btn="minusOne"
-			disabled={sshop.roles.get(worker).numWorkers == 0}
+			disabled={$WA[worker + "Current"] == 0}
 			onclick={() => {
 				sshop.removeWorker(worker);
 				trig = !trig;

@@ -80,14 +80,14 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		buy_coffee_shop: {
 			unlock_condition: (shop) => {
-				// return true;
+				return true;
 				return (shop as IPreshop).lifetimeCoffeeSold >= 250;
 			},
 			upgrade: (shop) => {
 				(shop as IScene).endScene();
 			},
 			maxLevel: 1,
-			cost: 600,
+			cost: 1, //600,
 			costMultiplier: 1,
 			image: "buy_coffee_shop.jpg",
 		},
@@ -355,7 +355,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 50;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).roles.get("server")!.maxWorkers += 1;
+				(shop as ILocalShop).workerAmounts["serverMax"] += 1;
 			},
 			maxLevel: 3,
 			cost: 100,
@@ -367,7 +367,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return shop.upgrades.get("unlock_promoter")! >= 1;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).roles.get("barista")!.maxWorkers += 1;
+				(shop as ILocalShop).workerAmounts["promoterMax"] += 1;
 			},
 			maxLevel: 3,
 			cost: 100,
@@ -379,7 +379,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 200;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).roles.get("barista")!.maxWorkers += 1;
+				(shop as ILocalShop).workerAmounts["baristaMax"] += 1;
 			},
 			maxLevel: 3,
 			cost: 100,

@@ -7,7 +7,7 @@ export class Shop implements ILocalShop {
 	w_emptyCups: Writable<number> = writable(500);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
-	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
+	w_money: Writable<number> = writable(999999); // local shop money is unusable untill collected
 	w_appeal: Writable<number> = writable(0);
 	w_coffeePrice: Writable<number> = writable(5);
 	w_promoterUnlocked: Writable<boolean> = writable(false);
@@ -87,6 +87,12 @@ export class Shop implements ILocalShop {
 	set multiShopUnlocked(value) {
 		this.w_multiShopUnlocked.set(value);
 	}
+	get workerAmounts() {
+		return get(this.w_workerAmounts);
+	}
+	set workerAmounts(value: { [key: string]: number }) {
+		this.w_workerAmounts.set(value);
+	}
 
 	// variable containers ///////////////////////////////////////////////////////
 	w_restockSheet: Writable<{ [key: string]: number }> = writable({
@@ -106,6 +112,16 @@ export class Shop implements ILocalShop {
 		coffeeProgress: 0,
 		promotionProgress: 0,
 		customerProgress: 0,
+	});
+	w_workerAmounts: Writable<{ [key: string]: number }> = writable({
+		baristaCurrent: 0,
+		serverCurrent: 0,
+		promoterCurrent: 0,
+		supplierCurrent: 0,
+		baristaMax: 2,
+		serverMax: 1,
+		promotersMax: 1,
+		suppliersMax: 1,
 	});
 
 	lifetimeStats: { [key: string]: number } = {
@@ -138,8 +154,6 @@ export class Shop implements ILocalShop {
 		// setting up default roles
 		this.roles.set("barista", {
 			name: "Barista",
-			numWorkers: 0,
-			maxWorkers: 2,
 			wage: 50,
 			update: (shop: Shop) => {
 				let barista = shop.roles.get("barista")!;
@@ -147,15 +161,14 @@ export class Shop implements ILocalShop {
 					shop.progressTrackers["coffeeProgress"] +=
 						((shop.workerStats["baristaBaseProductivity"] *
 							shop.workerStats["baristaCumulativeProductivity"]) +
-							shop.workerStats["baristaFlatProductivity"]) * barista.numWorkers;
+							shop.workerStats["baristaFlatProductivity"]) *
+						this.workerAmounts["baristaCurrent"];
 				}
 			},
 		});
 
 		this.roles.set("server", {
 			name: "Server",
-			numWorkers: 0,
-			maxWorkers: 1,
 			wage: 50,
 			update: (shop: Shop) => {
 				let server = shop.roles.get("server")!;
@@ -163,7 +176,8 @@ export class Shop implements ILocalShop {
 					shop.progressTrackers["serviceProgress"] +=
 						((shop.workerStats["serverBaseProductivity"] *
 							shop.workerStats["serverCumulativeProductivity"]) +
-							shop.workerStats["serverFlatProductivity"]) * server.numWorkers;
+							shop.workerStats["serverFlatProductivity"]) *
+						this.workerAmounts["serverCurrent"];
 				}
 			},
 		});
@@ -291,7 +305,9 @@ export class Shop implements ILocalShop {
 	getTotalExpenses() {
 		let totalExpenses = 0;
 		this.roles.forEach((role: Role) => {
-			totalExpenses += role.numWorkers * role.wage;
+			// pain peko
+			let numWorkers = this.workerAmounts[role.name.toLowerCase() + "Current"];
+			totalExpenses += numWorkers * role.wage;
 		});
 		totalExpenses += this.beans * this.beansPrice;
 		totalExpenses += this.emptyCups * this.cupsPrice;
@@ -352,9 +368,12 @@ export class Shop implements ILocalShop {
 
 	addWorker(role: string) {
 		if (!this.roles.has(role)) throw new Error(`${role} does not exist`);
+		let numWorkers = this.workerAmounts[role + "Current"];
+		let maxWorkers = this.workerAmounts[role + "Max"];
+
 		let roleObj = this.roles.get(role);
-		if (roleObj!.numWorkers < roleObj!.maxWorkers) {
-			roleObj!.numWorkers++;
+		if (numWorkers < maxWorkers) {
+			this.workerAmounts[role + "Current"]++;
 			// this.applyCost(roleObj!.wage*2); // hiring cost?
 		}
 	}
@@ -362,8 +381,8 @@ export class Shop implements ILocalShop {
 	removeWorker(role: string) {
 		if (!this.roles.has(role)) throw new Error("Role does not exist");
 		let roleObj = this.roles.get(role)!;
-		if (roleObj.numWorkers > 0) {
-			roleObj.numWorkers--;
+		if (this.workerAmounts[role + "Current"] > 0) {
+			this.workerAmounts[role + "Current"]--;
 		}
 	}
 
@@ -373,8 +392,6 @@ export class Shop implements ILocalShop {
 		this.promoterUnlocked = true;
 		this.roles.set("promoter", {
 			name: "Promoter",
-			numWorkers: 0,
-			maxWorkers: 1,
 			wage: 100,
 			update: (shop: Shop) => {
 				shop.progressTrackers["promotionProgress"] += 0.03;
@@ -387,8 +404,6 @@ export class Shop implements ILocalShop {
 		this.supplierUnlocked = true;
 		this.roles.set("supplier", {
 			name: "Supplier",
-			numWorkers: 0,
-			maxWorkers: 1,
 			wage: 100,
 			update: (shop: Shop, tickCounter: number) => {
 				console.log("supplier updated");
@@ -413,7 +428,7 @@ export class Shop implements ILocalShop {
 			promoterUnlocked: this.promoterUnlocked,
 			lifetimeStats: this.lifetimeStats,
 			workerStats: this.workerStats,
-			numWorkers: {},
+			workerAmounts: {},
 			appeal: this.appeal,
 		};
 
@@ -421,8 +436,8 @@ export class Shop implements ILocalShop {
 			saveObj.upgrades[key] = value;
 		}
 
-		for (let [key, value] of this.roles) {
-			saveObj.numWorkers[key] = value.numWorkers;
+		for (let key in this.workerAmounts) {
+			saveObj.workerAmounts[key] = this.workerAmounts[key];
 		}
 
 		for (let key in this.workerStats) {
@@ -453,8 +468,8 @@ export class Shop implements ILocalShop {
 		if (this.promoterUnlocked) {
 			this.unlockPromoter();
 		}
-		for (let key in state.numWorkers) {
-			this.roles.get(key)!.numWorkers = state.numWorkers[key];
+		for (let key in state.workerAmounts) {
+			this.workerAmounts[key] = state.workerAmounts[key];
 		}
 		for (let key in state.workerStats) {
 			this.workerStats[key] = state.workerStats[key];
@@ -464,8 +479,6 @@ export class Shop implements ILocalShop {
 
 interface Role {
 	name: string;
-	numWorkers: number;
-	maxWorkers: number;
 	wage: number; // weekly
 	update: (shop: Shop, tickCounter: number) => void;
 }
@@ -486,5 +499,5 @@ export interface LocalShopSave {
 	multiShopUnlocked: boolean;
 	promoterUnlocked: boolean;
 	workerStats: { [key: string]: number };
-	numWorkers: { [key: string]: number };
+	workerAmounts: { [key: string]: number };
 }
