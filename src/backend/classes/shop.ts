@@ -300,7 +300,6 @@ export class Shop implements ILocalShop {
 	}
 
 	restock() {
-		// !!! money is taken by getExpenses instead.
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
 		this.applyCost(this.restockSheet["emptyCups"] * this.cupsPrice);
 
@@ -319,8 +318,9 @@ export class Shop implements ILocalShop {
 			let numWorkers = this.workerAmounts[role.name.toLowerCase() + "Current"];
 			totalExpenses += numWorkers * role.wage;
 		});
-		totalExpenses += this.beans * this.beansPrice;
-		totalExpenses += this.emptyCups * this.cupsPrice;
+		// restock expenses taken from restock() 
+		// totalExpenses += this.beans * this.beansPrice;
+		// totalExpenses += this.emptyCups * this.cupsPrice;
 
 		return totalExpenses;
 	}

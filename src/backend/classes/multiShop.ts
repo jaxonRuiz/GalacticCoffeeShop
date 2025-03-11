@@ -82,8 +82,8 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		}
 		if (event === "week") {
 			this.withdrawAll();
-			this.applyExpenses();
-			this.shops.forEach((shop) => shop.restock());
+			// this.applyExpenses();
+			// this.shops.forEach((shop) => shop.restock());
 
 			if (this.money < 0) {
 				console.log("debt boy");
