@@ -59,7 +59,7 @@
 					<h1>{$t("multishop_title")}</h1>
 					<p>{$t("money_stat")}: {fMoney($money)}</p>
 					<Button
-						onlclick={() => {
+						onclick={() => {
 							mshop.withdrawAll();
 						}}
 					>
