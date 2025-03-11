@@ -66,6 +66,7 @@ export class UpgradeManager {
 }
 
 // need to have a
+const playtesterMultiplier = 3;
 //  way to designate upgrade caps and single upgrades
 export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	preshop: {
@@ -74,7 +75,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return true;
 			},
 			upgrade: (shop) => {
-				shop.moneyMultiplier = 2.3;
+				shop.moneyMultiplier = playtesterMultiplier;
 			},
 			maxLevel: 1,
 			cost: 0,
@@ -329,7 +330,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 					return true;
 				},
 				upgrade: (shop) => {
-					shop.moneyMultiplier = 2.3;
+					shop.moneyMultiplier = playtesterMultiplier;
 				},
 				maxLevel: 1,
 				cost: 0,
