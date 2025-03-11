@@ -76,6 +76,7 @@
 	 
 	{#if $multiShopUnlocked}
 		<button 
+		 	class="green"
 			onclick={() => {
 				sshopInd = -1;
 				sshop.deselectShop();
