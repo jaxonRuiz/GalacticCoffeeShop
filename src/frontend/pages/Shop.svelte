@@ -18,6 +18,7 @@
 	import Tooltip from "../components/Tooltip.svelte";
 	import Worker from "../components/Worker.svelte";
 	import { derived } from "svelte/store";
+  import { img } from "../../assets/img";
 
 	// base
 	const smanager = stageManager;
@@ -101,6 +102,11 @@
 			<p>{$t("mshopMoney_stat")}: {fMoney($mshopMoney)}</p>
 			<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
 			<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
+		</div>
+		<div id="main-art">
+			<img alt="shop" src={img.coffeeShop_bot} />
+			<img alt="rat" src={img.astrorat} class="float" />
+			<img alt="shop" src={img.coffeeShop_top} />
 		</div>
 	</div>
 
@@ -297,5 +303,12 @@
 		top: 0;
 		left: 0;
 		cursor: var(--cpointer), pointer;
+	}
+
+	#main-art {
+		img[alt="rat"] {
+			top: 24%;
+			right: 30%;
+		}
 	}
 </style>

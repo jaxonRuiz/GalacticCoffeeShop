@@ -23,4 +23,8 @@ export const img: { [key: string] : string } = {
 	boop_numDec: new URL('./img/clickEffects/numDec.svg', import.meta.url).href,
 	boop_numPlus: new URL('./img/clickEffects/numPlus.svg', import.meta.url).href,
 	tooltip: new URL('./img/tooltip.svg', import.meta.url).href,
+	astrorat: new URL('./img/astrorat.svg', import.meta.url).href,
+	coffeeShop_bot: new URL('./img/coffeeShop_bot.svg', import.meta.url).href,
+	coffeeShop_top: new URL('./img/coffeeShop_top.svg', import.meta.url).href,
+	coffeeStand: new URL('./img/coffeeStand.svg', import.meta.url).href,
 };

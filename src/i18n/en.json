@@ -36,6 +36,7 @@
 	"emptyCups_stat": "Empty Cups",
 	"coffeePrice_stat": "Coffee Price",
 	"beansPerBuy_stat": "Beans per Pack",
+	"restockPrice_stat": "Cost to Restock",
 
 	"grindBeans_btn": "Grind Beans",
 	"makeCoffee_btn": "Make Coffee",
@@ -65,7 +66,7 @@
 	"sellCoffee_tooltip": "Sell available coffee to waiting customers",
 	"promote_tooltip": "Promote your coffee stand to attract customers",
 	"shop_tooltip": "Buy raw coffee beans from the market",
-	"restock_tooltip": "Restock beans and empty cups weekly, or on demand for a fee.",
+	"restock_tooltip": "Restock beans and empty cups in bulk.",
 
 	"crank_grinder_upgName": "Crank Grinder",
 	"crank_grinder_upgDesc": "Make bean grinding process faster",

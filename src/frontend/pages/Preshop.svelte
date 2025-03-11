@@ -16,6 +16,7 @@
 		pointerStyle,
 	} from "../components/Styles.svelte";
 	import Upgrade from "../components/Upgrade.svelte";
+  import { img } from "../../assets/img";
 
 	// base
 	let smanager = stageManager;
@@ -68,7 +69,10 @@
 			<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
 			<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
 		</div>
-		<div style="height: 5rem;"></div>
+		<div id="main-art">
+			<img alt="shop" src={img.coffeeStand} />
+			<img alt="rat" src={img.astrorat} class="float" />
+		</div>
 	</div>
 
 	<div class="shop right row">
@@ -214,4 +218,10 @@
 </main>
 
 <style>
+	#main-art {
+		img[alt="rat"] {
+			top: 11%;
+			right: 20%;
+		}
+	}
 </style>

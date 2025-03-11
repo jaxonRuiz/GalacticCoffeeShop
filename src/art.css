@@ -1,0 +1,49 @@
+:root {
+	--floatH: 0.7rem;
+}
+
+.shop {
+	#main-art {
+		/* border: 1px solid red; */
+		margin: auto;
+		position: relative;
+		width: 80%;
+		aspect-ratio: 1/1;
+
+		img {
+			position: absolute;
+			/* border: 1px solid whitesmoke; */
+
+		}
+
+		img[alt="shop"] {
+			width: 80%;
+			height: auto;
+			top: 0;
+			right: 0;
+		}
+
+		img[alt="rat"] {
+			width: 25%;
+			height: auto;
+		}
+	}
+}
+
+img.float {
+	animation: float 2s linear infinite;
+}
+
+@keyframes float {
+	0% {
+		transform: translateY(0);
+	}
+
+	25% {
+		transform: translateY(calc(var(--floatH) * -1/2));
+	}
+
+	75% {
+		transform: translateY(calc(var(--floatH) * 1/2));
+	}
+}
