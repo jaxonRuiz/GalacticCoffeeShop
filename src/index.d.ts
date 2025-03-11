@@ -94,6 +94,7 @@ interface ILocalShop extends IShop {
   promotionEffectiveness: number;
   appealDecay: number;
   multiShopUnlocked: boolean;
+  lifetimeStats: { [key: string]: number };
 
   roles: Map<string, Role>;
   unlockPromoter(): void;

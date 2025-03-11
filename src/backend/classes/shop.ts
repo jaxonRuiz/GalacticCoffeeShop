@@ -108,6 +108,12 @@ export class Shop implements ILocalShop {
 		customerProgress: 0,
 	});
 
+	lifetimeStats: { [key: string]: number } = {
+		coffeeSold: 0,
+		moneyMade: 0,
+		coffeeMade: 0,
+	};
+
 	// stats /////////////////////////////////////////////////////////////////////
 	beansPrice: number = 1;
 	cupsPrice: number = 1;
@@ -312,6 +318,7 @@ export class Shop implements ILocalShop {
 			this.beans -= numToMake;
 			this.emptyCups -= numToMake;
 			this.coffeeCups += numToMake;
+			this.lifetimeStats["coffeeMade"] += numToMake;
 			return true;
 		}
 		return false;
@@ -328,6 +335,8 @@ export class Shop implements ILocalShop {
 			this.coffeeCups -= numToSell;
 			this.waitingCustomers -= numToSell;
 			this.money += this.coffeePrice * numToSell;
+			this.lifetimeStats["moneyMade"] += this.coffeePrice * numToSell;
+			this.lifetimeStats["coffeeSold"] += numToSell;
 			return true;
 		}
 		return false;
@@ -342,7 +351,7 @@ export class Shop implements ILocalShop {
 	}
 
 	addWorker(role: string) {
-		if (!this.roles.has(role)) throw new Error("Role does not exist");
+		if (!this.roles.has(role)) throw new Error(`${role} does not exist`);
 		let roleObj = this.roles.get(role);
 		if (roleObj!.numWorkers < roleObj!.maxWorkers) {
 			roleObj!.numWorkers++;
@@ -402,10 +411,23 @@ export class Shop implements ILocalShop {
 			upgrades: {},
 			multiShopUnlocked: this.multiShopUnlocked,
 			promoterUnlocked: this.promoterUnlocked,
+			lifetimeStats: this.lifetimeStats,
+			workerStats: this.workerStats,
+			numWorkers: {},
+			appeal: this.appeal,
 		};
 
 		for (let [key, value] of this.upgrades) {
 			saveObj.upgrades[key] = value;
+		}
+
+		for (let [key, value] of this.roles) {
+			saveObj.numWorkers[key] = value.numWorkers;
+		}
+
+		for (let key in this.workerStats) {
+			console.log(key);
+			saveObj.workerStats[key] = this.workerStats[key];
 		}
 
 		return saveObj;
@@ -424,9 +446,18 @@ export class Shop implements ILocalShop {
 		this.upgrades = new Map(Object.entries(state.upgrades));
 		this.multiShopUnlocked = state.multiShopUnlocked;
 		this.promoterUnlocked = state.promoterUnlocked;
+		this.lifetimeStats = state.lifetimeStats;
+		this.workerStats = state.workerStats;
+		this.appeal = state.appeal;
 
 		if (this.promoterUnlocked) {
 			this.unlockPromoter();
+		}
+		for (let key in state.numWorkers) {
+			this.roles.get(key)!.numWorkers = state.numWorkers[key];
+		}
+		for (let key in state.workerStats) {
+			this.workerStats[key] = state.workerStats[key];
 		}
 	}
 }
@@ -445,11 +476,15 @@ export interface LocalShopSave {
 	emptyCups: number;
 	coffeeCups: number;
 	waitingCustomers: number;
+	appeal: number;
 	minAppeal: number;
 	maxAppeal: number;
 	promotionEffectiveness: number;
 	appealDecay: number;
 	upgrades: { [key: string]: number };
+	lifetimeStats: { [key: string]: number };
 	multiShopUnlocked: boolean;
 	promoterUnlocked: boolean;
+	workerStats: { [key: string]: number };
+	numWorkers: { [key: string]: number };
 }

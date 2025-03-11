@@ -179,7 +179,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			this.shops[0].addWorker("barista");
 		}
 		if (data.hasCashier) {
-			this.shops[0].addWorker("cashier");
+			this.shops[0].addWorker("server");
 		}
 	}
 
