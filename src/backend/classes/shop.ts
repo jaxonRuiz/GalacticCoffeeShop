@@ -2,9 +2,10 @@ import { MultiShop } from "./multiShop";
 import { get, type Writable, writable } from "svelte/store";
 
 export class Shop implements ILocalShop {
+	moneyMultiplier: number = 1;
 	// writable resources
 	w_beans: Writable<number> = writable(10);
-	w_emptyCups: Writable<number> = writable(500);
+	w_emptyCups: Writable<number> = writable(50);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
@@ -359,8 +360,8 @@ export class Shop implements ILocalShop {
 		if (this.waitingCustomers >= numToSell && this.coffeeCups >= numToSell) {
 			this.coffeeCups -= numToSell;
 			this.waitingCustomers -= numToSell;
-			this.money += this.coffeePrice * numToSell;
-			this.lifetimeStats["moneyMade"] += this.coffeePrice * numToSell;
+			this.money += this.coffeePrice * numToSell * this.moneyMultiplier;
+			this.lifetimeStats["moneyMade"] += this.coffeePrice * numToSell * this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
 			return true;
 		}

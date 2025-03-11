@@ -69,18 +69,18 @@ export class UpgradeManager {
 //  way to designate upgrade caps and single upgrades
 export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	preshop: {
-		// play_tester_mode: {
-		// 	unlock_condition: (_shop) => {
-		// 		return true;
-		// 	},
-		// 	upgrade: (shop) => {
-		// 		shop.moneyMultiplier = 2.3;
-		// 	},
-		// 	maxLevel: 1,
-		// 	cost: 0,
-		// 	costMultiplier: 1,
-		// 	image: "play_tester_mode.jpg",
-		// },
+		play_tester_mode: {
+			unlock_condition: (_shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				shop.moneyMultiplier = 2.3;
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "play_tester_mode.jpg",
+		},
 
 		buy_coffee_shop: {
 			unlock_condition: (shop) => {
@@ -311,6 +311,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	},
 
 	localShop: {
+		play_tester_mode: {
+			unlock_condition: (_shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				shop.moneyMultiplier = 2.3;
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "play_tester_mode.jpg",
+		},
 		unlock_multishop: {
 			unlock_condition: (shop) => {
 				// return true;
