@@ -19,7 +19,9 @@ console.log("hello world");
 // make sure startGame is only called on a new save
 export function startNewGame() {
 	console.log("starting game");
-	stageManager.nextScene();
+	if (stageManager.currentSceneIndex == 0) {
+		stageManager.nextScene();
+	}
 }
 
 export function saveState() {

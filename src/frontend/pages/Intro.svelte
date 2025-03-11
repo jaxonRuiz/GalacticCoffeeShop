@@ -5,8 +5,6 @@
 	import { pointerStyle } from "../components/Styles.svelte";
 	import Button from "../components/Button.svelte";
 
-	let { tutorial } = $props();
-
 	let title = $state(true);
 	let text = $state(-1);
 	const script = ["intro1", "intro2", "intro3", "intro4"];
