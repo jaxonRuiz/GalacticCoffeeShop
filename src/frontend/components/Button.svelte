@@ -18,9 +18,6 @@
 
 <button
 	transition:fly={move ? {} : { duration: 0 }}
-	onintrostart={() => {
-		console.log('introstart');
-	}}
 	style={`${pointerStyle} ${style}`}
 	data-btn={dataBtn}
 	data-num={dataNum}

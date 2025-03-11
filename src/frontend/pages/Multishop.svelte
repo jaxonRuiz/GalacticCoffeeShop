@@ -9,6 +9,7 @@
 	import Shop from "./Shop.svelte";
 	import Upgrade from "../components/Upgrade.svelte";
 	import { fMoney, pointerStyle } from "../components/Styles.svelte";
+  import Button from "../components/Button.svelte";
 
 	const mockmshop = stageManager.currentScene as MultiShop;
 	let umanager = new UpgradeManager("multiShop");
@@ -57,7 +58,13 @@
 				<div class="col stats">
 					<h1>{$t("multishop_title")}</h1>
 					<p>{$t("money_stat")}: {fMoney($money)}</p>
-					<button>{$t("extractMoney_btn")}</button>
+					<Button
+						onlclick={() => {
+							mshop.withdrawAll();
+						}}
+					>
+						{$t("extractMoney_btn")}
+					</Button>
 				</div>
 				<div>imagine graphics here</div>
 			</div>

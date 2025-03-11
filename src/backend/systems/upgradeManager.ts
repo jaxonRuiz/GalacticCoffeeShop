@@ -366,6 +366,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 100,
 			costMultiplier: 1.5,
 			image: "expand_cashier_counter.jpg",
+			flags: ["refreshWorkerUI"],
 		},
 		additional_promotion_materials: {
 			unlock_condition: (shop) => {
@@ -390,6 +391,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 100,
 			costMultiplier: 1.5,
 			image: "expand_coffee_bar.jpg",
+			flags: ["refreshWorkerUI"],
 		},
 		upgrade_cash_register: {
 			unlock_condition: (shop) => {

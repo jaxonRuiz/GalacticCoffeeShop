@@ -13,10 +13,10 @@
 		pointerStyle,
 	} from "../components/Styles.svelte";
 	import Dropdown from "../components/Dropdown.svelte";
-	import Worker from "../components/Worker.svelte";
 	import Upgrade from "../components/Upgrade.svelte";
 	import Button from "../components/Button.svelte";
 	import Tooltip from "../components/Tooltip.svelte";
+  import Worker from "../components/Worker.svelte";
 
 	// base
 	const smanager = stageManager;
@@ -60,6 +60,9 @@
 	setInterval(() => {
 		availableUpgrades = umanager.checkUpgrade(sshop);
 	}, 1000);
+
+	// for workers
+	let refreshWorkers = $state(false);
 
 	// for restock
 	function updateRestock(key: string, count: number) {
@@ -111,7 +114,7 @@
 					}}>{$t("makeCoffee_btn")}</Button
 				>
 				{#if true}
-					<Worker worker="barista" {sshop} />
+					<Worker worker="barista" {sshop} trig={refreshWorkers} />
 				{/if}
 			</Dropdown>
 
@@ -136,10 +139,10 @@
 					}}>{$t("sellCoffee_btn")}</Button
 				>
 				{#if $promoterBool}
-					<Worker worker="promoter" {sshop} />
+					<Worker worker="promoter" {sshop} trig={refreshWorkers} />
 				{/if}
 				{#if true}
-					<Worker worker="server" {sshop} />
+					<Worker worker="server" {sshop} trig={refreshWorkers} />
 				{/if}
 			</Dropdown>
 
@@ -199,6 +202,9 @@
 									upgs_cost[upgkey] = umanager.getCost(upgkey, sshop);
 									availableUpgrades = umanager.checkUpgrade(sshop);
 									rupg = !rupg;
+									if (upgs[upgkey].flags?.includes("refreshWorkerUI")) {
+										refreshWorkers = !refreshWorkers;
+									}
 								}}
 							/>
 						{/each}
