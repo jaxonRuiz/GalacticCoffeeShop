@@ -8,6 +8,10 @@ export class UpgradeManager {
 	}
 
 	applyUpgrade(id: string, shopObject: IShop) {
+		let audio = new Audio("src/assets/sfx/upgrade.wav");
+		audio.volume = 0.5;
+		audio.play();
+
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
 			// maybe set it up so multishop upgrades show up in local shops?
@@ -310,7 +314,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	localShop: {
 		unlock_multishop: {
 			unlock_condition: (shop) => {
-				return true;
+				// return true;
 				if ((shop as ILocalShop).multiShopUnlocked) return false;
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100;
 			},
