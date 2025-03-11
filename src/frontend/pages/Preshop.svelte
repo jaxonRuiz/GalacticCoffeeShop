@@ -38,6 +38,9 @@
 
 	// upgrade checker on interval
 	let availableUpgrades = $state(umanager.checkUpgrade(pshop));
+	umanager.checkUpgrade(pshop).forEach((upgkey) => {
+		upgs_cost[upgkey] = umanager.getCost(upgkey, pshop);
+	});
 	setInterval(() => {
 		availableUpgrades = umanager.checkUpgrade(pshop);
 	}, 1000);
