@@ -57,7 +57,7 @@
 			<div class="row top">
 				<div class="col stats">
 					<h1>{$t("multishop_title")}</h1>
-					<p>{$t("money_stat")}: {fMoney($money)}</p>
+					<h3>{$t("money_stat")}: {fMoney($money)}</h3>
 					<Button
 						onclick={() => {
 							mshop.withdrawAll();

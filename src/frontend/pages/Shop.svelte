@@ -18,7 +18,7 @@
 	import Tooltip from "../components/Tooltip.svelte";
 	import Worker from "../components/Worker.svelte";
 	import { derived } from "svelte/store";
-  import { img } from "../../assets/img";
+	import { img } from "../../assets/img";
 
 	// base
 	const smanager = stageManager;
@@ -98,10 +98,8 @@
 	<div class="shop left col">
 		<div class="col">
 			<h1>{$t("localShop_title")} {sshopInd + 1}</h1>
-			<p>{$t("lshopMoney_stat")}: {fMoney($money)}</p>
-			<p>{$t("mshopMoney_stat")}: {fMoney($mshopMoney)}</p>
-			<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
-			<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
+			<h3>{$t("lshopMoney_stat")}: {fMoney($money)}</h3>
+			<h3>{$t("mshopMoney_stat")}: {fMoney($mshopMoney)}</h3>
 		</div>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeShop_bot} />
@@ -136,6 +134,7 @@
 				</div>
 				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 				<p>{$t("customersWaiting_stat")}: {$customers}</p>
+				<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
 				<Button
 					data-btn="star"
 					onclick={() => {
@@ -179,6 +178,18 @@
 						sshop.restock();
 					}}>{$t("restock_btn")}</Button
 				>
+				{#if (
+						$coffee < 1 && (($money < sshop.cupsPrice && $emptyCups < 1) || ($money < sshop.beansPrice && $beans < 1))
+					) ||
+					($money < sshop.beansPrice + sshop.cupsPrice && $coffee < 3 && $beans < 3 && $emptyCups < 3)
+				}
+					<Button
+						data-btn="plus"
+						onclick={() => {
+							sshop.choresForBeans();
+						}}>{$t("choresForBeans_btn")}</Button
+					>
+				{/if}
 			</Dropdown>
 		</div>
 		<div class="col block fixed">

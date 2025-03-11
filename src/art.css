@@ -46,4 +46,8 @@ img.float {
 	75% {
 		transform: translateY(calc(var(--floatH) * 1/2));
 	}
+
+	100% {
+		transform: translateY(0);
+	}
 }

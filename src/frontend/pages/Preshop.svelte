@@ -65,9 +65,7 @@
 	<div class="shop left col fixed">
 		<div class="col">
 			<h1>{$t("preshop_title")}</h1>
-			<p>{$t("money_stat")}: {fMoney($money)}</p>
-			<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
-			<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
+			<h3>{$t("money_stat")}: {fMoney($money)}</h3>
 		</div>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeStand} />
@@ -153,7 +151,7 @@
 				>
 				{#if $money < $beanPrice && $beans < 2 && $groundedBeans < 1 && $coffee < 1}
 					<Button
-						data-btn="chores-for-beans"
+					 	data-btn="plus"
 						onclick={() => {
 							pshop.choresForBeans();
 						}}>{$t("choresForBeans_btn")}</Button
