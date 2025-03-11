@@ -85,7 +85,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		buy_coffee_shop: {
 			unlock_condition: (shop) => {
 				// return true;
-				return (shop as IPreshop).lifetimeCoffeeSold >= 250;
+				return (shop as IPreshop).lifetimeCoffeeSold >= 250 / 2; // divide by 2 for playtest
 			},
 			upgrade: (shop) => {
 				(shop as IScene).endScene();
@@ -234,270 +234,284 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "coffee_grind_catcher.jpg",
 		},
 
-		multi_grinder: {
+		lingering_appeal: {
 			unlock_condition: (shop) => {
-				return (shop.upgrades.get("efficient_grinding") ?? 0) >= 1;
+				return (shop as IPreshop).lifetimeCoffeeSold > 50 && shop.upgrades.get("promotional_posters")! >= 1;
 			},
 			upgrade: (shop) => {
-				(shop as IPreshop).grindQuantity += 1;
-			},
-			maxLevel: 2,
-			cost: 22,
-			costMultiplier: 1.2,
-			image: "multi_grinder.jpg",
-		},
-
-		bulk_bean_deal: {
-			unlock_condition: (shop) => {
-				let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
-				let condition = [70, 200, 400];
-				return (shop as IPreshop).lifetimeGrindBeans >= condition[level];
-			},
-			upgrade: (shop) => {
-				let level = (shop as IPreshop).upgrades.get("bulk_bean_deal") ?? 0;
-				let beanPrice = [10.99, 17.99, 35.99];
-				let beanAmount = [10, 20, 40];
-				(shop as IPreshop).beanPrice = beanPrice[level];
-				(shop as IPreshop).beansPerBuy = beanAmount[level];
-			},
-			maxLevel: 3,
-			cost: 25,
-			costMultiplier: 2,
-			image: "bulk_bean_deal.jpg",
-		},
-
-		automatic_coffee_refiller: {
-			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeMade > 40 &&
-					(shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).makeCoffeeBatches += 2;
-			},
-			maxLevel: 3,
-			cost: 80,
-			costMultiplier: 1.3,
-			image: "automatic_coffee_refiller.jpg",
-		},
-
-		preshop_nicer_coffee: {
-			unlock_condition: (shop) => {
-				let thresholds = [20, 30, 50, 80, 100, 150, 170, 200, 220, 250];
-				let level = shop.upgrades.get("nicer_coffee") ?? 0;
-				return (shop as IPreshop).lifetimeCoffeeSold >= thresholds[level];
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).coffeePrice += 0.35;
-			},
-			maxLevel: 10,
-			cost: 20,
-			costMultiplier: 1.23,
-			image: "better_coffee.jpg",
-		},
-
-		express_coffee_maker: {
-			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeMade >= 15 &&
-					(shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 3;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).makeCoffeeCooldown -= 3500;
-			},
-			maxLevel: 1,
-			cost: 140,
-			costMultiplier: 1.2,
-			image: "express_coffee_maker.jpg",
-		},
-	},
-
-	localShop: {
-		play_tester_mode: {
-			unlock_condition: (_shop) => {
-				return true;
-			},
-			upgrade: (shop) => {
-				shop.moneyMultiplier = 2.3;
-			},
-			maxLevel: 1,
-			cost: 0,
-			costMultiplier: 1,
-			image: "play_tester_mode.jpg",
-		},
-		unlock_multishop: {
-			unlock_condition: (shop) => {
-				// return true;
-				if ((shop as ILocalShop).multiShopUnlocked) return false;
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).multiShopUnlocked = true;
-			},
-			maxLevel: 1,
-			cost: 500,
-			costMultiplier: 1,
-			image: "unlock_multishop.jpg",
-			flags: ["yellow"],
-		},
-		unlock_promoter: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 50;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).unlockPromoter();
-			},
-			maxLevel: 1,
-			cost: 300,
-			costMultiplier: 1,
-			image: "unlock_promoter.jpg",
-		},
-		flashy_sign: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 100;
-			},
-			upgrade: (shop, level) => {
-				let statLevels = [0.2, 0.25, 0.3];
-				(shop as ILocalShop).minAppeal! += statLevels[level];
-				(shop as ILocalShop).appealDecay *= 0.97;
-				if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
-					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
-				}
-			},
-			maxLevel: 3,
-			cost: 80,
-			costMultiplier: 1.2,
-			image: "flashy_sign.jpg",
-		},
-		expand_cashier_counter: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 50;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerAmounts["serverMax"] += 1;
+				(shop as IPreshop).appealDecay *= 0.95;
 			},
 			maxLevel: 3,
 			cost: 100,
 			costMultiplier: 1.5,
-			image: "expand_cashier_counter.jpg",
-			flags: ["refreshWorkerUI"],
+			image: "lingering_appeal.jpg",
 		},
-		additional_promotion_materials: {
-			unlock_condition: (shop) => {
-				return shop.upgrades.get("unlock_promoter")! >= 1;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerAmounts["promoterMax"] += 1;
-			},
-			maxLevel: 3,
-			cost: 100,
-			costMultiplier: 1.5,
-			image: "additional_promotion_materials.jpg",
-		},
-		expand_coffee_bar: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 200;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerAmounts["baristaMax"] += 1;
-			},
-			maxLevel: 3,
-			cost: 100,
-			costMultiplier: 1.5,
-			image: "expand_coffee_bar.jpg",
-			flags: ["refreshWorkerUI"],
-		},
-		upgrade_cash_register: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 10;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.1;
-			},
-			maxLevel: 1,
-			cost: 60,
-			costMultiplier: 1.15,
-			image: "upgrade_cash_register.jpg",
-		},
-		increase_customer_flow: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 40;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
-			},
-			maxLevel: 5,
-			cost: 50,
-			costMultiplier: 1.2,
-			image: "increase_customer_flow.jpg",
-		},
-		better_coffee_machine: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 70;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
-				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.03;
 
+			multi_grinder: {
+				unlock_condition: (shop) => {
+					return (shop.upgrades.get("efficient_grinding") ?? 0) >= 1;
+				},
+				upgrade: (shop) => {
+					(shop as IPreshop).grindQuantity += 1;
+				},
+				maxLevel: 2,
+				cost: 22,
+				costMultiplier: 1.2,
+				image: "multi_grinder.jpg",
 			},
-			maxLevel: 10,
-			cost: 70,
-			costMultiplier: 1.4,
-			image: "better_coffee_machine.jpg",
-		},
-		promoter_effectiveness: {
-			unlock_condition: (shop) => {
-				return shop.upgrades.get("unlock_promoter")! >= 1;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.promoterProductivity! += 0.05;
-				(shop as ILocalShop).promotionEffectiveness += 0.05;
-			},
-			maxLevel: 3,
-			cost: 100,
-			costMultiplier: 1.3,
-			image: "promoter_effectiveness.jpg",
-		},
-		local_shop_nicer_coffee: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
-					50 * (shop.upgrades.get("local_shop_nicer_coffee") ?? 0);
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).coffeePrice += 0.35;
-			},
-			maxLevel: 10,
-			cost: 40,
-			costMultiplier: 1.23,
-			image: "local_shop_nicer_coffee.jpg",
-		},
-	},
 
-	multiShop: {
-		cohesive_branding: {
-			unlock_condition: (multishop) => {
-				return multishop.shops!.length > 1; // maybe change to 2 later
+			bulk_bean_deal: {
+				unlock_condition: (shop) => {
+					let level = shop.upgrades.get("bulk_bean_deal") ?? 0;
+					let condition = [70, 200, 400];
+					return (shop as IPreshop).lifetimeGrindBeans >= condition[level];
+				},
+				upgrade: (shop) => {
+					let level = (shop as IPreshop).upgrades.get("bulk_bean_deal") ?? 0;
+					let beanPrice = [10.99, 17.99, 35.99];
+					let beanAmount = [10, 20, 40];
+					(shop as IPreshop).beanPrice = beanPrice[level];
+					(shop as IPreshop).beansPerBuy = beanAmount[level];
+				},
+				maxLevel: 3,
+				cost: 25,
+				costMultiplier: 2,
+				image: "bulk_bean_deal.jpg",
 			},
-			upgrade: (shop, level) => {
-				console.log("applying upgrade to local shop");
-				(shop as ILocalShop).minAppeal! += 0.2;
-				(shop as ILocalShop).promotionEffectiveness += 0.1;
+
+			automatic_coffee_refiller: {
+				unlock_condition: (shop) => {
+					return (shop as IPreshop).lifetimeCoffeeMade > 40 &&
+						(shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
+				},
+				upgrade: (shop) => {
+					(shop as IPreshop).makeCoffeeBatches += 2;
+				},
+				maxLevel: 3,
+				cost: 80,
+				costMultiplier: 1.3,
+				image: "automatic_coffee_refiller.jpg",
 			},
-			flags: ["applyToChildren"],
-			maxLevel: 3,
-			cost: 1000,
-			costMultiplier: 1.5,
-			image: "cohesive_branding.jpg",
+
+			preshop_nicer_coffee: {
+				unlock_condition: (shop) => {
+					let thresholds = [20, 30, 50, 80, 100, 150, 170, 200, 220, 250];
+					let level = shop.upgrades.get("nicer_coffee") ?? 0;
+					return (shop as IPreshop).lifetimeCoffeeSold >= thresholds[level];
+				},
+				upgrade: (shop) => {
+					(shop as IPreshop).coffeePrice += 0.35;
+				},
+				maxLevel: 10,
+				cost: 20,
+				costMultiplier: 1.23,
+				image: "better_coffee.jpg",
+			},
+
+			express_coffee_maker: {
+				unlock_condition: (shop) => {
+					return (shop as IPreshop).lifetimeCoffeeMade >= 15 &&
+						(shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 3;
+				},
+				upgrade: (shop) => {
+					(shop as IPreshop).makeCoffeeCooldown -= 3500;
+				},
+				maxLevel: 1,
+				cost: 140,
+				costMultiplier: 1.2,
+				image: "express_coffee_maker.jpg",
+			},
 		},
-		add_new_shop: {
-			unlock_condition: (multishop) => {
-				return true;
+
+		localShop: {
+			play_tester_mode: {
+				unlock_condition: (_shop) => {
+					return true;
+				},
+				upgrade: (shop) => {
+					shop.moneyMultiplier = 2.3;
+				},
+				maxLevel: 1,
+				cost: 0,
+				costMultiplier: 1,
+				image: "play_tester_mode.jpg",
 			},
-			upgrade: (shop) => {
-				(shop as IContainerShop).addShop();
+			unlock_multishop: {
+				unlock_condition: (shop) => {
+					// return true;
+					if ((shop as ILocalShop).multiShopUnlocked) return false;
+					return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).multiShopUnlocked = true;
+				},
+				maxLevel: 1,
+				cost: 500,
+				costMultiplier: 1,
+				image: "unlock_multishop.jpg",
+				flags: ["yellow"],
 			},
-			maxLevel: 6,
-			cost: 1000,
-			costMultiplier: 1.5,
-			image: "add_new_shop.jpg",
+			unlock_promoter: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeSold >= 50;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).unlockPromoter();
+				},
+				maxLevel: 1,
+				cost: 300,
+				costMultiplier: 1,
+				image: "unlock_promoter.jpg",
+			},
+			flashy_sign: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeSold >= 100;
+				},
+				upgrade: (shop, level) => {
+					let statLevels = [0.1, 0.15, 0.18];
+					(shop as ILocalShop).minAppeal! += statLevels[level];
+					(shop as ILocalShop).appealDecay *= 0.97;
+					if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
+						(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
+					}
+				},
+				maxLevel: 3,
+				cost: 80,
+				costMultiplier: 1.2,
+				image: "flashy_sign.jpg",
+			},
+			expand_cashier_counter: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeSold >= 50;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).workerAmounts["serverMax"] += 1;
+				},
+				maxLevel: 3,
+				cost: 100,
+				costMultiplier: 1.5,
+				image: "expand_cashier_counter.jpg",
+				flags: ["refreshWorkerUI"],
+			},
+			additional_promotion_materials: {
+				unlock_condition: (shop) => {
+					return shop.upgrades.get("unlock_promoter")! >= 1;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).workerAmounts["promoterMax"] += 1;
+				},
+				maxLevel: 3,
+				cost: 100,
+				costMultiplier: 1.5,
+				image: "additional_promotion_materials.jpg",
+				flags: ["refreshWorkerUI"],
+			},
+			expand_coffee_bar: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeMade >= 200;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).workerAmounts["baristaMax"] += 1;
+				},
+				maxLevel: 3,
+				cost: 100,
+				costMultiplier: 1.5,
+				image: "expand_coffee_bar.jpg",
+				flags: ["refreshWorkerUI"],
+			},
+			upgrade_cash_register: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeSold >= 10;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.1;
+				},
+				maxLevel: 1,
+				cost: 60,
+				costMultiplier: 1.15,
+				image: "upgrade_cash_register.jpg",
+			},
+			increase_customer_flow: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeSold >= 40;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
+				},
+				maxLevel: 5,
+				cost: 50,
+				costMultiplier: 1.2,
+				image: "increase_customer_flow.jpg",
+			},
+			better_coffee_machine: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeMade >= 70;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
+					(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.03;
+
+				},
+				maxLevel: 10,
+				cost: 70,
+				costMultiplier: 1.4,
+				image: "better_coffee_machine.jpg",
+			},
+			promoter_effectiveness: {
+				unlock_condition: (shop) => {
+					return shop.upgrades.get("unlock_promoter")! >= 1;
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).workerStats.promoterProductivity! += 0.05;
+					(shop as ILocalShop).promotionEffectiveness += 0.05;
+				},
+				maxLevel: 3,
+				cost: 100,
+				costMultiplier: 1.3,
+				image: "promoter_effectiveness.jpg",
+			},
+			local_shop_nicer_coffee: {
+				unlock_condition: (shop) => {
+					return (shop as ILocalShop).lifetimeStats.coffeeMade >=
+						50 * (shop.upgrades.get("local_shop_nicer_coffee") ?? 0);
+				},
+				upgrade: (shop) => {
+					(shop as ILocalShop).coffeePrice += 0.35;
+				},
+				maxLevel: 10,
+				cost: 40,
+				costMultiplier: 1.23,
+				image: "local_shop_nicer_coffee.jpg",
+			},
 		},
-	},
-};
+
+		multiShop: {
+			cohesive_branding: {
+				unlock_condition: (multishop) => {
+					return multishop.shops!.length > 1; // maybe change to 2 later
+				},
+				upgrade: (shop, level) => {
+					console.log("applying upgrade to local shop");
+					(shop as ILocalShop).minAppeal! += 0.2;
+					(shop as ILocalShop).promotionEffectiveness += 0.1;
+				},
+				flags: ["applyToChildren"],
+				maxLevel: 3,
+				cost: 1000,
+				costMultiplier: 1.5,
+				image: "cohesive_branding.jpg",
+			},
+			add_new_shop: {
+				unlock_condition: (multishop) => {
+					return true;
+				},
+				upgrade: (shop) => {
+					(shop as IContainerShop).addShop();
+				},
+				maxLevel: 6,
+				cost: 1000,
+				costMultiplier: 1.5,
+				image: "add_new_shop.jpg",
+			},
+		},
+	};
