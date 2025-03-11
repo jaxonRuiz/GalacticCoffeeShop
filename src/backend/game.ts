@@ -34,7 +34,7 @@ export function saveState() {
 export function loadState() {
 	console.log("game loading state");
 	if (!localStorage.getItem("GameSaveData")) {
-		console.error("No save data found");
+		console.log("No save data found");
 	}
 	let saveData = JSON.parse(localStorage.getItem("GameSaveData")!);
 	stageManager.loadStage(saveData.currentStageIndex);
@@ -45,10 +45,6 @@ export function resetState() {
 	localStorage.removeItem("GameSaveData");
 	localStorage.removeItem("multishop");
 	localStorage.removeItem("preshop");
-	firstTime = true;
-	timer = new Timer();
-	stageManager = new StageManager(timer);
-
 }
 
 interface SaveData {
