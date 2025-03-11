@@ -10,6 +10,7 @@
 	import Upgrade from "../components/Upgrade.svelte";
 	import { fMoney, pointerStyle } from "../components/Styles.svelte";
   import Button from "../components/Button.svelte";
+  import { img } from "../../assets/img";
 
 	const mockmshop = stageManager.currentScene as MultiShop;
 	let umanager = new UpgradeManager("multiShop");
@@ -66,7 +67,10 @@
 						{$t("extractMoney_btn")}
 					</Button>
 				</div>
-				<div>imagine graphics here</div>
+				<div id="main-art">
+					<img alt="rat" src={img.astrorat} class="float" />
+					<img alt="coffee" src={img.coffee} class="float" />
+				</div>
 			</div>
 
 			<div class="row shop-cards scroll">
@@ -187,6 +191,23 @@
 			flex-shrink: 0;
 			justify-content: space-evenly;
 			box-sizing: border-box;
+		}
+	}
+
+	#main-art {
+		width: auto;
+		height: 80%;
+
+		img[alt="rat"] {
+			width: 50%;
+			top: 15%;
+			left: 35%;
+		}
+		img[alt="coffee"] {
+			width: 15%;
+			animation-delay: 0.5s;
+			top: 60%;
+			left: 30%;
 		}
 	}
 </style>
