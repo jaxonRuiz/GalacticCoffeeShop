@@ -91,7 +91,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IScene).endScene();
 			},
 			maxLevel: 1,
-			cost: 1, //600,
+			cost: 600,
 			costMultiplier: 1,
 			image: "buy_coffee_shop.jpg",
 		},
@@ -149,8 +149,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IPreshop).maxAppeal! += 0.1;
 				(shop as IPreshop).maxCustomers! += 1;
 			},
-			maxLevel: 3,
-			cost: 30,
+			maxLevel: 5,
+			cost: 40,
 			costMultiplier: 1.3,
 			image: "promotional_posters.jpg",
 		},
@@ -194,7 +194,31 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.45,
 			image: "sibling_incentive.jpg",
 		},
+		hire_neighborhood_kid: {
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade > 50;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).autosellEnabled = true;
+			},
+			maxLevel: 1,
+			cost: 75,
+			costMultiplier: 1.5,
+			image: "hire_neighborhood_kid.jpg",
+		},
 
+		neighborhood_kid_incentive: {
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("hire_neighborhood_kid") ?? 0) >= 1;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).autosellInterval -= 3;
+			},
+			maxLevel: 4,
+			cost: 60,
+			costMultiplier: 1.55,
+			image: "neighborhood_kid_incentive.jpg",
+		},
 		efficient_grinding: {
 			unlock_condition: (shop) => {
 				return (shop.upgrades.get("crank_grinder") ?? 0) >= 2 &&
@@ -253,32 +277,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 80,
 			costMultiplier: 1.3,
 			image: "automatic_coffee_refiller.jpg",
-		},
-
-		hire_neighborhood_kid: {
-			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeMade > 50;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).autosellEnabled = true;
-			},
-			maxLevel: 1,
-			cost: 100,
-			costMultiplier: 1.5,
-			image: "hire_neighborhood_kid.jpg",
-		},
-
-		neighborhood_kid_incentive: {
-			unlock_condition: (shop) => {
-				return (shop.upgrades.get("hire_neighborhood_kid") ?? 0) >= 1;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).autosellInterval -= 3;
-			},
-			maxLevel: 4,
-			cost: 60,
-			costMultiplier: 1.55,
-			image: "neighborhood_kid_incentive.jpg",
 		},
 
 		preshop_nicer_coffee: {
@@ -398,10 +396,10 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 10;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.05;
+				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.1;
 			},
-			maxLevel: 10,
-			cost: 30,
+			maxLevel: 1,
+			cost: 60,
 			costMultiplier: 1.15,
 			image: "upgrade_cash_register.jpg",
 		},
@@ -410,9 +408,9 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 40;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.1;
+				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
 			},
-			maxLevel: 10,
+			maxLevel: 5,
 			cost: 50,
 			costMultiplier: 1.2,
 			image: "increase_customer_flow.jpg",
@@ -423,23 +421,13 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.03;
+
 			},
-			maxLevel: 5,
+			maxLevel: 10,
 			cost: 70,
 			costMultiplier: 1.4,
 			image: "better_coffee_machine.jpg",
-		},
-		upgrade_barista_tools: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 15;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.05;
-			},
-			maxLevel: 10,
-			cost: 40,
-			costMultiplier: 1.15,
-			image: "upgrade_barista_tools.jpg",
 		},
 		promoter_effectiveness: {
 			unlock_condition: (shop) => {
