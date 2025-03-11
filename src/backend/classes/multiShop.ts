@@ -142,6 +142,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	withdrawAll() {
 		let shopIndex = 0;
+		console.log("withdraw all");
 		this.shops.forEach((shop) => {
 			this.money += shop.money;
 			this.weeklyRecap[shopIndex].income = shop.money;

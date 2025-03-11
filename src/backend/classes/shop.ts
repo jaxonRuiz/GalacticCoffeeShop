@@ -441,7 +441,6 @@ export class Shop implements ILocalShop {
 		}
 
 		for (let key in this.workerStats) {
-			console.log(key);
 			saveObj.workerStats[key] = this.workerStats[key];
 		}
 
