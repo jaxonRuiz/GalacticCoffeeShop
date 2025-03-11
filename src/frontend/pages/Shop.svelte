@@ -112,7 +112,7 @@
 		<div class="col scroll">
 			<Dropdown title={$t("making_title")}>
 				<div class="tooltip">
-					<Tooltip text={["makeCoffee3_tooltip"]} />
+					<Tooltip text={["makeCoffee3_tooltip", "hire_tooltip"]} />
 				</div>
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<p>{$t("emptyCups_stat")}: {$emptyCups}</p>
@@ -130,7 +130,7 @@
 
 			<Dropdown title={$t("selling_title")}>
 				<div class="tooltip">
-					<Tooltip text={["promote_tooltip", "sellCoffee_tooltip"]} />
+					<Tooltip text={["promote_tooltip", "sellCoffee_tooltip", "hire_tooltip"]} />
 				</div>
 				<p>{$t("appeal_stat")}: {(100 * $appeal).toFixed(2)}%</p>
 				<p>{$t("customersWaiting_stat")}: {$customers}</p>

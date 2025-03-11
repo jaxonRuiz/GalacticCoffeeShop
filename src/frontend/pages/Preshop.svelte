@@ -67,6 +67,7 @@
 			<h1>{$t("preshop_title")}</h1>
 			<h3>{$t("money_stat")}: {fMoney($money)}</h3>
 		</div>
+		<p>{$t("howTo_tooltip")}</p>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeStand} />
 			<img alt="rat" src={img.astrorat} class="float" />

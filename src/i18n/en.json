@@ -60,13 +60,15 @@
 	"beans_text": "Beans",
 	"emptyCups_text": "Empty Cups",
 
+	"howTo_tooltip": "Click the ? for help.",
 	"makeCoffee1_tooltip": "Grind raw coffee beans to get grounded beans to make sellable coffee.",
 	"makeCoffee2_tooltip": "Grinding requires multiple clicks and making coffee takes time.",
-	"makeCoffee3_tooltip": "Making coffee requires grounded beans and empty cups.",
-	"sellCoffee_tooltip": "Sell available coffee to waiting customers",
-	"promote_tooltip": "Promote your coffee stand to attract customers",
-	"shop_tooltip": "Buy raw coffee beans from the market",
+	"makeCoffee3_tooltip": "Making coffee requires beans and empty cups.",
+	"sellCoffee_tooltip": "Sell available coffee to waiting customers.",
+	"promote_tooltip": "Promote your coffee stand to attract customers.",
+	"shop_tooltip": "Buy raw coffee beans from the market.",
 	"restock_tooltip": "Restock beans and empty cups in bulk.",
+	"hire_tooltip": "Hire workers to help you do tasks.",
 
 	"crank_grinder_upgName": "Crank Grinder",
 	"crank_grinder_upgDesc": "Make bean grinding process faster",
@@ -134,5 +136,8 @@
 	"promoter_effectiveness_upgName": "Promoter Effectiveness",
 	"promoter_effectiveness_upgDesc": "Increase the effectiveness of your promoters",
 	"local_shop_nicer_coffee_upgName": "Nicer Coffee",
-	"local_shop_nicer_coffee_upgDesc": "Put even more love into your coffee and charge more for it!"
+	"local_shop_nicer_coffee_upgDesc": "Put even more love into your coffee and charge more for it!",
+
+	"add_new_shop_upgName": "Domain Exapansion",
+	"add_new_shop_upgDesc": "Run another coffee shop at the same time!"
 }
