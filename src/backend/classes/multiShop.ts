@@ -51,6 +51,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	minAppeal: number = 0;
 	promotionEffectiveness: number = 0;
 	runTutorial: boolean = true;
+	audio: Map<string, HTMLAudioElement> = new Map();
 
 	multiShopUgradeManager: UpgradeManager = new UpgradeManager("multiShop");
 	localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
@@ -65,6 +66,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			income: 0,
 			expenses: 0,
 		};
+		this.audio.set(
+			"bgm",
+			new Audio("src/assets/music/Duraznito - Quincas Moreira.mp3"),
+		);
+		this.audio.get("bgm")!.loop = true;
+		this.audio.get("bgm")!.volume = 0.2;
+		this.audio.get("bgm")!.play();
 	}
 
 	notify(event: string, data?: any) {
@@ -118,16 +126,22 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	selectShop(shop: Shop) {
+		console.log("selecting shop ", shop);
 		this.selectedShop = shop;
+		this.selectedShop.isSelected = true;
 		this.selectedShopIndex = this.shops.indexOf(shop);
 	}
 
 	selectShopIndex(index: number) {
+		console.log("selecting shop by index ", index);
 		this.selectedShopIndex = index;
 		this.selectedShop = this.shops[index];
+		this.selectedShop.isSelected = true;
 	}
 
 	deselectShop() {
+		console.log("deselecting shop");
+		if (this.selectedShop) this.selectedShop!.isSelected = false;
 		this.selectedShop = null;
 		this.selectedShopIndex = -1;
 	}
@@ -182,6 +196,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		if (data.hasCashier) {
 			this.shops[0].addWorker("server");
 		}
+		this.selectShop(this.shops[0]);
 	}
 
 	// selected shop actions /////////////////////////////////////////////////////

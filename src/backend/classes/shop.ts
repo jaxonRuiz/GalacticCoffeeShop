@@ -148,6 +148,7 @@ export class Shop implements ILocalShop {
 	audio: Map<string, HTMLAudioElement> = new Map();
 	boilTimer: number = 0;
 	playBoiler: boolean = false;
+	isSelected: boolean = false;
 
 	constructor(multiShop: MultiShop) {
 		this.multiShop = multiShop;
@@ -182,13 +183,7 @@ export class Shop implements ILocalShop {
 			},
 		});
 
-		this.audio.set(
-			"bgm",
-			new Audio("src/assets/music/Duraznito - Quincas Moreira.mp3"),
-		);
-		this.audio.get("bgm")!.loop = true;
-		this.audio.get("bgm")!.volume = 0.3;
-		this.audio.get("bgm")!.play();
+
 		this.audio.set("boiling", new Audio("src/assets/sfx/boiling.flac"));
 		this.audio.get("boiling")!.loop = true;
 		this.audio.set("crowd", new Audio("src/assets/sfx/crowd.mp3"));
@@ -209,46 +204,56 @@ export class Shop implements ILocalShop {
 		this.decayAppeal();
 		this.drawCustomers();
 
-		// boil audio effect
-		if (this.boilTimer > 0) {
-			this.boilTimer -= 1;
-		} else {
-			this.playBoiler = false;
-			this.audio.get("boiling")!.pause();
+		// only play audio if selected
+		if (this.isSelected) audioUpdate(this);
+		else {
+			this.audio.get("boiling")!.volume = 0;
+			this.audio.get("crowd")!.volume = 0;
 		}
-
-		// crowd noise
-		this.audio.get("crowd")!.volume = Math.min(
-			this.waitingCustomers / this.maxCustomers,
-			1,
-		);
 
 		// progress updaters
-		// may limit throughput to 1 thing per tick, maybe fix
-		if (this.progressTrackers["coffeeProgress"] >= 1) {
-			let amount = Math.floor(this.progressTrackers["coffeeProgress"]);
-			if (this.produceCoffee(amount)) {
-				this.progressTrackers["coffeeProgress"] -= amount;
+		progressUpdates(this);
+
+		function audioUpdate(shop: Shop) {
+			shop.audio.get("boiling")!.volume = 1;
+			if (shop.boilTimer > 0) {
+				shop.boilTimer -= 1;
+			} else {
+				shop.playBoiler = false;
+				shop.audio.get("boiling")!.pause();
 			}
+
+			// crowd noise
+			shop.audio.get("crowd")!.volume = Math.min(
+				shop.waitingCustomers / shop.maxCustomers,
+				1
+			);
 		}
-		if (
-			this.progressTrackers["customerProgress"] >= 1 &&
-			this.waitingCustomers < this.maxCustomers
-		) {
-			let amount = Math.floor(this.progressTrackers["customerProgress"]);
-			this.waitingCustomers += amount;
-			this.progressTrackers["customerProgress"] -= amount;
-		}
-		if (this.progressTrackers["serviceProgress"] >= 1) {
-			let amount = Math.floor(this.progressTrackers["serviceProgress"]);
-			if (this.sellCoffee(amount)) {
-				this.progressTrackers["serviceProgress"] -= amount;
+
+		function progressUpdates(shop: Shop) {
+			if (shop.progressTrackers["coffeeProgress"] >= 1) {
+				let amount = Math.floor(shop.progressTrackers["coffeeProgress"]);
+				if (shop.produceCoffee(amount)) {
+					shop.progressTrackers["coffeeProgress"] -= amount;
+				}
 			}
-		}
-		if (this.progressTrackers["promotionProgress"] >= 1) {
-			let amount = Math.floor(this.progressTrackers["promotionProgress"]);
-			for (let i = 0; i < amount; i++) this.promote();
-			this.progressTrackers["promotionProgress"] -= amount;
+			if (shop.progressTrackers["customerProgress"] >= 1 &&
+				shop.waitingCustomers < shop.maxCustomers) {
+				let amount = Math.floor(shop.progressTrackers["customerProgress"]);
+				shop.waitingCustomers += amount;
+				shop.progressTrackers["customerProgress"] -= amount;
+			}
+			if (shop.progressTrackers["serviceProgress"] >= 1) {
+				let amount = Math.floor(shop.progressTrackers["serviceProgress"]);
+				if (shop.sellCoffee(amount)) {
+					shop.progressTrackers["serviceProgress"] -= amount;
+				}
+			}
+			if (shop.progressTrackers["promotionProgress"] >= 1) {
+				let amount = Math.floor(shop.progressTrackers["promotionProgress"]);
+				for (let i = 0; i < amount; i++) shop.promote();
+				shop.progressTrackers["promotionProgress"] -= amount;
+			}
 		}
 	}
 
@@ -316,7 +321,6 @@ export class Shop implements ILocalShop {
 	}
 
 	deselectShop() {
-		console.log("deselecting shop");
 		this.multiShop.deselectShop();
 		this.multiShop.finishedFirstShop = true;
 	}

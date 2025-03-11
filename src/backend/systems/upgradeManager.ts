@@ -310,6 +310,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	localShop: {
 		unlock_multishop: {
 			unlock_condition: (shop) => {
+				return true;
 				if ((shop as ILocalShop).multiShopUnlocked) return false;
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100;
 			},
