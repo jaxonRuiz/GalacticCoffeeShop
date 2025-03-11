@@ -66,8 +66,9 @@
 		availableUpgrades = umanager.checkUpgrade(sshop);
 	}, 1000);
 
-	// for workers
+	// for ui forced refreshes
 	let refreshWorkers = $state(false);
+	let refreshRestockPrice = $state(false);
 
 	// for restock
 	function updateRestock(key: string, count: number) {
@@ -77,6 +78,7 @@
 				[key]: state[key] + count,
 			};
 		});
+		refreshRestockPrice = !refreshRestockPrice;
 	}
 </script>
 
@@ -154,7 +156,9 @@
 				<div class="tooltip">
 					<Tooltip text={["restock_tooltip"]} />
 				</div>
-				<p>{$t("restockSheet_text")}</p>
+				{#key refreshRestockPrice}
+					<p>{$t("restockPrice_stat")}: {fMoney(sshop.getRestockPrice())}</p>
+				{/key}
 				{#each Object.keys($restockSheet) as key}
 					{@render restockItem(key)}
 				{/each}
