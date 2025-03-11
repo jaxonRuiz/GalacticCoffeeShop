@@ -3,11 +3,11 @@ import { get, type Writable, writable } from "svelte/store";
 
 export class Shop implements ILocalShop {
 	// writable resources
-	w_beans: Writable<number> = writable(500);
+	w_beans: Writable<number> = writable(10);
 	w_emptyCups: Writable<number> = writable(500);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
-	w_money: Writable<number> = writable(999999); // local shop money is unusable untill collected
+	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
 	w_appeal: Writable<number> = writable(0);
 	w_coffeePrice: Writable<number> = writable(5);
 	w_promoterUnlocked: Writable<boolean> = writable(false);
