@@ -308,7 +308,7 @@ export class Shop implements ILocalShop {
 		this.emptyCups += this.restockSheet["emptyCups"];
 
 		let audio = new Audio("src/assets/sfx/cashRegister.wav");
-		audio.volume = 0.7;
+		audio.volume = 0.5;
 		audio.play();
 	}
 
@@ -351,9 +351,11 @@ export class Shop implements ILocalShop {
 	}
 
 	sellCoffee(amount: number = 1) {
-		let audio = new Audio("src/assets/sfx/ding.wav");
-		audio.volume = 0.4;
-		audio.play();
+		if (this.isSelected) {
+			let audio = new Audio("src/assets/sfx/ding.wav");
+			audio.volume = 0.4;
+			audio.play();
+		}
 		let numToSell = Math.floor(
 			Math.min(amount, this.waitingCustomers, this.coffeeCups),
 		);

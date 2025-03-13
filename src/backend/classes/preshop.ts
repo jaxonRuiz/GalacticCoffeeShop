@@ -278,7 +278,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	sellCoffee() {
 		if (this.coffeeCups < 1) return;
 		let audio = new Audio("src/assets/sfx/ding.wav")
-		audio.volume = 0.8;
+		audio.volume = 0.6;
 		audio.play();
 		if (this.waitingCustomers >= 1) {
 			this.waitingCustomers--;
@@ -337,7 +337,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		// possibly make bean cost scale or change over time(?)
 
 		let audio = new Audio("src/assets/sfx/cashRegister.wav");
-		audio.volume = 0.7;
+		audio.volume = 0.5;
 		audio.play();
 		if (this.money < this.beanPrice) return;
 		this.beans += this.beansPerBuy;
