@@ -28,4 +28,7 @@ export const img: { [key: string] : string } = {
 	coffeeShop_top: new URL('./img/coffeeShop_top.svg', import.meta.url).href,
 	coffeeStand: new URL('./img/coffeeStand.svg', import.meta.url).href,
 	coffee: new URL('./img/coffee.svg', import.meta.url).href,
+	titleScreen_planets_1: new URL('./img/planets_1.svg', import.meta.url).href,
+	titleScreen_planets_2: new URL('./img/planets_2.svg', import.meta.url).href,
+	titleScreen_planets_3: new URL('./img/planets_3.svg', import.meta.url).href,
 };

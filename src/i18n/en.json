@@ -1,9 +1,9 @@
 {
-	"gameTitle": "Galactic Coffee Shop",
+	"gameTitle_1": "Galactic",
+	"gameTitle_2": "Coffee Shop",
 	"startGame_btn": "Continue Game",
 	"newGame_btn": "New Game",
-	"upgPurchased_btn": "Purchased",
-	"upgUnpurchased_btn": "Unpurchased",
+	"options_btn": "Options",
 
 	"intro1": "You have one goal, sell coffee...",
 	"intro2": "Your galactic coffee dreams start now.",
@@ -38,6 +38,8 @@
 	"beansPerBuy_stat": "Beans per Pack",
 	"restockPrice_stat": "Cost to Restock",
 
+	"upgPurchased_btn": "Purchased",
+	"upgUnpurchased_btn": "Unpurchased",
 	"grindBeans_btn": "Grind Beans",
 	"makeCoffee_btn": "Make Coffee",
 	"promote_btn": "Promote",
@@ -60,7 +62,6 @@
 	"beans_text": "Beans",
 	"emptyCups_text": "Empty Cups",
 
-	"howTo_tooltip": "Click the ? for help.",
 	"makeCoffee1_tooltip": "Grind raw coffee beans to get grounded beans to make sellable coffee.",
 	"makeCoffee2_tooltip": "Grinding requires multiple clicks and making coffee takes time.",
 	"makeCoffee3_tooltip": "Making coffee requires beans and empty cups.",
