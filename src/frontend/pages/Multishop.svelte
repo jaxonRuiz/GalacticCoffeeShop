@@ -188,6 +188,7 @@
 		height: 40%;
 		.card {
 			margin: 0.5rem;
+			width: 12rem;
 			flex-shrink: 0;
 			justify-content: space-evenly;
 			box-sizing: border-box;

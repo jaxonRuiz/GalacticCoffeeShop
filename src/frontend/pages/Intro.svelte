@@ -4,16 +4,17 @@
 	import { loadState, startNewGame } from "../../backend/game";
 	import { pointerStyle } from "../components/Styles.svelte";
 	import Button from "../components/Button.svelte";
-  import { img } from "../../assets/img";
+	import { img } from "../../assets/img";
+	import Options from "./Options.svelte";
 
-	let title = $state(true);
+	let page = $state("title");
 	let text = $state(-1);
 	const script = ["intro1", "intro2", "intro3", "intro4"];
 </script>
 
 <svelte:window
 	onmousedown={() => {
-		if (!title && text >= 0) {
+		if (!page && text >= 0) {
 			text++;
 			if (text >= script.length) {
 				startNewGame();
@@ -23,11 +24,11 @@
 />
 
 <main
-	class="fl col {title ? 'title' : ''}"
+	class="fl col {text >= 0 ? 'intro' : ''}"
 	style={pointerStyle}
 	transition:fade
 >
-	{#if title}
+	{#if page == "title"}
 		<div transition:fade class="row" id="title-screen">
 			<div id="title" class="col">
 				<h1>{$t("gameTitle_1")}</h1>
@@ -37,7 +38,7 @@
 				<Button
 					move={false}
 					onclick={() => {
-						title = false;
+						page = "intro";
 						setTimeout(() => {
 							text++;
 						}, 700);
@@ -46,19 +47,24 @@
 					<p>{$t("newGame_btn")}</p>
 				</Button>
 				{#if localStorage.getItem("GameSaveData") != null}
-					<Button
-						move={false}
-						onclick={loadState}
-					>
+					<Button move={false} onclick={loadState}>
 						<p>{$t("startGame_btn")}</p>
 					</Button>
 				{/if}
-				<Button move={false}>
+				<Button
+					move={false}
+					onclick={() => {
+						page = "";
+						setTimeout(() => {
+							page = "options";
+						}, 700);
+					}}
+				>
 					<p>{$t("options_btn")}</p>
 				</Button>
 			</div>
 		</div>
-		<div id="bg">
+		<div transition:fade id="bg">
 			<img alt="background" src={img.titleScreen_planets_1} />
 			<img alt="background" src={img.titleScreen_planets_2} />
 			<img alt="background" src={img.titleScreen_planets_3} />
@@ -69,6 +75,15 @@
 				<h2 class="intro" transition:fade>{$t(key)}</h2>
 			{/if}
 		{/each}
+	{:else if page == "options"}
+		<Options />
+		<Button
+			move={false}
+			onclick={() => {
+				page = "title";
+			}}>
+			<p>{$t("back_btn")}</p>
+		</Button>
 	{/if}
 </main>
 
@@ -80,7 +95,7 @@
 		width: 100%;
 		height: 100%;
 	}
-	main:not(.title) {
+	main.intro {
 		cursor: var(--cpointer), pointer;
 	}
 
