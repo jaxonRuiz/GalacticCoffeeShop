@@ -165,6 +165,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.sceneManager = sceneManager;
 
 		// setting up audio
+		/* audio list
+		- boil.flac
+		- crowd.mp3
+		- Squirm Worm - TrackTribe.mp3
+		- ding.wav
+		- papers.wav
+		- grind1.wav
+		*/
 		this.audio.set("boil", new Audio("src/assets/sfx/boiling.flac"));
 		this.audio.get("boil")!.loop = true;
 		this.audio.set("crowd", new Audio("src/assets/sfx/crowd.mp3"));
