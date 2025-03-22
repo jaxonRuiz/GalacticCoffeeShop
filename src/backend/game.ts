@@ -18,6 +18,7 @@ console.log("hello world");
 
 // make sure startGame is only called on a new save
 export function startNewGame() {
+	resetState();
 	console.log("starting game");
 	if (stageManager.currentSceneIndex == 0) {
 		stageManager.nextScene();
@@ -54,5 +55,6 @@ interface SaveData {
 }
 
 globalThis.addEventListener("beforeunload", function () {
-	saveState();
+	if (stageManager.currentSceneIndex != 0)
+		saveState();
 });
