@@ -52,3 +52,7 @@ export function resetState() {
 interface SaveData {
 	currentStageIndex: number;
 }
+
+globalThis.addEventListener("beforeunload", function () {
+	saveState();
+});
