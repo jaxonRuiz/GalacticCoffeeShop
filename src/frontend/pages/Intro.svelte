@@ -14,7 +14,7 @@
 
 <svelte:window
 	onmousedown={() => {
-		if (!page && text >= 0) {
+		if (page == "intro" && text >= 0) {
 			text++;
 			if (text >= script.length) {
 				startNewGame();
