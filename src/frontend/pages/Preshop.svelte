@@ -14,6 +14,7 @@
 		fSellableCoffee,
 		pointerStyle,
 	} from "../components/Styles.svelte";
+  import { onScroll } from "../components/Tooltip";
 
 	// base
 	let timer = new Timer();
@@ -57,7 +58,8 @@
 {#snippet upgrade(upgkey: string, purchased: boolean)}
 	<Button
 		data-btn={purchased ? "" : "coin"}
-		disabled={$money < upgs_cost[upgkey] ? true : false}
+		classes={["purchased-upg"]}
+		disabled={purchased || $money < upgs_cost[upgkey] ? true : false}
 		onclick={() => {
 			umanager.applyUpgrade(upgkey, pshop);
 			upgs_cost[upgkey] = umanager.getCost(upgkey, pshop);
@@ -92,7 +94,7 @@
 	</div>
 
 	<div class="shop right row">
-		<div class="col">
+		<div class="col scroll" onscroll={onScroll}>
 			<Dropdown title={$t("making_title")}>
 				<div class="tooltip">
 					<Tooltip text={["makeCoffee1_tooltip", "makeCoffee2_tooltip"]} />
@@ -195,7 +197,7 @@
 					<p>{$t("upgPurchased_btn")}</p>
 				</label>
 			</div>
-			<div class="col" id="upgrades">
+			<div class="col scroll" id="upgrades">
 				{#if upgPage == 0}
 					{#key rupgs}
 						{#each availableUpgrades as upgkey (upgkey)}
@@ -256,6 +258,5 @@
 
 	#upgrades {
 		flex-grow: 1;
-		overflow-y: auto;
 	}
 </style>

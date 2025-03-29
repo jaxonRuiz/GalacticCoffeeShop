@@ -8,6 +8,8 @@
   import { pointerStyle } from "./frontend/components/Styles.svelte";
   import { booped, boops } from "./frontend/components/Boops";
   import Boops from "./frontend/components/Boops.svelte";
+  import { tooltips, updateTooltip } from "./frontend/components/Tooltip";
+  import TooltipContent from "./frontend/components/TooltipContent.svelte";
 
 	let tabs = ["game", "preshop", "shop", "multishop", "test"];
 	let comps = [Game, Preshop, Shop, Multishop, Test];
@@ -27,8 +29,14 @@
 			type = b.dataset.btn ?? "button";
 			console.log(b.dataset.btn);
 		}
-		booped(event.clientX, event.clientY, type);
+		if (type === "tooltip") {
+			const r = b!.getBoundingClientRect();
+			updateTooltip(parseInt(b!.dataset.tooltipid ?? '-1'), r);
+		} else {
+			booped(event.clientX, event.clientY, type);
+		}
 	}
+
 </script>
 
 <svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
@@ -56,6 +64,13 @@
 		{#each $boops as b (b.id)}
 			<Boops x={b.x} y={b.y} type={b.type} />
 		{/each}
+		{#each $tooltips as tp (tp.id)}
+		 	{#if tp.visible}
+				{#key tp.y}
+					<TooltipContent x={tp.x} y={tp.y} text={tp.text} type={tp.type} />
+				{/key}
+			{/if}
+		{/each}
 	</div>
 	{#if currentTab > -1}
 		{@const Comp = comps[currentTab]}
@@ -67,6 +82,7 @@
 	main {
 		width: 100vw;
 		height: 100vh;
+		overflow: hidden;
 		font-family: "Syne Mono", monospace;
 		cursor: var(--cdefault), default;
 	}

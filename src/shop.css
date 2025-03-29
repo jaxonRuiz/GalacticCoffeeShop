@@ -18,6 +18,15 @@
 	display: none !important;
 }
 
+.scroll {
+	overflow: auto;
+	-ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+	&::-webkit-scrollbar {
+		display: none;  /* Safari and Chrome */
+	}
+}
+
 .shop {
 	&.container {
 		display: flex;
