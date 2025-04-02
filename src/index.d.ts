@@ -96,9 +96,12 @@ interface ILocalShop extends IShop {
   multiShopUnlocked: boolean;
   lifetimeStats: { [key: string]: number };
   workerAmounts: { [key: string]: number };
+  promoterUnlocked: boolean;
+  supplierUnlocked: boolean;
 
   roles: Map<string, Role>;
   unlockPromoter(): void;
+
   unlockSupplier(): void;
 }
 

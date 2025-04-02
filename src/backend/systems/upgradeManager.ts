@@ -347,22 +347,10 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).multiShopUnlocked = true;
 			},
 			maxLevel: 1,
-			cost: 500,
+			cost: 200,
 			costMultiplier: 1,
 			image: "unlock_multishop.jpg",
 			flags: ["yellow"],
-		},
-		unlock_promoter: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 50;
-			},
-			upgrade: (shop) => {
-				(shop as ILocalShop).unlockPromoter();
-			},
-			maxLevel: 1,
-			cost: 300,
-			costMultiplier: 1,
-			image: "unlock_promoter.jpg",
 		},
 		flashy_sign: {
 			unlock_condition: (shop) => {
@@ -396,7 +384,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		additional_promotion_materials: {
 			unlock_condition: (shop) => {
-				return shop.upgrades.get("unlock_promoter")! >= 1;
+				return (shop as ILocalShop).promoterUnlocked;
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerAmounts["promoterMax"] += 1;
@@ -460,7 +448,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		promoter_effectiveness: {
 			unlock_condition: (shop) => {
-				return shop.upgrades.get("unlock_promoter")! >= 1;
+				return (shop as ILocalShop).promoterUnlocked;
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.promoterProductivity! += 0.05;
@@ -487,6 +475,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	},
 
 	multiShop: {
+		// apply to children style upgrades have the associated flag. their upgrade function applies to the LOCAL shops
 		cohesive_branding: {
 			unlock_condition: (multishop) => {
 				return multishop.shops!.length > 1; // maybe change to 2 later
@@ -501,6 +490,20 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "cohesive_branding.jpg",
+		},
+		unlock_promoter: {
+			unlock_condition: (multishop) => {
+				return multishop.shops!.length > 1;
+			},
+			upgrade: (shop) => {
+				console.log("unlocking promoter from multishop");
+				(shop as ILocalShop).unlockPromoter();
+			},
+			maxLevel: 1,
+			cost: 300,
+			flags: ["applyToChildren"],
+			costMultiplier: 1,
+			image: "unlock_promoter.jpg",
 		},
 		add_new_shop: {
 			unlock_condition: (multishop) => {

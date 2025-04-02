@@ -406,6 +406,7 @@ export class Shop implements ILocalShop {
 	// upgrade functions /////////////////////////////////////////////////////////
 
 	unlockPromoter() {
+		console.log("local shop promoter unlocked");
 		this.promoterUnlocked = true;
 		this.roles.set("promoter", {
 			name: "Promoter",
