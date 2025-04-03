@@ -2,293 +2,295 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
+import { AudioManager } from "../systems/audioManager";
 
 export class MultiShop implements ISubscriber, IScene, IMultiShop {
-	// writable resources
-	w_money: Writable<number> = writable(0);
-	w_selectedShop: Writable<Shop | null> = writable(null);
-	w_selectedShopIndex: Writable<number> = writable(-1);
-	w_shops: Writable<Shop[]> = writable([]);
-	w_finishedFirstShop: Writable<boolean> = writable(false);
+  // writable resources
+  w_money: Writable<number> = writable(0);
+  w_selectedShop: Writable<Shop | null> = writable(null);
+  w_selectedShopIndex: Writable<number> = writable(-1);
+  w_shops: Writable<Shop[]> = writable([]);
+  w_finishedFirstShop: Writable<boolean> = writable(false);
 
-	// writable getters/setters
-	get money() {
-		return get(this.w_money);
-	}
-	set money(value) {
-		this.w_money.set(value);
-	}
-	get selectedShop() {
-		return get(this.w_selectedShop);
-	}
-	set selectedShop(value) {
-		this.w_selectedShop.set(value);
-	}
-	get selectedShopIndex() {
-		return get(this.w_selectedShopIndex);
-	}
-	set selectedShopIndex(value) {
-		this.w_selectedShopIndex.set(value);
-	}
-	get shops() {
-		return get(this.w_shops);
-	}
-	set shops(value) {
-		this.w_shops.set(value);
-	}
-	get finishedFirstShop() {
-		return get(this.w_finishedFirstShop);
-	}
-	set finishedFirstShop(value) {
-		this.w_finishedFirstShop.set(value);
-	}
+  // writable getters/setters
+  get money() {
+    return get(this.w_money);
+  }
+  set money(value) {
+    this.w_money.set(value);
+  }
+  get selectedShop() {
+    return get(this.w_selectedShop);
+  }
+  set selectedShop(value) {
+    this.w_selectedShop.set(value);
+  }
+  get selectedShopIndex() {
+    return get(this.w_selectedShopIndex);
+  }
+  set selectedShopIndex(value) {
+    this.w_selectedShopIndex.set(value);
+  }
+  get shops() {
+    return get(this.w_shops);
+  }
+  set shops(value) {
+    this.w_shops.set(value);
+  }
+  get finishedFirstShop() {
+    return get(this.w_finishedFirstShop);
+  }
+  set finishedFirstShop(value) {
+    this.w_finishedFirstShop.set(value);
+  }
 
-	// internal stats ////////////////////////////////////////////////////////////
-	upgrades: Map<string, number> = new Map();
-	// upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
-	weeklyRecap: { [key: number]: ShopWeekReport } = {};
-	sceneManager: Publisher;
-	minAppeal: number = 0;
-	promotionEffectiveness: number = 0;
-	runTutorial: boolean = true;
-	audio: Map<string, HTMLAudioElement> = new Map();
+  // internal stats ////////////////////////////////////////////////////////////
+  upgrades: Map<string, number> = new Map();
+  weeklyRecap: { [key: number]: ShopWeekReport } = {};
+  sceneManager: Publisher;
+  minAppeal: number = 0;
+  promotionEffectiveness: number = 0;
+  runTutorial: boolean = true;
 
-	multiShopUgradeManager: UpgradeManager = new UpgradeManager("multiShop");
-	localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
+  multiShopUgradeManager: UpgradeManager = new UpgradeManager("multiShop");
+  localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
+  audioManager: AudioManager = new AudioManager();
 
-	constructor(timer: Publisher, sceneManager: Publisher) {
-		timer.subscribe(this, "tick");
-		timer.subscribe(this, "week");
-		this.sceneManager = sceneManager;
+  constructor(timer: Publisher, sceneManager: Publisher) {
+    timer.subscribe(this, "tick");
+    timer.subscribe(this, "week");
+    this.sceneManager = sceneManager;
 
-		this.shops.push(new Shop(this));
-		this.weeklyRecap[this.shops.length - 1] = {
-			income: 0,
-			expenses: 0,
-		};
-		this.audio.set(
-			"bgm",
-			new Audio("src/assets/music/Duraznito - Quincas Moreira.mp3"),
-		);
-		this.audio.get("bgm")!.loop = true;
-		this.audio.get("bgm")!.volume = 0.2;
-		this.audio.get("bgm")!.play();
-	}
+    this.shops.push(new Shop(this));
+    this.weeklyRecap[this.shops.length - 1] = {
+      income: 0,
+      expenses: 0,
+    };
 
-	notify(event: string, data?: any) {
-		// maybe optimize better :/ dont need to call every shop every tick
-		if (event === "tick") {
-			this.tick();
-		}
-		if (event === "week") {
-			this.withdrawAll();
-			// this.applyExpenses();
-			// this.shops.forEach((shop) => shop.restock());
+    // Setting up audio
+    this.audioManager.addMusic(
+      "bgm",
+      "src/assets/music/Duraznito - Quincas Moreira.mp3"
+    );
+    this.audioManager.addAmbience("crowd", "src/assets/sfx/crowd.mp3");
 
-			if (this.money < 0) {
-				console.log("debt boy");
-			}
-		}
-	}
+    this.audioManager.playAudio("bgm");
+    this.audioManager.playAudio("crowd");
+  }
 
-	tick() {
-		this.shops.forEach((shop) => shop.tick(this));
-	}
+  notify(event: string, data?: any) {
+    // maybe optimize better :/ dont need to call every shop every tick
+    if (event === "tick") {
+      this.tick();
+    }
+    if (event === "week") {
+      this.withdrawAll();
+      // this.applyExpenses();
+      // this.shops.forEach((shop) => shop.restock());
 
-	// multishop actions /////////////////////////////////////////////////////////
-	addShop(applyUpgrades: boolean = true) {
-		let newShop = new Shop(this);
-		if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
-		if (applyUpgrades) {
-			this.upgrades.forEach((value, key) => {
-				console.log(key);
-				if (
-					this.multiShopUgradeManager.allUpgrades[key].flags?.includes(
-						"applyToChildren",
-					)
-				) {
-					// pain peko
-					for (let i = 0; i < value; i++) {
-						this.multiShopUgradeManager.allUpgrades[key].upgrade(
-							newShop,
-							value - 1,
-						);
-					}
-				}
-			});
-		}
-		// this.shops.push(newShop);
-		this.w_shops.update((shops) => [...shops, newShop]);
+      if (this.money < 0) {
+        console.log("debt boy");
+      }
+    }
+  }
 
-		this.weeklyRecap[this.shops.length - 1] = {
-			income: 0,
-			expenses: 0,
-		};
-	}
+  tick() {
+    this.shops.forEach((shop) => shop.tick(this));
+  }
 
-	selectShop(shop: Shop) {
-		this.selectedShop = shop;
-		this.selectedShop.isSelected = true;
-		this.selectedShopIndex = this.shops.indexOf(shop);
-	}
+  // multishop actions /////////////////////////////////////////////////////////
+  addShop(applyUpgrades: boolean = true) {
+    let newShop = new Shop(this);
+    if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
+    if (applyUpgrades) {
+      this.upgrades.forEach((value, key) => {
+        console.log(key);
+        if (
+          this.multiShopUgradeManager.allUpgrades[key].flags?.includes(
+            "applyToChildren"
+          )
+        ) {
+          // pain peko
+          for (let i = 0; i < value; i++) {
+            this.multiShopUgradeManager.allUpgrades[key].upgrade(
+              newShop,
+              value - 1
+            );
+          }
+        }
+      });
+    }
+    // this.shops.push(newShop);
+    this.w_shops.update((shops) => [...shops, newShop]);
 
-	selectShopIndex(index: number) {
-		this.selectedShopIndex = index;
-		this.selectedShop = this.shops[index];
-		this.selectedShop.isSelected = true;
-	}
+    this.weeklyRecap[this.shops.length - 1] = {
+      income: 0,
+      expenses: 0,
+    };
+  }
 
-	deselectShop() {
-		if (this.selectedShop) this.selectedShop!.isSelected = false;
-		this.selectedShop = null;
-		this.selectedShopIndex = -1;
-	}
+  selectShop(shop: Shop) {
+    this.selectedShop = shop;
+    this.selectedShop.isSelected = true;
+    this.selectedShopIndex = this.shops.indexOf(shop);
+  }
 
-	applyExpenses() {
-		let shopIndex = 0;
-		this.shops.forEach((shop) => {
-			this.money -= shop.getTotalExpenses();
-			this.weeklyRecap[shopIndex].expenses = shop.getTotalExpenses();
-		});
-	}
+  selectShopIndex(index: number) {
+    this.selectedShopIndex = index;
+    this.selectedShop = this.shops[index];
+    this.selectedShop.isSelected = true;
+  }
 
-	withdrawAll() {
-		let shopIndex = 0;
-		console.log("withdraw all");
-		this.shops.forEach((shop) => {
-			this.money += shop.money;
-			this.weeklyRecap[shopIndex].income = shop.money;
-			shop.money = 0;
-		});
-	}
+  deselectShop() {
+    if (this.selectedShop) this.selectedShop!.isSelected = false;
+    this.selectedShop = null;
+    this.selectedShopIndex = -1;
+  }
 
-	applyCost(cost: number) {
-		this.money -= cost;
-		if (this.money < 0) {
-			// apply debt?
-		}
-	}
+  applyExpenses() {
+    let shopIndex = 0;
+    this.shops.forEach((shop) => {
+      this.money -= shop.getTotalExpenses();
+      this.weeklyRecap[shopIndex].expenses = shop.getTotalExpenses();
+    });
+  }
 
-	// end scene /////////////////////////////////////////////////////////////////
+  withdrawAll() {
+    let shopIndex = 0;
+    console.log("withdraw all");
+    this.shops.forEach((shop) => {
+      this.money += shop.money;
+      this.weeklyRecap[shopIndex].income = shop.money;
+      shop.money = 0;
+    });
+  }
 
-	endScene() {
-		console.log("multishop endScene()");
+  applyCost(cost: number) {
+    this.money -= cost;
+    if (this.money < 0) {
+      // apply debt?
+    }
+  }
 
-		this.sceneManager.emit("nextScene");
-	}
+  // end scene /////////////////////////////////////////////////////////////////
 
-	getTransferData() {
-		return {
-			money: this.money,
-			upgrades: this.upgrades,
-			numShops: this.shops.length,
-		};
-	}
+  endScene() {
+    console.log("multishop endScene()");
+    this.audioManager.disableAudio();
+    this.sceneManager.emit("nextScene");
+  }
 
-	loadTransferData(data: any): void {
-		this.money += data.money;
-		this.shops[0].beans += data.beans;
-		if (data.hasBarista) {
-			this.shops[0].addWorker("barista");
-		}
-		if (data.hasCashier) {
-			this.shops[0].addWorker("server");
-		}
-		this.selectShop(this.shops[0]);
-	}
+  getTransferData() {
+    return {
+      money: this.money,
+      upgrades: this.upgrades,
+      numShops: this.shops.length,
+    };
+  }
 
-	// selected shop actions /////////////////////////////////////////////////////
-	// actions you can do at the selected shop
-	localSellCoffee() {
-		if (!this.selectedShop) return;
-		this.selectedShop.sellCoffee();
-	}
+  loadTransferData(data: any): void {
+    this.money += data.money;
+    this.shops[0].beans += data.beans;
+    if (data.hasBarista) {
+      this.shops[0].addWorker("barista");
+    }
+    if (data.hasCashier) {
+      this.shops[0].addWorker("server");
+    }
+    this.selectShop(this.shops[0]);
+  }
 
-	localPromote() {
-		if (!this.selectedShop) return;
-		this.selectedShop.promote();
-	}
+  // selected shop actions /////////////////////////////////////////////////////
+  // actions you can do at the selected shop
+  localSellCoffee() {
+    if (!this.selectedShop) return;
+    this.selectedShop.sellCoffee();
+  }
 
-	localProduceCoffee() {
-		if (!this.selectedShop) return;
-		this.selectedShop.produceCoffee();
-	}
+  localPromote() {
+    if (!this.selectedShop) return;
+    this.selectedShop.promote();
+  }
 
-	localWithdrawMoney() {
-		if (!this.selectedShop) return;
-		this.money += this.selectedShop.money;
-		this.selectedShop.money = 0;
-	}
+  localProduceCoffee() {
+    if (!this.selectedShop) return;
+    this.selectedShop.produceCoffee();
+  }
 
-	localAddWorker(role: string) {
-		if (!this.selectedShop) return;
-		this.selectedShop.addWorker(role);
-	}
+  localWithdrawMoney() {
+    if (!this.selectedShop) return;
+    this.money += this.selectedShop.money;
+    this.selectedShop.money = 0;
+  }
 
-	localRemoveWorker(role: string) {
-		if (!this.selectedShop) return;
-		this.selectedShop.removeWorker(role);
-	}
+  localAddWorker(role: string) {
+    if (!this.selectedShop) return;
+    this.selectedShop.addWorker(role);
+  }
 
-	// save state ////////////////////////////////////////////////////////////////
+  localRemoveWorker(role: string) {
+    if (!this.selectedShop) return;
+    this.selectedShop.removeWorker(role);
+  }
 
-	saveState() {
-		let saveObj: MultiShopSave = {
-			money: this.money,
-			selectedShopIndex: this.selectedShopIndex,
-			upgrades: {},
-			shops: [],
-		};
+  // save state ////////////////////////////////////////////////////////////////
 
-		for (let [key, value] of this.upgrades) {
-			saveObj.upgrades[key] = value;
-		}
+  saveState() {
+    let saveObj: MultiShopSave = {
+      money: this.money,
+      selectedShopIndex: this.selectedShopIndex,
+      upgrades: {},
+      shops: [],
+    };
 
-		for (let shop of this.shops) {
-			saveObj.shops.push(shop.getSaveState());
-		}
+    for (let [key, value] of this.upgrades) {
+      saveObj.upgrades[key] = value;
+    }
 
-		localStorage.setItem("multishop", JSON.stringify(saveObj));
-	}
+    for (let shop of this.shops) {
+      saveObj.shops.push(shop.getSaveState());
+    }
 
-	loadState() {
-		const rawJSON = localStorage.getItem("multishop");
+    localStorage.setItem("multishop", JSON.stringify(saveObj));
+  }
 
-		if (rawJSON === null) return;
+  loadState() {
+    const rawJSON = localStorage.getItem("multishop");
 
-		const state: MultiShopSave = JSON.parse(rawJSON);
+    if (rawJSON === null) return;
 
-		// check that multishop upgrades work fine loading in like this, especially "apply to all" upgrades
-		this.upgrades = new Map(Object.entries(state.upgrades));
+    const state: MultiShopSave = JSON.parse(rawJSON);
 
-		// this.upgradeFunctions = state.upgradeFunctions;
-		this.selectedShopIndex = state.selectedShopIndex;
+    // check that multishop upgrades work fine loading in like this, especially "apply to all" upgrades
+    this.upgrades = new Map(Object.entries(state.upgrades));
 
-		for (let i = 0; i < state.shops.length; i++) {
-			// only add new shop if shops > 1
-			if (i >= this.shops.length) {
-				this.addShop(false);
-				// let shop = new Shop(this);
-				// this.shops.push(shop);
-			}
-			this.shops[i].loadLocalState(state.shops[i]);
-		}
+    // this.upgradeFunctions = state.upgradeFunctions;
+    this.selectedShopIndex = state.selectedShopIndex;
 
-		this.money = state.money;
-	}
+    for (let i = 0; i < state.shops.length; i++) {
+      // only add new shop if shops > 1
+      if (i >= this.shops.length) {
+        this.addShop(false);
+        // let shop = new Shop(this);
+        // this.shops.push(shop);
+      }
+      this.shops[i].loadLocalState(state.shops[i]);
+    }
 
-	clearState() {
-	}
+    this.money = state.money;
+  }
+
+  clearState() {}
 }
 
 interface ShopWeekReport {
-	income: number;
-	expenses: number;
+  income: number;
+  expenses: number;
 }
 
 interface MultiShopSave {
-	money: number;
-	selectedShopIndex: number;
-	upgrades: { [key: string]: number };
-	shops: LocalShopSave[];
+  money: number;
+  selectedShopIndex: number;
+  upgrades: { [key: string]: number };
+  shops: LocalShopSave[];
 }
