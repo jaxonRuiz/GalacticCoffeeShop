@@ -1,5 +1,6 @@
 import { MultiShop } from "./multiShop";
 import { get, type Writable, writable } from "svelte/store";
+import { Timer } from "../systems/time"
 
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
@@ -13,7 +14,9 @@ export class Shop implements ILocalShop {
 	w_coffeePrice: Writable<number> = writable(5);
 	w_promoterUnlocked: Writable<boolean> = writable(false);
 	w_supplierUnlocked: Writable<boolean> = writable(false);
+	w_autoRestockUnlocked: Writable<boolean> = writable(false);
 	w_multiShopUnlocked: Writable<boolean> = writable(false);
+
 
 	// writable getters/setters
 	get beans() {
@@ -52,11 +55,11 @@ export class Shop implements ILocalShop {
 	set appeal(value) {
 		this.w_appeal.set(value);
 	}
-	set restockSheet(value: { [key: string]: number }) {
-		this.w_restockSheet.set(value);
-	}
 	get restockSheet() {
 		return get(this.w_restockSheet);
+	}
+	set restockSheet(value: { [key: string]: number }) {
+		this.w_restockSheet.set(value);
 	}
 	get progressTrackers() {
 		return get(this.w_progressTrackers);
@@ -81,6 +84,12 @@ export class Shop implements ILocalShop {
 	}
 	set supplierUnlocked(value) {
 		this.w_supplierUnlocked.set(value);
+	}
+	get autoRestockUnlocked() {
+		return get(this.w_autoRestockUnlocked);
+	}
+	set autoRestockUnlocked(value) {
+		this.w_autoRestockUnlocked.set(value);
 	}
 	get multiShopUnlocked() {
 		return get(this.w_multiShopUnlocked);
@@ -129,6 +138,7 @@ export class Shop implements ILocalShop {
 		coffeeSold: 0,
 		moneyMade: 0,
 		coffeeMade: 0,
+		totalRestocked: 0,
 	};
 
 	// stats /////////////////////////////////////////////////////////////////////
@@ -306,6 +316,7 @@ export class Shop implements ILocalShop {
 
 		this.beans += this.restockSheet["beans"];
 		this.emptyCups += this.restockSheet["emptyCups"];
+		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"] + this.restockSheet["emptyCups"];
 
 		let audio = new Audio("src/assets/sfx/cashRegister.wav");
 		audio.volume = 0.5;
@@ -430,6 +441,11 @@ export class Shop implements ILocalShop {
 		this.w_supplierUnlocked.set(true);
 	}
 
+	unlockAutoRestock() {
+		this.autoRestockUnlocked = true;
+		this.w_autoRestockUnlocked.set(true);
+	}
+
 	getSaveState(): LocalShopSave {
 		let saveObj: LocalShopSave = {
 			money: this.money,
@@ -444,12 +460,16 @@ export class Shop implements ILocalShop {
 			upgrades: {},
 			multiShopUnlocked: this.multiShopUnlocked,
 			promoterUnlocked: this.promoterUnlocked,
+			autoRestockUnlocked: this.autoRestockUnlocked,
 			lifetimeStats: this.lifetimeStats,
 			workerStats: this.workerStats,
 			workerAmounts: {},
 			appeal: this.appeal,
+			restockSheet: {},
 		};
-
+		for (let key in this.restockSheet){
+			saveObj.restockSheet[key] = this.restockSheet[key];
+		}
 		for (let [key, value] of this.upgrades) {
 			saveObj.upgrades[key] = value;
 		}
@@ -478,12 +498,24 @@ export class Shop implements ILocalShop {
 		this.upgrades = new Map(Object.entries(state.upgrades));
 		this.multiShopUnlocked = state.multiShopUnlocked;
 		this.promoterUnlocked = state.promoterUnlocked;
+		this.autoRestockUnlocked = state.autoRestockUnlocked;
 		this.lifetimeStats = state.lifetimeStats;
 		this.workerStats = state.workerStats;
 		this.appeal = state.appeal;
 
+		let restockSheetValue = get(this.w_restockSheet);
+		for (let key in state.restockSheet){
+			if(restockSheetValue.hasOwnProperty(key)){
+				restockSheetValue[key] = state.restockSheet[key];
+			}
+		}
+		this.w_restockSheet.set(restockSheetValue);
+
 		if (this.promoterUnlocked) {
 			this.unlockPromoter();
+		}
+		if(this.autoRestockUnlocked){
+			this.unlockAutoRestock();
 		}
 		for (let key in state.workerAmounts) {
 			this.workerAmounts[key] = state.workerAmounts[key];
@@ -515,6 +547,8 @@ export interface LocalShopSave {
 	lifetimeStats: { [key: string]: number };
 	multiShopUnlocked: boolean;
 	promoterUnlocked: boolean;
+	autoRestockUnlocked: boolean;
 	workerStats: { [key: string]: number };
 	workerAmounts: { [key: string]: number };
+	restockSheet: { [key: string]: number};
 }

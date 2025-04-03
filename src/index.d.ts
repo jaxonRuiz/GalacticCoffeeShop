@@ -74,6 +74,7 @@ interface IContainerShop extends IShop {
 
 interface IMultiShop extends IContainerShop {
   money: number;
+  boughtAutoRestock: boolean;
 }
 
 interface ILocalShop extends IShop {
@@ -98,11 +99,13 @@ interface ILocalShop extends IShop {
   workerAmounts: { [key: string]: number };
   promoterUnlocked: boolean;
   supplierUnlocked: boolean;
+  autoRestockUnlocked: boolean;
 
   roles: Map<string, Role>;
   unlockPromoter(): void;
-
+  
   unlockSupplier(): void;
+  unlockAutoRestock(): void;
 }
 
 interface IScene {

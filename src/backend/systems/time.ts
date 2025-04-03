@@ -6,7 +6,7 @@ export const msPerTick = 250;
 // currently mostly exists to track time
 // also contains an observer object, so can use Timer.timeEvents.subscribe()
 /* NOTES:
- *   Timer.day gives calander day
+ *   Timer.day gives calender day
  *   DAYS ARE 0 INDEXED
  */
 export class Timer {
