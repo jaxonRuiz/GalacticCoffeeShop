@@ -113,8 +113,6 @@
 	"additional_coffee_drips_upgDesc": "Make more cups of sellable coffee per session, without increasing production time",
 	"buy_coffee_shop_upgName": "Buy Coffee Shop",
 	"buy_coffee_shop_upgDesc": "Rent land to start a proper coffee shop! Open new managerial options and coffee creation options!",
-	"cohesive_branding_upgName": "Cohesive Branding",
-	"cohesive_branding_upgDesc": "Increase appeal of all shops",
 	"lingering_appeal_upgName": "Lingering Appeal",
 	"lingering_appeal_upgDesc": "Increase how long the memory of your coffee lasts",
 	"play_tester_mode_upgName": "Play Tester Mode",
@@ -122,8 +120,6 @@
 
 	"unlock_multishop_upgName": "Unlock Multi-Shop",
 	"unlock_multishop_upgDesc": "One shop was easy enough, now get ready for more!",
-	"unlock_promoter_upgName": "Unlock Promoter",
-	"unlock_promoter_upgDesc": "Open a new promoter position dedicated to drawing customers in",
 	"flashy_sign_upgName": "Flashy Sign",
 	"flashy_sign_upgDesc": "Passively attract more customers to your storefront!",
 	"expand_cashier_counter_upgName": "Expand Cashier Counter",
@@ -146,5 +142,12 @@
 	"local_shop_nicer_coffee_upgDesc": "Put even more love into your coffee and charge more for it!",
 
 	"add_new_shop_upgName": "Domain Exapansion",
-	"add_new_shop_upgDesc": "Run another coffee shop at the same time!"
+	"add_new_shop_upgDesc": "Run another coffee shop at the same time!",
+	"cohesive_branding_upgName": "Cohesive Branding",
+	"cohesive_branding_upgDesc": "Increase appeal of all shops",
+	"unlock_promoter_upgName": "Unlock Promoter",
+	"unlock_promoter_upgDesc": "Open a new promoter position dedicated to drawing customers in",
+	"unlock_auto_restock_upgName": "Unlock Auto Restock",
+	"unlock_auto_restock_upgDesc": "Establish automatic restocking of your various shops"
+	
 }
