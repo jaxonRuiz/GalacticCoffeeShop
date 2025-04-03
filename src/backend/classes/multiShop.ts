@@ -132,9 +132,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			});
 		}
 
-		//probably change this i just dont know the systems yet
-		newShop.autoRestockUnlocked = this.boughtAutoRestock;
-
 		// this.shops.push(newShop);
 		this.w_shops.update((shops) => [...shops, newShop]);
 
@@ -188,11 +185,10 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	restockShops() {
+		if(!this.boughtAutoRestock) return;
 		this.shops.forEach((shop) => 
 			{
-				if (shop.autoRestockUnlocked) {
 					shop.restock();
-				}
 			});
 	}
 

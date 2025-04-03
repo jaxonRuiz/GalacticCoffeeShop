@@ -99,13 +99,10 @@ interface ILocalShop extends IShop {
   workerAmounts: { [key: string]: number };
   promoterUnlocked: boolean;
   supplierUnlocked: boolean;
-  autoRestockUnlocked: boolean;
 
   roles: Map<string, Role>;
   unlockPromoter(): void;
-  
   unlockSupplier(): void;
-  unlockAutoRestock(): void;
 }
 
 interface IScene {

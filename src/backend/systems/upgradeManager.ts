@@ -529,12 +529,11 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.5,
 			image: "add_new_shop.jpg",
 		},
-		auto_restock: {
+		unlock_auto_restock: {
 			unlock_condition: (multishop) => {
-				return multishop.shops!.length > 1;
+				return multishop.shops!.length > 3;
 			},
 			upgrade: (shop) => {
-				(shop as IMultiShop).shops.forEach((shop) => {(shop as ILocalShop).unlockAutoRestock()});
 				(shop as IMultiShop).boughtAutoRestock = true;
 			},
 			maxLevel: 1,
