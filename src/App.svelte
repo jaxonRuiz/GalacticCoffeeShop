@@ -34,8 +34,9 @@
       console.log("app saving");
       saveState();
     }
-    if (event.key === "m") {
+    if (event.key === "r") {
       resetState();
+      smanager.currentSceneIndex = 0;
       currentTab = 0;
     }
     if (event.key === "4") {
