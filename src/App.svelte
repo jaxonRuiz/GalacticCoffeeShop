@@ -3,16 +3,23 @@
   import Shop from "./frontend/pages/Shop.svelte";
   import Test from "./frontend/pages/Test.svelte";
   import Multishop from "./frontend/pages/Multishop.svelte";
+  import { MultiShop } from "./backend/classes/multiShop";
   import Game from "./frontend/pages/Game.svelte";
   import "@fontsource/syne-mono";
   import { pointerStyle } from "./frontend/components/Styles.svelte";
   import { booped, boops } from "./frontend/components/Boops";
   import Boops from "./frontend/components/Boops.svelte";
-  import { saveState, loadState, resetState } from "./backend/game";
+  import {
+    saveState,
+    loadState,
+    resetState,
+    stageManager,
+  } from "./backend/game";
 
   let tabs = ["game", "preshop", "shop", "multishop", "test"];
-  let comps = [Game, Preshop, Shop, Multishop, Test];
+  let comps = [Game, Preshop, Multishop, Multishop, Test];
   let currentTab = $state(0);
+  const smanager = stageManager;
   let testing = $state(false); // open testing window
 
   function onKeyDown(event: KeyboardEvent) {
@@ -30,6 +37,14 @@
     if (event.key === "m") {
       resetState();
       currentTab = 0;
+    }
+    if (event.key === "4") {
+      // dev key to add money, only works in valid scenes
+      try {
+        (smanager.currentScene as MultiShop).money += 1000;
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 
@@ -60,6 +75,32 @@
             value={i}
             bind:group={currentTab}
             onclick={() => {
+              switch (i) {
+                case 0:
+                  // game
+                  smanager.loadStage(0, false);
+                  break;
+                case 1:
+                  // preshop
+                  smanager.loadStage(1, false);
+                  break;
+                case 2:
+                  // shop
+                  smanager.loadStage(2, false);
+                  break;
+                case 3:
+                  // multishop
+                  smanager.loadStage(2, false);
+                  (smanager.currentScene as MultiShop).finishedFirstShop = true;
+                  (
+                    smanager.currentScene as MultiShop
+                  ).shops[0].multiShopUnlocked = true;
+                  break;
+                case 4:
+                  smanager.loadStage(4, false);
+                  break;
+              }
+              if (i != 3) smanager.loadStage(i, false);
               testing = false;
             }}
           />
