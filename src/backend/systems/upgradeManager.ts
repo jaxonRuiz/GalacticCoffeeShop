@@ -472,18 +472,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.23,
 			image: "local_shop_nicer_coffee.jpg",
 		},
-		// auto_restock: {
-		// 	unlock_condition: (shop) => {
-		// 		return (shop as ILocalShop).lifetimeStats.totalRestocked >= 100;
-		// 	},
-		// 	upgrade: (shop) => {
-		// 		(shop as ILocalShop).unlockAutoRestock();
-		// 	},
-		// 	maxLevel: 1,
-		// 	cost: 200,
-		// 	costMultiplier: 1,
-		// 	image: "local_shop_nicer_coffee.jpg", //replace with correct image !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// },
+		unlock_auto_restock: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).lifetimeStats.totalRestocked >= 100;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).unlockAutoRestock();
+			},
+			maxLevel: 1,
+			cost: 200,
+			costMultiplier: 1,
+			image: "local_shop_nicer_coffee.jpg", //replace with correct image !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		},
 	},
 
 	multiShop: {
@@ -528,18 +528,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "add_new_shop.jpg",
-		},
-		unlock_auto_restock: {
-			unlock_condition: (multishop) => {
-				return multishop.shops!.length > 3;
-			},
-			upgrade: (shop) => {
-				(shop as IMultiShop).boughtAutoRestock = true;
-			},
-			maxLevel: 1,
-			cost: 1000,
-			costMultiplier: 1,
-			image: "local_shop_nicer_coffee.jpg", //replace with correct image !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		},
+		}
 	},
 };

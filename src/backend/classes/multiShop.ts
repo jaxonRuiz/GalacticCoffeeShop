@@ -10,7 +10,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	w_selectedShopIndex: Writable<number> = writable(-1);
 	w_shops: Writable<Shop[]> = writable([]);
 	w_finishedFirstShop: Writable<boolean> = writable(false);
-	w_boughtAutoRestock: Writable<boolean> = writable(false);
 
 	// writable getters/setters
 	get money() {
@@ -43,12 +42,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	set finishedFirstShop(value) {
 		this.w_finishedFirstShop.set(value);
 	}
-	get boughtAutoRestock() {
-		return get(this.w_boughtAutoRestock);
-	}
-	set boughtAutoRestock(value) {
-		this.w_boughtAutoRestock.set(value);
-	}
+
 
 	// internal stats ////////////////////////////////////////////////////////////
 	upgrades: Map<string, number> = new Map();
@@ -88,12 +82,12 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		if (event === "tick") {
 			this.tick();
 		}
-		if (event === "day"){
+		if (event === "day") {
 			this.restockShops();
 		}
 		if (event === "week") {
 			this.withdrawAll();
-			
+
 			// this.applyExpenses();
 			// this.shops.forEach((shop) => shop.restock());
 
@@ -107,7 +101,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.shops.forEach((shop) => shop.tick(this));
 	}
 
-	
+
 
 	// multishop actions /////////////////////////////////////////////////////////
 	addShop(applyUpgrades: boolean = true) {
@@ -185,11 +179,9 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	restockShops() {
-		if(!this.boughtAutoRestock) return;
-		this.shops.forEach((shop) => 
-			{
-					shop.restock();
-			});
+		this.shops.forEach((shop) => {
+			if (shop.autoRestockUnlocked) shop.restock();
+		});
 	}
 
 	// end scene /////////////////////////////////////////////////////////////////
@@ -261,7 +253,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			selectedShopIndex: this.selectedShopIndex,
 			upgrades: {},
 			shops: [],
-			boughtAutoRestock: this.boughtAutoRestock,
 		};
 
 		for (let [key, value] of this.upgrades) {
@@ -299,9 +290,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		}
 
 		this.money = state.money;
-
-
-		this.boughtAutoRestock = state.boughtAutoRestock;
 	}
 
 	clearState() {
@@ -318,7 +306,4 @@ interface MultiShopSave {
 	selectedShopIndex: number;
 	upgrades: { [key: string]: number };
 	shops: LocalShopSave[];
-
-
-	boughtAutoRestock: boolean;
 }

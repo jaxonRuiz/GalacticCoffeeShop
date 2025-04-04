@@ -14,6 +14,7 @@ export class Shop implements ILocalShop {
 	w_promoterUnlocked: Writable<boolean> = writable(false);
 	w_supplierUnlocked: Writable<boolean> = writable(false);
 	w_multiShopUnlocked: Writable<boolean> = writable(false);
+	w_autoRestockUnlocked: Writable<boolean> = writable(false);
 
 
 	// writable getters/setters
@@ -94,6 +95,12 @@ export class Shop implements ILocalShop {
 	}
 	set workerAmounts(value: { [key: string]: number }) {
 		this.w_workerAmounts.set(value);
+	}
+	get autoRestockUnlocked() {
+		return get(this.w_autoRestockUnlocked);
+	}
+	set autoRestockUnlocked(value) {
+		this.w_autoRestockUnlocked.set(value);
 	}
 
 	// variable containers ///////////////////////////////////////////////////////
@@ -421,6 +428,10 @@ export class Shop implements ILocalShop {
 		this.w_promoterUnlocked.set(true);
 	}
 
+	unlockAutoRestock() {
+		this.autoRestockUnlocked = true;
+	}
+
 	unlockSupplier() {
 		this.supplierUnlocked = true;
 		this.roles.set("supplier", {
@@ -451,9 +462,10 @@ export class Shop implements ILocalShop {
 			workerStats: this.workerStats,
 			workerAmounts: {},
 			appeal: this.appeal,
+			autoRestockUnlocked: this.autoRestockUnlocked,
 			restockSheet: {},
 		};
-		for (let key in this.restockSheet){
+		for (let key in this.restockSheet) {
 			saveObj.restockSheet[key] = this.restockSheet[key];
 		}
 		for (let [key, value] of this.upgrades) {
@@ -487,10 +499,11 @@ export class Shop implements ILocalShop {
 		this.lifetimeStats = state.lifetimeStats;
 		this.workerStats = state.workerStats;
 		this.appeal = state.appeal;
+		this.autoRestockUnlocked = state.autoRestockUnlocked;
 
 		let restockSheetValue = get(this.w_restockSheet);
-		for (let key in state.restockSheet){
-			if(restockSheetValue.hasOwnProperty(key)){
+		for (let key in state.restockSheet) {
+			if (restockSheetValue.hasOwnProperty(key)) {
 				restockSheetValue[key] = state.restockSheet[key];
 			}
 		}
@@ -531,5 +544,6 @@ export interface LocalShopSave {
 	promoterUnlocked: boolean;
 	workerStats: { [key: string]: number };
 	workerAmounts: { [key: string]: number };
-	restockSheet: { [key: string]: number};
+	restockSheet: { [key: string]: number };
+	autoRestockUnlocked: boolean;
 }
