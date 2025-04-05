@@ -121,7 +121,8 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
       });
     }
     // this.shops.push(newShop);
-    this.w_shops.update((shops) => [...shops, newShop]);
+    // this.w_shops.update((shops) => [...shops, newShop]);
+    this.shops = [...this.shops, newShop];
 
     this.weeklyRecap[this.shops.length - 1] = {
       income: 0,

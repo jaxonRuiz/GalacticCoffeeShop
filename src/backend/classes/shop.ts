@@ -1,6 +1,7 @@
 import { MultiShop } from "./multiShop";
 import { get, type Writable, writable } from "svelte/store";
 import { AudioManager } from "../systems/audioManager";
+import { dictProxy } from "../proxies";
 
 export class Shop implements ILocalShop {
   moneyMultiplier: number = 1;
@@ -57,7 +58,7 @@ export class Shop implements ILocalShop {
     this.w_restockSheet.set(value);
   }
   get restockSheet() {
-    return get(this.w_restockSheet);
+    return dictProxy(this.w_restockSheet);
   }
   get progressTrackers() {
     return get(this.w_progressTrackers);
@@ -90,7 +91,7 @@ export class Shop implements ILocalShop {
     this.w_multiShopUnlocked.set(value);
   }
   get workerAmounts() {
-    return get(this.w_workerAmounts);
+    return dictProxy(this.w_workerAmounts);
   }
   set workerAmounts(value: { [key: string]: number }) {
     this.w_workerAmounts.set(value);

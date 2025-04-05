@@ -1,25 +1,34 @@
 <script lang="ts">
-  import { get } from "svelte/store";
-  import { stageManager } from "../../backend/game";
+	import { stageManager } from "../../backend/game";
+	import { Sample } from "../../backend/proxies";
 
-  // let cs = currentScene;
-  let cs = stageManager.currentScene;
+	// let cs = currentScene;
+	let cs = stageManager.currentScene;
+	let sample = new Sample();
+	let a = sample.w_dictionary;
 </script>
 
 <main>
 	<!-- <script type="module" src="/src/backend/game.ts"></script> -->
 
+	<h1>sanity checking</h1>
+	<p>dictionary</p>
+	{#each Object.keys(sample.dictionary) as key (key)}
+		<p>{key}: {$a[key]}</p>
+		<button onclick={()=>{sample.updateDictionary(key)}}>increment</button>
+	{/each}
+
 	<p>jaxon test ground</p>
-  <button
-    onclick={() => {
-      console.log("click");
+	<button
+		onclick={() => {
+			console.log("click");
 
-      cs.endScene();
+			cs.endScene();
 
-    }}>
-    TEST
-    <!-- cs.endScene(); -->
-  </button>
+		}}>
+		TEST
+		<!-- cs.endScene(); -->
+	</button>
 
 	<p>lyssa testing</p>
 	<div class="lyssa-testing">
