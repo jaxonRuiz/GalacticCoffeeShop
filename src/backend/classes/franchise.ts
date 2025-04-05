@@ -15,6 +15,7 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
   audioManager: AudioManager = new AudioManager();
 
   constructor(timer: Publisher, sceneManager: Publisher) {
+    console.log("franchise constructor()");
     timer.subscribe(this, "tick");
     this.sceneManager = sceneManager;
 
@@ -23,7 +24,7 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
   notify(event: string, data?: any) {
   }
 
-  tick() {}
+  tick() { }
 
   // franchise actions /////////////////////////////////////////////////////////
   // stuff the player can do

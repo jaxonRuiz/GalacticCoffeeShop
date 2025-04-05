@@ -3,6 +3,7 @@ import { get, type Writable, writable } from "svelte/store";
 import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
+import { Franchise } from "../classes/franchise";
 
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
@@ -72,14 +73,17 @@ export class StageManager extends Publisher {
 
 			case 1: // preshop to multishop
 				console.log("preshop to multishop");
-				let transferData = this.currentScene.getTransferData();
+				let preshopData = this.currentScene.getTransferData();
 				this.currentScene = new MultiShop(this.timer.timeEvents, this);
-				this.currentScene.loadTransferData(transferData);
+				this.currentScene.loadTransferData(preshopData);
 				this.currentSceneIndex = 2;
 				break;
 
 			case 2: // multishop to franchise
 				console.log("multishop to franchise");
+				let multishopData = this.currentScene.getTransferData();
+				this.currentScene = new Franchise(this.timer.timeEvents, this);
+				this.currentScene.loadTransferData(multishopData);
 				this.currentSceneIndex = 3;
 				break;
 
