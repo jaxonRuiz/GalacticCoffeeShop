@@ -514,5 +514,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.5,
 			image: "add_new_shop.jpg",
 		},
+		expand_to_franchise: {
+			unlock_condition: (multishop) => {
+				return true;
+				return multishop.shops!.length > 10;
+			},
+			upgrade: (multishop) => {
+				(multishop as IScene).endScene();
+			},
+			maxLevel: 1,
+			cost: 10,
+			costMultiplier: 1,
+			image: "expand_to_franchise.jpg",
+		}
 	},
 };

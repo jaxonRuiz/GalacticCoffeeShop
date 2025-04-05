@@ -105,6 +105,10 @@ interface ILocalShop extends IShop {
   unlockSupplier(): void;
 }
 
+interface IFranchise {
+
+}
+
 interface IScene {
   endScene(): void;
   saveState(): void;

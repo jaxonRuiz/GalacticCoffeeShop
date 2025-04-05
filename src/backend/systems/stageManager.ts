@@ -78,9 +78,14 @@ export class StageManager extends Publisher {
 				this.currentSceneIndex = 2;
 				break;
 
-			case 2: // multishop to gameover
-				console.log("multishop to game over");
+			case 2: // multishop to franchise
+				console.log("multishop to franchise");
 				this.currentSceneIndex = 3;
+				break;
+
+			case 3: // franchise to game over
+				console.log("franchise to game over");
+				this.currentSceneIndex = 4;
 				break;
 
 			default:
