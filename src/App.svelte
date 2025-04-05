@@ -17,7 +17,8 @@
   } from "./backend/game";
 
   let tabs = ["game", "preshop", "shop", "multishop", "test"];
-  let comps = [Game, Preshop, Multishop, Multishop, Test];
+  // let comps = [Game, Preshop, Multishop, Multishop, Test];
+  let comps = [Game, Game, Game, Game, Test];
   let currentTab = $state(0);
   const smanager = stageManager;
   let testing = $state(false); // open testing window
