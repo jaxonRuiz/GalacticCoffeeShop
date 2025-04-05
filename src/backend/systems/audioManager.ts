@@ -1,3 +1,13 @@
+import { get, writable } from "svelte/store";
+
+export const globalVolumeScale = writable(
+    parseFloat(localStorage.getItem("globalVolumeScale") || "1")
+);
+
+globalVolumeScale.subscribe((value) => {
+    localStorage.setItem("globalVolumeScale", value.toString());
+});
+
 export class AudioManager {
   SFX: Map<string, HTMLAudioElement[]> = new Map();
   ambience: Map<string, HTMLAudioElement> = new Map();
@@ -9,6 +19,11 @@ export class AudioManager {
   musicVolume: number = 1;
 
   constructor() {}
+
+  // Helper to apply global volume scale
+  applyVolumeScale(volume: number): number {
+    return volume * get(globalVolumeScale);
+  }
 
   // Mutes all audio
   disableAudio() {
@@ -27,15 +42,15 @@ export class AudioManager {
   // Unmutes all audio
   enableAudio() {
     for (let audios of this.SFX.values()) {
-      audios.forEach((audio) => (audio.volume = this.sfxVolume));
+        audios.forEach((audio) => (audio.volume = this.applyVolumeScale(this.sfxVolume)));
     }
     for (let audio of this.ambience.values()) {
-      audio.volume = this.ambienceVolume;
+        audio.volume = this.applyVolumeScale(this.ambienceVolume);
     }
     for (let audio of this.music.values()) {
-      audio.volume = this.musicVolume;
+        audio.volume = this.applyVolumeScale(this.musicVolume);
     }
-    this.bgMusic.forEach((audio) => (audio.volume = this.musicVolume));
+    this.bgMusic.forEach((audio) => (audio.volume = this.applyVolumeScale(this.musicVolume)));
   }
 
   // Adds sound effects (can overlap)
@@ -61,19 +76,19 @@ export class AudioManager {
   // Plays a specific audio asset
   playAudio(name: string) {
     if (this.SFX.has(name)) {
-      const audioInstances = this.SFX.get(name)!;
-      const audio = audioInstances.find((a) => a.paused) || audioInstances[0];
-      audio.volume = this.sfxVolume;
-      audio.currentTime = 0;
-      audio.play();
+        const audioInstances = this.SFX.get(name)!;
+        const audio = audioInstances.find((a) => a.paused) || audioInstances[0];
+        audio.volume = this.applyVolumeScale(this.sfxVolume); // Applies globalVolumeScale
+        audio.currentTime = 0;
+        audio.play();
     } else if (this.music.has(name)) {
-      const audio = this.music.get(name)!;
-      audio.volume = this.musicVolume;
-      audio.play();
+        const audio = this.music.get(name)!;
+        audio.volume = this.applyVolumeScale(this.musicVolume); // Applies globalVolumeScale
+        audio.play();
     } else if (this.ambience.has(name)) {
-      const audio = this.ambience.get(name)!;
-      audio.volume = this.ambienceVolume;
-      audio.play();
+        const audio = this.ambience.get(name)!;
+        audio.volume = this.applyVolumeScale(this.ambienceVolume); // Applies globalVolumeScale
+        audio.play();
     }
   }
 
@@ -103,14 +118,14 @@ export class AudioManager {
     if (this.SFX.has(name)) {
       const audioInstances = this.SFX.get(name)!;
       audioInstances.forEach((audio) => {
-        audio.volume = volume;
+        audio.volume = this.applyVolumeScale(volume);
       });
     } else if (this.music.has(name)) {
       const audio = this.music.get(name)!;
-      audio.volume = volume;
+      audio.volume = this.applyVolumeScale(volume);
     } else if (this.ambience.has(name)) {
       const audio = this.ambience.get(name)!;
-      audio.volume = volume;
+      audio.volume = this.applyVolumeScale(volume);
     }
   }
 }
