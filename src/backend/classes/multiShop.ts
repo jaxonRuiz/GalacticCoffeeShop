@@ -44,55 +44,88 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
     this.w_finishedFirstShop.set(value);
   }
 
-  // internal stats ////////////////////////////////////////////////////////////
-  upgrades: Map<string, number> = new Map();
-  weeklyRecap: { [key: number]: ShopWeekReport } = {};
-  sceneManager: Publisher;
-  minAppeal: number = 0;
-  promotionEffectiveness: number = 0;
-  runTutorial: boolean = true;
+
+	// internal stats ////////////////////////////////////////////////////////////
+	upgrades: Map<string, number> = new Map();
+	// upgradeFunctions: ((shop: Shop, level: number) => void)[] = [];
+	weeklyRecap: { [key: number]: ShopWeekReport } = {};
+	sceneManager: Publisher;
+	minAppeal: number = 0;
+	promotionEffectiveness: number = 0;
+	runTutorial: boolean = true;
+	audio: Map<string, HTMLAudioElement> = new Map();
 
   multiShopUgradeManager: UpgradeManager = new UpgradeManager("multiShop");
   localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
   audioManager: AudioManager = new AudioManager();
 
-  constructor(timer: Publisher, sceneManager: Publisher) {
-    timer.subscribe(this, "tick");
-    timer.subscribe(this, "week");
-    this.sceneManager = sceneManager;
+	constructor(timer: Publisher, sceneManager: Publisher) {
+		timer.subscribe(this, "tick");
+		timer.subscribe(this, "day");
+		timer.subscribe(this, "week");
+		this.sceneManager = sceneManager;
 
-    this.shops.push(new Shop(this));
-    this.weeklyRecap[this.shops.length - 1] = {
-      income: 0,
-      expenses: 0,
-    };
+		this.shops.push(new Shop(this));
+		this.weeklyRecap[this.shops.length - 1] = {
+		income: 0,
+		expenses: 0,
+		};
 
-    // Setting up audio
-    this.audioManager.addMusic(
-      "bgm",
-      "src/assets/music/Duraznito - Quincas Moreira.mp3"
-    );
+		// Setting up audio
+		this.audioManager.addMusic(
+		"bgm",
+		"src/assets/music/Duraznito - Quincas Moreira.mp3"
+		);
     this.audioManager.addAmbience("crowd", "src/assets/sfx/crowd.mp3");
+	}
 
-    this.audioManager.playAudio("bgm");
-    this.audioManager.playAudio("crowd");
-  }
+	notify(event: string, data?: any) {
+		// maybe optimize better :/ dont need to call every shop every tick
+		if (event === "tick") {
+			this.tick();
+		}
+		if (event === "day") {
+			this.restockShops();
+		}
+		if (event === "week") {
+			this.withdrawAll();
 
-  notify(event: string, data?: any) {
-    // maybe optimize better :/ dont need to call every shop every tick
-    if (event === "tick") {
-      this.tick();
-    }
-    if (event === "week") {
-      this.withdrawAll();
-      // this.applyExpenses();
-      // this.shops.forEach((shop) => shop.restock());
+			// this.applyExpenses();
+			// this.shops.forEach((shop) => shop.restock());
 
-      if (this.money < 0) {
-        console.log("debt boy");
-      }
-    }
-  }
+		this.audioManager.playAudio("bgm");
+		this.audioManager.playAudio("crowd");
+		}
+	}
+
+
+
+	// // multishop actions /////////////////////////////////////////////////////////
+	// addShop(applyUpgrades: boolean = true) {
+	// 	let newShop = new Shop(this);
+	// 	if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
+	// 	if (applyUpgrades) {
+	// 		this.upgrades.forEach((value, key) => {
+	// 			console.log(key);
+	// 			if (
+	// 				this.multiShopUgradeManager.allUpgrades[key].flags?.includes(
+	// 					"applyToChildren",
+	// 				)
+	// 			) {
+	// 				// pain peko
+	// 				for (let i = 0; i < value; i++) {
+	// 					this.multiShopUgradeManager.allUpgrades[key].upgrade(
+	// 						newShop,
+	// 						value - 1,
+	// 					);
+	// 				}
+	// 			}
+	// 		});
+	// 	}
+
+	// 	// this.shops.push(newShop);
+	// 	this.w_shops.update((shops) => [...shops, newShop]);
+	// }
 
   tick() {
     this.shops.forEach((shop) => shop.tick(this));
@@ -165,6 +198,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
       shop.money = 0;
     });
   }
+	restockShops() {
+		this.shops.forEach((shop) => {
+			if (shop.autoRestockUnlocked) shop.restock();
+		});
+	}
+
+	// end scene /////////////////////////////////////////////////////////////////
 
   applyCost(cost: number) {
     this.money -= cost;

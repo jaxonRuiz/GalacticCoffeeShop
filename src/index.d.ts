@@ -101,8 +101,8 @@ interface ILocalShop extends IShop {
 
   roles: Map<string, Role>;
   unlockPromoter(): void;
-
   unlockSupplier(): void;
+  unlockAutoRestock(): void;
 }
 
 interface IScene {
