@@ -18,6 +18,7 @@
   import Upgrade from "../components/Upgrade.svelte";
   import { img } from "../../assets/img";
   import { onDestroy } from "svelte";
+  import UpgradesPanel from "../components/UpgradesPanel.svelte";
 
   // base
   let smanager = stageManager;
@@ -165,58 +166,12 @@
       </Dropdown>
     </div>
 
-    <div class="col block fixed">
-      <h1>{$t("upgrades_title")}</h1>
-      <p>{$t("money_stat")}: {fMoney($money)}</p>
-      <div class="row">
-        <label class="tab">
-          <input
-            checked
-            type="radio"
-            name="upgPage"
-            value={0}
-            bind:group={upgPage}
-          />
-          <p>{$t("upgUnpurchased_btn")}</p>
-        </label>
-        <label class="tab">
-          <input type="radio" name="upgPage" value={1} bind:group={upgPage} />
-          <p>{$t("upgPurchased_btn")}</p>
-        </label>
-      </div>
-      <div class="col scroll" id="upgrades">
-        {#if upgPage == 0}
-          {#key rupg}
-            {#each availableUpgrades as upgkey (upgkey)}
-              <Upgrade
-                purchased={false}
-                item={upgs[upgkey]}
-                key={upgkey}
-                {money}
-                cost={upgs_cost[upgkey]}
-                level={pshop.upgrades.get(upgkey) ?? 0}
-                flags={upgs[upgkey].flags ?? []}
-                onclick={() => {
-                  umanager.applyUpgrade(upgkey, pshop);
-                  upgs_cost[upgkey] = umanager.getCost(upgkey, pshop);
-                  availableUpgrades = umanager.checkUpgrade(pshop);
-                  rupg = !rupg;
-                }}
-              />
-            {/each}
-          {/key}
-        {:else if upgPage === 1}
-          {#each [...pshop.upgrades.keys()] as upgkey (upgkey)}
-            <Upgrade
-              purchased={true}
-              item={upgs[upgkey]}
-              key={upgkey}
-              cost={upgs_cost[upgkey]}
-              level={pshop.upgrades.get(upgkey) ?? 0}
-            />
-          {/each}
-        {/if}
-      </div>
+    <div class="col">
+      <UpgradesPanel 
+        wshop={pshop}
+        umKey="preshop"
+        money={money}
+      />
     </div>
   </div>
 </main>
