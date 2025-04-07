@@ -35,11 +35,11 @@
       console.log("app saving");
       saveState();
     }
-    if (event.key === "r") {
-      resetState();
-      smanager.currentSceneIndex = 0;
-      currentTab = 0;
-    }
+    // if (event.key === "i") {
+    //   resetState();
+    //   smanager.currentSceneIndex = 0;
+    //   currentTab = 0;
+    // }
     if (event.key === "4") {
       // dev key to add money, only works in valid scenes
       try {
