@@ -2,7 +2,7 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
-import { AudioManager } from "../systems/audioManager";
+import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 
 export class MultiShop implements ISubscriber, IScene, IMultiShop {
@@ -67,6 +67,9 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
       income: 0,
       expenses: 0,
     };
+
+    // Clean up other audio managers
+    cleanupAudioManagers(this.audioManager);
 
     // Setting up audio
     this.audioManager.addMusic("bgm", aud.shop_music);

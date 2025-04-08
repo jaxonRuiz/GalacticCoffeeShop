@@ -1,6 +1,6 @@
 import { MultiShop } from "./multiShop";
 import { get, type Writable, writable } from "svelte/store";
-import { AudioManager } from "../systems/audioManager";
+import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 
 export class Shop implements ILocalShop {
@@ -186,8 +186,11 @@ export class Shop implements ILocalShop {
       },
     });
 
+    // Clean up other audio managers
+    cleanupAudioManagers(this.audioManager);
+
     // Setting up audio
-    this.audioManager.addSFX("boiling", aud.bloing);
+    this.audioManager.addSFX("boiling", aud.boiling);
     this.audioManager.addSFX("ding", aud.ding);
     this.audioManager.addAmbience("crowd", aud.crowd);
 

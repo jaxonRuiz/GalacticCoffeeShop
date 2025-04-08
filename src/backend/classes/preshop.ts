@@ -1,7 +1,7 @@
 import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { msPerTick } from "../systems/time";
-import { AudioManager } from "../systems/audioManager";
+import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 
 export class Preshop implements ISubscriber, IScene, IPreshop {
@@ -165,6 +165,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
     timer.subscribe(this, "hour");
     timer.subscribe(this, "week");
     this.sceneManager = sceneManager;
+
+    // Clean up other audio managers
+    cleanupAudioManagers(this.audioManager);
 
     // Setting up audio
     this.audioManager.addMusic("bgm", aud.preshop_music);
