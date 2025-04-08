@@ -1,10 +1,10 @@
 <script>
 	import { t } from "svelte-i18n";
 	import Button from "../components/Button.svelte";
-	import { setLanguage } from "../../i18n/i18n";
+	import { cycleLanguage, locName, currLoc } from "../../i18n/i18n";
 	import { globalVolumeScale } from "../../backend/systems/audioManager";
+  import { fPercent } from "../components/Styles.svelte";
 
-	let locale = "en";
 </script>
 
 <main class="col">
@@ -14,11 +14,10 @@
 		<Button
 			move={false}
 			onclick={() => {
-				locale = locale == "en" ? "zh" : "en";
-				setLanguage(locale);
+				cycleLanguage();
 			}}
 		>
-			<p>{$t("opt_lang_" + locale)}</p>
+			<p>{locName[$currLoc]}</p>
 		</Button>
 	</div>
 
@@ -31,7 +30,7 @@
 			step="0.01"
 			bind:value={$globalVolumeScale}
 		/>
-		<span>{Math.round($globalVolumeScale * 100)}%</span>
+		<span>{fPercent(Math.round($globalVolumeScale * 100))}</span>
 	</div>
 </main>
 
@@ -40,8 +39,13 @@
 		margin-bottom: 2rem;
 	}
 
+	h1 {
+		text-align: center;
+	}
+
 	div.item {
 		align-items: center;
+		justify-content: space-between;
 		&> *:first-child {
 			margin-right: 2rem;
 		}
