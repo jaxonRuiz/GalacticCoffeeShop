@@ -1,16 +1,20 @@
+import { AudioManager } from "./audioManager";
+import { aud } from "../../assets/aud";
 // will have diff upgrade manager for each subset (preshop, shop, etc)
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
 	allUpgrades: { [key: string]: IUpgrade };
+	audioManager: AudioManager;
 
 	constructor(subset: string) {
 		this.allUpgrades = upgradeJSON[subset];
+		this.audioManager = new AudioManager();
 	}
 
 	applyUpgrade(id: string, shopObject: IShop) {
-		let audio = new Audio("src/assets/sfx/upgrade.wav");
-		audio.volume = 0.5;
-		audio.play();
+		this.audioManager.addSFX("upgrade", aud.upgrade);
+		this.audioManager.setVolume("upgrade", 0.5);
+		this.audioManager.playAudio("upgrade");
 
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
