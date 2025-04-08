@@ -2,7 +2,8 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
-import { AudioManager } from "../systems/audioManager";
+import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
+import { aud } from "../../assets/aud";
 
 export class MultiShop implements ISubscriber, IScene, IMultiShop {
   // writable resources
@@ -71,13 +72,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		expenses: 0,
 		};
 
-		// Setting up audio
-		this.audioManager.addMusic(
-		"bgm",
-		"src/assets/music/Duraznito - Quincas Moreira.mp3"
-		);
-    this.audioManager.addAmbience("crowd", "src/assets/sfx/crowd.mp3");
-	}
+    // Clean up other audio managers
+    cleanupAudioManagers(this.audioManager);
+
+    // Setting up audio
+    this.audioManager.addMusic("bgm", aud.shop_music);
+    this.audioManager.addAmbience("crowd", aud.crowd);
+  }
 
 	notify(event: string, data?: any) {
 		// maybe optimize better :/ dont need to call every shop every tick
@@ -321,7 +322,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
     this.money = state.money;
   }
 
-  clearState() {}
+  clearState() { }
 }
 
 interface ShopWeekReport {
