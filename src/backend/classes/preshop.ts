@@ -2,6 +2,7 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { msPerTick } from "../systems/time";
 import { AudioManager } from "../systems/audioManager";
+import { aud } from "../../assets/aud";
 
 export class Preshop implements ISubscriber, IScene, IPreshop {
   moneyMultiplier: number = 1;
@@ -166,17 +167,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
     this.sceneManager = sceneManager;
 
     // Setting up audio
-    this.audioManager.addMusic(
-      "bgm",
-      "src/assets/music/Squirm Worm - TrackTribe.mp3"
-    );
-    this.audioManager.addSFX("ding", "src/assets/sfx/ding.wav");
-    this.audioManager.addSFX("grind", "src/assets/sfx/grind1.wav");
-    this.audioManager.addSFX("papers", "src/assets/sfx/papers.wav");
-    this.audioManager.addSFX("boil", "src/assets/sfx/boiling.flac");
-    this.audioManager.addSFX("cashRegister", "src/assets/sfx/cashRegister.wav");
-    this.audioManager.addSFX("grind2", "src/assets/sfx/grind2.wav");
-    this.audioManager.addAmbience("crowd", "src/assets/sfx/crowd.mp3");
+    this.audioManager.addMusic("bgm", aud.preshop_music);
+    this.audioManager.addSFX("ding", aud.ding);
+    this.audioManager.addSFX("grind", aud.grind1);
+    this.audioManager.addSFX("papers", aud.papers);
+    this.audioManager.addSFX("boil", aud.boiling);
+    this.audioManager.addSFX("cashRegister", aud.cashRegister);
+    this.audioManager.addSFX("grind2", aud.grind2);
+    this.audioManager.addAmbience("crowd", aud.crowd);
 
     this.audioManager.playAudio("bgm");
     this.audioManager.playAudio("crowd");
