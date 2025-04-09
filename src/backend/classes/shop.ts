@@ -1,7 +1,8 @@
 import { MultiShop } from "./multiShop";
 import { get, type Writable, writable } from "svelte/store";
-import { AudioManager } from "../systems/audioManager";
 import { dictProxy } from "../proxies";
+import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
+import { aud } from "../../assets/aud";
 
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
@@ -195,10 +196,13 @@ export class Shop implements ILocalShop {
       },
     });
 
+    // Clean up other audio managers
+    cleanupAudioManagers(this.audioManager);
+
     // Setting up audio
-    this.audioManager.addSFX("boiling", "src/assets/sfx/boiling.flac");
-    this.audioManager.addSFX("ding", "src/assets/sfx/ding.wav");
-    this.audioManager.addAmbience("crowd", "src/assets/sfx/crowd.mp3");
+    this.audioManager.addSFX("boiling", aud.boiling);
+    this.audioManager.addSFX("ding", aud.ding);
+    this.audioManager.addAmbience("crowd", aud.crowd);
 
     this.audioManager.playAudio("crowd");
   }

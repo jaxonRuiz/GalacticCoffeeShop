@@ -25,3 +25,7 @@ export function fMoney(num: number) {
 export function fAppeal(num: number) {
 	return (100 * num).toFixed(2) + "%";
 }
+
+export function fPercent(num: number) {
+	return num + "%";
+}
