@@ -9,7 +9,7 @@
 	import Options from "./Options.svelte";
 	import Button from "../components/Button.svelte";
 
-	const smanager = stageManager;
+  const smanager = stageManager;
 
 	const stage = smanager.w_currentSceneIndex;
 	let options = $state(false);
@@ -41,11 +41,13 @@
 {/if}
 
 {#if $stage == 0}
-	<Intro />
+  <Intro />
 {:else if $stage == 1}
-	<Preshop wshop={smanager.currentScene as IPreshop} />
+  <Preshop wshop={smanager.currentScene as IPreshop} />
 {:else if $stage == 2}
-	<Multishop wshop={smanager.currentScene as IMultishop} />
+  <Multishop wshop={smanager.currentScene as IMultishop} />
+{:else if $stage == 3}
+  <Test />
 {/if}
 
 <style>
