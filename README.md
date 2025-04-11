@@ -41,15 +41,17 @@ All frontend files should be `.svelte` files. Reminder to use `lang="ts"` for yo
 #### Current File Structure
 ```
 src
-|____assets
-|  |____img
-|  |____aud
-|____backend
-|  |____classes
-|  |____systems
-|____frontend
-|  |____pages
+|____lib
+|  |____assets
+|  |____backend
 |  |____components
+|  |____i18n
+|____routes
+|  |____game
+|  |  |____{game pages}
+|  |____test
+|____static
+|  |____css
 ```
 
 ## Naming Conventions
