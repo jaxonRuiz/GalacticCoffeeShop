@@ -19,7 +19,7 @@
 	onmousedown={() => {
 		if (page == "intro" && text >= 0) {
 			text++;
-			if (text >= script.length) {
+			if (text == script.length) {
 				startNewGame();
 				goto(`${base}/game`);
 			}

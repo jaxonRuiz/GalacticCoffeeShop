@@ -33,7 +33,7 @@
 			border: none;
 			border-radius: 0;
 			border-bottom: 3px solid white;
-			background-color: var(--bg2);
+			background-color: transparent;
 			cursor: var(--cpointer), pointer;
 		}
 	}
