@@ -1,11 +1,19 @@
 <script lang="ts">
+	import { fade } from "svelte/transition";
 	import "@fontsource/syne-mono";
+	import { page } from "$app/state";
 	import { base } from "$app/paths";
+	import { goto } from "$app/navigation";
+	import { get } from "svelte/store";
+	import { t } from "svelte-i18n";
 	import type { MultiShop } from "$lib/backend/classes/multiShop";
 	import { loadState, saveState, stageManager } from "$lib/backend/game";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
+	import { optionsWindowOpen } from "$lib/components/Options";
 	import Boops from "$lib/components/Boops.svelte";
+	import Button from "$lib/components/Button.svelte";
+	import Options from "$lib/components/Options.svelte";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -14,6 +22,9 @@
 	let { children } = $props();
 
 	function onKeyDown(event: KeyboardEvent) {
+		if (event.key === "Escape" && page.url.href !== `${base}/`) {
+			$optionsWindowOpen = !get(optionsWindowOpen);
+		}
 		if (event.key === "t") {
 			testWindowOpen = !testWindowOpen;
 		}
@@ -24,6 +35,9 @@
 		if (event.key === "o") {
 			console.log("app saving");
 			saveState();
+		}
+		if (event.key === " ") {
+			goto(`${base}/`);
 		}
 		// if (event.key === "r") {
 		//   resetState();
@@ -56,15 +70,31 @@
 
 <svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
 
-<div class="fl" style={pointerStyle}>
+<div id="overlays" class="fl" style={pointerStyle}>
+	{#if $optionsWindowOpen}
+		<div transition:fade={{ duration: 100 }} id="options">
+			<div class="col">
+				<Options />
+				<br />
+				<Button
+					move={false}
+					onclick={() => {
+						$optionsWindowOpen = false;
+					}}
+				>
+					{$t("back_btn")}
+				</Button>
+			</div>
+		</div>
+	{/if}
+
 	<div id="test-window" style="display: {testWindowOpen ? 'grid' : 'none'};">
 		<div id="tabs" class="col">
 			{#each tabs as tab, i}
 				<a
-					href="{base}/{i > 0 ? `${tab}` : ''}"
+					href="{base}/{i == 0 ? '' : (i == tabs.length-1 ? 'test' : 'game')}"
 					class="tab"
 					onclick={() => {
-						console.log(`${base}${i > 0 ? `/${tab}` : ''}`);
 						switch (i) {
 							case 0:
 								// game
@@ -108,7 +138,8 @@
 </div>
 
 <style>
-	#content {
+	#content,
+	#overlays {
 		width: 100%;
 		height: 100%;
 		cursor: var(--cdefault), default;
@@ -144,5 +175,26 @@
 		width: 100%;
 		height: 100%;
 		pointer-events: none;
+	}
+
+	#options {
+		pointer-events: auto;
+		overflow: hidden;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		display: grid;
+		place-items: center;
+		background-color: color-mix(in srgb, var(--bg1) 85%, transparent 15%);
+		z-index: 1000;
+		> div {
+			background-color: var(--bg2);
+			border-radius: 1rem;
+			padding: 3rem;
+
+			br {
+				margin: 1rem;
+			}
+		}
 	}
 </style>
