@@ -1,18 +1,21 @@
 <script lang="ts">
 	import "@fontsource/syne-mono";
+	import { base } from "$app/paths";
 	import type { MultiShop } from "$lib/backend/classes/multiShop";
 	import { loadState, saveState, stageManager } from "$lib/backend/game";
-	import { booped } from "$lib/components/Boops";
+	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
+	import Boops from "$lib/components/Boops.svelte";
 
 	const smanager = stageManager;
-	let testing = $state(false); // open testing window
+	let testWindowOpen = $state(false);
+	let tabs = ["game", "preshop", "shop", "multishop", "test"];
 
 	let { children } = $props();
 
 	function onKeyDown(event: KeyboardEvent) {
 		if (event.key === "t") {
-			testing = !testing;
+			testWindowOpen = !testWindowOpen;
 		}
 		if (event.key === "p") {
 			console.log("app loading");
@@ -53,6 +56,53 @@
 
 <svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
 
+<div class="fl" style={pointerStyle}>
+	<div id="test-window" style="display: {testWindowOpen ? 'grid' : 'none'};">
+		<div id="tabs" class="col">
+			{#each tabs as tab, i}
+				<a
+					href="{base}/{i > 0 ? `${tab}` : ''}"
+					class="tab"
+					onclick={() => {
+						console.log(`${base}${i > 0 ? `/${tab}` : ''}`);
+						switch (i) {
+							case 0:
+								// game
+								smanager.loadStage(0, false);
+								break;
+							case 1:
+								// preshop
+								smanager.loadStage(1, false);
+								break;
+							case 2:
+								// shop
+								smanager.loadStage(2, false);
+								break;
+							case 3:
+								// multishop
+								smanager.loadStage(2, false);
+								(smanager.currentScene as MultiShop).finishedFirstShop = true;
+								(
+									smanager.currentScene as MultiShop
+								).shops[0].multiShopUnlocked = true;
+								break;
+							// case 4:
+							//   smanager.loadStage(4, false);
+							//   break;
+						}
+						testWindowOpen = false;
+					}}>{tab}</a
+				>
+			{/each}
+		</div>
+	</div>
+	<div id="mouse-effects">
+		{#each $boops as b (b.id)}
+			<Boops x={b.x} y={b.y} type={b.type} numerical={b.num} />
+		{/each}
+	</div>
+</div>
+
 <div id="content" style={pointerStyle}>
 	{@render children()}
 </div>
@@ -61,8 +111,38 @@
 	#content {
 		width: 100%;
 		height: 100%;
-		&:hover {
-			cursor: var(--cdefault), default;
+		cursor: var(--cdefault), default;
+	}
+
+	div:has(#test-window) {
+		pointer-events: none;
+		position: absolute;
+		z-index: 10000;
+		width: 100vw;
+		height: 100vh;
+		display: grid;
+		place-content: center;
+		#test-window {
+			pointer-events: auto;
+			background: var(--bg2);
+			border: 1px solid var(--yellow);
+			a {
+				padding: 0.5rem 2rem;
+				text-decoration: none;
+				text-align: center;
+				cursor: var(--cpointer), pointer;
+				&:hover {
+					background: var(--bg1);
+				}
+			}
 		}
+	}
+
+	#mouse-effects {
+		position: fixed;
+		z-index: 1000;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
 	}
 </style>
