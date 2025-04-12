@@ -6,9 +6,14 @@ import { AudioManager } from "../../systems/audioManager";
 
 export class Franchise implements ISubscriber, IScene, IFranchise {
   // writable resources
-
+  w_money: Writable<number> = writable(0);
   // writable getters/setters
-
+  get money(){
+    return get(this.w_money);
+  }
+  set money(value){
+    this.w_money.set(value);
+  }
   // internal stats ////////////////////////////////////////////////////////////
 
   sceneManager: Publisher;

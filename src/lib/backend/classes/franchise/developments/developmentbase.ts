@@ -5,6 +5,7 @@ import { UpgradeManager } from "../../../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
 import { aud } from "../../../../assets/aud";
 import type { Region } from "../region";
+import { Franchise } from "../franchise";
 
 export enum DevelopmentType{
     City = "City",
@@ -36,10 +37,16 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         this.w_developmentType.set(value);
     }
 
+    boughtBuildings: Building[] = [];
+    availableBuildings: Building[] = [];
+
     sceneManager: Publisher;
     parent: Region;
+    franchise: Franchise;
+
+    currentArea: number;
     
-    constructor(timer: Publisher, sceneManager: Publisher, region: Region, areaSize: number, cost: number) {
+    constructor(timer: Publisher, sceneManager: Publisher, region: Region, areaSize: number, cost: number, franchise: Franchise) {
         timer.subscribe(this, "tick");
         timer.subscribe(this, "hour");
         timer.subscribe(this, "week");
@@ -47,6 +54,9 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         this.parent = region;
         this.developmentArea = areaSize;
         this.developmentCost = cost;
+        this.franchise = franchise;
+
+        this.currentArea = this.developmentArea
 
         this.InitializeDevelopment();
     }
@@ -71,4 +81,45 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
     InitializeDevelopment(){
 
     }
+
+    BuyBuilding(building: Building){
+        if (building.areaSize > this.currentArea || building.buyCost > this.franchise.money) {return;}
+
+        this.franchise.money -= building.buyCost; //pay your dues
+        this.currentArea -= building.areaSize;
+        this.boughtBuildings.push(building); //add to bought buildings
+        const index = this.availableBuildings.indexOf(building);
+        if (index !== -1) {
+            this.availableBuildings.splice(index, 1); // remove from available buildings
+        }
+    }
+
+    SellBuilding(building: Building){
+        this.franchise.money += building.sellCost;
+        this.currentArea += building.areaSize;
+        const index = this.boughtBuildings.indexOf(building);
+        if (index !== -1) {
+            this.boughtBuildings.splice(index, 1); // remove from your bought buildings
+        }
+    }
+
+    PayRent(){
+        this.boughtBuildings.forEach(element => {
+            this.franchise.money -= element.rent;
+        });
+    }
+
+    UpdateAvailableBuildings(){
+
+    }
 }
+
+
+export interface Building {
+    name: string;
+    areaSize: number;
+    buyCost: number;
+    sellCost: number;
+    rent: number; // daily maybe?
+    update: (development: DevelopmentBase) => void;
+  }

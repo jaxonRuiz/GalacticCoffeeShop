@@ -6,6 +6,7 @@ import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManage
 import { aud } from "../../../../assets/aud";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Region } from "../region";
+import { Building } from "./developmentbase";
 
 export class City extends DevelopmentBase implements ICity{
     get developmentType(): DevelopmentType {
@@ -62,8 +63,19 @@ export class City extends DevelopmentBase implements ICity{
         //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
         
     }
+    
+    UpdateAvailableBuildings(): void {
+      this.availableBuildings = [];
+      const possibleBuilding = [
+        {
+          name: "Coffee Skyscraper",
+          areaSize: 3,
+          
+        },
+        {
 
-    BuyShop() {
-      
+        },
+
+      ]
     }
 }

@@ -123,20 +123,18 @@ dont forget to add the subscriber to the observer with .subscribe()
 */
 
 interface IDevelopment {
-  parent: Region;
-  developmentCost: number;
-  developmentArea: number;
-  developmentType: DevelopmentType;
+  // parent: Region;
+  // developmentCost: number;
+  // developmentArea: number;
+  // developmentType: DevelopmentType;
 
-  InitializeDevelopment();
+  // InitializeDevelopment();
 }
 
 interface ICity {
-  population: number;
-  shopCount: number;
-  income: number;
-
-  BuyShop();
+  // population: number;
+  // shopCount: number;
+  // income: number;
 }
 
 
@@ -145,34 +143,38 @@ interface IFarm{
 }
 
 interface IRegion {
-  parent: Country;
-  totalArea: number;
-  developmentList: DevelopmentBase[];
-  environmentalFactors: { [key: string]: number };
-  accessibilityLevel: number;
-  importCapacity: number;
-  exportCapacity: number;
-  unlockCost: number;
-  coordinates: [number, number];
+  // parent: Country;
+  // totalArea: number;
+  // developmentList: DevelopmentBase[];
+  // environmentalFactors: { [key: string]: number };
+  // accessibilityLevel: number;
+  // importCapacity: number;
+  // exportCapacity: number;
+  // unlockCost: number;
+  // coordinates: [number, number];
 
-  InitializeRegion(climate: ClimateType);
+  // InitializeRegion(climate: ClimateType);
 }
 
 interface ICountry{
-  parent: World;
-  taxRate: number;
-  tariffRate: number;
-  regionList: Region[];
+  // parent: World;
+  // taxRate: number;
+  // tariffRate: number;
+  // regionList: Region[];
 }
 
 interface IWorld{
 
 }
 interface TimeData {
-	tickProgress: number;
-	hour: number;
-	day: number;
-	week: number;
-	month: number;
-	year: number;
+	// tickProgress: number;
+	// hour: number;
+	// day: number;
+	// week: number;
+	// month: number;
+	// year: number;
+}
+
+interface IFranchise{
+  // money: number;
 }
