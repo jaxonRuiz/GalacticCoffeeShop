@@ -5,28 +5,30 @@ import { UpgradeManager } from "../../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
 import type { World } from "./world";
+import type { Region } from "./region";
 
-export class Country implements ISubscriber, ICountry{
-    
-	// parent: World;
-  	// taxRate: number;
-  	// tariffRate: number;
-  	// regionList: Region[];
+export class Country{
+	parent: World;
+	taxRate: number = 0.2;
+	tariffRate: number = 0.1;
 
-    notify(event: string, data?: any) {
-		// maybe optimize better :/ dont need to call every shop every tick
-		if (event === "tick") {
-			this.tick();
-		}
-		if (event === "day") {
-			
-		}
-		if (event === "week") {
-			
-		}
+	// modifiers represent taxes and subsidies. scaler to development building costs
+	farmModifier: number = 1.0;
+	shopModifier: number = 1.0;
+	housingModifier: number = 1.0;
+	
+	regionList: Region[] = [];
+	// need to figure out how to represent regions in a graph
+
+
+	constructor(parent: World) {
+		this.parent = parent;
+
 	}
 
-    tick(){
-
-    }
+	tick(){
+		for (const region of this.regionList) {
+			region.tick();
+		}
+	}
 }

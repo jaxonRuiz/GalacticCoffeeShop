@@ -140,14 +140,14 @@ interface ICity {
 }
 
 
-interface IFarm{
-  
+interface IFarm {
+
 }
 
 interface IRegion {
-  parent: Country;
+  parentCountry: Country;
   totalArea: number;
-  developmentList: DevelopmentBase[];
+  developmentList: { [key: string]: DevelopmentBase };
   environmentalFactors: { [key: string]: number };
   accessibilityLevel: number;
   importCapacity: number;
@@ -158,21 +158,21 @@ interface IRegion {
   InitializeRegion(climate: ClimateType);
 }
 
-interface ICountry{
+interface ICountry {
   parent: World;
   taxRate: number;
   tariffRate: number;
   regionList: Region[];
 }
 
-interface IWorld{
+interface IWorld {
 
 }
 interface TimeData {
-	tickProgress: number;
-	hour: number;
-	day: number;
-	week: number;
-	month: number;
-	year: number;
+  tickProgress: number;
+  hour: number;
+  day: number;
+  week: number;
+  month: number;
+  year: number;
 }
