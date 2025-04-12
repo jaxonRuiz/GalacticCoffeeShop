@@ -4,6 +4,7 @@ import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
+import type { IMultiShop, IScene, ISubscriber } from "../..";
 
 export class MultiShop implements ISubscriber, IScene, IMultiShop {
   // writable resources

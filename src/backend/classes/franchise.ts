@@ -2,6 +2,7 @@ import { Publisher } from "../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { UpgradeManager } from "../systems/upgradeManager";
 import { AudioManager } from "../systems/audioManager";
+import type { IFranchise, IScene, ISubscriber } from "../..";
 
 
 export class Franchise implements ISubscriber, IScene, IFranchise {

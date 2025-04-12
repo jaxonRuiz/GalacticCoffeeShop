@@ -3,6 +3,7 @@ import { get, type Writable, writable } from "svelte/store";
 import { dictProxy } from "../proxies";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
+import type { ILocalShop } from "../..";
 
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;

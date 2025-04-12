@@ -4,8 +4,9 @@ import { type LocalShopSave, Shop } from "../shop";
 import { UpgradeManager } from "../../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
+import type { ISubscriber, IWorld } from "../../..";
 
-export class World implements ISubscriber{
+export class World implements ISubscriber, IWorld{
     
 
 

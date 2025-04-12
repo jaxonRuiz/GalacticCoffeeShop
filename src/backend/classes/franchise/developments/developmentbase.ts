@@ -5,6 +5,7 @@ import { UpgradeManager } from "../../../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
 import { aud } from "../../../../assets/aud";
 import type { Region } from "../region";
+import type { IDevelopment, ISubscriber } from "../../../..";
 
 export enum DevelopmentType{
     City = "City",
@@ -12,7 +13,7 @@ export enum DevelopmentType{
     Logistic = "Logistic"
 }
 
-export class DevelopmentBase implements ISubscriber{
+export class DevelopmentBase implements ISubscriber, IDevelopment{
     w_developmentCost: Writable<number> = writable(1000);
     w_developmentArea: Writable<number> = writable(10);
     w_developmentType: Writable<DevelopmentType> = writable();
@@ -37,16 +38,17 @@ export class DevelopmentBase implements ISubscriber{
     }
 
     sceneManager: Publisher;
-    region: Region;
+    parent: Region;
     
     constructor(timer: Publisher, sceneManager: Publisher, region: Region, areaSize: number, cost: number) {
         timer.subscribe(this, "tick");
         timer.subscribe(this, "hour");
         timer.subscribe(this, "week");
         this.sceneManager = sceneManager;
-        this.region = region;
+        this.parent = region;
         this.developmentArea = areaSize;
         this.developmentCost = cost;
+
         this.InitializeDevelopment();
     }
 

@@ -3,6 +3,7 @@ import { get, type Writable, writable } from "svelte/store";
 import { msPerTick } from "../systems/time";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
+import type { IPreshop, IScene, ISubscriber } from "../..";
 
 export class Preshop implements ISubscriber, IScene, IPreshop {
   moneyMultiplier: number = 1;
