@@ -29,6 +29,7 @@ export function saveState() {
 	console.log("game saving state");
 	let saveData: SaveData = {
 		currentStageIndex: stageManager.currentSceneIndex,
+		timeData: timer.exportTimeData()
 	};
 	stageManager.currentScene.saveState();
 	localStorage.setItem("GameSaveData", JSON.stringify(saveData));
@@ -41,6 +42,7 @@ export function loadState() {
 	}
 	let saveData = JSON.parse(localStorage.getItem("GameSaveData")!);
 	stageManager.loadStage(saveData.currentStageIndex);
+	timer.loadTimeData(saveData.timeData);
 }
 
 export function resetState() {
@@ -52,6 +54,7 @@ export function resetState() {
 
 interface SaveData {
 	currentStageIndex: number;
+	timeData: TimeData
 }
 
 globalThis.addEventListener("beforeunload", function () {

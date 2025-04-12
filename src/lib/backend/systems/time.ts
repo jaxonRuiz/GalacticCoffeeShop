@@ -76,7 +76,27 @@ export class Timer {
 	}
 
 	resume() {
-		this.ticker = setInterval(() => this.tick(), 250);
+		this.ticker = setInterval(() => this.tick(), msPerTick);
+	}
+
+	exportTimeData(): TimeData {
+		return {
+			tickProgress: this.tickProgress,
+			hour: this.hour,
+			day: this.day,
+			week: this.week,
+			month: this.month,
+			year: this.year,
+		};
+	}
+
+	loadTimeData(data: TimeData) {
+		this.tickProgress = data.tickProgress;
+		this.hour = data.hour;
+		this.day = data.day;
+		this.week = data.week;
+		this.month = data.month;
+		this.year = data.year;
 	}
 
 	// getters
