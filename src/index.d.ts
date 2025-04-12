@@ -121,3 +121,50 @@ classes that implement subscriber should implement a
 notify(event: string, data?: any) method that does a behavior
 dont forget to add the subscriber to the observer with .subscribe()
 */
+
+interface IDevelopment {
+  parent: Region;
+  developmentCost: number;
+  developmentArea: number;
+  developmentType: DevelopmentType;
+
+  InitializeDevelopment();
+}
+
+interface ICity {
+  population: number;
+  shopCount: number;
+  income: number;
+
+  BuyShop();
+}
+
+
+interface IFarm{
+  
+}
+
+interface IRegion {
+  parent: Country;
+  totalArea: number;
+  developmentList: DevelopmentBase[];
+  environmentalFactors: { [key: string]: number };
+  accessibilityLevel: number;
+  importCapacity: number;
+  exportCapacity: number;
+  unlockCost: number;
+  coordinates: [number, number];
+
+  InitializeRegion(climate: ClimateType);
+}
+
+interface ICountry{
+  parent: World;
+  taxRate: number;
+  tariffRate: number;
+  regionList: Region[];
+}
+
+interface IWorld{
+
+}
