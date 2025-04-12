@@ -6,6 +6,7 @@ import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
 import type { DevelopmentBase, DevelopmentType } from "./developments/developmentbase";
 import type { Country } from "./country";
+import { dev } from "$app/environment";
 
 export enum ClimateType {
 	Arid = "Arid",
@@ -18,7 +19,10 @@ export enum ClimateType {
 export class Region implements ISubscriber, IRegion {
 	//writables
 	w_totalArea: Writable<number> = writable(100);
-	w_developmentList: Writable<{ [key: string]: DevelopmentBase }> = writable({});
+	w_unusedLand: Writable<number> = writable(100);
+	w_developmentList: Writable<{ [key: string]: DevelopmentBase }> = writable({
+		// developments should be predefined, but set with area size of zero.
+	});
 	w_environmentalFactors: Writable<{ [key: string]: number }> = writable({
 		soilRichness: 0,
 		waterAvailability: 0,
@@ -65,6 +69,12 @@ export class Region implements ISubscriber, IRegion {
 	set exportCapacity(value) {
 		this.w_exportCapacity.set(value);
 	}
+	get unusedLand() {
+		return get(this.w_unusedLand);
+	}
+	set unusedLand(value) {
+		this.w_unusedLand.set(value);
+	}
 
 	//internal variables
 	unlockCost: number;
@@ -97,14 +107,30 @@ export class Region implements ISubscriber, IRegion {
 	}
 
 	tick() {
-		
+
 	}
 
 	InitializeRegion(climate: ClimateType) {
 
 	}
 
-	AddDevelopment(developmentType: DevelopmentType) {
+	increaseDevelopmentArea(development: string, areaSize: number = 1) {
+		if (this.unusedLand >= areaSize) {
+			if (this.developmentList[development] === undefined) {
+				throw new Error(`Development type ${development} does not exist in this region.`);
+			}
+			this.developmentList[development].developmentArea += areaSize;
+			this.unusedLand -= areaSize;
+		}
+	}
 
+	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
+		if (this.unusedLand >= areaSize) {
+			if (this.developmentList[development] === undefined) {
+				throw new Error(`Development type ${development} does not exist in this region.`);
+			}
+			this.developmentList[development].developmentArea -= areaSize;
+			this.unusedLand += areaSize;
+		}
 	}
 }
