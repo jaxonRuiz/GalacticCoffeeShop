@@ -11,6 +11,7 @@ import { StageManager } from "./systems/stageManager";
 // tester.preshopTest01();
 
 let timer = new Timer();
+let gamePaused = writable(false);
 export let firstTime = true;
 export let stageManager = new StageManager(timer);
 
@@ -50,6 +51,19 @@ export function resetState() {
 	localStorage.removeItem("GameSaveData");
 	localStorage.removeItem("multishop");
 	localStorage.removeItem("preshop");
+}
+
+// also acts as unpause game
+export function pauseGame() {
+	if (get(gamePaused)) {
+		console.log("game unpaused");
+		gamePaused.set(false);
+		timer.resume();
+	} else {
+		gamePaused.set(true);
+		console.log("game paused");
+		timer.pause();
+	}
 }
 
 interface SaveData {

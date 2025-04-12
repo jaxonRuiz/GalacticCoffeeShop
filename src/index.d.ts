@@ -138,8 +138,8 @@ interface ICity {
 }
 
 
-interface IFarm{
-  
+interface IFarm {
+
 }
 
 interface IRegion {
@@ -163,18 +163,14 @@ interface ICountry{
   // regionList: Region[];
 }
 
-interface IWorld{
+interface IWorld {
 
 }
 interface TimeData {
-	// tickProgress: number;
-	// hour: number;
-	// day: number;
-	// week: number;
-	// month: number;
-	// year: number;
-}
-
-interface IFranchise{
-  // money: number;
+  tickProgress: number;
+  hour: number;
+  day: number;
+  week: number;
+  month: number;
+  year: number;
 }

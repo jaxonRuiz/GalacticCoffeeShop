@@ -6,8 +6,9 @@ import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
 import type { DevelopmentBase, DevelopmentType } from "./developments/developmentbase";
 import type { Country } from "./country";
+import { dev } from "$app/environment";
 
-export enum ClimateType{
+export enum ClimateType {
 	Arid = "Arid",
 	Wintry = "Wintry",
 	Temperate = "Temperate",
@@ -15,10 +16,13 @@ export enum ClimateType{
 
 }
 
-export class Region implements ISubscriber, IRegion{
+export class Region implements ISubscriber, IRegion {
 	//writables
-    w_totalArea: Writable<number> = writable(100);
-	w_developmentList: Writable<DevelopmentBase[]> = writable([]);
+	w_totalArea: Writable<number> = writable(100);
+	w_unusedLand: Writable<number> = writable(100);
+	w_developmentList: Writable<{ [key: string]: DevelopmentBase }> = writable({
+		// developments should be predefined, but set with area size of zero.
+	});
 	w_environmentalFactors: Writable<{ [key: string]: number }> = writable({
 		soilRichness: 0,
 		waterAvailability: 0,
@@ -27,86 +31,106 @@ export class Region implements ISubscriber, IRegion{
 	w_accessibilityLevel: Writable<number> = writable(10);
 	w_importCapacity: Writable<number> = writable(1000);
 	w_exportCapacity: Writable<number> = writable(1000);
-	
+
 	//getters and setters
-	get totalArea(){
+	get totalArea() {
 		return get(this.w_totalArea);
 	}
-	set totalArea(value){
+	set totalArea(value) {
 		this.w_totalArea.set(value);
 	}
-	get developmentList(){
+	get developmentList() {
 		return get(this.w_developmentList);
 	}
-	set developmentList(value) {
+	set developmentList(value: { [key: string]: DevelopmentBase }) {
 		this.w_developmentList.set(value);
 	}
-	get environmentalFactors(){
+	get environmentalFactors() {
 		return get(this.w_environmentalFactors);
 	}
-	set environmentalFactors(value: { [key: string]: number }){
+	set environmentalFactors(value: { [key: string]: number }) {
 		this.w_environmentalFactors.set(value);
 	}
-	get accessibilityLevel(){
+	get accessibilityLevel() {
 		return get(this.w_accessibilityLevel);
 	}
-	set accessibilityLevel(value){
+	set accessibilityLevel(value) {
 		this.w_accessibilityLevel.set(value);
 	}
-	get importCapacity(){
+	get importCapacity() {
 		return get(this.w_importCapacity);
 	}
-	set importCapacity(value){
+	set importCapacity(value) {
 		this.w_importCapacity.set(value);
 	}
-	get exportCapacity(){
+	get exportCapacity() {
 		return get(this.w_exportCapacity);
 	}
-	set exportCapacity(value){
+	set exportCapacity(value) {
 		this.w_exportCapacity.set(value);
+	}
+	get unusedLand() {
+		return get(this.w_unusedLand);
+	}
+	set unusedLand(value) {
+		this.w_unusedLand.set(value);
 	}
 
 	//internal variables
 	unlockCost: number;
 	coordinates: [number, number];
 
-	sceneManager: Publisher;
-    parent: Country;
-    
-    constructor(timer: Publisher, sceneManager: Publisher, country: Country, areaSize: number, cost: number, climate: ClimateType, coordinates: [number, number]) {
-        timer.subscribe(this, "tick");
-        timer.subscribe(this, "hour");
-        timer.subscribe(this, "week");
-        this.sceneManager = sceneManager;
-        this.parent = country;
-        this.totalArea = areaSize;
-        this.unlockCost = cost;
+	parentCountry: Country;
+
+	constructor(timer: Publisher, country: Country, areaSize: number, cost: number, climate: ClimateType, coordinates: [number, number]) {
+		timer.subscribe(this, "tick");
+		timer.subscribe(this, "hour");
+		timer.subscribe(this, "week");
+		this.parentCountry = country;
+		this.totalArea = areaSize;
+		this.unlockCost = cost;
 		this.coordinates = coordinates;
 
-        this.InitializeRegion(climate);
-    }
+		this.InitializeRegion(climate);
+	}
 
-    notify(event: string, data?: any) {
+	notify(event: string, data?: any) {
 		if (event === "tick") {
 			this.tick();
 		}
 		if (event === "day") {
-			
+
 		}
 		if (event === "week") {
-			
+
 		}
 	}
 
-    tick(){
+	tick() {
 
-    }
-
-	InitializeRegion(climate: ClimateType) {
-		
 	}
 
-	AddDevelopment(developmentType: DevelopmentType){
+	InitializeRegion(climate: ClimateType) {
 
+	}
+
+	increaseDevelopmentArea(development: string, areaSize: number = 1) {
+		if (this.unusedLand >= areaSize) {
+			if (this.developmentList[development] === undefined) {
+				throw new Error(`Development type ${development} does not exist in this region.`);
+			}
+			this.developmentList[development].developmentArea += areaSize;
+			this.unusedLand -= areaSize;
+		}
+	}
+
+	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
+		if (this.unusedLand >= areaSize) {
+			if (this.developmentList[development] === undefined) {
+				throw new Error(`Development type ${development} does not exist in this region.`);
+			}
+			this.developmentList[development].developmentArea -= areaSize;
+			this.unusedLand += areaSize;
+		}
 	}
 }
