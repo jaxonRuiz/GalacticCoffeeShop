@@ -121,3 +121,12 @@ classes that implement subscriber should implement a
 notify(event: string, data?: any) method that does a behavior
 dont forget to add the subscriber to the observer with .subscribe()
 */
+
+interface TimeData {
+	tickProgress: number;
+	hour: number;
+	day: number;
+	week: number;
+	month: number;
+	year: number;
+}
