@@ -56,7 +56,7 @@
             step="0.01"
             bind:value={$sfxVolume}
         />
-        <span>{fPercent(Math.round($sfxVolume) * 100)}</span>
+        <span>{fPercent(Math.round($sfxVolume * 100))}</span>
     </div>
 </main>
 
