@@ -13,7 +13,7 @@ export class Residential extends DevelopmentBase implements IResidential{
         return DevelopmentType.Residential;
     }
 
-    w_population: Writable<number> = writable(1000);
+    w_population: Writable<number> = writable(100);
     w_shopCount: Writable<number> = writable(1);
     w_income: Writable<number> = writable(); //income per day? just to show the player how much their place is making
 
@@ -37,45 +37,46 @@ export class Residential extends DevelopmentBase implements IResidential{
     }
 
     //internal variables
-    maxPopulation: number = this.developmentArea * 200;
+    maxPopulation: number = this.developmentArea * 500;
     populationPurchasingPower: number = 1;
-    shopSize: number = 1; //can be upgraded
-    beanCount: number = 0;
 
     totalMaxCoffeePerHour: number = 0;
+
+    get coffeePrice(): number{
+      return 5 * this.populationPurchasingPower;
+    }
 
     get hourlyCustomerEstimate(): number{
       return this.population/20;
     }
 
-    notify(event: string, data?: any) {
-		// maybe optimize better :/ dont need to call every shop every tick
-		if (event === "tick") {
-			this.tick();
-		}
-		if (event === "day") {
-			
-		}
-		if (event === "week") {
-			
-		}
-	}
 
-    tick(){
 
+    SellCoffee(coffeeAmount: number){
+      if (coffeeAmount > this.parent.beans){
+        this.parent.parentCountry.ImportBeansTo(coffeeAmount - this.parent.beans, this.parent); //try to import as much as possible
+      }
+      var coffeeSold = Math.min(coffeeAmount, this.parent.beans);
+
+      this.parent.beans -= coffeeSold;
+      this.franchise.money += coffeeSold * this.coffeePrice;
     }
 
     InitializeDevelopment(): void {
         //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
+        this.InitializePossibleBuildings();
         this.UpdateAvailableBuildings();
-
-        
     }
     
     UpdateAvailableBuildings(): void {
       this.availableBuildings = [];
-      const self = this;
       
+      
+    }
+
+    InitializePossibleBuildings(){
+      const self = this;
+
       this.possibleBuildings.push({
         name: "Coffee Skyscraper",
         desc: 'A towering coffee-themed building occupying ${areaSize} tiles, ',
@@ -94,43 +95,15 @@ export class Residential extends DevelopmentBase implements IResidential{
 
         },
         onHour: function () {
-          var coffeeSold = self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2);
-          self.beanCount 
+          self.SellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
         },
         onDay: function () {
-
+          self.franchise.money -= this.rent;
         },
         onWeek: function () {
 
         },
       } as CoffeeBuilding)
-
-      this.possibleBuildings.push({
-        name: "Coffee Skyscraper",
-        desc: "",
-        areaSize: 3,
-        buyCost: 800 + Math.floor(Math.random() * 400),
-        sellCost: 700,
-        rent: 100,
-        onBuy: () => {
-
-        },
-        onSell: () => {
-
-        },
-        onTick: () => {
-
-        },
-        onHour: () => {
-
-        },
-        onDay: () => {
-
-        },
-        onWeek: () => {
-
-        },
-      })
     }
 }
 

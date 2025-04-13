@@ -90,8 +90,6 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
     day(){
         this.boughtBuildings.forEach(building => building.onDay());
-
-        this.PayRent(); //could just include in each building
     }
 
     week(){

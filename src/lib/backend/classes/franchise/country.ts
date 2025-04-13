@@ -31,4 +31,14 @@ export class Country{
 			region.tick();
 		}
 	}
+
+	ImportBeansTo(numBeans: number, region: Region): number{ //will import as many beans as it can to the target region from all the other available regions
+		var beansLeft = numBeans;
+		for (const currReg of this.regionList) {
+			if (beansLeft == 0) {return 0;}
+			if (currReg === region) continue;
+			beansLeft = region.ImportBeans(beansLeft, currReg);
+		}
+		return numBeans - beansLeft; //return the number of beans imported
+	}
 }

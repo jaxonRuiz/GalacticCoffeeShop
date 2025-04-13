@@ -31,6 +31,7 @@ export class Region implements ISubscriber, IRegion {
 	w_accessibilityLevel: Writable<number> = writable(10);
 	w_importCapacity: Writable<number> = writable(1000);
 	w_exportCapacity: Writable<number> = writable(1000);
+	w_beans: Writable<number> = writable(0);
 
 	//getters and setters
 	get totalArea() {
@@ -75,8 +76,16 @@ export class Region implements ISubscriber, IRegion {
 	set unusedLand(value) {
 		this.w_unusedLand.set(value);
 	}
+	get beans(){
+		return get(this.w_beans);
+	}
+	set beans(value){
+		this.w_beans.set(value);
+	}
 
 	//internal variables
+	dailyImport: number = this.importCapacity;
+	dailyExport: number = this.exportCapacity;
 	unlockCost: number;
 	coordinates: [number, number];
 
@@ -99,7 +108,7 @@ export class Region implements ISubscriber, IRegion {
 			this.tick();
 		}
 		if (event === "day") {
-
+			this.ResetImportExport();
 		}
 		if (event === "week") {
 
@@ -112,6 +121,23 @@ export class Region implements ISubscriber, IRegion {
 
 	InitializeRegion(climate: ClimateType) {
 
+	}
+
+	ResetImportExport(){
+		this.dailyExport = this.exportCapacity;
+		this.dailyImport = this.importCapacity;
+	}
+
+	ImportBeans(importAmount: number, fromRegion: Region): number{
+		const maxImportable = Math.min(importAmount, this.dailyImport, fromRegion.dailyExport, fromRegion.beans);
+		
+		this.beans += maxImportable;
+		fromRegion.beans -= maxImportable;
+
+		this.dailyImport -= maxImportable;
+		this.dailyExport -= maxImportable;
+
+		return maxImportable;
 	}
 
 	increaseDevelopmentArea(development: string, areaSize: number = 1) {
