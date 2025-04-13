@@ -8,6 +8,7 @@ import { World } from "./world";
 export class Franchise implements ISubscriber, IScene {
   // writable resources
   w_money: Writable<number> = writable(0);
+  w_beans: Writable<number> = writable(0);
 
   // writable getters/setters
   get money() {
@@ -15,6 +16,12 @@ export class Franchise implements ISubscriber, IScene {
   }
   set money(value) {
     this.w_money.set(value);
+  }
+  get beans() {
+    return get(this.w_beans);
+  }
+  set beans(value) {
+    this.w_beans.set(value);
   }
 
   // internal stats ////////////////////////////////////////////////////////////

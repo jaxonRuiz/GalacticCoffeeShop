@@ -131,7 +131,7 @@ interface IDevelopment {
   // InitializeDevelopment();
 }
 
-interface ICity {
+interface IResidential {
   // population: number;
   // shopCount: number;
   // income: number;

@@ -8,7 +8,7 @@ import type { Region } from "../region";
 import { Franchise } from "../franchise";
 
 export enum DevelopmentType{
-    City = "City",
+    Residential = "Residential",
     Farm = "Farm",
     Logistic = "Logistic"
 }
@@ -40,6 +40,8 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
     boughtBuildings: Building[] = [];
     availableBuildings: Building[] = [];
 
+    possibleBuildings: Building[] = [];
+
     sceneManager: Publisher;
     parent: Region;
     franchise: Franchise;
@@ -49,6 +51,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
     constructor(timer: Publisher, sceneManager: Publisher, region: Region, areaSize: number, cost: number, franchise: Franchise) {
         timer.subscribe(this, "tick");
         timer.subscribe(this, "hour");
+        timer.subscribe(this, "day");
         timer.subscribe(this, "week");
         this.sceneManager = sceneManager;
         this.parent = region;
@@ -66,16 +69,33 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 		if (event === "tick") {
 			this.tick();
 		}
+        if (event === "hour"){
+            this.hour();
+        }
 		if (event === "day") {
-			
+			this.day();
 		}
 		if (event === "week") {
-			
+			this.week();
 		}
 	}
 
     tick(){
+        this.boughtBuildings.forEach(building => building.onTick());
+    }
 
+    hour(){
+        this.boughtBuildings.forEach(building => building.onHour());
+    }
+
+    day(){
+        this.boughtBuildings.forEach(building => building.onDay());
+
+        this.PayRent(); //could just include in each building
+    }
+
+    week(){
+        this.boughtBuildings.forEach(building => building.onWeek());
     }
 
     InitializeDevelopment(){
@@ -92,6 +112,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         if (index !== -1) {
             this.availableBuildings.splice(index, 1); // remove from available buildings
         }
+        building.onBuy();
     }
 
     SellBuilding(building: Building){
@@ -101,6 +122,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         if (index !== -1) {
             this.boughtBuildings.splice(index, 1); // remove from your bought buildings
         }
+        building.onSell();
     }
 
     PayRent(){
@@ -117,9 +139,15 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
 export interface Building {
     name: string;
+    desc: string;
     areaSize: number;
     buyCost: number;
     sellCost: number;
-    rent: number; // daily maybe?
-    update: (development: DevelopmentBase) => void;
+    rent: number;
+    onBuy: () => void;
+    onSell: () => void;
+    onTick: () => void;
+    onHour: () => void;
+    onDay: () => void;
+    onWeek: () => void;
   }
