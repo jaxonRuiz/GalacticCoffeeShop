@@ -22,7 +22,7 @@
 
     <!-- Master Volume Slider -->
     <div class="row item">
-        <p>{$t("opt_master_volume")}</p>
+        <p>{$t("Master")}</p>
         <input
             type="range"
             min="0"
@@ -35,7 +35,7 @@
 
     <!-- Music Volume Slider -->
     <div class="row item">
-        <p>{$t("opt_music_volume")}</p>
+        <p>{$t("Music")}</p>
         <input
             type="range"
             min="0"
@@ -48,7 +48,7 @@
 
     <!-- SFX Volume Slider -->
     <div class="row item">
-        <p>{$t("opt_sfx_volume")}</p>
+        <p>{$t("SFX")}</p>
         <input
             type="range"
             min="0"
