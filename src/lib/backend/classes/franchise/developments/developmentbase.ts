@@ -129,7 +129,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         });
     }
 
-    UpdateAvailableBuildings(){
+    UpdateAvailableBuildings(buildingCount: number){
 
     }
 }

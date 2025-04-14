@@ -24,9 +24,9 @@ export class Region implements ISubscriber, IRegion {
 		// developments should be predefined, but set with area size of zero.
 	});
 	w_environmentalFactors: Writable<{ [key: string]: number }> = writable({
-		soilRichness: 0,
-		waterAvailability: 0,
-		averageTemp: 0,
+		soilRichness: 1,
+		waterAvailability: 1,
+		averageTemp: 1,
 	});
 	w_accessibilityLevel: Writable<number> = writable(10);
 	w_importCapacity: Writable<number> = writable(1000);

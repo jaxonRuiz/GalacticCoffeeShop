@@ -13,8 +13,7 @@ export class Residential extends DevelopmentBase implements IResidential{
         return DevelopmentType.Residential;
     }
 
-    w_population: Writable<number> = writable(100);
-    w_shopCount: Writable<number> = writable(1);
+    w_population: Writable<number> = writable(10000);
     w_income: Writable<number> = writable(); //income per day? just to show the player how much their place is making
 
     get population(){
@@ -22,12 +21,6 @@ export class Residential extends DevelopmentBase implements IResidential{
     }
     set population(value){
       this.w_population.set(value);
-    }
-    get shopCount(){
-      return get(this.w_shopCount);
-    }
-    set shopCount(value){
-      this.w_shopCount.set(value);
     }
     get income(){
       return get(this.w_income);
@@ -37,7 +30,6 @@ export class Residential extends DevelopmentBase implements IResidential{
     }
 
     //internal variables
-    maxPopulation: number = this.developmentArea * 500;
     populationPurchasingPower: number = 1;
 
     totalMaxCoffeePerHour: number = 0;
@@ -64,22 +56,17 @@ export class Residential extends DevelopmentBase implements IResidential{
 
     InitializeDevelopment(): void {
         //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
-        this.InitializePossibleBuildings();
-        this.UpdateAvailableBuildings();
+        this.UpdateAvailableBuildings(3); //these should be displayed on the frontend
     }
     
-    UpdateAvailableBuildings(): void {
+    UpdateAvailableBuildings(buildingCount: number): void {
+      const self = this;
       this.availableBuildings = [];
       
-      
-    }
-
-    InitializePossibleBuildings(){
-      const self = this;
-
-      this.possibleBuildings.push({
+      let possibleBuildings = [];
+      possibleBuildings.push({
         name: "Coffee Skyscraper",
-        desc: 'A towering coffee-themed building occupying ${areaSize} tiles, ',
+        desc: "A towering coffee-themed building",
         areaSize: 3,
         buyCost: 1600 + Math.floor(Math.random() * 800),
         sellCost: 1600 - Math.floor(Math.random() * 200),
@@ -104,38 +91,169 @@ export class Residential extends DevelopmentBase implements IResidential{
 
         },
       } as CoffeeBuilding)
+
+      possibleBuildings.push({
+        name: "Corner Cafe",
+        desc: "Cute cafe on the corner",
+        areaSize: 1,
+        buyCost: 800 + Math.floor(Math.random() * 400),
+        sellCost: 800 - Math.floor(Math.random() * 50),
+        rent: 50,
+        maxCoffeePerHour: 100,
+        onBuy: function () {
+          self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
+        },
+        onSell: function () {
+          self.totalMaxCoffeePerHour -= this.maxCoffeePerHour;
+        },
+        onTick: function () {
+
+        },
+        onHour: function () {
+          self.SellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
+        },
+        onDay: function () {
+          self.franchise.money -= this.rent;
+        },
+        onWeek: function () {
+
+        },
+      } as CoffeeBuilding)
+
+      this.possibleBuildings.push({
+          name: "Apartment Building",
+          desc: "20 stories of solid concrete",
+          areaSize: 2,
+          buyCost: 1600 + Math.floor(Math.random() * 800),
+          sellCost: 1600 - Math.floor(Math.random() * 200),
+          rent: 200,
+          populationIncrease: 10000 +  Math.floor(Math.random() * 5000),
+          onBuy: function () {
+            self.population += this.populationIncrease;
+          },
+          onSell: function () {
+            self.population -= this.populationIncrease;
+          },
+          onTick: function () {
+        
+          },
+          onHour: function () {
+        
+          },
+          onDay: function () {
+            self.franchise.money -= this.rent;
+          },
+          onWeek: function () {
+        
+          },
+        } as HousingBuilding)
+
+        this.possibleBuildings.push({
+          name: "Motel",
+          desc: "The rooms have yellow walls and suspicious stains",
+          areaSize: 1,
+          buyCost: 600 + Math.floor(Math.random() * 300),
+          sellCost: 600 - Math.floor(Math.random() * 50),
+          rent: 200,
+          populationIncrease: 3000 +  Math.floor(Math.random() * 2000),
+          onBuy: function () {
+            self.population += this.populationIncrease;
+          },
+          onSell: function () {
+            self.population -= this.populationIncrease;
+          },
+          onTick: function () {
+        
+          },
+          onHour: function () {
+        
+          },
+          onDay: function () {
+            self.franchise.money -= this.rent;
+          },
+          onWeek: function () {
+        
+          },
+        } as HousingBuilding)
+
+        this.possibleBuildings.push({
+          name: "Bean Store",
+          desc: "Imports high quality Columbian coffee beans",
+          areaSize: 1,
+          buyCost: 800 + Math.floor(Math.random() * 100),
+          sellCost: 800 - Math.floor(Math.random() * 100),
+          rent: 200,
+          beansPerHour: 1000,
+          beanCost: 3 + Math.floor(Math.random() * 3),
+          onBuy: function () {
+            
+          },
+          onSell: function () {
+            
+          },
+          onTick: function () {
+        
+          },
+          onHour: function () {
+            if (self.franchise.money >= this.beansPerHour * this.beanCost){
+              self.parent.beans += this.beansPerHour;
+              self.franchise.money -= this.beansPerHour * this.beanCost
+            }
+          },
+          onDay: function () {
+            self.franchise.money -= this.rent;
+          },
+          onWeek: function () {
+        
+          },
+        } as ImportBuilding)
+
+        this.possibleBuildings.push({
+          name: "Bean Dispensary",
+          desc: "Smells like a mix of coffee and weed",
+          areaSize: 1,
+          buyCost: 1600 + Math.floor(Math.random() * 800),
+          sellCost: 1600 - Math.floor(Math.random() * 200),
+          rent: 200,
+          beansPerHour: 800,
+          beanCost: 2 + Math.floor(Math.random() * 3),
+          onBuy: function () {
+            
+          },
+          onSell: function () {
+            
+          },
+          onTick: function () {
+        
+          },
+          onHour: function () {
+            if (self.franchise.money >= this.beansPerHour * this.beanCost){
+              self.parent.beans += this.beansPerHour;
+              self.franchise.money -= this.beansPerHour * this.beanCost;
+            }
+          },
+          onDay: function () {
+            self.franchise.money -= this.rent;
+          },
+          onWeek: function () {
+        
+          },
+        } as ImportBuilding)
+
+        this.availableBuildings = this.possibleBuildings.sort(() => Math.random() - 0.5).slice(0, buildingCount);
     }
+  
 }
 
 interface CoffeeBuilding extends Building{
   maxCoffeePerHour: number;
 }
 
+interface HousingBuilding extends Building{
+  populationIncrease: number;
+}
 
-
-// this.possibleBuildings.push({
-//   name: "",
-//   desc: "",
-//   areaSize: ,
-//   buyCost: ,
-//   sellCost: ,
-//   rent: ,
-//   onBuy: function () {
-
-//   },
-//   onSell: function () {
-
-//   },
-//   onTick: function () {
-
-//   },
-//   onHour: function () {
-
-//   },
-//   onDay: function () {
-
-//   },
-//   onWeek: function () {
-
-//   },
-// })
+interface ImportBuilding extends Building{
+  beansPerHour: number;
+  beanCost: number;
+}
