@@ -206,7 +206,7 @@ export class Residential extends DevelopmentBase implements IResidential{
           onWeek: function () {
         
           },
-        } as ImportBuilding)
+        } as BeanBuilding)
 
         this.possibleBuildings.push({
           name: "Bean Dispensary",
@@ -238,7 +238,7 @@ export class Residential extends DevelopmentBase implements IResidential{
           onWeek: function () {
         
           },
-        } as ImportBuilding)
+        } as BeanBuilding)
 
         this.availableBuildings = this.possibleBuildings.sort(() => Math.random() - 0.5).slice(0, buildingCount);
     }
@@ -253,7 +253,7 @@ interface HousingBuilding extends Building{
   populationIncrease: number;
 }
 
-interface ImportBuilding extends Building{
+interface BeanBuilding extends Building{
   beansPerHour: number;
   beanCost: number;
 }
