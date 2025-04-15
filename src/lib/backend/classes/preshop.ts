@@ -172,12 +172,12 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		// Setting up audio
 		this.audioManager.addMusic("bgm", aud.preshop_music);
 		this.audioManager.addSFX("ding", aud.ding);
-		this.audioManager.addSFX("grind", aud.grind1);
+		this.audioManager.addSFX("grind", aud.crunch);
 		this.audioManager.addSFX("papers", aud.papers);
 		this.audioManager.addSFX("boil", aud.boiling);
 		this.audioManager.addSFX("cashRegister", aud.cashRegister);
-		this.audioManager.addSFX("grind2", aud.grind2);
-		this.audioManager.addAmbience("crowd", aud.crowd);
+		this.audioManager.addSFX("grind2", aud.crunch2);
+		this.audioManager.addAmbience("crowd", aud.new_crowd);
 
 		this.audioManager.playAudio("bgm");
 		this.audioManager.playAudio("crowd");
