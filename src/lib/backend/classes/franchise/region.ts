@@ -4,16 +4,19 @@ import { type LocalShopSave, Shop } from "../shop";
 import { UpgradeManager } from "../../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
-import type { DevelopmentBase, DevelopmentType } from "./developments/developmentbase";
+import { DevelopmentBase, DevelopmentType } from "./developments/developmentbase";
 import type { Country } from "./country";
-import { dev } from "$app/environment";
+//import { dev } from "$app/environment";
+import { Residential } from "./developments/residential";
+import { Franchise } from "./franchise";
+import { Farm } from "./developments/farm";
+import { LogisticCenter } from "./developments/logisticCenter";
 
 export enum ClimateType {
-	Arid = "Arid",
-	Wintry = "Wintry",
-	Temperate = "Temperate",
-	Tropical = "Tropical",
-
+	Arid = 0,
+	Wintry = 1,
+	Temperate = 2,
+	Tropical = 3,
 }
 
 export class Region implements ISubscriber, IRegion {
@@ -88,10 +91,12 @@ export class Region implements ISubscriber, IRegion {
 	dailyExport: number = this.exportCapacity;
 	unlockCost: number;
 	coordinates: [number, number];
-
+	
+	timer: Publisher;
 	parentCountry: Country;
+	franchise: Franchise;
 
-	constructor(timer: Publisher, country: Country, areaSize: number, cost: number, climate: ClimateType, coordinates: [number, number]) {
+	constructor(timer: Publisher, country: Country, franchise: Franchise, areaSize: number, cost: number, climate: ClimateType, coordinates: [number, number]) {
 		timer.subscribe(this, "tick");
 		timer.subscribe(this, "hour");
 		timer.subscribe(this, "week");
@@ -99,6 +104,8 @@ export class Region implements ISubscriber, IRegion {
 		this.totalArea = areaSize;
 		this.unlockCost = cost;
 		this.coordinates = coordinates;
+		this.timer = timer;
+		this.franchise = franchise;
 
 		this.InitializeRegion(climate);
 	}
@@ -120,7 +127,26 @@ export class Region implements ISubscriber, IRegion {
 	}
 
 	InitializeRegion(climate: ClimateType) {
-
+		switch (climate) {
+			case ClimateType.Arid:
+				this.environmentalFactors["soilRichness"] = 0.5 + Math.random() * 0.1;
+				this.environmentalFactors["waterAvailability"] = 0.4 + Math.random() * 0.1;
+				break;
+			case ClimateType.Temperate:
+				this.environmentalFactors["soilRichness"] = 1 + Math.random() * 0.2;
+				this.environmentalFactors["waterAvailability"] = 1 + Math.random() * 0.2;
+				break;
+			case ClimateType.Tropical:
+				this.environmentalFactors["soilRichness"] = 1.3 + Math.random() * 0.3;
+				this.environmentalFactors["waterAvailability"] = 1.5 + Math.random() * 0.3;
+				break;
+			case ClimateType.Wintry:
+				this.environmentalFactors["soilRichness"] = 0.5 + Math.random() * 0.1;
+				this.environmentalFactors["waterAvailability"] = 0.4 + Math.random() * 0.1;
+				break;
+			default:
+				break;
+		}
 	}
 
 	ResetImportExport(){
@@ -138,6 +164,27 @@ export class Region implements ISubscriber, IRegion {
 		this.dailyExport -= maxImportable;
 
 		return maxImportable;
+	}
+
+	BuyDevelopment(developmentType: DevelopmentType) {
+		let newDev: DevelopmentBase;
+	
+		if (developmentType === DevelopmentType.Residential) {
+			newDev = new Residential(this.timer, this, 10, 1000, this.franchise);
+		} else if (developmentType === DevelopmentType.Farm) {
+			newDev = new Farm(this.timer, this, 10, 1000, this.franchise);
+		} else if (developmentType === DevelopmentType.Logistic) {
+			newDev = new LogisticCenter(this.timer, this, 10, 1000, this.franchise);
+		} else {
+			throw new Error("Unknown development type");
+		}
+		const numDev = Object.keys(this.developmentList).filter(key => this.developmentList[key].developmentType === developmentType).length;
+
+		this.developmentList[`${DevelopmentType[developmentType]} ${numDev + 1}`] = newDev;
+	}
+
+	SellDevelopment(key: string){
+
 	}
 
 	increaseDevelopmentArea(development: string, areaSize: number = 1) {

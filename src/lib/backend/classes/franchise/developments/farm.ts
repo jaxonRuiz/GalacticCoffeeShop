@@ -38,7 +38,7 @@ export class Farm extends DevelopmentBase{
         buyCost: 800 + Math.floor(Math.random() * 200),
         sellCost: 800 - Math.floor(Math.random() * 100),
         rent: 50,
-        waterPerDay: 500,
+        waterPerDay: 500 * this.parent.environmentalFactors["waterAvailability"],
         onBuy: function () {
 
         },
@@ -67,7 +67,7 @@ export class Farm extends DevelopmentBase{
         buyCost: 1000 + Math.floor(Math.random() * 400),
         sellCost: 1000 - Math.floor(Math.random() * 200),
         rent: 100,
-        waterPerDay: 1000,
+        waterPerDay: 1000 * this.parent.environmentalFactors["waterAvailability"],
         onBuy: function () {
 
         },
@@ -96,7 +96,7 @@ export class Farm extends DevelopmentBase{
           buyCost: 600 + Math.floor(Math.random() * 200),
           sellCost: 600 - Math.floor(Math.random() * 100),
           rent: 0,
-          coffeePerHour: 100 +  Math.floor(Math.random() * 20),
+          coffeePerHour: 100 +  Math.floor(Math.random() * 20) * this.parent.environmentalFactors["soilRichness"],
           onBuy: function () {
             
           },
@@ -127,7 +127,7 @@ export class Farm extends DevelopmentBase{
             buyCost: 600 + Math.floor(Math.random() * 200),
             sellCost: 600 - Math.floor(Math.random() * 100),
             rent: 0,
-            coffeePerHour: 100 +  Math.floor(Math.random() * 20),
+            coffeePerHour: 100 +  Math.floor(Math.random() * 20) * this.parent.environmentalFactors["soilRichness"],
             onBuy: function () {
               
             },
@@ -158,7 +158,7 @@ export class Farm extends DevelopmentBase{
             buyCost: 1200 + Math.floor(Math.random() * 400),
             sellCost: 1200 - Math.floor(Math.random() * 100),
             rent: 0,
-            coffeePerHour: 200 +  Math.floor(Math.random() * 50),
+            coffeePerHour: 200 +  Math.floor(Math.random() * 50) * this.parent.environmentalFactors["soilRichness"],
             onBuy: function () {
               
             },

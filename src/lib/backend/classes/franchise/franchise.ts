@@ -28,11 +28,13 @@ export class Franchise implements ISubscriber, IScene {
 
   sceneManager: Publisher;
   audioManager: AudioManager = new AudioManager();
-  world: World = new World();
+  timer: Publisher;
+  world: World = new World(this);
 
   constructor(timer: Publisher, sceneManager: Publisher) {
     console.log("franchise constructor()");
     timer.subscribe(this, "tick");
+    this.timer = timer;
     this.sceneManager = sceneManager;
 
   }

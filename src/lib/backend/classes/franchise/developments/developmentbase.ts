@@ -42,18 +42,16 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
     possibleBuildings: Building[] = [];
 
-    sceneManager: Publisher;
     parent: Region;
     franchise: Franchise;
 
     currentArea: number;
     
-    constructor(timer: Publisher, sceneManager: Publisher, region: Region, areaSize: number, cost: number, franchise: Franchise) {
+    constructor(timer: Publisher, region: Region, areaSize: number, cost: number, franchise: Franchise) {
         timer.subscribe(this, "tick");
         timer.subscribe(this, "hour");
         timer.subscribe(this, "day");
         timer.subscribe(this, "week");
-        this.sceneManager = sceneManager;
         this.parent = region;
         this.developmentArea = areaSize;
         this.developmentCost = cost;
