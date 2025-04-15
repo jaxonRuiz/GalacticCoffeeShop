@@ -12,5 +12,5 @@ export const aud: { [key: string]: string } = {
     upgrade: new URL('./sfx/upgrade.wav', import.meta.url).href,
     crunch: new URL('./sfx/crunch.mp3', import.meta.url).href,
     crunch2: new URL('./sfx/crunch2.mp3', import.meta.url).href,
-    new_crowd: new URL('./sfx/new_crowd.mp3', import.meta.url).href,
+    new_crowd: new URL('./sfx/new_crowd.wav', import.meta.url).href,
 };
