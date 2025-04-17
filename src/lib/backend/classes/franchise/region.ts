@@ -2,9 +2,12 @@ import { Publisher } from "../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import { type LocalShopSave, Shop } from "../shop";
 import { UpgradeManager } from "../../systems/upgradeManager";
-import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
+import { AudioManager, cleanupAudioManagers } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
-import { DevelopmentBase, DevelopmentType } from "./developments/developmentbase";
+import {
+	DevelopmentBase,
+	DevelopmentType,
+} from "./developments/developmentbase";
 import type { Country } from "./country";
 //import { dev } from "$app/environment";
 import { Residential } from "./developments/residential";
@@ -79,10 +82,10 @@ export class Region implements ISubscriber, IRegion {
 	set unusedLand(value) {
 		this.w_unusedLand.set(value);
 	}
-	get beans(){
+	get beans() {
 		return get(this.w_beans);
 	}
-	set beans(value){
+	set beans(value) {
 		this.w_beans.set(value);
 	}
 
@@ -91,12 +94,22 @@ export class Region implements ISubscriber, IRegion {
 	dailyExport: number = this.exportCapacity;
 	unlockCost: number;
 	coordinates: [number, number];
-	
+
 	timer: Publisher;
 	parentCountry: Country;
 	franchise: Franchise;
 
-	constructor(timer: Publisher, country: Country, franchise: Franchise, areaSize: number, cost: number, climate: ClimateType, coordinates: [number, number]) {
+	constructor(
+		timer: Publisher,
+		country: Country,
+		franchise: Franchise,
+		areaSize: number,
+		cost: number,
+		climate: ClimateType,
+		coordinates: [number, number],
+	) {
+		console.log("region constructor()");
+		timer = franchise.timer;
 		timer.subscribe(this, "tick");
 		timer.subscribe(this, "hour");
 		timer.subscribe(this, "week");
@@ -118,45 +131,52 @@ export class Region implements ISubscriber, IRegion {
 			this.ResetImportExport();
 		}
 		if (event === "week") {
-
 		}
 	}
 
 	tick() {
-
 	}
 
 	InitializeRegion(climate: ClimateType) {
 		switch (climate) {
 			case ClimateType.Arid:
 				this.environmentalFactors["soilRichness"] = 0.5 + Math.random() * 0.1;
-				this.environmentalFactors["waterAvailability"] = 0.4 + Math.random() * 0.1;
+				this.environmentalFactors["waterAvailability"] = 0.4 +
+					Math.random() * 0.1;
 				break;
 			case ClimateType.Temperate:
 				this.environmentalFactors["soilRichness"] = 1 + Math.random() * 0.2;
-				this.environmentalFactors["waterAvailability"] = 1 + Math.random() * 0.2;
+				this.environmentalFactors["waterAvailability"] = 1 +
+					Math.random() * 0.2;
 				break;
 			case ClimateType.Tropical:
 				this.environmentalFactors["soilRichness"] = 1.3 + Math.random() * 0.3;
-				this.environmentalFactors["waterAvailability"] = 1.5 + Math.random() * 0.3;
+				this.environmentalFactors["waterAvailability"] = 1.5 +
+					Math.random() * 0.3;
 				break;
 			case ClimateType.Wintry:
 				this.environmentalFactors["soilRichness"] = 0.5 + Math.random() * 0.1;
-				this.environmentalFactors["waterAvailability"] = 0.4 + Math.random() * 0.1;
+				this.environmentalFactors["waterAvailability"] = 0.4 +
+					Math.random() * 0.1;
 				break;
 			default:
 				break;
 		}
 	}
 
-	ResetImportExport(){
+	ResetImportExport() {
 		this.dailyExport = this.exportCapacity;
 		this.dailyImport = this.importCapacity;
 	}
 
-	ImportBeans(importAmount: number, fromRegion: Region): number{
-		const maxImportable = Math.min(importAmount, this.dailyImport, fromRegion.dailyExport, fromRegion.beans);
-		
+	ImportBeans(importAmount: number, fromRegion: Region): number {
+		const maxImportable = Math.min(
+			importAmount,
+			this.dailyImport,
+			fromRegion.dailyExport,
+			fromRegion.beans,
+		);
+
 		this.beans += maxImportable;
 		fromRegion.beans -= maxImportable;
 
@@ -168,7 +188,7 @@ export class Region implements ISubscriber, IRegion {
 
 	BuyDevelopment(developmentType: DevelopmentType) {
 		let newDev: DevelopmentBase;
-	
+
 		if (developmentType === DevelopmentType.Residential) {
 			newDev = new Residential(this.timer, this, 10, 1000, this.franchise);
 		} else if (developmentType === DevelopmentType.Farm) {
@@ -178,19 +198,24 @@ export class Region implements ISubscriber, IRegion {
 		} else {
 			throw new Error("Unknown development type");
 		}
-		const numDev = Object.keys(this.developmentList).filter(key => this.developmentList[key].developmentType === developmentType).length;
+		const numDev =
+			Object.keys(this.developmentList).filter((key) =>
+				this.developmentList[key].developmentType === developmentType
+			).length;
 
-		this.developmentList[`${DevelopmentType[developmentType]} ${numDev + 1}`] = newDev;
+		this.developmentList[`${DevelopmentType[developmentType]} ${numDev + 1}`] =
+			newDev;
 	}
 
-	SellDevelopment(key: string){
-
+	SellDevelopment(key: string) {
 	}
 
 	increaseDevelopmentArea(development: string, areaSize: number = 1) {
 		if (this.unusedLand >= areaSize) {
 			if (this.developmentList[development] === undefined) {
-				throw new Error(`Development type ${development} does not exist in this region.`);
+				throw new Error(
+					`Development type ${development} does not exist in this region.`,
+				);
 			}
 			this.developmentList[development].developmentArea += areaSize;
 			this.unusedLand -= areaSize;
@@ -200,7 +225,9 @@ export class Region implements ISubscriber, IRegion {
 	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
 		if (this.unusedLand >= areaSize) {
 			if (this.developmentList[development] === undefined) {
-				throw new Error(`Development type ${development} does not exist in this region.`);
+				throw new Error(
+					`Development type ${development} does not exist in this region.`,
+				);
 			}
 			this.developmentList[development].developmentArea -= areaSize;
 			this.unusedLand += areaSize;

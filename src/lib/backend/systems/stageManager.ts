@@ -3,6 +3,7 @@ import { Publisher } from "./observer";
 import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
+import { Franchise } from "../classes/franchise/franchise";
 
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
@@ -72,15 +73,22 @@ export class StageManager extends Publisher {
 
 			case 1: // preshop to multishop
 				console.log("preshop to multishop");
-				let transferData = this.currentScene.getTransferData();
+				let preshopTransferData = this.currentScene.getTransferData();
 				this.currentScene = new MultiShop(this.timer.timeEvents, this);
-				this.currentScene.loadTransferData(transferData);
+				this.currentScene.loadTransferData(preshopTransferData);
 				this.currentSceneIndex = 2;
 				break;
 
-			case 2: // multishop to gameover
-				console.log("multishop to game over");
+			case 2: // multishop to franchise
+				console.log("multishop to franchise");
+				let multishopTransferData = this.currentScene.getTransferData();
+				this.currentScene = new Franchise(this.timer.timeEvents, this);
+				this.currentScene.loadTransferData(multishopTransferData);
 				this.currentSceneIndex = 3;
+				break;
+
+			case 3: // franchise to game over
+				console.log("franchise to game over");
 				break;
 
 			default:

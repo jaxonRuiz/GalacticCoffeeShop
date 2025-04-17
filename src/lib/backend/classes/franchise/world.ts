@@ -12,6 +12,7 @@ export class World implements ISubscriber, IWorld{
 
 	countries: { [key: string]: any } = {};
 	franchise: Franchise;
+	
 	// maybe represent countries locations in relation to each other?
 	// if so that would require a graph representation.
 

@@ -241,7 +241,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		lingering_appeal: {
 			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeSold > 50 && shop.upgrades.get("promotional_posters")! >= 1;
+				return (shop as IPreshop).lifetimeCoffeeSold > 50 &&
+					shop.upgrades.get("promotional_posters")! >= 1;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).appealDecay *= 0.95;
@@ -440,7 +441,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.03;
-
 			},
 			maxLevel: 10,
 			cost: 70,
@@ -488,6 +488,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	},
 
 	multiShop: {
+		establish_franchise: {
+			unlock_condition: (multishop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as IScene).endScene();
+			},
+			maxLevel: 1,
+			cost: 500,
+			costMultiplier: 1,
+			image: "establish_franchise.jpg",
+		},
 		// apply to children style upgrades have the associated flag. their upgrade function applies to the LOCAL shops
 		cohesive_branding: {
 			unlock_condition: (multishop) => {
@@ -529,6 +541,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "add_new_shop.jpg",
-		}
+		},
 	},
 };

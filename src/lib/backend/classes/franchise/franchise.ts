@@ -4,7 +4,6 @@ import { UpgradeManager } from "../../systems/upgradeManager";
 import { AudioManager } from "../../systems/audioManager";
 import { World } from "./world";
 
-
 export class Franchise implements ISubscriber, IScene {
   // writable resources
   w_money: Writable<number> = writable(0);
@@ -29,7 +28,7 @@ export class Franchise implements ISubscriber, IScene {
   sceneManager: Publisher;
   audioManager: AudioManager = new AudioManager();
   timer: Publisher;
-  world: World = new World(this);
+  world: World;
 
   constructor(timer: Publisher, sceneManager: Publisher) {
     console.log("franchise constructor()");
@@ -37,6 +36,7 @@ export class Franchise implements ISubscriber, IScene {
     this.timer = timer;
     this.sceneManager = sceneManager;
 
+    this.world = new World(this);
   }
 
   notify(event: string, data?: any) {
@@ -49,11 +49,9 @@ export class Franchise implements ISubscriber, IScene {
   // franchise actions /////////////////////////////////////////////////////////
   // stuff the player can do
 
-
   // end scene ////////////////////////////////////////////////////////////////
   endScene() {
     console.log("franchise stage endScene()");
-
   }
 
   getTransferData() {
@@ -61,19 +59,16 @@ export class Franchise implements ISubscriber, IScene {
   }
 
   loadTransferData() {
-
   }
 
   // save state ////////////////////////////////////////////////////////////////
   saveState() {
     console.log("franchise stage saveState()");
-
   }
 
   loadState() {
     console.log("franchise stage loadState()");
-
   }
 
-  clearState() { }
+  clearState() {}
 }
