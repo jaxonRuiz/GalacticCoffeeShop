@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { base } from "$app/paths";
-  import { MultiShop } from "$lib/backend/classes/multiShop";
 	import { stageManager } from "$lib/backend/game";
 
 	let { children } = $props();
