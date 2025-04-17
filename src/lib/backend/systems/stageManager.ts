@@ -42,6 +42,10 @@ export class StageManager extends Publisher {
 					this.currentScene = new MultiShop(this.timer.timeEvents, this);
 					break;
 				case 3:
+					console.log("loading franchise");
+					this.currentScene = new Franchise(this.timer.timeEvents, this);
+					break;
+				case 4:
 					console.log("game over reload");
 					break;
 				default:
