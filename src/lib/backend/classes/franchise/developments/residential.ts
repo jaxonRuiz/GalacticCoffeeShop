@@ -6,7 +6,7 @@ import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManage
 import { aud } from "../../../../assets/aud";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Region } from "../region";
-import { Building } from "./developmentbase";
+import { type Building } from "./developmentbase";
 
 export class Residential extends DevelopmentBase implements IResidential{
     get developmentType(): DevelopmentType {

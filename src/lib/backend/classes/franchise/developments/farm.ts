@@ -7,11 +7,7 @@ import {
   cleanupAudioManagers,
 } from "../../../systems/audioManager";
 import { aud } from "../../../../assets/aud";
-import {
-  type Building,
-  DevelopmentBase,
-  DevelopmentType,
-} from "./developmentbase";
+import { type Building, DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Region } from "../region";
 
 export class Farm extends DevelopmentBase {

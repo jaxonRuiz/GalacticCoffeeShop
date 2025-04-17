@@ -4,7 +4,7 @@ import { type LocalShopSave, Shop } from "../../shop";
 import { UpgradeManager } from "../../../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
 import { aud } from "../../../../assets/aud";
-import { Building, DevelopmentBase, DevelopmentType } from "./developmentbase";
+import { type Building, DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Region } from "../region";
 
 export class LogisticCenter extends DevelopmentBase{
