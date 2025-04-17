@@ -3,6 +3,8 @@ import { get, type Writable, writable } from "svelte/store";
 import { UpgradeManager } from "../../systems/upgradeManager";
 import { AudioManager } from "../../systems/audioManager";
 import { World } from "./world";
+import { Country } from "./country";
+import { Region } from "./region";
 
 export class Franchise implements ISubscriber, IScene {
   // writable resources
@@ -30,6 +32,10 @@ export class Franchise implements ISubscriber, IScene {
   timer: Publisher;
   world: World;
 
+  // current country/region to be used by frontend
+  currentCountry: null | Country = null;
+  currentRegion: null | Region = null;
+
   constructor(timer: Publisher, sceneManager: Publisher) {
     console.log("franchise constructor()");
     timer.subscribe(this, "tick");
@@ -37,6 +43,10 @@ export class Franchise implements ISubscriber, IScene {
     this.sceneManager = sceneManager;
 
     this.world = new World(this);
+
+    // setting starting country and region. may need to change when loading existing saves.
+    this.currentCountry = this.world.countries["country 1"];
+    this.currentRegion = this.currentCountry!.regionList[0];
   }
 
   notify(event: string, data?: any) {
