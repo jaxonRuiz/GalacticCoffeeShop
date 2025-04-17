@@ -89,7 +89,7 @@ export class Farm extends DevelopmentBase {
       buyCost: 600 + Math.floor(Math.random() * 200),
       sellCost: 600 - Math.floor(Math.random() * 100),
       rent: 0,
-      coffeePerHour: 100 +
+      beansPerHour: 100 +
         Math.floor(Math.random() * 20) *
           this.parent.environmentalFactors["soilRichness"],
       onBuy: function () {
@@ -102,7 +102,7 @@ export class Farm extends DevelopmentBase {
       },
       onDay: function () {
         self.franchise.money -= this.rent;
-        var b = Math.min(this.coffeePerHour, self.water);
+        var b = Math.min(this.beansPerHour, self.water);
         self.parent.beans += b;
         self.water -= b;
       },
@@ -117,7 +117,7 @@ export class Farm extends DevelopmentBase {
       buyCost: 600 + Math.floor(Math.random() * 200),
       sellCost: 600 - Math.floor(Math.random() * 100),
       rent: 0,
-      coffeePerHour: 100 +
+      beansPerHour: 100 +
         Math.floor(Math.random() * 20) *
           this.parent.environmentalFactors["soilRichness"],
       onBuy: function () {
@@ -130,7 +130,7 @@ export class Farm extends DevelopmentBase {
       },
       onDay: function () {
         self.franchise.money -= this.rent;
-        var b = Math.min(this.coffeePerHour, self.water);
+        var b = Math.min(this.beansPerHour, self.water);
         self.parent.beans += b;
         self.water -= b;
       },
@@ -145,7 +145,7 @@ export class Farm extends DevelopmentBase {
       buyCost: 1200 + Math.floor(Math.random() * 400),
       sellCost: 1200 - Math.floor(Math.random() * 100),
       rent: 0,
-      coffeePerHour: 200 +
+      beansPerHour: 200 +
         Math.floor(Math.random() * 50) *
           this.parent.environmentalFactors["soilRichness"],
       onBuy: function () {
@@ -158,7 +158,7 @@ export class Farm extends DevelopmentBase {
       },
       onDay: function () {
         self.franchise.money -= this.rent;
-        var b = Math.min(this.coffeePerHour, self.water);
+        var b = Math.min(this.beansPerHour, self.water);
         self.parent.beans += b;
         self.water -= b;
       },
@@ -177,5 +177,5 @@ interface WaterBuilding extends Building {
 }
 
 interface FarmBuilding extends Building {
-  coffeePerHour: number;
+  beansPerHour: number;
 }
