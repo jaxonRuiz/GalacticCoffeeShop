@@ -6,14 +6,14 @@
 
 	let { children } = $props();
 
-	let smanager = stageManager
+	let smanager = stageManager;
 	let shopIndex = (smanager.currentScene as MultiShop).w_selectedShopIndex;
 </script>
 
 <div class="hidden">
 	{#if $shopIndex >= 0}
 		{goto(`${base}/game/multishop/shop`)}
-	{:else}
+	{:else if $shopIndex == -1}
 		{goto(`${base}/game/multishop`)}
 	{/if}
 </div>
