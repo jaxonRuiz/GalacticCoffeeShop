@@ -6,10 +6,18 @@ import { AudioManager, cleanupAudioManagers } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
 import { Franchise } from "./franchise";
 import { Country } from "./country";
+import { dictProxy } from "$lib/backend/proxies";
 
 export class World implements ISubscriber, IWorld {
-	countries: { [key: string]: any } = {};
+	w_countries: Writable<{ [key: string]: any }> = writable({});
 	franchise: Franchise;
+
+	get countries() {
+		return dictProxy(this.w_countries);
+	}
+	set countries(value: { [key: string]: Country }) {
+		this.w_countries.set(value);
+	}
 
 	// maybe represent countries locations in relation to each other?
 	// if so that would require a graph representation.

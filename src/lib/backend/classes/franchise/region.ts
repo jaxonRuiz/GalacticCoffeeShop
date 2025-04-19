@@ -14,6 +14,7 @@ import { Residential } from "./developments/residential";
 import { Franchise } from "./franchise";
 import { Farm } from "./developments/farm";
 import { LogisticCenter } from "./developments/logisticCenter";
+import { dictProxy } from "$lib/backend/proxies";
 
 export enum ClimateType {
 	Arid = 0,
@@ -47,13 +48,13 @@ export class Region implements ISubscriber, IRegion {
 		this.w_totalArea.set(value);
 	}
 	get developmentList() {
-		return get(this.w_developmentList);
+		return dictProxy(this.w_developmentList);
 	}
 	set developmentList(value: { [key: string]: DevelopmentBase }) {
 		this.w_developmentList.set(value);
 	}
 	get environmentalFactors() {
-		return get(this.w_environmentalFactors);
+		return dictProxy(this.w_environmentalFactors);
 	}
 	set environmentalFactors(value: { [key: string]: number }) {
 		this.w_environmentalFactors.set(value);

@@ -22,7 +22,7 @@
 
   const smanager = stageManager;
   let testWindowOpen = $state(false);
-  let tabs = ["game", "preshop", "shop", "multishop", "test"];
+  let tabs = ["game", "preshop", "shop", "multishop", "franchise", "test"];
 
   let { children } = $props();
 
@@ -122,9 +122,10 @@
                   smanager.currentScene as MultiShop
                 ).shops[0].multiShopUnlocked = true;
                 break;
-              // case 4:
-              //   smanager.loadStage(4, false);
-              //   break;
+              case 4:
+                // franchise
+                smanager.loadStage(3, false);
+                break;
             }
             testWindowOpen = false;
           }}>{tab}</a

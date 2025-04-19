@@ -10,8 +10,21 @@ import { Franchise } from "./franchise";
 
 export class Country{
 	parent: World;
-	taxRate: number = 0.2;
-	tariffRate: number = 0.1;
+	w_taxRate: Writable<number> = writable(0.2);
+	w_tariffRate: Writable<number> = writable(0.1);
+
+	get taxRate() {
+		return get(this.w_taxRate);
+	}
+	set taxRate(value) {
+		this.w_taxRate.set(value);
+	}
+	get tariffRate() {
+		return get(this.w_tariffRate);
+	}
+	set tariffRate(value) {
+		this.w_tariffRate.set(value);
+	}
 
 	// modifiers represent taxes and subsidies. scaler to development building costs
 	farmModifier: number = 1.0;
@@ -20,8 +33,14 @@ export class Country{
 	coordinates: [number, number];
 	franchise: Franchise;
 	
-	regionList: Region[] = [];
+	w_regionList: Writable<Region[]> = writable([]);
 	// need to figure out how to represent regions in a graph
+	get regionList() {
+		return get(this.w_regionList);
+	}
+	set regionList(value: Region[]) {
+		this.w_regionList.set(value);
+	}
 
 
 	constructor(parent: World, franchise: Franchise, coordinates: [number, number]) {
@@ -55,7 +74,8 @@ export class Country{
 
 			if (isSpaced) {
 				var newRegion = new Region(this.franchise.timer, this, this.franchise, 90 + Math.floor(Math.random() * 30), 2000 * Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords);
-				this.regionList.push(newRegion);
+				this.regionList = [...this.regionList, newRegion];
+				// this.regionList.push(newRegion);
 			}
 		}
 	}	

@@ -33,8 +33,21 @@ export class Franchise implements ISubscriber, IScene {
   world: World;
 
   // current country/region to be used by frontend
-  currentCountry: null | Country = null;
-  currentRegion: null | Region = null;
+  w_currentCountry: Writable<null | Country> = writable(null);
+  w_currentRegion: Writable<null | Region> = writable(null);
+
+  get currentCountry() {
+    return get(this.w_currentCountry);
+  }
+  set currentCountry(value: Country | null) {
+    this.w_currentCountry.set(value);
+  }
+  get currentRegion() {
+    return get(this.w_currentRegion);
+  }
+  set currentRegion(value: Region | null) {
+    this.w_currentRegion.set(value);
+  }
 
   constructor(timer: Publisher, sceneManager: Publisher) {
     console.log("franchise constructor()");

@@ -53,6 +53,11 @@ div {
 	place-content: center;
 }
 
+.block {
+	margin: 10px;
+	margin-bottom: 0;
+}
+
 button {
 	border-radius: 8px;
 	border: var(--borderW) solid transparent;

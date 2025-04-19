@@ -31,7 +31,6 @@ import { get, writable, type Writable } from "svelte/store";
 export function dictProxy<T>(dictionary: Writable<{ [key: string]: T }>): { [key: string]: T } {
 	return new Proxy(get(dictionary), {
 		get(target, prop) {
-			console.log('here2');
 			if (prop in target) {
 				return target[prop as keyof typeof target];
 			}
