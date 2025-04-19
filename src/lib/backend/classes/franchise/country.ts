@@ -29,7 +29,7 @@ export class Country{
 		this.coordinates = coordinates;
 		this.franchise = franchise;
 
-		this.InitializeRegions(10);
+		this.initializeRegions(10);
 	}
 
 	tick(){
@@ -38,7 +38,7 @@ export class Country{
 		}
 	}
 
-	InitializeRegions(count: number){
+	initializeRegions(count: number){
 		while (this.regionList.length < count) {
 			const newCoords: [number, number] = [
 				Math.floor(Math.random() * 1000),
@@ -60,12 +60,12 @@ export class Country{
 		}
 	}	
 
-	ImportBeansTo(numBeans: number, region: Region): number{ //will import as many beans as it can to the target region from all the other available regions
+	importBeansTo(numBeans: number, region: Region): number{ //will import as many beans as it can to the target region from all the other available regions
 		var beansLeft = numBeans;
 		for (const currReg of this.regionList) {
 			if (beansLeft == 0) {return 0;}
 			if (currReg === region) continue;
-			beansLeft = region.ImportBeans(beansLeft, currReg);
+			beansLeft = region.importBeans(beansLeft, currReg);
 		}
 		return numBeans - beansLeft; //return the number of beans imported
 	}

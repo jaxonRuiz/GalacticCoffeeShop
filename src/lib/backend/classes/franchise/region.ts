@@ -120,7 +120,7 @@ export class Region implements ISubscriber, IRegion {
 		this.timer = timer;
 		this.franchise = franchise;
 
-		this.InitializeRegion(climate);
+		this.initializeRegion(climate);
 	}
 
 	notify(event: string, data?: any) {
@@ -128,7 +128,7 @@ export class Region implements ISubscriber, IRegion {
 			this.tick();
 		}
 		if (event === "day") {
-			this.ResetImportExport();
+			this.resetImportExport();
 		}
 		if (event === "week") {
 		}
@@ -137,7 +137,7 @@ export class Region implements ISubscriber, IRegion {
 	tick() {
 	}
 
-	InitializeRegion(climate: ClimateType) {
+	initializeRegion(climate: ClimateType) {
 		switch (climate) {
 			case ClimateType.Arid:
 				this.environmentalFactors["soilRichness"] = 0.5 + Math.random() * 0.1;
@@ -164,12 +164,12 @@ export class Region implements ISubscriber, IRegion {
 		}
 	}
 
-	ResetImportExport() {
+	resetImportExport() {
 		this.dailyExport = this.exportCapacity;
 		this.dailyImport = this.importCapacity;
 	}
 
-	ImportBeans(importAmount: number, fromRegion: Region): number {
+	importBeans(importAmount: number, fromRegion: Region): number {
 		const maxImportable = Math.min(
 			importAmount,
 			this.dailyImport,
@@ -186,7 +186,7 @@ export class Region implements ISubscriber, IRegion {
 		return maxImportable;
 	}
 
-	BuyDevelopment(developmentType: DevelopmentType) {
+	buyDevelopment(developmentType: DevelopmentType) {
 		let newDev: DevelopmentBase;
 
 		if (developmentType === DevelopmentType.Residential) {
@@ -207,7 +207,7 @@ export class Region implements ISubscriber, IRegion {
 			newDev;
 	}
 
-	SellDevelopment(key: string) {
+	sellDevelopment(key: string) {
 	}
 
 	increaseDevelopmentArea(development: string, areaSize: number = 1) {

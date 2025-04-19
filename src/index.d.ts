@@ -174,3 +174,48 @@ interface TimeData {
   month: number;
   year: number;
 }
+
+
+interface Building {
+  name: string;
+  desc: string;
+  areaSize: number;
+  buyCost: number;
+  sellCost: number;
+  rent: number;
+  onBuy: () => void;
+  onSell: () => void;
+  onTick: () => void;
+  onHour: () => void;
+  onDay: () => void;
+  onWeek: () => void;
+}
+
+interface CoffeeBuilding extends Building{
+  maxCoffeePerHour: number;
+}
+
+interface HousingBuilding extends Building{
+  populationIncrease: number;
+}
+
+interface BeanBuilding extends Building{
+  beansPerHour: number;
+  beanCost: number;
+}
+
+interface ImportBuilding extends Building{
+  importIncrease: number;
+}
+
+interface ExportBuilding extends Building{
+  exportIncrease: number;
+}
+
+interface WaterBuilding extends Building {
+  waterPerDay: number;
+}
+
+interface FarmBuilding extends Building {
+  beansPerHour: number;
+}

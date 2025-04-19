@@ -59,7 +59,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
         this.currentArea = this.developmentArea
 
-        this.InitializeDevelopment();
+        this.initializeDevelopment();
     }
 
     notify(event: string, data?: any) {
@@ -94,11 +94,11 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         this.boughtBuildings.forEach(building => building.onWeek());
     }
 
-    InitializeDevelopment(){
+    initializeDevelopment(){
 
     }
 
-    BuyBuilding(building: Building){
+    buyBuilding(building: Building){
         if (building.areaSize > this.currentArea || building.buyCost > this.franchise.money) {return;}
 
         this.franchise.money -= building.buyCost; //pay your dues
@@ -111,7 +111,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         building.onBuy();
     }
 
-    SellBuilding(building: Building){
+    sellBuilding(building: Building){
         this.franchise.money += building.sellCost;
         this.currentArea += building.areaSize;
         const index = this.boughtBuildings.indexOf(building);
@@ -121,29 +121,15 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         building.onSell();
     }
 
-    PayRent(){
+    payRent(){
         this.boughtBuildings.forEach(element => {
             this.franchise.money -= element.rent;
         });
     }
 
-    UpdateAvailableBuildings(buildingCount: number){
+    updateAvailableBuildings(buildingCount: number){
 
     }
 }
 
 
-export interface Building {
-    name: string;
-    desc: string;
-    areaSize: number;
-    buyCost: number;
-    sellCost: number;
-    rent: number;
-    onBuy: () => void;
-    onSell: () => void;
-    onTick: () => void;
-    onHour: () => void;
-    onDay: () => void;
-    onWeek: () => void;
-  }

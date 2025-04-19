@@ -4,7 +4,7 @@ import { type LocalShopSave, Shop } from "../../shop";
 import { UpgradeManager } from "../../../systems/upgradeManager";
 import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
 import { aud } from "../../../../assets/aud";
-import { type Building, DevelopmentBase, DevelopmentType } from "./developmentbase";
+import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Region } from "../region";
 
 export class LogisticCenter extends DevelopmentBase{
@@ -12,12 +12,12 @@ export class LogisticCenter extends DevelopmentBase{
         return DevelopmentType.Logistic;
       }
 
-    InitializeDevelopment(): void {
+    initializeDevelopment(): void {
         //put all the logistic center specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
-        this.UpdateAvailableBuildings(3); //these should be displayed on the frontend
+        this.updateAvailableBuildings(3); //these should be displayed on the frontend
     }
     
-    UpdateAvailableBuildings(buildingCount: number): void {
+    updateAvailableBuildings(buildingCount: number): void {
       const self = this;
       this.availableBuildings = [];
       
@@ -138,10 +138,3 @@ export class LogisticCenter extends DevelopmentBase{
     }
 }
 
-interface ImportBuilding extends Building{
-    importIncrease: number;
-}
-
-interface ExportBuilding extends Building{
-    exportIncrease: number;
-}

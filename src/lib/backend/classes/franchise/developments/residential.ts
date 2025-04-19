@@ -6,7 +6,6 @@ import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManage
 import { aud } from "../../../../assets/aud";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Region } from "../region";
-import { type Building } from "./developmentbase";
 
 export class Residential extends DevelopmentBase implements IResidential{
     get developmentType(): DevelopmentType {
@@ -44,9 +43,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 
 
 
-    SellCoffee(coffeeAmount: number){
+    sellCoffee(coffeeAmount: number){
       if (coffeeAmount > this.parent.beans){
-        this.parent.parentCountry.ImportBeansTo(coffeeAmount - this.parent.beans, this.parent); //try to import as much as possible
+        this.parent.parentCountry.importBeansTo(coffeeAmount - this.parent.beans, this.parent); //try to import as much as possible
       }
       var coffeeSold = Math.min(coffeeAmount, this.parent.beans);
 
@@ -54,12 +53,12 @@ export class Residential extends DevelopmentBase implements IResidential{
       this.franchise.money += coffeeSold * this.coffeePrice;
     }
 
-    InitializeDevelopment(): void {
+    initializeDevelopment(): void {
         //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
-        this.UpdateAvailableBuildings(3); //these should be displayed on the frontend
+        this.updateAvailableBuildings(3); //these should be displayed on the frontend
     }
     
-    UpdateAvailableBuildings(buildingCount: number): void {
+    updateAvailableBuildings(buildingCount: number): void {
       const self = this;
       this.availableBuildings = [];
       
@@ -82,7 +81,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 
         },
         onHour: function () {
-          self.SellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
+          self.sellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
         },
         onDay: function () {
           self.franchise.money -= this.rent;
@@ -110,7 +109,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 
         },
         onHour: function () {
-          self.SellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
+          self.sellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
         },
         onDay: function () {
           self.franchise.money -= this.rent;
@@ -245,15 +244,3 @@ export class Residential extends DevelopmentBase implements IResidential{
   
 }
 
-interface CoffeeBuilding extends Building{
-  maxCoffeePerHour: number;
-}
-
-interface HousingBuilding extends Building{
-  populationIncrease: number;
-}
-
-interface BeanBuilding extends Building{
-  beansPerHour: number;
-  beanCost: number;
-}

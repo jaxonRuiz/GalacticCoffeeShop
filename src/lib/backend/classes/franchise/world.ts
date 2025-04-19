@@ -16,10 +16,10 @@ export class World implements ISubscriber, IWorld {
 
 	constructor(franchise: Franchise) {
 		this.franchise = franchise;
-		this.InitializeCountries(5);
+		this.initializeCountries(5);
 	}
 
-	InitializeCountries(count: number) {
+	initializeCountries(count: number) {
 		let created = 0;
 
 		while (created < count) {

@@ -7,7 +7,7 @@ import {
   cleanupAudioManagers,
 } from "../../../systems/audioManager";
 import { aud } from "../../../../assets/aud";
-import { type Building, DevelopmentBase, DevelopmentType } from "./developmentbase";
+import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Region } from "../region";
 
 export class Farm extends DevelopmentBase {
@@ -24,12 +24,12 @@ export class Farm extends DevelopmentBase {
     this.w_water.set(value);
   }
 
-  InitializeDevelopment(): void {
+  initializeDevelopment(): void {
     //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
-    this.UpdateAvailableBuildings(3); //these should be displayed on the frontend
+    this.updateAvailableBuildings(3); //these should be displayed on the frontend
   }
 
-  UpdateAvailableBuildings(buildingCount: number): void {
+  updateAvailableBuildings(buildingCount: number): void {
     const self = this;
     this.availableBuildings = [];
 
@@ -172,10 +172,3 @@ export class Farm extends DevelopmentBase {
   }
 }
 
-interface WaterBuilding extends Building {
-  waterPerDay: number;
-}
-
-interface FarmBuilding extends Building {
-  beansPerHour: number;
-}
