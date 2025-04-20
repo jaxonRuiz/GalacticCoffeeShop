@@ -5,7 +5,7 @@ import { AudioManager } from "../../systems/audioManager";
 import { World } from "./world";
 import { Country } from "./country";
 import { Region } from "./region";
-import type { DevelopmentBase } from "./developments/developmentbase";
+import { DevelopmentBase } from "./developments/developmentbase";
 
 export class Franchise implements ISubscriber, IScene {
   // writable resources
@@ -106,6 +106,12 @@ export class Franchise implements ISubscriber, IScene {
   // to call functions on the frontend
   
   // Country stuff
+  selectCountry(country: Country){
+    this.currentCountry = country;
+  }
+  deselectCountry(){
+    this.currentCountry = null;
+  }
   unlockRegion(regionIndex: number){
 		this.currentCountry?.unlockRegion(regionIndex);
 	}
@@ -114,16 +120,27 @@ export class Franchise implements ISubscriber, IScene {
   increaseDevelopmentArea(development: string, areaSize: number = 1) {
 		this.currentRegion?.increaseDevelopmentArea(development, areaSize);
 	}
-
 	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
 		this.currentRegion?.decreaseDevelopmentArea(development, areaSize);
-	}
-  
+  }
+  selectRegion(region: Region){
+    this.currentRegion = region;
+  }
+  deselectRegion(){
+    this.currentRegion = null;
+  }
+
   //Development stuff
   buyBuilding(index: number){ // let me know if you'd rather have the building reference as a parameter
     this.currentDevelopment?.buyBuilding(this.currentDevelopment.availableBuildings[index]);
   }
   sellBuilding(index: number){ 
     this.currentDevelopment?.sellBuilding(this.currentDevelopment.availableBuildings[index]);
+  }
+  selectDevelopment(development: DevelopmentBase){
+    this.currentDevelopment = development;
+  }
+  deselectDevelopment(){
+    this.currentDevelopment = null;
   }
 }
