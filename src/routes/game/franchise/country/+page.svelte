@@ -2,6 +2,7 @@
 	import { t } from "svelte-i18n";
 	import { stageManager } from "$lib/backend/game";
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
+	import Button from "$lib/components/Button.svelte";
 
 	// base
 	let smanager = stageManager;
@@ -9,24 +10,43 @@
 	let country = franchise.w_currentCountry;
 
 	// define variables
-	let taxRate = $country!.w_taxRate;
-	let tariffRate = $country!.w_tariffRate;
-	let regions = $country!.w_regionList;
+	let taxRate = $country?.w_taxRate;
+	let tariffRate = $country?.w_tariffRate;
+	let regions = $country?.w_regionList;
 </script>
 
 <div class="country row">
-	<div class="left">
+	<div class="left block">
 		<h1>Stats</h1>
-		<p>coordinates: {$country!.coordinates}</p>
+		<p>coordinates: {$country?.coordinates}</p>
 		<p>tax rate: {$taxRate}</p>
 		<p>tariff rate: {$tariffRate}</p>
+		<br />
+		<p>countries currently don't have a name</p>
+		<br />
+		<Button
+			static={false}
+			onclick={() => {
+				franchise.deselectCountry();
+			}}
+		>
+			deselect country
+		</Button>
 	</div>
 
-	<div class="right">
+	<div class="right block">
 		<h1>Region List</h1>
-		{#each $regions as region, i (region)}
-			<p>region {i + 1}</p>
-		{/each}
+		<div class="col">
+			{#if $regions}
+				{#each $regions as region, i (region)}
+					<Button
+						onclick={() => {
+							franchise.selectRegion(region);
+						}}>region {i + 1}</Button
+					>
+				{/each}
+			{/if}
+		</div>
 	</div>
 </div>
 

@@ -1,9 +1,5 @@
 import { Publisher } from "../../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
-import { type LocalShopSave, Shop } from "../../shop";
-import { UpgradeManager } from "../../../systems/upgradeManager";
-import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
-import { aud } from "../../../../assets/aud";
 import type { Region } from "../region";
 import { Franchise } from "../franchise";
 
@@ -14,6 +10,7 @@ export enum DevelopmentType{
 }
 
 export class DevelopmentBase implements ISubscriber, IDevelopment{
+    // statistics
     w_developmentArea: Writable<number> = writable(10);
     w_developmentType: Writable<DevelopmentType> = writable();
 
@@ -30,8 +27,22 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         this.w_developmentType.set(value);
     }
 
-    boughtBuildings: Building[] = [];
-    availableBuildings: Building[] = [];
+    // buildings
+    w_boughtBuildings: Writable<Building[]> = writable([]);
+    w_availableBuildings: Writable<Building[]> = writable([]);
+
+    get boughtBuildings() {
+        return get(this.w_boughtBuildings);
+    }
+    set boughtBuildings(value: Building[]) {
+        this.w_boughtBuildings.set(value);
+    }
+    get availableBuildings() {
+        return get(this.w_availableBuildings);
+    }
+    set availableBuildings(value: Building[]) {
+        this.w_availableBuildings.set(value);
+    }
 
     possibleBuildings: Building[] = [];
 
@@ -97,10 +108,11 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
         this.franchise.money -= building.buyCost; //pay your dues
         this.currentArea -= building.areaSize;
-        this.boughtBuildings.push(building); //add to bought buildings
+        this.boughtBuildings = [...this.boughtBuildings, building]; //add to bought buildings
         const index = this.availableBuildings.indexOf(building);
         if (index !== -1) {
             this.availableBuildings.splice(index, 1); // remove from available buildings
+            this.availableBuildings = [...this.availableBuildings]; // update for svelte
         }
         building.onBuy();
     }
@@ -111,6 +123,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         const index = this.boughtBuildings.indexOf(building);
         if (index !== -1) {
             this.boughtBuildings.splice(index, 1); // remove from your bought buildings
+            this.boughtBuildings = [...this.boughtBuildings]; // update for svelte
         }
         building.onSell();
     }

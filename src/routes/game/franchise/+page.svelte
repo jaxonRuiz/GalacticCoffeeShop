@@ -10,7 +10,7 @@
 
 <div class="col block">
 	<h1>Countries</h1>
-	{#each Object.keys(countries) as country (country)}
+	{#each Object.keys($countries) as country (country)}
 		<Button
 			static={false}
 			onclick={() => {

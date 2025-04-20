@@ -13,7 +13,7 @@
 }
 
 * {
-	color: rgba(255, 255, 255, 1);
+	color: var(--text);
 	user-select: none;
 }
 

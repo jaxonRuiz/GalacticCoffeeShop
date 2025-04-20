@@ -22,4 +22,6 @@
 	{/if}
 </div>
 
-{@render children()}
+<div class="franchise">
+	{@render children()}
+</div>

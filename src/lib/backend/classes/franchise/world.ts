@@ -1,9 +1,4 @@
-import { Publisher } from "../../systems/observer";
-import { get, type Writable, writable } from "svelte/store";
-import { type LocalShopSave, Shop } from "../shop";
-import { UpgradeManager } from "../../systems/upgradeManager";
-import { AudioManager, cleanupAudioManagers } from "../../systems/audioManager";
-import { aud } from "../../../assets/aud";
+import { type Writable, writable } from "svelte/store";
 import { Franchise } from "./franchise";
 import { Country } from "./country";
 import { dictProxy } from "$lib/backend/proxies";

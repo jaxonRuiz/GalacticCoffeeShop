@@ -1,14 +1,5 @@
-import { Publisher } from "../../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
-import { type LocalShopSave, Shop } from "../../shop";
-import { UpgradeManager } from "../../../systems/upgradeManager";
-import {
-  AudioManager,
-  cleanupAudioManagers,
-} from "../../../systems/audioManager";
-import { aud } from "../../../../assets/aud";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
-import type { Region } from "../region";
 
 export class Farm extends DevelopmentBase {
   get developmentType(): DevelopmentType {
@@ -81,34 +72,6 @@ export class Farm extends DevelopmentBase {
       onWeek: function () {
       },
     } as WaterBuilding);
-
-    this.possibleBuildings.push({
-      name: "Greenhouse",
-      desc: "Grow some beans",
-      areaSize: 2,
-      buyCost: 600 + Math.floor(Math.random() * 200),
-      sellCost: 600 - Math.floor(Math.random() * 100),
-      rent: 0,
-      beansPerHour: 100 +
-        Math.floor(Math.random() * 20) *
-          this.parent.environmentalFactors["soilRichness"],
-      onBuy: function () {
-      },
-      onSell: function () {
-      },
-      onTick: function () {
-      },
-      onHour: function () {
-      },
-      onDay: function () {
-        self.franchise.money -= this.rent;
-        var b = Math.min(this.beansPerHour, self.water);
-        self.parent.beans += b;
-        self.water -= b;
-      },
-      onWeek: function () {
-      },
-    } as FarmBuilding);
 
     this.possibleBuildings.push({
       name: "Greenhouse",
