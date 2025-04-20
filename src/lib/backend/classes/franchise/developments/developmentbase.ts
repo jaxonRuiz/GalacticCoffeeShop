@@ -14,16 +14,9 @@ export enum DevelopmentType{
 }
 
 export class DevelopmentBase implements ISubscriber, IDevelopment{
-    w_developmentCost: Writable<number> = writable(1000);
     w_developmentArea: Writable<number> = writable(10);
     w_developmentType: Writable<DevelopmentType> = writable();
 
-    get developmentCost() {
-        return get(this.w_developmentCost);
-    }
-    set developmentCost(value) {
-        this.w_developmentCost.set(value);
-    }
     get developmentArea() {
         return get(this.w_developmentArea);
     }
@@ -47,17 +40,18 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
     currentArea: number;
     
-    constructor(timer: Publisher, region: Region, areaSize: number, cost: number, franchise: Franchise) {
+    constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
         timer.subscribe(this, "tick");
         timer.subscribe(this, "hour");
         timer.subscribe(this, "day");
         timer.subscribe(this, "week");
         this.parent = region;
         this.developmentArea = areaSize;
-        this.developmentCost = cost;
         this.franchise = franchise;
 
         this.currentArea = this.developmentArea
+
+        this.parent.unusedLand -= areaSize;
 
         this.initializeDevelopment();
     }

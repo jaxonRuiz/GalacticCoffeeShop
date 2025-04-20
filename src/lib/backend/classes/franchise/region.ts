@@ -25,8 +25,8 @@ export enum ClimateType {
 
 export class Region implements ISubscriber, IRegion {
 	//writables
-	w_totalArea: Writable<number> = writable(100);
-	w_unusedLand: Writable<number> = writable(100);
+	w_totalArea: Writable<number> = writable(30);
+	w_unusedLand: Writable<number> = writable(30);
 	w_developmentList: Writable<{ [key: string]: DevelopmentBase }> = writable({
 		// developments should be predefined, but set with area size of zero.
 	});
@@ -39,6 +39,7 @@ export class Region implements ISubscriber, IRegion {
 	w_importCapacity: Writable<number> = writable(1000);
 	w_exportCapacity: Writable<number> = writable(1000);
 	w_beans: Writable<number> = writable(0);
+	w_unlocked: Writable<boolean> = writable(false);
 
 	//getters and setters
 	get totalArea() {
@@ -88,6 +89,12 @@ export class Region implements ISubscriber, IRegion {
 	}
 	set beans(value) {
 		this.w_beans.set(value);
+	}
+	get unlocked(){
+		return get(this.w_unlocked);
+	}
+	set unlocked(value){
+		this.w_unlocked.set(value);
 	}
 
 	//internal variables
@@ -163,6 +170,7 @@ export class Region implements ISubscriber, IRegion {
 			default:
 				break;
 		}
+		this.initializeDevelopments();
 	}
 
 	resetImportExport() {
@@ -187,28 +195,10 @@ export class Region implements ISubscriber, IRegion {
 		return maxImportable;
 	}
 
-	buyDevelopment(developmentType: DevelopmentType) {
-		let newDev: DevelopmentBase;
-
-		if (developmentType === DevelopmentType.Residential) {
-			newDev = new Residential(this.timer, this, 10, 1000, this.franchise);
-		} else if (developmentType === DevelopmentType.Farm) {
-			newDev = new Farm(this.timer, this, 10, 1000, this.franchise);
-		} else if (developmentType === DevelopmentType.Logistic) {
-			newDev = new LogisticCenter(this.timer, this, 10, 1000, this.franchise);
-		} else {
-			throw new Error("Unknown development type");
-		}
-		const numDev =
-			Object.keys(this.developmentList).filter((key) =>
-				this.developmentList[key].developmentType === developmentType
-			).length;
-
-		this.developmentList[`${DevelopmentType[developmentType]} ${numDev + 1}`] =
-			newDev;
-	}
-
-	sellDevelopment(key: string) {
+	initializeDevelopments() {
+		this.developmentList["farm"] = new Farm(this.timer, this, 7, this.franchise);
+		this.developmentList["residential"] = new Residential(this.timer, this, 5, this.franchise);
+		this.developmentList["logistic"] = new LogisticCenter(this.timer, this, 4, this.franchise);
 	}
 
 	increaseDevelopmentArea(development: string, areaSize: number = 1) {
@@ -232,6 +222,17 @@ export class Region implements ISubscriber, IRegion {
 			}
 			this.developmentList[development].developmentArea -= areaSize;
 			this.unusedLand += areaSize;
+		}
+	}
+
+	unlockRegion(){
+		if (this.unlocked) return;
+		if (this.franchise.money >= this.unlockCost){
+			this.unlocked = true;
+			this.franchise.money -= this.unlockCost;
+		}
+		else{
+			console.log("You are too broke to afford this propery");
 		}
 	}
 }

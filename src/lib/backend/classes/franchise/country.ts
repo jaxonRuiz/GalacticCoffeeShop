@@ -89,4 +89,8 @@ export class Country{
 		}
 		return numBeans - beansLeft; //return the number of beans imported
 	}
+
+	unlockRegion(regionIndex: number){
+		this.regionList[regionIndex].unlockRegion();
+	}
 }

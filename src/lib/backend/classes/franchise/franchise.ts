@@ -5,6 +5,7 @@ import { AudioManager } from "../../systems/audioManager";
 import { World } from "./world";
 import { Country } from "./country";
 import { Region } from "./region";
+import type { DevelopmentBase } from "./developments/developmentbase";
 
 export class Franchise implements ISubscriber, IScene {
   // writable resources
@@ -35,6 +36,7 @@ export class Franchise implements ISubscriber, IScene {
   // current country/region to be used by frontend
   w_currentCountry: Writable<null | Country> = writable(null);
   w_currentRegion: Writable<null | Region> = writable(null);
+  w_currentDevelopment: Writable<null | DevelopmentBase> = writable(null);
 
   get currentCountry() {
     return get(this.w_currentCountry);
@@ -47,6 +49,12 @@ export class Franchise implements ISubscriber, IScene {
   }
   set currentRegion(value: Region | null) {
     this.w_currentRegion.set(value);
+  }
+  get currentDevelopment() {
+    return get(this.w_currentDevelopment);
+  }
+  set currentDevelopment(value: DevelopmentBase | null) {
+    this.w_currentDevelopment.set(value);
   }
 
   constructor(timer: Publisher, sceneManager: Publisher) {
@@ -94,4 +102,28 @@ export class Franchise implements ISubscriber, IScene {
   }
 
   clearState() {}
+
+  // to call functions on the frontend
+  
+  // Country stuff
+  unlockRegion(regionIndex: number){
+		this.currentCountry?.unlockRegion(regionIndex);
+	}
+
+  //Region stuff
+  increaseDevelopmentArea(development: string, areaSize: number = 1) {
+		this.currentRegion?.increaseDevelopmentArea(development, areaSize);
+	}
+
+	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
+		this.currentRegion?.decreaseDevelopmentArea(development, areaSize);
+	}
+  
+  //Development stuff
+  buyBuilding(index: number){ // let me know if you'd rather have the building reference as a parameter
+    this.currentDevelopment?.buyBuilding(this.currentDevelopment.availableBuildings[index]);
+  }
+  sellBuilding(index: number){ 
+    this.currentDevelopment?.sellBuilding(this.currentDevelopment.availableBuildings[index]);
+  }
 }
