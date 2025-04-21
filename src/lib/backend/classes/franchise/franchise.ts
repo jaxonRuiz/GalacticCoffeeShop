@@ -117,10 +117,10 @@ export class Franchise implements ISubscriber, IScene {
 
   //Region stuff
   increaseDevelopmentArea(development: string, areaSize: number = 1) {
-		this.currentRegion?.increaseDevelopmentArea(development, areaSize);
+		this.currentDevelopment?.increaseDevelopmentArea(areaSize);
 	}
 	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
-		this.currentRegion?.decreaseDevelopmentArea(development, areaSize);
+		this.currentDevelopment?.decreaseDevelopmentArea(areaSize);
   }
   selectRegion(region: Region){
     this.currentRegion = region;

@@ -196,30 +196,6 @@ export class Region implements ISubscriber, IRegion {
 		this.developmentList["logistic"] = new LogisticCenter(this.timer, this, 4, this.franchise);
 	}
 
-	increaseDevelopmentArea(development: string, areaSize: number = 1) {
-		if (this.unusedLand >= areaSize) {
-			if (this.developmentList[development] === undefined) {
-				throw new Error(
-					`Development type ${development} does not exist in this region.`,
-				);
-			}
-			this.developmentList[development].developmentArea += areaSize;
-			this.unusedLand -= areaSize;
-		}
-	}
-
-	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
-		if (this.unusedLand >= areaSize) {
-			if (this.developmentList[development] === undefined) {
-				throw new Error(
-					`Development type ${development} does not exist in this region.`,
-				);
-			}
-			this.developmentList[development].developmentArea -= areaSize;
-			this.unusedLand += areaSize;
-		}
-	}
-
 	unlockRegion(){
 		if (this.unlocked) return;
 		if (this.franchise.money >= this.unlockCost){

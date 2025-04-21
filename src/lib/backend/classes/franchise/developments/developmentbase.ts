@@ -131,6 +131,20 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
     updateAvailableBuildings(buildingCount: number){
 
     }
+
+    increaseDevelopmentArea(areaSize: number = 1) {
+		if (this.parent.unusedLand >= areaSize) {
+			this.developmentArea += areaSize;
+			this.parent.unusedLand -= areaSize;
+		}
+	}
+
+	decreaseDevelopmentArea(areaSize: number = 1) {
+		if (this.developmentArea - areaSize >= 0) {
+			this.developmentArea -= areaSize;
+			this.parent.unusedLand += areaSize;
+		}
+	}
 }
 
 

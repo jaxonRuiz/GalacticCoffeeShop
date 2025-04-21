@@ -14,9 +14,20 @@
 
 <div class="dev-container">
 	<div class="block">
-		<p style="font-size: 1.2rem; font-weight: bold;">{d.developmentType}</p>
-		<p>Area available: {$area}</p>
-		<br />
+		<div class="dev-header row space-between">
+			<div class="col">
+				<p style="font-size: 1.3rem; font-weight: bold;">{d.developmentType}</p>
+				<p>Area available: {$area}</p>
+			</div>
+			<div class="row button-group">
+				<Button onclick={() => {d.decreaseDevelopmentArea()}}>
+					Shrink
+				</Button>
+				<Button onclick={() => {d.increaseDevelopmentArea()}}>
+					Expand
+				</Button>
+			</div>
+		</div>
 
 		<div class="buildings-container">
 			<div class="bought-dev col inner-block">
@@ -44,7 +55,7 @@
 				<h3>Available Buildings</h3>
 				{#each $availBuildings as building, i (building)}
 					<div class="building-card">
-						<p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
+						<p style="font-size: 1.rem; font-weight: bold;">{building.name}</p>
 						<p>{building.desc}</p>
 						<p>Area Size: {building.areaSize}</p>
 						<p>{building.whatDo()}</p>
@@ -109,4 +120,18 @@
 		background-color:rgb(43, 43, 43);
 		box-sizing: border-box;
 	}
+
+	.dev-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+	}
+
+	.button-group {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
 </style>
