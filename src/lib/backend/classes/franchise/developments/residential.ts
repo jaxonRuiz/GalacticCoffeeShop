@@ -49,6 +49,37 @@ export class Residential extends DevelopmentBase implements IResidential{
 
     initializeDevelopment(): void {
         //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
+        const self = this;
+        this.buyBuilding({
+          name: "Corner Cafe",
+          desc: "Cute cafe on the corner",
+          areaSize: 1,
+          buyCost: 0,
+          sellCost: 800 - Math.floor(Math.random() * 50),
+          rent: 50,
+          maxCoffeePerHour: 100,
+          onBuy: function () {
+            self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
+          },
+          onSell: function () {
+            self.totalMaxCoffeePerHour -= this.maxCoffeePerHour;
+          },
+          onTick: function () {
+  
+          },
+          onHour: function () {
+            self.sellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
+          },
+          onDay: function () {
+            self.franchise.money -= this.rent;
+          },
+          onWeek: function () {
+  
+          },
+          whatDo: function (): string {
+            return `Sells ${this.maxCoffeePerHour} coffees per hour (if you got the beans)`;
+          }
+        } as CoffeeBuilding)
         this.updateAvailableBuildings(3); //these should be displayed on the frontend
     }
     
@@ -83,6 +114,9 @@ export class Residential extends DevelopmentBase implements IResidential{
         onWeek: function () {
 
         },
+        whatDo: function (): string {
+          return `Sells ${this.maxCoffeePerHour} coffees per hour (if you got the beans)`;
+        }
       } as CoffeeBuilding)
 
       possibleBuildings.push({
@@ -111,9 +145,12 @@ export class Residential extends DevelopmentBase implements IResidential{
         onWeek: function () {
 
         },
+        whatDo: function (): string {
+          return `Sells ${this.maxCoffeePerHour} coffees per hour (if you got the beans)`;
+        }
       } as CoffeeBuilding)
 
-      this.possibleBuildings.push({
+      possibleBuildings.push({
           name: "Apartment Building",
           desc: "20 stories of solid concrete",
           areaSize: 2,
@@ -139,9 +176,12 @@ export class Residential extends DevelopmentBase implements IResidential{
           onWeek: function () {
         
           },
+          whatDo: function (): string {
+            return `Increases population by ${this.populationIncrease}`;
+          }
         } as HousingBuilding)
 
-        this.possibleBuildings.push({
+        possibleBuildings.push({
           name: "Motel",
           desc: "The rooms have yellow walls and suspicious stains",
           areaSize: 1,
@@ -167,9 +207,12 @@ export class Residential extends DevelopmentBase implements IResidential{
           onWeek: function () {
         
           },
+          whatDo: function (): string {
+            return `Increases population by ${this.populationIncrease}`;
+          }
         } as HousingBuilding)
 
-        this.possibleBuildings.push({
+        possibleBuildings.push({
           name: "Bean Store",
           desc: "Imports high quality Columbian coffee beans",
           areaSize: 1,
@@ -199,9 +242,12 @@ export class Residential extends DevelopmentBase implements IResidential{
           onWeek: function () {
         
           },
+          whatDo: function (): string {
+            return `Buys ${this.beansPerHour} off of the free market`;
+          }
         } as BeanBuilding)
 
-        this.possibleBuildings.push({
+        possibleBuildings.push({
           name: "Bean Dispensary",
           desc: "Smells like a mix of coffee and weed",
           areaSize: 1,
@@ -231,10 +277,22 @@ export class Residential extends DevelopmentBase implements IResidential{
           onWeek: function () {
         
           },
+          whatDo: function (): string {
+            return `Buys ${this.beansPerHour} off of the free market`;
+          }
         } as BeanBuilding)
 
-        this.availableBuildings = this.possibleBuildings.sort(() => Math.random() - 0.5).slice(0, buildingCount);
+        this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
     }
   
+    getRandomSubset<T>(array: T[], count: number): T[] {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, count);
+    }
+    
 }
 

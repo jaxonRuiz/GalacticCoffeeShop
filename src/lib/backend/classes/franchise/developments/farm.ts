@@ -17,6 +17,37 @@ export class Farm extends DevelopmentBase {
 
   initializeDevelopment(): void {
     //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
+    const self = this;
+    this.buyBuilding({
+      name: "Greenhouse",
+      desc: "Grow some beans",
+      areaSize: 2,
+      buyCost: 0,
+      sellCost: 600 - Math.floor(Math.random() * 100),
+      rent: 0,
+      beansPerHour: 100 +
+        Math.floor((Math.random() * 20) *
+          this.parent.environmentalFactors["soilRichness"]),
+      onBuy: function () {
+      },
+      onSell: function () {
+      },
+      onTick: function () {
+      },
+      onHour: function () {
+      },
+      onDay: function () {
+        self.franchise.money -= this.rent;
+        var b = Math.min(this.beansPerHour, self.water);
+        self.parent.beans += b;
+        self.water -= b;
+      },
+      onWeek: function () {
+      },
+      whatDo: function (): string {
+        return `Grows ${this.beansPerHour} beans per hour`;
+      }
+    } as FarmBuilding);
     this.updateAvailableBuildings(3); //these should be displayed on the frontend
   }
 
@@ -32,7 +63,7 @@ export class Farm extends DevelopmentBase {
       buyCost: 800 + Math.floor(Math.random() * 200),
       sellCost: 800 - Math.floor(Math.random() * 100),
       rent: 50,
-      waterPerDay: 500 * this.parent.environmentalFactors["waterAvailability"],
+      waterPerDay: Math.floor(500 * this.parent.environmentalFactors["waterAvailability"]),
       onBuy: function () {
       },
       onSell: function () {
@@ -47,6 +78,9 @@ export class Farm extends DevelopmentBase {
       },
       onWeek: function () {
       },
+      whatDo: function (): string {
+        return `Produces ${this.waterPerDay} water per day`;
+      }
     } as WaterBuilding);
 
     possibleBuildings.push({
@@ -56,7 +90,7 @@ export class Farm extends DevelopmentBase {
       buyCost: 1000 + Math.floor(Math.random() * 400),
       sellCost: 1000 - Math.floor(Math.random() * 200),
       rent: 100,
-      waterPerDay: 1000 * this.parent.environmentalFactors["waterAvailability"],
+      waterPerDay: Math.floor(1000 * this.parent.environmentalFactors["waterAvailability"]),
       onBuy: function () {
       },
       onSell: function () {
@@ -71,9 +105,12 @@ export class Farm extends DevelopmentBase {
       },
       onWeek: function () {
       },
+      whatDo: function (): string {
+        return `Produces ${this.waterPerDay} water per day`;
+      }
     } as WaterBuilding);
 
-    this.possibleBuildings.push({
+    possibleBuildings.push({
       name: "Greenhouse",
       desc: "Grow some beans",
       areaSize: 2,
@@ -81,8 +118,8 @@ export class Farm extends DevelopmentBase {
       sellCost: 600 - Math.floor(Math.random() * 100),
       rent: 0,
       beansPerHour: 100 +
-        Math.floor(Math.random() * 20) *
-          this.parent.environmentalFactors["soilRichness"],
+        Math.floor((Math.random() * 20) *
+          this.parent.environmentalFactors["soilRichness"]),
       onBuy: function () {
       },
       onSell: function () {
@@ -99,9 +136,12 @@ export class Farm extends DevelopmentBase {
       },
       onWeek: function () {
       },
+      whatDo: function (): string {
+        return `Grows ${this.beansPerHour} beans per hour`;
+      }
     } as FarmBuilding);
 
-    this.possibleBuildings.push({
+    possibleBuildings.push({
       name: "Field",
       desc: "Grow loads of beans",
       areaSize: 4,
@@ -109,8 +149,8 @@ export class Farm extends DevelopmentBase {
       sellCost: 1200 - Math.floor(Math.random() * 100),
       rent: 0,
       beansPerHour: 200 +
-        Math.floor(Math.random() * 50) *
-          this.parent.environmentalFactors["soilRichness"],
+        Math.floor((Math.random() * 50) *
+          this.parent.environmentalFactors["soilRichness"]),
       onBuy: function () {
       },
       onSell: function () {
@@ -127,11 +167,21 @@ export class Farm extends DevelopmentBase {
       },
       onWeek: function () {
       },
+      whatDo: function (): string {
+        return `Grows ${this.beansPerHour} beans per hour`;
+      }
     } as FarmBuilding);
 
-    this.availableBuildings = this.possibleBuildings.sort(() =>
-      Math.random() - 0.5
-    ).slice(0, buildingCount);
-  }
+    this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
+    }
+  
+    getRandomSubset<T>(array: T[], count: number): T[] {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, count);
+    }
 }
 

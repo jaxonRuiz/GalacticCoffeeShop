@@ -8,7 +8,7 @@ import { DevelopmentBase } from "./developments/developmentbase";
 
 export class Franchise implements ISubscriber, IScene {
   // writable resources
-  w_money: Writable<number> = writable(0);
+  w_money: Writable<number> = writable(10000);
   w_beans: Writable<number> = writable(0);
 
   // writable getters/setters

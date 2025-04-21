@@ -496,7 +496,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IScene).endScene();
 			},
 			maxLevel: 1,
-			cost: 500,
+			cost: 5000,
 			costMultiplier: 1,
 			image: "establish_franchise.jpg",
 		},

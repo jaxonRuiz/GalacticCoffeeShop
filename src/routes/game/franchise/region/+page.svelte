@@ -71,7 +71,7 @@
 		width: 50%;
 	}
 	div.right {
-		height: 500px;
+		height: 90vh;
 		/* scroll doesn't work unless height is set :/ */
 	}
 </style>

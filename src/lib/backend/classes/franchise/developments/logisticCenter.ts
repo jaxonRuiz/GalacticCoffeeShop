@@ -41,6 +41,9 @@ export class LogisticCenter extends DevelopmentBase{
         onWeek: function () {
 
         },
+        whatDo: function (): string {
+            return `Increases import by ${this.importIncrease}`;
+          }
       } as ImportBuilding)
 
       possibleBuildings.push({
@@ -69,6 +72,9 @@ export class LogisticCenter extends DevelopmentBase{
         onWeek: function () {
 
         },
+        whatDo: function (): string {
+            return `Increase import by ${this.importIncrease}`;
+          }
       } as ImportBuilding)
 
       possibleBuildings.push({
@@ -97,6 +103,10 @@ export class LogisticCenter extends DevelopmentBase{
         onWeek: function () {
 
         },
+        whatDo: function (): string {
+            return `Increase export by ${this.exportIncrease}`;
+          }
+          
       } as ExportBuilding)
 
       possibleBuildings.push({
@@ -125,9 +135,21 @@ export class LogisticCenter extends DevelopmentBase{
         onWeek: function () {
 
         },
+        whatDo: function (): string {
+            return `Increase export by ${this.exportIncrease}`;
+          }
       } as ExportBuilding)
 
-        this.availableBuildings = this.possibleBuildings.sort(() => Math.random() - 0.5).slice(0, buildingCount);
+      this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
+    }
+  
+    getRandomSubset<T>(array: T[], count: number): T[] {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, count);
     }
 }
 

@@ -189,6 +189,7 @@ interface Building {
   onHour: () => void;
   onDay: () => void;
   onWeek: () => void;
+  whatDo: () => string;
 }
 
 interface CoffeeBuilding extends Building{

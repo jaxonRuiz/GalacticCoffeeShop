@@ -44,12 +44,8 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         this.w_availableBuildings.set(value);
     }
 
-    possibleBuildings: Building[] = [];
-
     parent: Region;
     franchise: Franchise;
-
-    currentArea: number;
     
     constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
         timer.subscribe(this, "tick");
@@ -59,9 +55,6 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         this.parent = region;
         this.developmentArea = areaSize;
         this.franchise = franchise;
-
-        this.currentArea = this.developmentArea
-
         this.parent.unusedLand -= areaSize;
 
         this.initializeDevelopment();
@@ -93,6 +86,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
     day(){
         this.boughtBuildings.forEach(building => building.onDay());
+        this.updateAvailableBuildings(3);
     }
 
     week(){
@@ -104,10 +98,10 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
     }
 
     buyBuilding(building: Building){
-        if (building.areaSize > this.currentArea || building.buyCost > this.franchise.money) {return;}
+        if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
         this.franchise.money -= building.buyCost; //pay your dues
-        this.currentArea -= building.areaSize;
+        this.developmentArea -= building.areaSize;
         this.boughtBuildings = [...this.boughtBuildings, building]; //add to bought buildings
         const index = this.availableBuildings.indexOf(building);
         if (index !== -1) {
@@ -119,7 +113,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
     sellBuilding(building: Building){
         this.franchise.money += building.sellCost;
-        this.currentArea += building.areaSize;
+        this.developmentArea += building.areaSize;
         const index = this.boughtBuildings.indexOf(building);
         if (index !== -1) {
             this.boughtBuildings.splice(index, 1); // remove from your bought buildings
