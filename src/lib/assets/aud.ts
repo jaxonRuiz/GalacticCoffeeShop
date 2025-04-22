@@ -1,6 +1,12 @@
 export const aud: { [key: string]: string } = {
     shop_music: new URL('./music/Duraznito - Quincas Moreira.mp3', import.meta.url).href,
     preshop_music: new URL('./music/Squirm Worm - TrackTribe.mp3', import.meta.url).href,
+    cant_burn: new URL(`./music/Mid-Air Machine - Just Can't Burn.mp3`, import.meta.url).href,
+    moonlight: new URL('./music/snoozy beats - moonlight city.mp3', import.meta.url).href,
+    fat_caps: new URL('./music/Jason Shaw - Fat Caps.mp3', import.meta.url).href,
+    gavelston: new URL('./music/LOPKERJO -Soul of Gavelston.mp3', import.meta.url).href,
+    cafe_crumble: new URL('./music/snoozy beats - cafe crumble[lofi beat].mp3', import.meta.url).href,
+    lovely_days: new URL('./music/snoozy beats - lovely days [lofi].mp3', import.meta.url).href,
     boiling: new URL('./sfx/boiling.flac', import.meta.url).href,
     ding: new URL('./sfx/ding.wav', import.meta.url).href,
     cashRegister: new URL('./sfx/cashRegister.wav', import.meta.url).href,
@@ -10,4 +16,7 @@ export const aud: { [key: string]: string } = {
     grind2: new URL('./sfx/grind2.wav', import.meta.url).href,
     papers: new URL('./sfx/papers.wav', import.meta.url).href,
     upgrade: new URL('./sfx/upgrade.wav', import.meta.url).href,
+    crunch: new URL('./sfx/crunch.mp3', import.meta.url).href,
+    crunch2: new URL('./sfx/crunch2.mp3', import.meta.url).href,
+    new_crowd: new URL('./sfx/new_crowd.wav', import.meta.url).href,
 };
