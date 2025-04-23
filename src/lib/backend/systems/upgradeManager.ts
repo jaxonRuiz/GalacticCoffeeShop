@@ -139,7 +139,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IPreshop).minAppeal! += 0.05;
 			},
 			maxLevel: 1,
-			cost: 0,
+			cost: 50,
 			costMultiplier: 1,
 			image: "word_of_mouth.jpg",
 		},
@@ -369,11 +369,65 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
 				}
 			},
-			maxLevel: 3,
-			cost: 80,
+			maxLevel: 1,
+			cost: 100,
+			costMultiplier: 1,
+			image: "flashy_sign.jpg",
+		},
+		window_flowers: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 130 && shop.upgrades.has("flashy_sign");
+			},
+			upgrade: (shop, level) => {
+				let statLevels = [0.1, 0.15, 0.18];
+				(shop as ILocalShop).minAppeal! += statLevels[level];
+				(shop as ILocalShop).appealDecay *= 0.97;
+				if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
+					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
+				}
+			},
+			maxLevel: 1,
+			cost: 120,
 			costMultiplier: 1.2,
 			image: "flashy_sign.jpg",
 		},
+		bumpin_music: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 170 && shop.upgrades.has("window_flowers");
+			},
+			upgrade: (shop, level) => {
+				let statLevels = [0.1, 0.15, 0.18];
+				(shop as ILocalShop).minAppeal! += statLevels[level];
+				(shop as ILocalShop).appealDecay *= 0.97;
+				if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
+					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
+				}
+				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
+			},
+			maxLevel: 1,
+			cost: 150,
+			costMultiplier: 1.2,
+			image: "flashy_sign.jpg",
+		},
+		drug_the_coffee: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 170 && shop.upgrades.has("bumpin_music");
+			},
+			upgrade: (shop, level) => {
+				let statLevels = [0.1, 0.15, 0.18];
+				(shop as ILocalShop).minAppeal! += statLevels[level];
+				(shop as ILocalShop).appealDecay *= 0.97;
+				if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
+					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
+				}
+				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
+			},
+			maxLevel: 1,
+			cost: 200,
+			costMultiplier: 1.2,
+			image: "flashy_sign.jpg",
+		},
+
 		expand_cashier_counter: {
 			unlock_condition: (shop) => {
 				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 70;
@@ -442,9 +496,93 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.03;
 			},
-			maxLevel: 10,
+			maxLevel: 1,
 			cost: 70,
-			costMultiplier: 1.4,
+			costMultiplier: 1,
+			image: "better_coffee_machine.jpg",
+		},
+		betterer_coffee_machine: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).upgrades.has("better_coffee_machine");
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
+
+			},
+			maxLevel: 1,
+			cost: 100,
+			costMultiplier: 1,
+			image: "better_coffee_machine.jpg",
+		},
+		super_coffee_machine: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).upgrades.has("betterer_coffee_machine");
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
+
+			},
+			maxLevel: 1,
+			cost: 120,
+			costMultiplier: 1,
+			image: "better_coffee_machine.jpg",
+		},
+		super_duper_coffee_machine: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).upgrades.has("super_coffee_machine");
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
+
+			},
+			maxLevel: 1,
+			cost: 150,
+			costMultiplier: 1,
+			image: "better_coffee_machine.jpg",
+		},
+		ultra_coffee_machine: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).upgrades.has("super_duper_coffee_machine");
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
+
+			},
+			maxLevel: 1,
+			cost: 200,
+			costMultiplier: 1,
+			image: "better_coffee_machine.jpg",
+		},
+		giga_coffee_machine: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).upgrades.has("ultra_coffee_machine");
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.07;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.05;
+
+			},
+			maxLevel: 1,
+			cost: 250,
+			costMultiplier: 1,
+			image: "better_coffee_machine.jpg",
+		},
+		ultimate_coffee_machine: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).upgrades.has("giga_coffee_machine");
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.08;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.06;
+
+			},
+			maxLevel: 1,
+			cost: 250,
+			costMultiplier: 1,
 			image: "better_coffee_machine.jpg",
 		},
 		promoter_effectiveness: {
@@ -468,11 +606,38 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).coffeePrice += 0.35;
 			},
-			maxLevel: 10,
+			maxLevel: 3,
 			cost: 40,
 			costMultiplier: 1.23,
 			image: "local_shop_nicer_coffee.jpg",
 		},
+		brazilian_beans: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
+					150 && ((shop.upgrades.get("local_shop_nicer_coffee") ?? 0) >= 3);
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).coffeePrice += 0.5;
+			},
+			maxLevel: 1,
+			cost: 150,
+			costMultiplier: 1,
+			image: "local_shop_nicer_coffee.jpg",
+		},
+		civet_coffee: {
+			unlock_condition: (shop) => {
+				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
+					200 && shop.upgrades.has("brazilian_beans");
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).coffeePrice += 0.8;
+			},
+			maxLevel: 1,
+			cost: 200,
+			costMultiplier: 1,
+			image: "local_shop_nicer_coffee.jpg",
+		},
+
 		unlock_auto_restock: {
 			unlock_condition: (shop) => {
 				return (shop as ILocalShop).lifetimeStats.totalRestocked >= 100;

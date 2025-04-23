@@ -77,7 +77,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 		// Setting up audio
 		this.audioManager.addMusic("bgm", aud.shop_music);
-		this.audioManager.addAmbience("crowd", aud.crowd);
+		this.audioManager.addAmbience("crowd", aud.new_crowd);
 	}
 
 	notify(event: string, data?: any) {

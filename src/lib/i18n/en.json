@@ -5,7 +5,8 @@
 	"newGame_btn": "New Game",
 	"options_btn": "Options",
 	"options_title": "Game Options",
-	"back_btn": "Return",
+	"closeOptions_btn": "Close",
+	"returnToMenu_btn": "Main Menu",
 
 	"opt_lang": "Language",
 	"opt_volume": "Volume",
@@ -149,6 +150,30 @@
 	"unlock_promoter_upgName": "Unlock Promoter",
 	"unlock_promoter_upgDesc": "Open a new promoter position dedicated to drawing customers in",
 	"unlock_auto_restock_upgName": "Unlock Auto Restock",
-	"unlock_auto_restock_upgDesc": "Establish automatic restocking of your various shops"
+	"unlock_auto_restock_upgDesc": "Establish automatic restocking of your various shops",
 	
+	"betterer_coffee_machine_upgName": "Betterer Coffee Machine",
+	"betterer_coffee_machine_upgDesc": "Cranks out coffee pretty darn fast",
+	"super_coffee_machine_upgName": "Super Coffee Machine",
+	"super_coffee_machine_upgDesc": "Cranks out coffee fartin' quick",
+	"super_duper_coffee_machine_upgName": "Super Duper Coffee Machine",
+	"super_duper_coffee_machine_upgDesc": "Coffee just won't stop coming out",
+	"ultra_coffee_machine_upgName": "Ultra Coffee Machine",
+	"ultra_coffee_machine_upgDesc": "Makes so much coffee you won't know what to do with it",
+	"giga_coffee_machine_upgName": "Giga Coffee Machine",
+	"giga_coffee_machine_upgDesc": "Unbelievable quantities of coffee",
+	"ultimate_coffee_machine_upgName": "Ultimate Coffee Machine",
+	"ultimate_coffee_machine_upgDesc": "The pinnacle of coffee creation.",
+
+	"brazilian_beans_upgName": "Brazilian Coffee Beans",
+	"brazilian_beans_upgDesc": "No better beans than Brazilian beans",
+	"civet_coffee_upgName": "Civet Coffee",
+	"civet_coffee_upgDesc": "Poop has never tasted better",
+
+	"window_flowers_upgName": "Buy Flowers",
+	"window_flowers_upgDesc": "Some beautiful roses for the window",
+	"bumpin_music_upgName": "Hire a Live Performer",
+	"bumpin_music_upgDesc": "He says he's Frank Sinatra but I'm not sure I believe him",
+	"drug_the_coffee_upgName": "Drug the Coffee",
+	"drug_the_coffee_upgDesc": "It looks like sugar so nobody will know"
 }
