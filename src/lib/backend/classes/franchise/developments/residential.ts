@@ -59,7 +59,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 			buyCost: 0,
 			sellCost: 800 - Math.floor(Math.random() * 50),
 			rent: 100,
-			maxCoffeePerHour: 100,
+			maxCoffeePerHour: 50,
 			onBuy: function () {
 			  self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
 			},
@@ -102,7 +102,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 		buyCost: 1600 + Math.floor(Math.random() * 800),
 		sellCost: 1600 - Math.floor(Math.random() * 200),
 		rent: 200,
-		maxCoffeePerHour: 500,
+		maxCoffeePerHour: 200,
 		onBuy: function () {
 		  self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
 		},
@@ -132,7 +132,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 		buyCost: 800 + Math.floor(Math.random() * 400),
 		sellCost: 800 - Math.floor(Math.random() * 50),
 		rent: 100,
-		maxCoffeePerHour: 100,
+		maxCoffeePerHour: 50,
 		onBuy: function () {
 		  self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
 		},
@@ -217,75 +217,75 @@ export class Residential extends DevelopmentBase implements IResidential{
 		  }
 		} as HousingBuilding)
 
-		possibleBuildings.push({
-		  name: "Bean Store",
-		  desc: "Imports high quality Columbian coffee beans",
-		  areaSize: 1,
-		  buyCost: 800 + Math.floor(Math.random() * 100),
-		  sellCost: 800 - Math.floor(Math.random() * 100),
-		  rent: 200,
-		  beansPerHour: 100,
-		  beanCost: 3 + Math.floor(Math.random() * 3),
-		  onBuy: function () {
+		// possibleBuildings.push({
+		//   name: "Bean Store",
+		//   desc: "Imports high quality Columbian coffee beans",
+		//   areaSize: 1,
+		//   buyCost: 800 + Math.floor(Math.random() * 100),
+		//   sellCost: 800 - Math.floor(Math.random() * 100),
+		//   rent: 200,
+		//   beansPerHour: 100,
+		//   beanCost: 3 + Math.floor(Math.random() * 3),
+		//   onBuy: function () {
 			
-		  },
-		  onSell: function () {
+		//   },
+		//   onSell: function () {
 			
-		  },
-		  onTick: function () {
+		//   },
+		//   onTick: function () {
 		
-		  },
-		  onHour: function () {
-			if (self.franchise.money >= this.beansPerHour * this.beanCost){
-			  self.parent.beans += this.beansPerHour;
-			  self.franchise.money -= this.beansPerHour * this.beanCost
-			}
-		  },
-		  onDay: function () {
-			self.franchise.money -= this.rent;
-		  },
-		  onWeek: function () {
+		//   },
+		//   onHour: function () {
+		// 	if (self.franchise.money >= this.beansPerHour * this.beanCost){
+		// 	  self.parent.beans += this.beansPerHour;
+		// 	  self.franchise.money -= this.beansPerHour * this.beanCost
+		// 	}
+		//   },
+		//   onDay: function () {
+		// 	self.franchise.money -= this.rent;
+		//   },
+		//   onWeek: function () {
 		
-		  },
-		  whatDo: function (): string {
-			return `Buys ${this.beansPerHour} off of the free market`;
-		  }
-		} as BeanBuilding)
+		//   },
+		//   whatDo: function (): string {
+		// 	return `Buys ${this.beansPerHour} off of the free market`;
+		//   }
+		// } as BeanBuilding)
 
-		possibleBuildings.push({
-		  name: "Bean Dispensary",
-		  desc: "Smells like a mix of coffee and weed",
-		  areaSize: 1,
-		  buyCost: 1600 + Math.floor(Math.random() * 800),
-		  sellCost: 1600 - Math.floor(Math.random() * 200),
-		  rent: 200,
-		  beansPerHour: 800,
-		  beanCost: 2 + Math.floor(Math.random() * 3),
-		  onBuy: function () {
+		// possibleBuildings.push({
+		//   name: "Bean Dispensary",
+		//   desc: "Smells like a mix of coffee and weed",
+		//   areaSize: 1,
+		//   buyCost: 1600 + Math.floor(Math.random() * 800),
+		//   sellCost: 1600 - Math.floor(Math.random() * 200),
+		//   rent: 200,
+		//   beansPerHour: 800,
+		//   beanCost: 2 + Math.floor(Math.random() * 3),
+		//   onBuy: function () {
 			
-		  },
-		  onSell: function () {
+		//   },
+		//   onSell: function () {
 			
-		  },
-		  onTick: function () {
+		//   },
+		//   onTick: function () {
 		
-		  },
-		  onHour: function () {
-			if (self.franchise.money >= this.beansPerHour * this.beanCost){
-			  self.parent.beans += this.beansPerHour;
-			  self.franchise.money -= this.beansPerHour * this.beanCost;
-			}
-		  },
-		  onDay: function () {
-			self.franchise.money -= this.rent;
-		  },
-		  onWeek: function () {
+		//   },
+		//   onHour: function () {
+		// 	if (self.franchise.money >= this.beansPerHour * this.beanCost){
+		// 	  self.parent.beans += this.beansPerHour;
+		// 	  self.franchise.money -= this.beansPerHour * this.beanCost;
+		// 	}
+		//   },
+		//   onDay: function () {
+		// 	self.franchise.money -= this.rent;
+		//   },
+		//   onWeek: function () {
 		
-		  },
-		  whatDo: function (): string {
-			return `Buys ${this.beansPerHour} off of the free market`;
-		  }
-		} as BeanBuilding)
+		//   },
+		//   whatDo: function (): string {
+		// 	return `Buys ${this.beansPerHour} off of the free market`;
+		//   }
+		// } as BeanBuilding)
 
 		this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
 	}
