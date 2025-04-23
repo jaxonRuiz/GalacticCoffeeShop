@@ -36,14 +36,18 @@
 
 	<div class="right block">
 		<h1>Region List</h1>
-		<div class="col">
+		<div class="col" style = "position: relative; width: 70vw; height: 90vh;">
 			{#if $regions}
 				{#each $regions as region, i (region)}
 					<Button
-						onclick={() => {
-							franchise.selectRegion(region);
-						}}>region {i + 1}</Button
-					>
+						onclick={() => franchise.selectRegion(region)}
+						style = "
+							position: absolute;
+							left: {region.coordinates[0]/11}%;
+							top: {region.coordinates[1]/11}%;
+						">
+						region {i + 1}
+					</Button>
 				{/each}
 			{/if}
 		</div>
@@ -53,6 +57,11 @@
 <style>
 	div.left,
 	div.right {
-		width: 50%;
+		width: 70%;
+		border: 1px solid #ccc;
+		padding: 1rem;
+		border-radius: 0.5rem;
+		background-color: #1a1a1a;
+		box-sizing: border-box;
 	}
 </style>

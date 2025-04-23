@@ -8,14 +8,19 @@
 	let countries = franchise.world.w_countries;
 </script>
 
-<div class="col block">
-	<h1>Countries</h1>
+<div class="col block" style = "position: relative; height: 100vh;">
+	<h1>World View</h1>
 	{#each Object.keys($countries) as country (country)}
 		<Button
 			static={false}
 			onclick={() => {
 				franchise.world.selectCountry(country);
 			}}
+			style = "
+				position: absolute;
+				left: {($countries[country].coordinates[0] / 12)}%;
+				top: {($countries[country].coordinates[1] / 11)}%;
+			"
 		>
 			{country}
 		</Button>
