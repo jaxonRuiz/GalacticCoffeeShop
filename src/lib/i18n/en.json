@@ -5,7 +5,8 @@
 	"newGame_btn": "New Game",
 	"options_btn": "Options",
 	"options_title": "Game Options",
-	"back_btn": "Return",
+	"closeOptions_btn": "Close",
+	"returnToMenu_btn": "Main Menu",
 
 	"opt_lang": "Language",
 	"opt_volume": "Volume",
