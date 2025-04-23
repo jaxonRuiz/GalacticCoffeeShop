@@ -51,6 +51,10 @@ export function resetState() {
 	localStorage.removeItem("GameSaveData");
 	localStorage.removeItem("multishop");
 	localStorage.removeItem("preshop");
+
+	// reset variables to erase data inside them
+	timer = new Timer();
+	stageManager = new StageManager(timer);
 }
 
 // also acts as unpause game
