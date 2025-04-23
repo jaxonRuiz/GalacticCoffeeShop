@@ -56,8 +56,6 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
         this.developmentArea = areaSize;
         this.franchise = franchise;
         this.parent.unusedLand -= areaSize;
-
-        this.initializeDevelopment();
     }
 
     notify(event: string, data?: any) {

@@ -35,6 +35,7 @@ export class Region implements ISubscriber, IRegion {
 	w_exportCapacity: Writable<number> = writable(1000);
 	w_beans: Writable<number> = writable(0);
 	w_unlocked: Writable<boolean> = writable(false);
+	w_population: Writable<number> = writable(1000);
 
 	//getters and setters
 	get totalArea() {
@@ -91,6 +92,12 @@ export class Region implements ISubscriber, IRegion {
 	set unlocked(value){
 		this.w_unlocked.set(value);
 	}
+	get population(){
+		return get(this.w_population);
+	}
+	set population(value){
+		this.w_population.set(value);
+	}
 
 	//internal variables
 	dailyImport: number = this.importCapacity;
@@ -122,6 +129,7 @@ export class Region implements ISubscriber, IRegion {
 		this.coordinates = coordinates;
 		this.timer = timer;
 		this.franchise = franchise;
+		this.population = 1000;
 
 		this.initializeRegion(climate);
 	}

@@ -20,6 +20,7 @@
 	let importCapacity = $region?.w_importCapacity;
 	let exportCapacity = $region?.w_exportCapacity;
 	let beans = $region?.w_beans;
+	let population = $region?.w_population;
 </script>
 
 <div class="region row">
@@ -32,6 +33,7 @@
 		<p>import capacity: {$importCapacity}</p>
 		<p>export capacity: {$exportCapacity}</p>
 		<p>stockpiled beans: {$beans}</p>
+		<p>population: {$population}</p>
 
 		{#if $environmentalFactors}
 			<h1>Environment</h1>

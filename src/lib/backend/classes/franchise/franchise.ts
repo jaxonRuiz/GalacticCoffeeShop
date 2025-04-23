@@ -31,6 +31,8 @@ export class Franchise implements ISubscriber, IScene {
   audioManager: AudioManager = new AudioManager();
   timer: Publisher;
   world: World;
+  firstFarm: boolean = true;
+  firstCity: boolean = true;
 
   // current country/region to be used by frontend
   w_currentCountry: Writable<null | Country> = writable(null);

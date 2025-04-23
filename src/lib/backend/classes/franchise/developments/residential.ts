@@ -1,20 +1,18 @@
 import { get, type Writable, writable } from "svelte/store";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
+import type { Publisher } from "$lib/backend/systems/observer";
+import type { Region } from "../region";
+import type { Franchise } from "../franchise";
 
 export class Residential extends DevelopmentBase implements IResidential{
     get developmentType(): DevelopmentType {
         return DevelopmentType.Residential;
     }
 
-    w_population: Writable<number> = writable(10000);
+    
     w_income: Writable<number> = writable(); //income per day? just to show the player how much their place is making
 
-    get population(){
-      return get(this.w_population);
-    }
-    set population(value){
-      this.w_population.set(value);
-    }
+    
     get income(){
       return get(this.w_income);
     }
@@ -32,10 +30,13 @@ export class Residential extends DevelopmentBase implements IResidential{
     }
 
     get hourlyCustomerEstimate(): number{
-      return this.population/20;
+      return this.parent.population/20;
     }
 
-
+    constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
+            super(timer, region, areaSize, franchise);
+            this.initializeDevelopment();
+        }
 
     sellCoffee(coffeeAmount: number){
       if (coffeeAmount > this.parent.beans){
@@ -50,37 +51,43 @@ export class Residential extends DevelopmentBase implements IResidential{
     initializeDevelopment(): void {
         //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
         const self = this;
-        this.buyBuilding({
-          name: "Corner Cafe",
-          desc: "Cute cafe on the corner",
-          areaSize: 1,
-          buyCost: 0,
-          sellCost: 800 - Math.floor(Math.random() * 50),
-          rent: 50,
-          maxCoffeePerHour: 100,
-          onBuy: function () {
-            self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
-          },
-          onSell: function () {
-            self.totalMaxCoffeePerHour -= this.maxCoffeePerHour;
-          },
-          onTick: function () {
-  
-          },
-          onHour: function () {
-            self.sellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
-          },
-          onDay: function () {
-            self.franchise.money -= this.rent;
-          },
-          onWeek: function () {
-  
-          },
-          whatDo: function (): string {
-            return `Sells ${this.maxCoffeePerHour} coffees per hour (if you got the beans)`;
-          }
-        } as CoffeeBuilding)
+        if (this.franchise.firstCity){
+          this.buyBuilding({
+            name: "Corner Cafe",
+            desc: "Cute cafe on the corner",
+            areaSize: 1,
+            buyCost: 0,
+            sellCost: 800 - Math.floor(Math.random() * 50),
+            rent: 50,
+            maxCoffeePerHour: 100,
+            onBuy: function () {
+              self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
+            },
+            onSell: function () {
+              self.totalMaxCoffeePerHour -= this.maxCoffeePerHour;
+            },
+            onTick: function () {
+              self.sellCoffee(self.coffeesToSell(this.maxCoffeePerHour));
+            },
+            onHour: function () {
+            },
+            onDay: function () {
+              self.franchise.money -= this.rent;
+            },
+            onWeek: function () {
+            },
+            whatDo: function (): string {
+              return `Sells ${this.maxCoffeePerHour} coffees per hour (if you got the beans)`;
+            }
+          } as CoffeeBuilding)
+          this.franchise.firstCity = false;
+        }
+
         this.updateAvailableBuildings(3); //these should be displayed on the frontend
+    }
+
+    coffeesToSell(maxCoffeePerHour: number): number{
+      return Math.floor(this.hourlyCustomerEstimate* maxCoffeePerHour/this.totalMaxCoffeePerHour * (1 + Math.random() * 0.2) / 16);
     }
     
     updateAvailableBuildings(buildingCount: number): void {
@@ -103,10 +110,9 @@ export class Residential extends DevelopmentBase implements IResidential{
           self.totalMaxCoffeePerHour -= this.maxCoffeePerHour;
         },
         onTick: function () {
-
+          self.sellCoffee(self.coffeesToSell(this.maxCoffeePerHour));
         },
         onHour: function () {
-          self.sellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
         },
         onDay: function () {
           self.franchise.money -= this.rent;
@@ -134,10 +140,9 @@ export class Residential extends DevelopmentBase implements IResidential{
           self.totalMaxCoffeePerHour -= this.maxCoffeePerHour;
         },
         onTick: function () {
-
+          self.sellCoffee(self.coffeesToSell(this.maxCoffeePerHour));
         },
         onHour: function () {
-          self.sellCoffee(self.hourlyCustomerEstimate * this.maxCoffeePerHour/self.totalMaxCoffeePerHour * (1 + Math.random() * 0.2));
         },
         onDay: function () {
           self.franchise.money -= this.rent;
@@ -157,12 +162,12 @@ export class Residential extends DevelopmentBase implements IResidential{
           buyCost: 1600 + Math.floor(Math.random() * 800),
           sellCost: 1600 - Math.floor(Math.random() * 200),
           rent: 200,
-          populationIncrease: 10000 +  Math.floor(Math.random() * 5000),
+          populationIncrease: 1000 +  Math.floor(Math.random() * 300),
           onBuy: function () {
-            self.population += this.populationIncrease;
+            self.parent.population += this.populationIncrease;
           },
           onSell: function () {
-            self.population -= this.populationIncrease;
+            self.parent.population -= this.populationIncrease;
           },
           onTick: function () {
         
@@ -188,12 +193,12 @@ export class Residential extends DevelopmentBase implements IResidential{
           buyCost: 600 + Math.floor(Math.random() * 300),
           sellCost: 600 - Math.floor(Math.random() * 50),
           rent: 200,
-          populationIncrease: 3000 +  Math.floor(Math.random() * 2000),
+          populationIncrease: 500 +  Math.floor(Math.random() * 100),
           onBuy: function () {
-            self.population += this.populationIncrease;
+            self.parent.population += this.populationIncrease;
           },
           onSell: function () {
-            self.population -= this.populationIncrease;
+            self.parent.population -= this.populationIncrease;
           },
           onTick: function () {
         
@@ -219,7 +224,7 @@ export class Residential extends DevelopmentBase implements IResidential{
           buyCost: 800 + Math.floor(Math.random() * 100),
           sellCost: 800 - Math.floor(Math.random() * 100),
           rent: 200,
-          beansPerHour: 1000,
+          beansPerHour: 100,
           beanCost: 3 + Math.floor(Math.random() * 3),
           onBuy: function () {
             

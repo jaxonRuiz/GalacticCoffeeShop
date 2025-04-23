@@ -1,5 +1,8 @@
 import { get, type Writable, writable } from "svelte/store";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
+import type { Publisher } from "$lib/backend/systems/observer";
+import type { Region } from "../region";
+import type { Franchise } from "../franchise";
 
 export class Farm extends DevelopmentBase {
   get developmentType(): DevelopmentType {
@@ -15,39 +18,74 @@ export class Farm extends DevelopmentBase {
     this.w_water.set(value);
   }
 
+  constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
+    super(timer, region, areaSize, franchise);
+    this.initializeDevelopment();
+  }
+
   initializeDevelopment(): void {
     //put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
     const self = this;
-    this.buyBuilding({
-      name: "Greenhouse",
-      desc: "Grow some beans",
-      areaSize: 2,
-      buyCost: 0,
-      sellCost: 600 - Math.floor(Math.random() * 100),
-      rent: 0,
-      beansPerHour: 100 +
-        Math.floor((Math.random() * 20) *
-          this.parent.environmentalFactors["soilRichness"]),
-      onBuy: function () {
-      },
-      onSell: function () {
-      },
-      onTick: function () {
-      },
-      onHour: function () {
-      },
-      onDay: function () {
-        self.franchise.money -= this.rent;
-        var b = Math.min(this.beansPerHour, self.water);
-        self.parent.beans += b;
-        self.water -= b;
-      },
-      onWeek: function () {
-      },
-      whatDo: function (): string {
-        return `Grows ${this.beansPerHour} beans per hour`;
-      }
-    } as FarmBuilding);
+    if (this.franchise.firstFarm){
+      this.buyBuilding({
+        name: "Greenhouse",
+        desc: "Grow some beans",
+        areaSize: 2,
+        buyCost: 0,
+        sellCost: 600 - Math.floor(Math.random() * 100),
+        rent: 0,
+        beansPerHour: 100 +
+          Math.floor((Math.random() * 20) *
+            this.parent.environmentalFactors["soilRichness"]),
+        onBuy: function () {
+        },
+        onSell: function () {
+        },
+        onTick: function () {
+        },
+        onHour: function () {
+          var b = Math.min(this.beansPerHour, self.water);
+          self.parent.beans += b;
+          self.water -= b;
+        },
+        onDay: function () {
+          self.franchise.money -= this.rent;
+        },
+        onWeek: function () {
+        },
+        whatDo: function (): string {
+          return `Grows ${this.beansPerHour} beans per hour`;
+        }
+      } as FarmBuilding);
+      this.buyBuilding(({
+        name: "Water Tower",
+        desc: "Hope you're thirsty",
+        areaSize: 1,
+        buyCost: 0,
+        sellCost: 800 - Math.floor(Math.random() * 100),
+        rent: 50,
+        waterPerDay: Math.floor(100 * this.parent.environmentalFactors["waterAvailability"]),
+        onBuy: function () {
+        },
+        onSell: function () {
+        },
+        onTick: function () {
+        },
+        onHour: function () {
+          self.water += this.waterPerDay;
+        },
+        onDay: function () {
+          self.franchise.money -= this.rent;
+        },
+        onWeek: function () {
+        },
+        whatDo: function (): string {
+          return `Produces ${this.waterPerDay} water per hour`;
+        }
+      } as WaterBuilding))
+      this.franchise.firstFarm = false;
+    }
+    
     this.updateAvailableBuildings(3); //these should be displayed on the frontend
   }
 

@@ -1,9 +1,17 @@
+import type { Publisher } from "$lib/backend/systems/observer";
+import type { Franchise } from "../franchise";
+import type { Region } from "../region";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 
 export class LogisticCenter extends DevelopmentBase{
     get developmentType(): DevelopmentType {
         return DevelopmentType.Logistic;
       }
+
+    constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
+        super(timer, region, areaSize, franchise);
+        this.initializeDevelopment();
+    }
 
     initializeDevelopment(): void {
         //put all the logistic center specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
