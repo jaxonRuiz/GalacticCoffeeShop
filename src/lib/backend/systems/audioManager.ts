@@ -65,7 +65,7 @@ export class AudioManager {
 
     // Helper to apply global and specific volume scales
     applyVolumeScale(volume: number, type: "music" | "sfx" | "ambience"): number {
-        if ( type === "ambience"){
+        if (type === "ambience") {
             return volume * get(globalVolumeScale) * get(musicVolume) * this.ambienceVolume;
         }
         const specificVolume = type === "music" ? get(musicVolume) : get(sfxVolume);
