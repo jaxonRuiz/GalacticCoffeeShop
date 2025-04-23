@@ -1,4 +1,5 @@
 import { get, type Writable, writable } from "svelte/store";
+import { globalVolumeScale, musicVolume, sfxVolume } from "../systems/audioManager";
 import { Publisher } from "../systems/observer";
 import { msPerTick } from "../systems/time";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
@@ -235,10 +236,11 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 					this.maxCustomers
 				);
 				this.customerProgress %= 1;
-				this.audioManager.setVolume(
-					"crowd",
-					Math.min(this.waitingCustomers / this.maxCustomers, 1)
-				);
+
+				// Scale crowd volume by the number of customers and global/music volume
+				const crowdVolume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
+				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.25);
+				this.audioManager.setVolume("crowd", scaledVolume);
 			}
 		}
 	}
