@@ -20,7 +20,7 @@ console.log("hello world");
 // make sure startGame is only called on a new save
 export function startNewGame() {
 	resetState();
-	console.log("starting game");
+	console.log("starting new game");
 	if (stageManager.currentSceneIndex == 0) {
 		stageManager.nextScene();
 	}
@@ -40,6 +40,8 @@ export function loadState() {
 	console.log("game loading state");
 	if (!localStorage.getItem("GameSaveData")) {
 		console.log("No save data found");
+		startNewGame();
+		return;
 	}
 	let saveData = JSON.parse(localStorage.getItem("GameSaveData")!);
 	stageManager.loadStage(saveData.currentStageIndex);
