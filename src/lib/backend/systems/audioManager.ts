@@ -38,7 +38,7 @@ export class AudioManager {
     bgMusic: HTMLAudioElement[] = [];
 
     sfxVolume: number = 1;
-    ambienceVolume: number = 1;
+    ambienceVolume: number = 0.25;
     musicVolume: number = 1;
 
     constructor() {
@@ -64,7 +64,10 @@ export class AudioManager {
     }
 
     // Helper to apply global and specific volume scales
-    applyVolumeScale(volume: number, type: "music" | "sfx"): number {
+    applyVolumeScale(volume: number, type: "music" | "sfx" | "ambience"): number {
+        if ( type === "ambience"){
+            return volume * get(globalVolumeScale) * get(musicVolume) * this.ambienceVolume;
+        }
         const specificVolume = type === "music" ? get(musicVolume) : get(sfxVolume);
         return volume * get(globalVolumeScale) * specificVolume;
     }
@@ -80,7 +83,7 @@ export class AudioManager {
         }
         for (let audio of this.ambience.values()) {
             if (!audio.paused) {
-                audio.volume = this.applyVolumeScale(this.ambienceVolume, "music");
+                audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience");
             }
         }
         for (let audio of this.music.values()) {
