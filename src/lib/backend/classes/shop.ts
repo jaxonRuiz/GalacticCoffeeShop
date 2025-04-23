@@ -105,35 +105,35 @@ export class Shop implements ILocalShop {
 		this.w_autoRestockUnlocked.set(value);
 	}
 
-  // variable containers ///////////////////////////////////////////////////////
-  w_restockSheet: Writable<{ [key: string]: number }> = writable({
-    beans: 5,
-    emptyCups: 5,
-  });
-  workerStats: { [key: string]: number } = {
-    baristaBaseProductivity: 0.1,
-    serverBaseProductivity: 0.05,
-    baristaCumulativeProductivity: 1,
-    serverCumulativeProductivity: 1,
-    baristaFlatProductivity: 0,
-    serverFlatProductivity: 0,
-  };
-  w_progressTrackers: Writable<{ [key: string]: number }> = writable({
-    serviceProgress: 0,
-    coffeeProgress: 0,
-    promotionProgress: 0,
-    customerProgress: 0,
-  });
-  w_workerAmounts: Writable<{ [key: string]: number }> = writable({
-    baristaCurrent: 0,
-    serverCurrent: 0,
-    promoterCurrent: 0,
-    supplierCurrent: 0,
-    baristaMax: 2,
-    serverMax: 1,
-    promoterMax: 1,
-    supplierMax: 1,
-  });
+	// variable containers ///////////////////////////////////////////////////////
+	w_restockSheet: Writable<{ [key: string]: number }> = writable({
+		beans: 5,
+		emptyCups: 5,
+	});
+	workerStats: { [key: string]: number } = {
+		baristaBaseProductivity: 0.1,
+		serverBaseProductivity: 0.05,
+		baristaCumulativeProductivity: 1,
+		serverCumulativeProductivity: 1,
+		baristaFlatProductivity: 0,
+		serverFlatProductivity: 0,
+	};
+	w_progressTrackers: Writable<{ [key: string]: number }> = writable({
+		serviceProgress: 0,
+		coffeeProgress: 0,
+		promotionProgress: 0,
+		customerProgress: 0,
+	});
+	w_workerAmounts: Writable<{ [key: string]: number }> = writable({
+		baristaCurrent: 0,
+		serverCurrent: 0,
+		promoterCurrent: 0,
+		supplierCurrent: 0,
+		baristaMax: 2,
+		serverMax: 1,
+		promoterMax: 1,
+		supplierMax: 1,
+	});
 
 	lifetimeStats: { [key: string]: number } = {
 		coffeeSold: 0,
@@ -142,288 +142,288 @@ export class Shop implements ILocalShop {
 		totalRestocked: 0,
 	};
 
-  // stats /////////////////////////////////////////////////////////////////////
-  beansPrice: number = 2.5;
-  cupsPrice: number = 0.1;
-  totalWorkers: number = 0;
-  maxCustomers: number = 7;
-  promotionEffectiveness: number = 0.2;
-  minAppeal: number = 0.1;
-  maxAppeal: number = 2;
-  appealDecay: number = 0.05;
-  runTutorial: boolean = true;
+	// stats /////////////////////////////////////////////////////////////////////
+	beansPrice: number = 2.5;
+	cupsPrice: number = 0.1;
+	totalWorkers: number = 0;
+	maxCustomers: number = 7;
+	promotionEffectiveness: number = 0.2;
+	minAppeal: number = 0.1;
+	maxAppeal: number = 2;
+	appealDecay: number = 0.05;
+	runTutorial: boolean = true;
 
-  // misc //////////////////////////////////////////////////////////////////////
-  roles: Map<string, Role> = new Map();
-  upgrades: Map<string, number> = new Map();
-  multiShop: MultiShop;
-  audioManager: AudioManager = new AudioManager();
-  boilTimer: number = 0;
-  playBoiler: boolean = false;
-  isSelected: boolean = false;
+	// misc //////////////////////////////////////////////////////////////////////
+	roles: Map<string, Role> = new Map();
+	upgrades: Map<string, number> = new Map();
+	multiShop: MultiShop;
+	audioManager: AudioManager = new AudioManager();
+	boilTimer: number = 0;
+	playBoiler: boolean = false;
+	isSelected: boolean = false;
 
-  constructor(multiShop: MultiShop) {
-    this.multiShop = multiShop;
-    // setting up default roles
-    this.roles.set("barista", {
-      name: "Barista",
-      wage: 50,
-      update: (shop: Shop) => {
-        let barista = shop.roles.get("barista")!;
-        if (shop.beans >= 1 && shop.emptyCups >= 1) {
-          shop.progressTrackers["coffeeProgress"] +=
-            (shop.workerStats["baristaBaseProductivity"] *
-              shop.workerStats["baristaCumulativeProductivity"] +
-              shop.workerStats["baristaFlatProductivity"]) *
-            this.workerAmounts["baristaCurrent"];
-        }
-      },
-    });
+	constructor(multiShop: MultiShop) {
+		this.multiShop = multiShop;
+		// setting up default roles
+		this.roles.set("barista", {
+			name: "Barista",
+			wage: 50,
+			update: (shop: Shop) => {
+				let barista = shop.roles.get("barista")!;
+				if (shop.beans >= 1 && shop.emptyCups >= 1) {
+					shop.progressTrackers["coffeeProgress"] +=
+						(shop.workerStats["baristaBaseProductivity"] *
+							shop.workerStats["baristaCumulativeProductivity"] +
+							shop.workerStats["baristaFlatProductivity"]) *
+						this.workerAmounts["baristaCurrent"];
+				}
+			},
+		});
 
-    this.roles.set("server", {
-      name: "Server",
-      wage: 50,
-      update: (shop: Shop) => {
-        let server = shop.roles.get("server")!;
-        if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
-          shop.progressTrackers["serviceProgress"] +=
-            (shop.workerStats["serverBaseProductivity"] *
-              shop.workerStats["serverCumulativeProductivity"] +
-              shop.workerStats["serverFlatProductivity"]) *
-            this.workerAmounts["serverCurrent"];
-        }
-      },
-    });
+		this.roles.set("server", {
+			name: "Server",
+			wage: 50,
+			update: (shop: Shop) => {
+				let server = shop.roles.get("server")!;
+				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
+					shop.progressTrackers["serviceProgress"] +=
+						(shop.workerStats["serverBaseProductivity"] *
+							shop.workerStats["serverCumulativeProductivity"] +
+							shop.workerStats["serverFlatProductivity"]) *
+						this.workerAmounts["serverCurrent"];
+				}
+			},
+		});
 
-    // Clean up other audio managers
-    cleanupAudioManagers(this.audioManager);
+		// Clean up other audio managers
+		cleanupAudioManagers(this.audioManager);
 
-    // Setting up audio
-    this.audioManager.addSFX("boiling", aud.boiling);
-    this.audioManager.addSFX("ding", aud.ding);
-    this.audioManager.addAmbience("crowd", aud.new_crowd);
+		// Setting up audio
+		this.audioManager.addSFX("boiling", aud.boiling);
+		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addAmbience("crowd", aud.new_crowd);
 
-    this.audioManager.playAudio("crowd");
-  }
+		this.audioManager.playAudio("crowd");
+	}
 
-  // multishop utility /////////////////////////////////////////////////////////
-  tickCounter: number = 0;
-  tick(owner: MultiShop) {
-    this.tickCounter += 1;
-    if (this.tickCounter >= Number.MAX_SAFE_INTEGER) this.tickCounter = 1;
-    this.roles.forEach((role: Role) => {
-      role.update(this, this.tickCounter);
-    });
+	// multishop utility /////////////////////////////////////////////////////////
+	tickCounter: number = 0;
+	tick(owner: MultiShop) {
+		this.tickCounter += 1;
+		if (this.tickCounter >= Number.MAX_SAFE_INTEGER) this.tickCounter = 1;
+		this.roles.forEach((role: Role) => {
+			role.update(this, this.tickCounter);
+		});
 
-    this.decayAppeal();
-    this.drawCustomers();
+		this.decayAppeal();
+		this.drawCustomers();
 
-    // only play audio if selected
-    if (this.isSelected) audioUpdate(this);
-    else {
-      this.audioManager.disableAudio();
-    }
+		// only play audio if selected
+		if (this.isSelected) audioUpdate(this);
+		else {
+			this.audioManager.disableAudio();
+		}
 
-    // progress updaters
-    progressUpdates(this);
+		// progress updaters
+		progressUpdates(this);
 
-    function audioUpdate(shop: Shop) {
-      if (shop.boilTimer > 0) {
-        shop.boilTimer -= 1;
-      } else {
-        shop.playBoiler = false;
-        shop.audioManager.stopAudio("boiling");
-      }
-    }
+		function audioUpdate(shop: Shop) {
+			if (shop.boilTimer > 0) {
+				shop.boilTimer -= 1;
+			} else {
+				shop.playBoiler = false;
+				shop.audioManager.stopAudio("boiling");
+			}
+		}
 
-    function progressUpdates(shop: Shop) {
-      if (shop.progressTrackers["coffeeProgress"] >= 1) {
-        let amount = Math.floor(shop.progressTrackers["coffeeProgress"]);
-        if (shop.produceCoffee(amount)) {
-          shop.progressTrackers["coffeeProgress"] -= amount;
-        }
-      }
-      if (
-        shop.progressTrackers["customerProgress"] >= 1 &&
-        shop.waitingCustomers < shop.maxCustomers
-      ) {
-        let amount = Math.floor(shop.progressTrackers["customerProgress"]);
-        shop.waitingCustomers += amount;
-        shop.progressTrackers["customerProgress"] -= amount;
-      }
-      if (shop.progressTrackers["serviceProgress"] >= 1) {
-        let amount = Math.floor(shop.progressTrackers["serviceProgress"]);
-        if (shop.sellCoffee(amount)) {
-          shop.progressTrackers["serviceProgress"] -= amount;
-        }
-      }
-      if (shop.progressTrackers["promotionProgress"] >= 1) {
-        let amount = Math.floor(shop.progressTrackers["promotionProgress"]);
-        for (let i = 0; i < amount; i++) shop.promote();
-        shop.progressTrackers["promotionProgress"] -= amount;
-      }
-    }
-  }
+		function progressUpdates(shop: Shop) {
+			if (shop.progressTrackers["coffeeProgress"] >= 1) {
+				let amount = Math.floor(shop.progressTrackers["coffeeProgress"]);
+				if (shop.produceCoffee(amount)) {
+					shop.progressTrackers["coffeeProgress"] -= amount;
+				}
+			}
+			if (
+				shop.progressTrackers["customerProgress"] >= 1 &&
+				shop.waitingCustomers < shop.maxCustomers
+			) {
+				let amount = Math.floor(shop.progressTrackers["customerProgress"]);
+				shop.waitingCustomers += amount;
+				shop.progressTrackers["customerProgress"] -= amount;
+			}
+			if (shop.progressTrackers["serviceProgress"] >= 1) {
+				let amount = Math.floor(shop.progressTrackers["serviceProgress"]);
+				if (shop.sellCoffee(amount)) {
+					shop.progressTrackers["serviceProgress"] -= amount;
+				}
+			}
+			if (shop.progressTrackers["promotionProgress"] >= 1) {
+				let amount = Math.floor(shop.progressTrackers["promotionProgress"]);
+				for (let i = 0; i < amount; i++) shop.promote();
+				shop.progressTrackers["promotionProgress"] -= amount;
+			}
+		}
+	}
 
-  // TODO make cleanness affect appeal decay
-  decayAppeal() {
-    // appeal decay
-    if (this.appeal > this.minAppeal) {
-      this.appeal = this.appeal * (1 - this.appealDecay);
-    } else {
-      this.appeal = this.minAppeal;
-    }
-  }
+	// TODO make cleanness affect appeal decay
+	decayAppeal() {
+		// appeal decay
+		if (this.appeal > this.minAppeal) {
+			this.appeal = this.appeal * (1 - this.appealDecay);
+		} else {
+			this.appeal = this.minAppeal;
+		}
+	}
 
-  drawCustomers() {
-    if (this.appeal > 0) {
-      // customer generation
-      this.progressTrackers["customerProgress"] += this.appeal;
-      if (this.progressTrackers["customerProgress"] >= 1) {
-        this.waitingCustomers += Math.floor(
-          this.progressTrackers["customerProgress"]
-        );
-        this.waitingCustomers = Math.min(
-          this.waitingCustomers,
-          this.maxCustomers
-        );
-        this.progressTrackers["customerProgress"] %= 1;
-      }
-    }
-  }
+	drawCustomers() {
+		if (this.appeal > 0) {
+			// customer generation
+			this.progressTrackers["customerProgress"] += this.appeal;
+			if (this.progressTrackers["customerProgress"] >= 1) {
+				this.waitingCustomers += Math.floor(
+					this.progressTrackers["customerProgress"]
+				);
+				this.waitingCustomers = Math.min(
+					this.waitingCustomers,
+					this.maxCustomers
+				);
+				this.progressTrackers["customerProgress"] %= 1;
+			}
+		}
+	}
 
-  // TODO check
-  applyCost(cost: number) {
-    this.money -= cost;
-    if (this.money < 0) {
-      this.multiShop.applyCost(Math.abs(this.money));
-      this.money = 0;
-      // apply debt?
-    }
-  }
+	// TODO check
+	applyCost(cost: number) {
+		this.money -= cost;
+		if (this.money < 0) {
+			this.multiShop.applyCost(Math.abs(this.money));
+			this.money = 0;
+			// apply debt?
+		}
+	}
 
-  getRestockPrice() {
-    return (
-      this.restockSheet["beans"] * this.beansPrice +
-      this.restockSheet["emptyCups"] * this.cupsPrice
-    );
-  }
+	getRestockPrice() {
+		return (
+			this.restockSheet["beans"] * this.beansPrice +
+			this.restockSheet["emptyCups"] * this.cupsPrice
+		);
+	}
 
-  restock() {
-    this.applyCost(this.restockSheet["beans"] * this.beansPrice);
-    this.applyCost(this.restockSheet["emptyCups"] * this.cupsPrice);
+	restock() {
+		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
+		this.applyCost(this.restockSheet["emptyCups"] * this.cupsPrice);
 
-    this.beans += this.restockSheet["beans"];
-	this.emptyCups += this.restockSheet["emptyCups"];
-	this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"] + this.restockSheet["emptyCups"];
+		this.beans += this.restockSheet["beans"];
+		this.emptyCups += this.restockSheet["emptyCups"];
+		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"] + this.restockSheet["emptyCups"];
 
-    this.audioManager.playAudio("ding");
-  }
-		
+		this.audioManager.playAudio("ding");
+	}
 
-  getTotalExpenses() {
-    let totalExpenses = 0;
-    this.roles.forEach((role: Role) => {
-      // pain peko
-      let numWorkers = this.workerAmounts[role.name.toLowerCase() + "Current"];
-      totalExpenses += numWorkers * role.wage;
-    });
-    // restock expenses taken from restock()
-    // totalExpenses += this.beans * this.beansPrice;
-    // totalExpenses += this.emptyCups * this.cupsPrice;
 
-    return totalExpenses;
-  }
+	getTotalExpenses() {
+		let totalExpenses = 0;
+		this.roles.forEach((role: Role) => {
+			// pain peko
+			let numWorkers = this.workerAmounts[role.name.toLowerCase() + "Current"];
+			totalExpenses += numWorkers * role.wage;
+		});
+		// restock expenses taken from restock()
+		// totalExpenses += this.beans * this.beansPrice;
+		// totalExpenses += this.emptyCups * this.cupsPrice;
 
-  deselectShop() {
-    this.audioManager.disableAudio();
-    this.multiShop.deselectShop();
-    this.multiShop.finishedFirstShop = true;
-  }
+		return totalExpenses;
+	}
 
-  // player actions ////////////////////////////////////////////////////////////
-  produceCoffee(amount: number = 1) {
-    if (this.boilTimer === 0) {
-      this.audioManager.playAudio("boiling");
-      this.boilTimer += 7;
-    }
+	deselectShop() {
+		this.audioManager.disableAudio();
+		this.multiShop.deselectShop();
+		this.multiShop.finishedFirstShop = true;
+	}
 
-    let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
-    if (this.beans >= numToMake && this.emptyCups >= numToMake) {
-      this.beans -= numToMake;
-      this.emptyCups -= numToMake;
-      this.coffeeCups += numToMake;
-      this.lifetimeStats["coffeeMade"] += numToMake;
-      return true;
-    }
-    return false;
-  }
+	// player actions ////////////////////////////////////////////////////////////
+	produceCoffee(amount: number = 1) {
+		if (this.boilTimer === 0) {
+			this.audioManager.playAudio("boiling");
+			this.boilTimer += 7;
+		}
 
-  sellCoffee(amount: number = 1) {
-    if (this.isSelected) {
-      this.audioManager.playAudio("ding");
-    }
-    let numToSell = Math.floor(
-      Math.min(amount, this.waitingCustomers, this.coffeeCups)
-    );
-    if (this.waitingCustomers >= numToSell && this.coffeeCups >= numToSell) {
-      this.coffeeCups -= numToSell;
-      this.waitingCustomers -= numToSell;
-      this.money += this.coffeePrice * numToSell * this.moneyMultiplier;
-      this.lifetimeStats["moneyMade"] +=
-        this.coffeePrice * numToSell * this.moneyMultiplier;
-      this.lifetimeStats["coffeeSold"] += numToSell;
-      return true;
-    }
-    return false;
-  }
+		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
+		if (this.beans >= numToMake && this.emptyCups >= numToMake) {
+			this.beans -= numToMake;
+			this.emptyCups -= numToMake;
+			this.coffeeCups += numToMake;
+			this.lifetimeStats["coffeeMade"] += numToMake;
+			return true;
+		}
+		return false;
+	}
 
-  promote() {
-    this.audioManager.playAudio("ding");
-    this.appeal +=
-      this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
-    this.appeal = Math.min(this.appeal, this.maxAppeal);
-  }
+	sellCoffee(amount: number = 1) {
+		if (this.isSelected) {
+			this.audioManager.playAudio("ding");
+		}
+		let numToSell = Math.floor(
+			Math.min(amount, this.waitingCustomers, this.coffeeCups)
+		);
+		if (this.waitingCustomers >= numToSell && this.coffeeCups >= numToSell) {
+			this.coffeeCups -= numToSell;
+			this.waitingCustomers -= numToSell;
+			this.money += this.coffeePrice * numToSell * this.moneyMultiplier;
+			this.lifetimeStats["moneyMade"] +=
+				this.coffeePrice * numToSell * this.moneyMultiplier;
+			this.lifetimeStats["coffeeSold"] += numToSell;
+			return true;
+		}
+		return false;
+	}
 
-  addWorker(role: string) {
-    if (!this.roles.has(role)) throw new Error(`${role} does not exist`);
-    let numWorkers = this.workerAmounts[role + "Current"];
-    let maxWorkers = this.workerAmounts[role + "Max"];
+	promote() {
+		this.audioManager.playAudio("ding");
+		this.appeal +=
+			this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
+		this.appeal = Math.min(this.appeal, this.maxAppeal);
+	}
 
-    let roleObj = this.roles.get(role);
-    if (numWorkers < maxWorkers) {
-      this.workerAmounts[role + "Current"]++;
-      // this.applyCost(roleObj!.wage*2); // hiring cost?
-    }
-  }
+	addWorker(role: string) {
+		if (!this.roles.has(role)) throw new Error(`${role} does not exist`);
+		let numWorkers = this.workerAmounts[role + "Current"];
+		let maxWorkers = this.workerAmounts[role + "Max"];
 
-  removeWorker(role: string) {
-    if (!this.roles.has(role)) throw new Error("Role does not exist");
-    let roleObj = this.roles.get(role)!;
-    if (this.workerAmounts[role + "Current"] > 0) {
-      this.workerAmounts[role + "Current"]--;
-    }
-  }
+		let roleObj = this.roles.get(role);
+		if (numWorkers < maxWorkers) {
+			this.workerAmounts[role + "Current"]++;
+			// this.applyCost(roleObj!.wage*2); // hiring cost?
+		}
+	}
 
-  choresForBeans() {
-    this.emptyCups += 1;
-    this.beans += 1;
-  }
+	removeWorker(role: string) {
+		if (!this.roles.has(role)) throw new Error("Role does not exist");
+		let roleObj = this.roles.get(role)!;
+		if (this.workerAmounts[role + "Current"] > 0) {
+			this.workerAmounts[role + "Current"]--;
+		}
+	}
 
-  // upgrade functions /////////////////////////////////////////////////////////
+	choresForBeans() {
+		this.emptyCups += 1;
+		this.beans += 1;
+	}
 
-  unlockPromoter() {
-    console.log("local shop promoter unlocked");
-    this.promoterUnlocked = true;
-    this.roles.set("promoter", {
-      name: "Promoter",
-      wage: 100,
-      update: (shop: Shop) => {
-        shop.progressTrackers["promotionProgress"] += 0.03;
-      },
-    });
-    this.w_promoterUnlocked.set(true);
-  }
+	// upgrade functions /////////////////////////////////////////////////////////
+
+	unlockPromoter() {
+		console.log("local shop promoter unlocked");
+		this.promoterUnlocked = true;
+		this.roles.set("promoter", {
+			name: "Promoter",
+			wage: 100,
+			update: (shop: Shop) => {
+				shop.progressTrackers["promotionProgress"] += 0.03;
+			},
+		});
+		this.w_promoterUnlocked.set(true);
+	}
 
 	unlockAutoRestock() {
 		this.autoRestockUnlocked = true;
@@ -469,12 +469,12 @@ export class Shop implements ILocalShop {
 			saveObj.upgrades[key] = value;
 		}
 
-    for (let key in this.workerStats) {
-      saveObj.workerStats[key] = this.workerStats[key];
-    }
+		for (let key in this.workerStats) {
+			saveObj.workerStats[key] = this.workerStats[key];
+		}
 
-    return saveObj;
-  }
+		return saveObj;
+	}
 
 
 	loadLocalState(state: LocalShopSave) {
@@ -516,9 +516,9 @@ export class Shop implements ILocalShop {
 }
 
 interface Role {
-  name: string;
-  wage: number; // weekly
-  update: (shop: Shop, tickCounter: number) => void;
+	name: string;
+	wage: number; // weekly
+	update: (shop: Shop, tickCounter: number) => void;
 }
 
 export interface LocalShopSave {

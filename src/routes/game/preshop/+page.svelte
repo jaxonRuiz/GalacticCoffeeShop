@@ -133,11 +133,7 @@
 		</div>
 
 		<div class="col">
-			<UpgradesPanel 
-				wshop={pshop}
-				umKey="preshop"
-				money={money}
-			/>
+			<UpgradesPanel wshop={pshop} umKey="preshop" {money} />
 		</div>
 	</div>
 </main>
