@@ -35,7 +35,7 @@
 	</div>
 
 	<div class="right block">
-		<h1>Region List</h1>
+		<h1>Country</h1>
 		<div class="col" style = "position: relative; width: 70vw; height: 90vh;">
 			{#if $regions}
 				{#each $regions as region, i (region)}
