@@ -2,7 +2,7 @@
 	import { t } from "svelte-i18n";
 	import type { DevelopmentBase } from "$lib/backend/classes/franchise/developments/developmentbase";
 	import Button from "./Button.svelte";
-	import { fMoney } from "./Styles.svelte.ts";
+	import { fMoney } from "./Styles.svelte";
 
 	let { dev } = $props();
 
@@ -56,7 +56,7 @@
 				<h3>Available Buildings</h3>
 				{#each $availBuildings as building, i (building)}
 					<div class="building-card">
-						<p style="font-size: 1.rem; font-weight: bold;">{building.name}</p>
+						<p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
 						<p>{building.desc}</p>
 						<p>Area Size: {building.areaSize} acres</p>
 						<p>{building.whatDo()}</p>

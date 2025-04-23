@@ -34,7 +34,7 @@ export class Farm extends DevelopmentBase {
 				buyCost: 0,
 				sellCost: 600 - Math.floor(Math.random() * 100),
 				rent: 100,
-				beansPerHour: 100 +
+				beansPerHour: 30 +
 					Math.floor((Math.random() * 20) *
 						this.parent.environmentalFactors["soilRichness"]),
 				onBuy: function () {
@@ -64,7 +64,7 @@ export class Farm extends DevelopmentBase {
 				buyCost: 0,
 				sellCost: 800 - Math.floor(Math.random() * 100),
 				rent: 100,
-				waterPerDay: Math.floor(100 * this.parent.environmentalFactors["waterAvailability"]),
+				waterPerHour: Math.floor(50 * this.parent.environmentalFactors["waterAvailability"]),
 				onBuy: function () {
 				},
 				onSell: function () {
@@ -72,7 +72,7 @@ export class Farm extends DevelopmentBase {
 				onTick: function () {
 				},
 				onHour: function () {
-					self.water += this.waterPerDay;
+					self.water += this.waterPerHour;
 				},
 				onDay: function () {
 					self.franchise.money -= this.rent;
@@ -80,7 +80,7 @@ export class Farm extends DevelopmentBase {
 				onWeek: function () {
 				},
 				whatDo: function (): string {
-					return `Produces ${this.waterPerDay} water per hour`;
+					return `Produces ${this.waterPerHour} water per hour`;
 				}
 			} as WaterBuilding))
 			this.franchise.firstFarm = false;
@@ -101,7 +101,7 @@ export class Farm extends DevelopmentBase {
 			buyCost: 800 + Math.floor(Math.random() * 200),
 			sellCost: 800 - Math.floor(Math.random() * 100),
 			rent: 100,
-			waterPerDay: Math.floor(500 * this.parent.environmentalFactors["waterAvailability"]),
+			waterPerHour: Math.floor(50 * this.parent.environmentalFactors["waterAvailability"]),
 			onBuy: function () {
 			},
 			onSell: function () {
@@ -109,15 +109,15 @@ export class Farm extends DevelopmentBase {
 			onTick: function () {
 			},
 			onHour: function () {
+				self.water += this.waterPerHour;
 			},
 			onDay: function () {
 				self.franchise.money -= this.rent;
-				self.water += this.waterPerDay;
 			},
 			onWeek: function () {
 			},
 			whatDo: function (): string {
-				return `Produces ${this.waterPerDay} water per day`;
+				return `Produces ${this.waterPerHour} water per hour`;
 			}
 		} as WaterBuilding);
 
@@ -128,7 +128,7 @@ export class Farm extends DevelopmentBase {
 			buyCost: 1000 + Math.floor(Math.random() * 400),
 			sellCost: 1000 - Math.floor(Math.random() * 200),
 			rent: 200,
-			waterPerDay: Math.floor(1000 * this.parent.environmentalFactors["waterAvailability"]),
+			waterPerHour: Math.floor(100 * this.parent.environmentalFactors["waterAvailability"]),
 			onBuy: function () {
 			},
 			onSell: function () {
@@ -136,15 +136,15 @@ export class Farm extends DevelopmentBase {
 			onTick: function () {
 			},
 			onHour: function () {
+				self.water += this.waterPerHour;
 			},
 			onDay: function () {
 				self.franchise.money -= this.rent;
-				self.water += this.waterPerDay;
 			},
 			onWeek: function () {
 			},
 			whatDo: function (): string {
-				return `Produces ${this.waterPerDay} water per day`;
+				return `Produces ${this.waterPerHour} water per hour`;
 			}
 		} as WaterBuilding);
 
@@ -155,7 +155,7 @@ export class Farm extends DevelopmentBase {
 			buyCost: 600 + Math.floor(Math.random() * 200),
 			sellCost: 600 - Math.floor(Math.random() * 100),
 			rent: 100,
-			beansPerHour: 100 +
+			beansPerHour: 30 +
 				Math.floor((Math.random() * 20) *
 					this.parent.environmentalFactors["soilRichness"]),
 			onBuy: function () {
@@ -165,12 +165,12 @@ export class Farm extends DevelopmentBase {
 			onTick: function () {
 			},
 			onHour: function () {
-			},
-			onDay: function () {
-				self.franchise.money -= this.rent;
 				var b = Math.min(this.beansPerHour, self.water);
 				self.parent.beans += b;
 				self.water -= b;
+			},
+			onDay: function () {
+				self.franchise.money -= this.rent;
 			},
 			onWeek: function () {
 			},
@@ -186,8 +186,8 @@ export class Farm extends DevelopmentBase {
 			buyCost: 1200 + Math.floor(Math.random() * 400),
 			sellCost: 1200 - Math.floor(Math.random() * 100),
 			rent: 200,
-			beansPerHour: 200 +
-				Math.floor((Math.random() * 50) *
+			beansPerHour: 50 +
+				Math.floor((Math.random() * 30) *
 					this.parent.environmentalFactors["soilRichness"]),
 			onBuy: function () {
 			},
@@ -196,12 +196,12 @@ export class Farm extends DevelopmentBase {
 			onTick: function () {
 			},
 			onHour: function () {
-			},
-			onDay: function () {
-				self.franchise.money -= this.rent;
 				var b = Math.min(this.beansPerHour, self.water);
 				self.parent.beans += b;
 				self.water -= b;
+			},
+			onDay: function () {
+				self.franchise.money -= this.rent;
 			},
 			onWeek: function () {
 			},

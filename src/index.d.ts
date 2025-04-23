@@ -214,7 +214,7 @@ interface ExportBuilding extends Building{
 }
 
 interface WaterBuilding extends Building {
-  waterPerDay: number;
+  waterPerHour: number;
 }
 
 interface FarmBuilding extends Building {
