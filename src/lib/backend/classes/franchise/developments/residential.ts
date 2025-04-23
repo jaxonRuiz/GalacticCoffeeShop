@@ -58,7 +58,7 @@ export class Residential extends DevelopmentBase implements IResidential{
             areaSize: 1,
             buyCost: 0,
             sellCost: 800 - Math.floor(Math.random() * 50),
-            rent: 50,
+            rent: 100,
             maxCoffeePerHour: 100,
             onBuy: function () {
               self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
@@ -131,7 +131,7 @@ export class Residential extends DevelopmentBase implements IResidential{
         areaSize: 1,
         buyCost: 800 + Math.floor(Math.random() * 400),
         sellCost: 800 - Math.floor(Math.random() * 50),
-        rent: 50,
+        rent: 100,
         maxCoffeePerHour: 100,
         onBuy: function () {
           self.totalMaxCoffeePerHour += this.maxCoffeePerHour;

@@ -17,7 +17,7 @@
 		<div class="dev-header row space-between">
 			<div class="col">
 				<p style="font-size: 1.3rem; font-weight: bold;">{d.developmentType}</p>
-				<p>Area available: {$area}</p>
+				<p>Area available: {$area} acres</p>
 			</div>
 			<div class="row button-group">
 				<Button onclick={() => {d.decreaseDevelopmentArea()}}>
@@ -36,8 +36,9 @@
 					<div class="building-card">
 						<p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
 						<p>{building.desc}</p>
-						<p>Area Size: {building.areaSize}</p>
+						<p>Area Size: {building.areaSize} acres</p>
 						<p>{building.whatDo()}</p>
+						<p>Rent: {fMoney(building.rent)}/day</p>
 						<div class="row">
 							<Button
 								onclick={() => {
@@ -57,8 +58,9 @@
 					<div class="building-card">
 						<p style="font-size: 1.rem; font-weight: bold;">{building.name}</p>
 						<p>{building.desc}</p>
-						<p>Area Size: {building.areaSize}</p>
+						<p>Area Size: {building.areaSize} acres</p>
 						<p>{building.whatDo()}</p>
+						<p>Rent: {fMoney(building.rent)}/day</p>
 						<div class="row">
 							<Button
 								onclick={() => {

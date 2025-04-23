@@ -33,7 +33,7 @@ export class Farm extends DevelopmentBase {
         areaSize: 2,
         buyCost: 0,
         sellCost: 600 - Math.floor(Math.random() * 100),
-        rent: 0,
+        rent: 100,
         beansPerHour: 100 +
           Math.floor((Math.random() * 20) *
             this.parent.environmentalFactors["soilRichness"]),
@@ -63,7 +63,7 @@ export class Farm extends DevelopmentBase {
         areaSize: 1,
         buyCost: 0,
         sellCost: 800 - Math.floor(Math.random() * 100),
-        rent: 50,
+        rent: 100,
         waterPerDay: Math.floor(100 * this.parent.environmentalFactors["waterAvailability"]),
         onBuy: function () {
         },
@@ -100,7 +100,7 @@ export class Farm extends DevelopmentBase {
       areaSize: 1,
       buyCost: 800 + Math.floor(Math.random() * 200),
       sellCost: 800 - Math.floor(Math.random() * 100),
-      rent: 50,
+      rent: 100,
       waterPerDay: Math.floor(500 * this.parent.environmentalFactors["waterAvailability"]),
       onBuy: function () {
       },
@@ -127,7 +127,7 @@ export class Farm extends DevelopmentBase {
       areaSize: 2,
       buyCost: 1000 + Math.floor(Math.random() * 400),
       sellCost: 1000 - Math.floor(Math.random() * 200),
-      rent: 100,
+      rent: 200,
       waterPerDay: Math.floor(1000 * this.parent.environmentalFactors["waterAvailability"]),
       onBuy: function () {
       },
@@ -154,7 +154,7 @@ export class Farm extends DevelopmentBase {
       areaSize: 2,
       buyCost: 600 + Math.floor(Math.random() * 200),
       sellCost: 600 - Math.floor(Math.random() * 100),
-      rent: 0,
+      rent: 100,
       beansPerHour: 100 +
         Math.floor((Math.random() * 20) *
           this.parent.environmentalFactors["soilRichness"]),
@@ -185,7 +185,7 @@ export class Farm extends DevelopmentBase {
       areaSize: 4,
       buyCost: 1200 + Math.floor(Math.random() * 400),
       sellCost: 1200 - Math.floor(Math.random() * 100),
-      rent: 0,
+      rent: 200,
       beansPerHour: 200 +
         Math.floor((Math.random() * 50) *
           this.parent.environmentalFactors["soilRichness"]),

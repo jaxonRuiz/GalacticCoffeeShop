@@ -29,7 +29,7 @@ export class LogisticCenter extends DevelopmentBase{
         areaSize: 1,
         buyCost: 800 + Math.floor(Math.random() * 200),
         sellCost: 800 - Math.floor(Math.random() * 100),
-        rent: 50,
+        rent: 100,
         importIncrease: 1000,
         onBuy: function () {
             self.parent.importCapacity += this.importIncrease;

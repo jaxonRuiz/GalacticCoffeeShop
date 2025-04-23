@@ -25,23 +25,25 @@
 
 <div class="region row">
 	<div class="left block">
-		<h1>Stats</h1>
-		<p>money: {$money}</p>
-		<p>total area: {$totalArea}</p>
-		<p>unused land: {$unusedLand}</p>
-		<p>accessibility level: {$accessibilityLevel}</p>
-		<p>import capacity: {$importCapacity}</p>
-		<p>export capacity: {$exportCapacity}</p>
-		<p>stockpiled beans: {$beans}</p>
-		<p>population: {$population}</p>
-
-		{#if $environmentalFactors}
-			<h1>Environment</h1>
-			<p>soil richness: {$environmentalFactors.soilRichness}</p>
-			<p>water availability: {$environmentalFactors.waterAvailability}</p>
-			<p>average temperature: {$environmentalFactors.averageTemp}</p>
-		{/if}
-
+		<div class = "stats">
+			<h1>Stats</h1>
+			<p>money: ${$money}.00</p>
+			<p>total area: {$totalArea} acres</p>
+			<p>unused land: {$unusedLand}</p>
+			<p>accessibility level: {$accessibilityLevel}</p>
+			<p>import capacity: {$importCapacity}</p>
+			<p>export capacity: {$exportCapacity}</p>
+			<p>stockpiled beans: {$beans}</p>
+			<p>population: {$population}</p>
+		</div>
+		<div class = "env">
+			{#if $environmentalFactors}
+				<h1>Environment</h1>
+				<p>soil richness: {$environmentalFactors.soilRichness}</p>
+				<p>water availability: {$environmentalFactors.waterAvailability}</p>
+				<p>average temperature: {$environmentalFactors.averageTemp}</p>
+			{/if}
+		</div>
 		<br />
 
 		<p>regions currently don't have a name</p>
@@ -68,12 +70,49 @@
 </div>
 
 <style>
-	div.left,
+	div.left{
+		width: 50%;
+		height: 90vh;
+		border: 1px solid #444;
+		padding: 0.75rem;
+		margin-bottom: 1rem;
+		border-radius: 0.4rem;
+		background-color:rgb(28, 28, 28);
+		box-sizing: border-box;
+	}
 	div.right {
 		width: 50%;
-	}
-	div.right {
 		height: 90vh;
-		/* scroll doesn't work unless height is set :/ */
+		display: flex;
+		flex-direction: column;
 	}
+	div.stats{
+		border: 1px solid #444;
+		padding: 0.75rem;
+		margin-bottom: 1rem;
+		border-radius: 0.4rem;
+		background-color:rgb(43, 43, 43);
+		box-sizing: border-box;
+	}
+	div.env{
+		border: 1px solid #444;
+		padding: 0.75rem;
+		margin-bottom: 1rem;
+		border-radius: 0.4rem;
+		background-color:rgb(43, 43, 43);
+		box-sizing: border-box;
+	}
+	div.right{
+		border: 1px solid #444;
+		padding: 0.75rem;
+		margin-bottom: 1rem;
+		border-radius: 0.4rem;
+		background-color:rgb(28, 28, 28);
+		box-sizing: border-box;
+	}
+	.col.scroll {
+	overflow-y: auto;
+	max-height: 100%;
+}
+
 </style>
