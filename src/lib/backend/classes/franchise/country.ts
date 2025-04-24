@@ -45,7 +45,7 @@ export class Country{
 		this.franchise = franchise;
 		this.firstRegion = true;
 
-		this.initializeRegions(10);
+		this.initializeRegions(4 + Math.floor(Math.random() * 3));
 	}
 
 	tick(){

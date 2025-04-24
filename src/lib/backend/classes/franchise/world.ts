@@ -19,7 +19,7 @@ export class World implements ISubscriber, IWorld {
 
 	constructor(franchise: Franchise) {
 		this.franchise = franchise;
-		this.initializeCountries(5);
+		this.initializeCountries(4 + Math.floor(Math.random() * 2));
 	}
 
 	initializeCountries(count: number) {
