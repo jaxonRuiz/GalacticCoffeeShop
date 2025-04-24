@@ -21,6 +21,7 @@
 
 	// ui
 	let coffeeOnTable = pshop.uiManager.coffees;
+	let customersInLine = pshop.uiManager.customers;
 
 	// define variables
 	let money = pshop.w_money;
@@ -46,7 +47,7 @@
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeStand} />
 			<img alt="rat" src={img.astrorat} class="float" />
-			<div id="coffees">
+			<div id="coffees" class="abs">
 				{#each $coffeeOnTable as coffee (coffee)}
 					<img
 						in:fly={{ y: -50, duration: 500 }}
@@ -57,6 +58,21 @@
 							top: {-45 + coffee[0] * 25}%;
 							left: {-14 + coffee[1] * 11.2}%;
 							z-index:{coffee[0] + coffee[1]}"
+					/>
+				{/each}
+			</div>
+			<div class="customers abs">
+				{#each $customersInLine as customer, ind (customer)}
+				{console.log(`alien_${customer[0]}_${customer[1]}`)}
+					<img
+						in:fly={{ y: -50, duration: 500 }}
+						out:fly={{ y: -50, duration: 500 }}
+						alt="customer"
+						src={img[`alien_${customer[0]}_${customer[1]}`]}
+						style="
+							top: {ind * 10 + 15}%;
+							right: {ind * 10 + 25}%;
+							z-index:{20 + ind}"
 					/>
 				{/each}
 			</div>
@@ -175,6 +191,13 @@
 			img {
 				transform: rotateZ(-45deg) rotateY(-53deg);
 				width: 23%;
+			}
+		}
+
+		.customers {
+
+			img {
+				width: 55%
 			}
 		}
 	}

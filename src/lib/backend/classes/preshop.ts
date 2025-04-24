@@ -191,6 +191,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			Array.from({ length: 4 }, (_, row) =>
 				Array.from({ length: 9 }, (_, col) => [row, col])
 			).flat());
+		this.uiManager.alienGenerator.updateTypes(['catorbiter']);
 	}
 
 	notify(event: string, data?: any) {
@@ -200,6 +201,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (event === "hour") {
 			if (this.waitingCustomers > 0) {
 				this.waitingCustomers--;
+				this.uiManager.customerLeaving();
 			}
 			// this.decayAppeal();
 		}
@@ -250,6 +252,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				const crowdVolume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
 				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.25);
 				this.audioManager.setVolume("crowd", scaledVolume);
+				
+				// ui
+				this.uiManager.newCustomer(this.waitingCustomers);
 			}
 		}
 	}
@@ -302,6 +307,8 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups--;
 			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
+			
+			// ui
 			this.uiManager.coffeeSold();
 		}
 	}
