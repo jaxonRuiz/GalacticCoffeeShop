@@ -11,7 +11,12 @@ export class UIManager {
 		this.coffeeGenerator = new CoffeeGenerator([]);
 	}
 
+	setCoffeeLocations(loc: number[][]) {
+		this.coffeeGenerator.updateLocations(loc);
+	}
+
 	coffeeMade(totalCoffees: number) {
+		console.log("coffee made", totalCoffees);
 		const currCoffee = this.coffeeGenerator.coffeeCount;
 		for (let i = 0; i < Math.floor(totalCoffees - currCoffee); ++i) {
 			this.coffeeGenerator.addCoffee();
@@ -19,6 +24,7 @@ export class UIManager {
 	}
 
 	coffeeSold() {
+		// TODO will need to update if coffee sell unit > 1
 		// remove customer
 		this.coffeeGenerator.removeCoffee();
 	}
