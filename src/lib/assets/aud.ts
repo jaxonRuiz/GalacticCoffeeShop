@@ -9,7 +9,7 @@ export const aud: { [key: string]: string } = {
 	lovely_days: new URL('./music/snoozy beats - lovely days [lofi].mp3', import.meta.url).href,
 	boiling: new URL('./sfx/boiling.flac', import.meta.url).href,
 	ding: new URL('./sfx/ding.wav', import.meta.url).href,
-	cashRegister: new URL('./sfx/cashRegister.wav', import.meta.url).href,
+	cashRegister: new URL('./sfx/ding.wav', import.meta.url).href,
 	crank: new URL('./sfx/crank.wav', import.meta.url).href,
 	crowd: new URL('./sfx/crowd.mp3', import.meta.url).href,
 	grind1: new URL('./sfx/grind1.wav', import.meta.url).href,
@@ -19,4 +19,6 @@ export const aud: { [key: string]: string } = {
 	crunch: new URL('./sfx/crunch.mp3', import.meta.url).href,
 	crunch2: new URL('./sfx/crunch2.mp3', import.meta.url).href,
 	new_crowd: new URL('./sfx/new_crowd.wav', import.meta.url).href,
+	preshop_crowd: new URL('./sfx/preshop_crowd.mp3', import.meta.url).href,
+	new_cash: new URL('./sfx/new_cash.wav', import.meta.url).href,
 };

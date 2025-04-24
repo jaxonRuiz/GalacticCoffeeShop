@@ -38,7 +38,7 @@ export class AudioManager {
 		bgMusic: HTMLAudioElement[] = [];
 
 		sfxVolume: number = 1;
-		ambienceVolume: number = 0.25;
+		ambienceVolume: number = 0.5;
 		musicVolume: number = 1;
 
 		constructor() {
