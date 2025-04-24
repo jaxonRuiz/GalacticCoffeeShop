@@ -1,6 +1,9 @@
 import { AudioManager } from "./audioManager";
 import { aud } from "../../assets/aud";
 // will have diff upgrade manager for each subset (preshop, shop, etc)
+
+const unlockStages: boolean = false;
+
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
 	allUpgrades: { [key: string]: IUpgrade };
@@ -89,7 +92,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		buy_coffee_shop: {
 			unlock_condition: (shop) => {
-				// return true;
+				if (unlockStages) return true;
 				return (shop as IPreshop).lifetimeCoffeeSold >= 250 / 2; // divide by 2 for playtest
 			},
 			upgrade: (shop) => {
@@ -343,7 +346,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		// },
 		unlock_multishop: {
 			unlock_condition: (shop) => {
-				// return true;
+				if (unlockStages) return true;
 				if ((shop as ILocalShop).multiShopUnlocked) return false;
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100;
 			},
@@ -375,7 +378,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		window_flowers: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 130 && shop.upgrades.has("flashy_sign");
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 130 &&
+					shop.upgrades.has("flashy_sign");
 			},
 			upgrade: (shop, level) => {
 				let statLevels = [0.1, 0.15, 0.18];
@@ -392,7 +396,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		bumpin_music: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 170 && shop.upgrades.has("window_flowers");
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 170 &&
+					shop.upgrades.has("window_flowers");
 			},
 			upgrade: (shop, level) => {
 				let statLevels = [0.1, 0.15, 0.18];
@@ -410,7 +415,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		drug_the_coffee: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 170 && shop.upgrades.has("bumpin_music");
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 170 &&
+					shop.upgrades.has("bumpin_music");
 			},
 			upgrade: (shop, level) => {
 				let statLevels = [0.1, 0.15, 0.18];
@@ -508,7 +514,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
-
 			},
 			maxLevel: 1,
 			cost: 100,
@@ -522,7 +527,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
-
 			},
 			maxLevel: 1,
 			cost: 120,
@@ -536,7 +540,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
-
 			},
 			maxLevel: 1,
 			cost: 150,
@@ -550,7 +553,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.06;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.04;
-
 			},
 			maxLevel: 1,
 			cost: 200,
@@ -564,7 +566,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.07;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.05;
-
 			},
 			maxLevel: 1,
 			cost: 250,
@@ -578,7 +579,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.08;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.06;
-
 			},
 			maxLevel: 1,
 			cost: 250,
@@ -614,7 +614,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		brazilian_beans: {
 			unlock_condition: (shop) => {
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
-					150 && ((shop.upgrades.get("local_shop_nicer_coffee") ?? 0) >= 3);
+						150 && ((shop.upgrades.get("local_shop_nicer_coffee") ?? 0) >= 3);
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).coffeePrice += 0.5;
@@ -627,7 +627,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		civet_coffee: {
 			unlock_condition: (shop) => {
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
-					200 && shop.upgrades.has("brazilian_beans");
+						200 && shop.upgrades.has("brazilian_beans");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).coffeePrice += 0.8;
@@ -653,6 +653,19 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	},
 
 	multiShop: {
+		establish_franchise: {
+			unlock_condition: (multishop) => {
+				if (unlockStages) return true;
+				return (multishop as IMultiShop).shops!.length > 2;
+			},
+			upgrade: (shop) => {
+				(shop as IScene).endScene();
+			},
+			maxLevel: 1,
+			cost: 5000,
+			costMultiplier: 1,
+			image: "establish_franchise.jpg",
+		},
 		// apply to children style upgrades have the associated flag. their upgrade function applies to the LOCAL shops
 		cohesive_branding: {
 			unlock_condition: (multishop) => {
