@@ -71,11 +71,11 @@ export class Country{
 
 			if (isSpaced) {
 				if (this.firstRegion){
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 90 + Math.floor(Math.random() * 30), 2000 * Math.floor(Math.random() * 1000), 2, newCoords);
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2000 * Math.floor(Math.random() * 1000), 2, newCoords);
 					this.firstRegion = false;
 				}
 				else{
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 90 + Math.floor(Math.random() * 30), 2000 * Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords);
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), 2000 * Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords);
 				}
 				this.regionList = [...this.regionList, newRegion];
 				// this.regionList.push(newRegion);
