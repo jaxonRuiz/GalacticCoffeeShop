@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fly } from "svelte/transition";
 	import { t } from "svelte-i18n";
 	import { Preshop } from "$lib/backend/classes/preshop";
 	import { stageManager } from "$lib/backend/game";
@@ -17,6 +18,9 @@
 	// base
 	let smanager = stageManager;
 	const pshop: Preshop = smanager.currentScene as Preshop;
+
+	// ui
+	let coffeeOnTable = pshop.uiManager.coffees;
 
 	// define variables
 	let money = pshop.w_money;
@@ -42,6 +46,20 @@
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeStand} />
 			<img alt="rat" src={img.astrorat} class="float" />
+			<div id="coffees">
+				{#each $coffeeOnTable as coffee (coffee)}
+					<img
+						in:fly={{ y: -50, duration: 500 }}
+						out:fly={{ y: -50, duration: 500 }}
+						alt="coffee"
+						src={img.coffee}
+						style="
+							top: {-45 + coffee[0] * 25}%;
+							left: {-14 + coffee[1] * 11.2}%;
+							z-index:{coffee[0] + coffee[1]}"
+					/>
+				{/each}
+			</div>
 		</div>
 	</div>
 
@@ -143,6 +161,21 @@
 		img[alt="rat"] {
 			top: 11%;
 			right: 20%;
+		}
+
+		#coffees {
+			/* border: 1px solid var(--accent); */
+			transform-origin: center;
+			transform: rotateX(53deg) rotateY(0deg) rotateZ(45deg);
+			width: 37%;
+			height: 15%;
+			right: 21.5%;
+			top: 31.8%;
+
+			img {
+				transform: rotateZ(-45deg) rotateY(-53deg);
+				width: 23%;
+			}
 		}
 	}
 </style>

@@ -2,6 +2,8 @@ import { get, type Writable, writable } from "svelte/store";
 import { MultiShop } from "./multiShop";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
+import { UIManager } from "../interface/uimanager";
+import { dictProxy } from "../proxies";
 
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
@@ -57,13 +59,13 @@ export class Shop implements ILocalShop {
 		this.w_appeal.set(value);
 	}
 	get restockSheet() {
-		return get(this.w_restockSheet);
+		return dictProxy(this.w_restockSheet);
 	}
 	set restockSheet(value: { [key: string]: number }) {
 		this.w_restockSheet.set(value);
 	}
 	get progressTrackers() {
-		return get(this.w_progressTrackers);
+		return dictProxy(this.w_progressTrackers);
 	}
 	set progressTrackers(value: { [key: string]: number }) {
 		this.w_progressTrackers.set(value);
@@ -93,7 +95,7 @@ export class Shop implements ILocalShop {
 		this.w_multiShopUnlocked.set(value);
 	}
 	get workerAmounts() {
-		return get(this.w_workerAmounts);
+		return dictProxy(this.w_workerAmounts);
 	}
 	set workerAmounts(value: { [key: string]: number }) {
 		this.w_workerAmounts.set(value);
@@ -158,6 +160,7 @@ export class Shop implements ILocalShop {
 	upgrades: Map<string, number> = new Map();
 	multiShop: MultiShop;
 	audioManager: AudioManager = new AudioManager();
+	uiManager: UIManager;
 	boilTimer: number = 0;
 	playBoiler: boolean = false;
 	isSelected: boolean = false;
@@ -204,6 +207,16 @@ export class Shop implements ILocalShop {
 		this.audioManager.addAmbience("crowd", aud.new_crowd);
 
 		this.audioManager.playAudio("crowd");
+		this.uiManager = new UIManager();
+		this.uiManager.setCoffeeLocations(
+			[
+				...Array.from({ length: 2 }, (_, row) =>
+					Array.from({ length: 12 }, (_, col) => [row + 6, col])
+				).flat(),
+				...Array.from({ length: 6 }, (_, row) =>
+					Array.from({ length: 2 }, (_, col) => [row, col+10])
+				).flat(),
+			]);
 	}
 
 	// multishop utility /////////////////////////////////////////////////////////
@@ -354,6 +367,8 @@ export class Shop implements ILocalShop {
 			this.emptyCups -= numToMake;
 			this.coffeeCups += numToMake;
 			this.lifetimeStats["coffeeMade"] += numToMake;
+			//TODO will break if amt > 1
+			this.uiManager.coffeeMade(this.coffeeCups);
 			return true;
 		}
 		return false;
@@ -373,6 +388,8 @@ export class Shop implements ILocalShop {
 			this.lifetimeStats["moneyMade"] +=
 				this.coffeePrice * numToSell * this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
+			// TODO will break if amt > 1
+			this.uiManager.coffeeSold();
 			return true;
 		}
 		return false;

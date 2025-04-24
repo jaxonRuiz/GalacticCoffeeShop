@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition';
 	import { t } from "svelte-i18n";
 	import { derived } from "svelte/store";
 	import { MultiShop } from "$lib/backend/classes/multiShop";
@@ -20,6 +21,8 @@
 	const smanager = stageManager;
 	const mshop: MultiShop = smanager.currentScene as MultiShop;
 	let sshop = mshop.shops[mshop.selectedShopIndex];
+
+	let coffeeOnTable = sshop.uiManager.coffees;
 
 	// define variables
 	let mshopMoney = mshop.w_money;
@@ -70,6 +73,20 @@
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeShop_bot} />
 			<img alt="rat" src={img.astrorat} class="float" />
+			<div id="coffees">
+				{#each $coffeeOnTable as coffee (coffee)}
+					<img
+						in:fly={{ y: -50, duration: 500 }}
+						out:fly={{ y: -50, duration: 500 }}
+						alt="coffee"
+						src={img.coffee}
+						style="
+							top: {-19.5 + coffee[0] * 12.8}%;
+							left: {-10.5 + coffee[1] * 8.3}%;
+							z-index:{coffee[0] + coffee[1]}"
+					/>
+				{/each}
+			</div>
 			<img alt="shop" src={img.coffeeShop_top} />
 		</div>
 	</div>
@@ -234,6 +251,19 @@
 		img[alt="rat"] {
 			top: 24%;
 			right: 30%;
+		}
+
+		#coffees {
+			transform-origin: center;
+			transform: rotateX(54deg) rotateY(0deg) rotateZ(45deg);
+			width: 44.5%;
+			height: 32.7%;
+			right: 16.8%;
+			top: 29.2%;
+			img {
+				transform: rotateZ(-45deg) rotateY(-54deg);
+				width: 18%;
+			}
 		}
 	}
 </style>

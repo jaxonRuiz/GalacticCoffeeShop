@@ -4,6 +4,7 @@ import { Publisher } from "../systems/observer";
 import { msPerTick } from "../systems/time";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
+import { UIManager } from "../interface/uimanager";
 
 export class Preshop implements ISubscriber, IScene, IPreshop {
 	moneyMultiplier: number = 1;
@@ -57,6 +58,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	sceneManager: Publisher;
 	audioManager: AudioManager = new AudioManager();
+	uiManager: UIManager;
 
 	// abstracting svelte store from normal usage (allows use of writables in backend)
 	// resources
@@ -182,6 +184,13 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 		this.audioManager.playAudio("bgm");
 		this.audioManager.playAudio("crowd");
+
+		// UI
+		this.uiManager = new UIManager();
+		this.uiManager.coffeeGenerator.updateLocations(
+			Array.from({ length: 4 }, (_, row) =>
+				Array.from({ length: 9 }, (_, col) => [row, col])
+			).flat());
 	}
 
 	notify(event: string, data?: any) {
@@ -268,6 +277,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				this.makeCoffeeTime = 0;
 				this.makeCoffeeCount = 0;
 				this.canMakeCoffee = true;
+				this.uiManager.coffeeMade(this.coffeeCups);
 			} else {
 				// next coffee batch
 				this.makeCoffee();
@@ -292,6 +302,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups--;
 			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
+			this.uiManager.coffeeSold();
 		}
 	}
 
@@ -473,6 +484,8 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.lifetimeGrindBeans = state.lifetimeGrindBeans;
 		this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
 		this.lifetimeCoffeeMade = state.lifetimeCoffeeMade;
+
+		this.uiManager.coffeeMade(this.coffeeCups);
 	}
 
 	clearState() {

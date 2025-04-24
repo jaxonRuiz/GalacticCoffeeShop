@@ -28,7 +28,6 @@
 	let { children } = $props();
 
 	function onKeyDown(event: KeyboardEvent) {
-		console.log(event.key);
 		if (event.key === "Escape") {
 			$optionsWindowOpen = !get(optionsWindowOpen);
 			pauseGame();
