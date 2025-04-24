@@ -55,11 +55,11 @@ export class Residential extends DevelopmentBase implements IResidential{
 		  this.buyBuilding({
 			name: "Corner Cafe",
 			desc: "Cute cafe on the corner",
-			areaSize: 1,
+			areaSize: 3,
 			buyCost: 0,
-			sellCost: 800 - Math.floor(Math.random() * 50),
-			rent: 100,
-			maxCoffeePerHour: 50,
+			sellCost: 3000 - Math.floor(Math.random() * 500),
+			rent: 200,
+			maxCoffeePerHour: 30,
 			onBuy: function () {
 			  self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
 			},
@@ -98,11 +98,11 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  possibleBuildings.push({
 		name: "Coffee Skyscraper",
 		desc: "A towering coffee-themed building",
-		areaSize: 3,
-		buyCost: 1600 + Math.floor(Math.random() * 800),
-		sellCost: 1600 - Math.floor(Math.random() * 200),
-		rent: 200,
-		maxCoffeePerHour: 200,
+		areaSize: 5,
+		buyCost: 5000 + Math.floor(Math.random() * 2000),
+		sellCost: 5000 - Math.floor(Math.random() * 1000),
+		rent: 400,
+		maxCoffeePerHour: 100,
 		onBuy: function () {
 		  self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
 		},
@@ -128,11 +128,11 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  possibleBuildings.push({
 		name: "Corner Cafe",
 		desc: "Cute cafe on the corner",
-		areaSize: 1,
-		buyCost: 800 + Math.floor(Math.random() * 400),
-		sellCost: 800 - Math.floor(Math.random() * 50),
-		rent: 100,
-		maxCoffeePerHour: 50,
+		areaSize: 3,
+		buyCost: 3000 + Math.floor(Math.random() * 500),
+		sellCost: 3000 - Math.floor(Math.random() * 500),
+		rent: 200,
+		maxCoffeePerHour: 30,
 		onBuy: function () {
 		  self.totalMaxCoffeePerHour += this.maxCoffeePerHour;
 		},
@@ -158,10 +158,10 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  possibleBuildings.push({
 		  name: "Apartment Building",
 		  desc: "20 stories of solid concrete",
-		  areaSize: 2,
-		  buyCost: 1600 + Math.floor(Math.random() * 800),
-		  sellCost: 1600 - Math.floor(Math.random() * 200),
-		  rent: 200,
+		  areaSize: 4,
+		  buyCost: 5000 + Math.floor(Math.random() * 2000),
+		  sellCost: 5000 - Math.floor(Math.random() * 1000),
+		  rent: 400,
 		  populationIncrease: 1000 +  Math.floor(Math.random() * 300),
 		  onBuy: function () {
 			self.parent.population += this.populationIncrease;
@@ -189,9 +189,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 		possibleBuildings.push({
 		  name: "Motel",
 		  desc: "The rooms have yellow walls and suspicious stains",
-		  areaSize: 1,
-		  buyCost: 600 + Math.floor(Math.random() * 300),
-		  sellCost: 600 - Math.floor(Math.random() * 50),
+		  areaSize: 3,
+		  buyCost: 2500 + Math.floor(Math.random() * 500),
+		  sellCost: 2500 - Math.floor(Math.random() * 500),
 		  rent: 200,
 		  populationIncrease: 500 +  Math.floor(Math.random() * 100),
 		  onBuy: function () {

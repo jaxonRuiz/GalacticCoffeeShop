@@ -56,7 +56,7 @@ export class LogisticCenter extends DevelopmentBase{
 
 	  possibleBuildings.push({
 		name: "Large Coffee Warehouse",
-		desc: "Stors crazy mad beans yo",
+		desc: "Store crazy mad beans yo",
 		areaSize: 2,
 		buyCost: 1200 + Math.floor(Math.random() * 400),
 		sellCost: 1200 - Math.floor(Math.random() * 200),

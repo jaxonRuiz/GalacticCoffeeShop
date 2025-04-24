@@ -30,7 +30,7 @@ export class Farm extends DevelopmentBase {
 			this.buyBuilding({
 				name: "Greenhouse",
 				desc: "Grow some beans",
-				areaSize: 2,
+				areaSize: 3,
 				buyCost: 0,
 				sellCost: 600 - Math.floor(Math.random() * 100),
 				rent: 100,
@@ -60,7 +60,7 @@ export class Farm extends DevelopmentBase {
 			this.buyBuilding(({
 				name: "Water Tower",
 				desc: "Hope you're thirsty",
-				areaSize: 1,
+				areaSize: 2,
 				buyCost: 0,
 				sellCost: 800 - Math.floor(Math.random() * 100),
 				rent: 100,
@@ -97,10 +97,10 @@ export class Farm extends DevelopmentBase {
 		possibleBuildings.push({
 			name: "Water Tower",
 			desc: "Hope you're thirsty",
-			areaSize: 1,
-			buyCost: 800 + Math.floor(Math.random() * 200),
-			sellCost: 800 - Math.floor(Math.random() * 100),
-			rent: 100,
+			areaSize: 2,
+			buyCost: 2000 + Math.floor(Math.random() * 1000),
+			sellCost: 2000 - Math.floor(Math.random() * 500),
+			rent: 200,
 			waterPerHour: Math.floor(50 * this.parent.environmentalFactors["waterAvailability"]),
 			onBuy: function () {
 			},
@@ -124,10 +124,10 @@ export class Farm extends DevelopmentBase {
 		possibleBuildings.push({
 			name: "Large Water Tower",
 			desc: "Hope you're super thirsty",
-			areaSize: 2,
-			buyCost: 1000 + Math.floor(Math.random() * 400),
-			sellCost: 1000 - Math.floor(Math.random() * 200),
-			rent: 200,
+			areaSize: 3,
+			buyCost: 3000 + Math.floor(Math.random() * 1000),
+			sellCost: 3000 - Math.floor(Math.random() * 500),
+			rent: 300,
 			waterPerHour: Math.floor(100 * this.parent.environmentalFactors["waterAvailability"]),
 			onBuy: function () {
 			},
@@ -151,10 +151,10 @@ export class Farm extends DevelopmentBase {
 		possibleBuildings.push({
 			name: "Greenhouse",
 			desc: "Grow some beans",
-			areaSize: 2,
-			buyCost: 600 + Math.floor(Math.random() * 200),
-			sellCost: 600 - Math.floor(Math.random() * 100),
-			rent: 100,
+			areaSize: 3,
+			buyCost: 3000 + Math.floor(Math.random() * 1000),
+			sellCost: 3000 - Math.floor(Math.random() * 500),
+			rent: 200,
 			beansPerHour: 30 +
 				Math.floor((Math.random() * 20) *
 					this.parent.environmentalFactors["soilRichness"]),
@@ -182,10 +182,10 @@ export class Farm extends DevelopmentBase {
 		possibleBuildings.push({
 			name: "Field",
 			desc: "Grow loads of beans",
-			areaSize: 4,
-			buyCost: 1200 + Math.floor(Math.random() * 400),
-			sellCost: 1200 - Math.floor(Math.random() * 100),
-			rent: 200,
+			areaSize: 5,
+			buyCost: 4000 + Math.floor(Math.random() * 1000),
+			sellCost: 4000 - Math.floor(Math.random() * 500),
+			rent: 300,
 			beansPerHour: 50 +
 				Math.floor((Math.random() * 30) *
 					this.parent.environmentalFactors["soilRichness"]),
