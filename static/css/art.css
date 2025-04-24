@@ -10,10 +10,10 @@
 		width: 80%;
 		aspect-ratio: 1/1;
 
-		img {
+		img,
+		div#coffees {
 			position: absolute;
 			/* border: 1px solid whitesmoke; */
-
 		}
 
 		img[alt="shop"] {
@@ -56,6 +56,7 @@ img.float {
 	from {
 		transform: rotate(0deg);
 	}
+
 	to {
 		transform: rotate(360deg);
 	}
