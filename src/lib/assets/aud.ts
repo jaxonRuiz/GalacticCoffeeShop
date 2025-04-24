@@ -5,7 +5,7 @@ export const aud: { [key: string]: string } = {
 	moonlight: new URL('./music/snoozy beats - moonlight city.mp3', import.meta.url).href,
 	fat_caps: new URL('./music/Jason Shaw - Fat Caps.mp3', import.meta.url).href,
 	gavelston: new URL('./music/LOPKERJO -Soul of Gavelston.mp3', import.meta.url).href,
-	cafe_crumble: new URL('./music/snoozy beats - cafe crumble[lofi beat].mp3', import.meta.url).href,
+	cafe_crumble: new URL('./music/snoozy beats - cafe crumble.mp3', import.meta.url).href,
 	lovely_days: new URL('./music/snoozy beats - lovely days [lofi].mp3', import.meta.url).href,
 	boiling: new URL('./sfx/boiling.flac', import.meta.url).href,
 	ding: new URL('./sfx/ding.wav', import.meta.url).href,
