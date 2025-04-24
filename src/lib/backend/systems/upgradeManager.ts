@@ -3,6 +3,7 @@ import { aud } from "../../assets/aud";
 // will have diff upgrade manager for each subset (preshop, shop, etc)
 
 const unlockStages: boolean = false;
+const playtesterMode: boolean = false;
 
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
@@ -77,18 +78,18 @@ const playtesterMultiplier = 3;
 //  way to designate upgrade caps and single upgrades
 export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	preshop: {
-		// play_tester_mode: {
-		// 	unlock_condition: (_shop) => {
-		// 		return true;
-		// 	},
-		// 	upgrade: (shop) => {
-		// 		shop.moneyMultiplier = playtesterMultiplier;
-		// 	},
-		// 	maxLevel: 1,
-		// 	cost: 0,
-		// 	costMultiplier: 1,
-		// 	image: "play_tester_mode.jpg",
-		// },
+		play_tester_mode: {
+			unlock_condition: (_shop) => {
+				return playtesterMode;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).moneyMultiplier = playtesterMultiplier;
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "play_tester_mode.jpg",
+		},
 
 		buy_coffee_shop: {
 			unlock_condition: (shop) => {
@@ -244,7 +245,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		lingering_appeal: {
 			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeSold > 50 && shop.upgrades.get("promotional_posters")! >= 1;
+				return (shop as IPreshop).lifetimeCoffeeSold > 50 &&
+					shop.upgrades.get("promotional_posters")! >= 1;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).appealDecay *= 0.95;
@@ -332,18 +334,18 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	},
 
 	localShop: {
-		// play_tester_mode: {
-		// 	unlock_condition: (_shop) => {
-		// 		return true;
-		// 	},
-		// 	upgrade: (shop) => {
-		// 		shop.moneyMultiplier = playtesterMultiplier;
-		// 	},
-		// 	maxLevel: 1,
-		// 	cost: 0,
-		// 	costMultiplier: 1,
-		// 	image: "play_tester_mode.jpg",
-		// },
+		play_tester_mode: {
+			unlock_condition: (_shop) => {
+				return playtesterMode;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).moneyMultiplier = playtesterMultiplier;
+			},
+			maxLevel: 1,
+			cost: 0,
+			costMultiplier: 1,
+			image: "play_tester_mode.jpg",
+		},
 		unlock_multishop: {
 			unlock_condition: (shop) => {
 				if (unlockStages) return true;
@@ -500,7 +502,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.03;
-
 			},
 			maxLevel: 1,
 			cost: 70,
@@ -707,6 +708,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "add_new_shop.jpg",
-		}
+		},
 	},
 };
