@@ -77,6 +77,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 		// Setting up audio
 		this.audioManager.addMusic("bgm", aud.shop_music);
+		this.audioManager.addSFX("ding", aud.ding);
 		this.audioManager.playAudio("bgm");
 	}
 
@@ -133,6 +134,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	// multishop actions /////////////////////////////////////////////////////////
 	addShop(applyUpgrades: boolean = true) {
+		this.audioManager.playAudio("ding");
 		let newShop = new Shop(this);
 		if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
 		if (applyUpgrades) {
@@ -199,6 +201,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		});
 	}
 	restockShops() {
+		this.audioManager.playAudio("ding");
 		this.shops.forEach((shop) => {
 			if (shop.autoRestockUnlocked) shop.restock();
 		});
@@ -244,32 +247,38 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// selected shop actions /////////////////////////////////////////////////////
 	// actions you can do at the selected shop
 	localSellCoffee() {
+		this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.sellCoffee();
 	}
 
 	localPromote() {
+		this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.promote();
 	}
 
 	localProduceCoffee() {
+		this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.produceCoffee();
 	}
 
 	localWithdrawMoney() {
+		this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.money += this.selectedShop.money;
 		this.selectedShop.money = 0;
 	}
 
 	localAddWorker(role: string) {
+		this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.addWorker(role);
 	}
 
 	localRemoveWorker(role: string) {
+		this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.removeWorker(role);
 	}
