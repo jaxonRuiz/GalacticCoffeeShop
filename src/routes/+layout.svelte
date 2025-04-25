@@ -28,7 +28,6 @@
 	let { children } = $props();
 
 	function onKeyDown(event: KeyboardEvent) {
-		console.log(event.key);
 		if (event.key === "Escape") {
 			$optionsWindowOpen = !get(optionsWindowOpen);
 			pauseGame();
@@ -44,7 +43,7 @@
 			console.log("app saving");
 			saveState();
 		}
-		if (event.key === " ") {
+		if (event.key === "[") {
 			goto(`${base}/`);
 		}
 		// if (event.key === "r") {

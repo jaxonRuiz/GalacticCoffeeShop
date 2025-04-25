@@ -63,6 +63,7 @@ interface IPreshop extends IShop {
   lifetimeCoffeeSold: number;
   lifetimeCoffeeMade: number;
   lifetimeGrindBeans: number;
+  moneyMultiplier: number;
 }
 
 // for classes which act as container to multiple shops
@@ -98,6 +99,8 @@ interface ILocalShop extends IShop {
   workerAmounts: { [key: string]: number };
   promoterUnlocked: boolean;
   supplierUnlocked: boolean;
+  moneyMultiplier: number;
+
 
   roles: Map<string, Role>;
   unlockPromoter(): void;

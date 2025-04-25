@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fly } from "svelte/transition";
 	import { t } from "svelte-i18n";
 	import { derived } from "svelte/store";
 	import { MultiShop } from "$lib/backend/classes/multiShop";
@@ -20,6 +21,9 @@
 	const smanager = stageManager;
 	const mshop: MultiShop = smanager.currentScene as MultiShop;
 	let sshop = mshop.shops[mshop.selectedShopIndex];
+
+	let coffeeOnTable = sshop.uiManager.coffees;
+	let customersInLine = sshop.uiManager.customers;
 
 	// define variables
 	let mshopMoney = mshop.w_money;
@@ -70,7 +74,35 @@
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeShop_bot} />
 			<img alt="rat" src={img.astrorat} class="float" />
+			<div id="coffees" class="abs">
+				{#each $coffeeOnTable as coffee (coffee)}
+					<img
+						in:fly={{ y: -50, duration: 500 }}
+						out:fly={{ y: -50, duration: 500 }}
+						alt="coffee"
+						src={img.coffee}
+						style="
+							top: {-19.5 + coffee[0] * 12.8}%;
+							left: {-10.5 + coffee[1] * 8.3}%;
+							z-index:{coffee[0] + coffee[1]}"
+					/>
+				{/each}
+			</div>
 			<img alt="shop" src={img.coffeeShop_top} />
+			<div class="customers abs">
+				{#each $customersInLine as customer, ind (customer)}
+					<img
+						in:fly={{ y: -50, duration: 500 }}
+						out:fly={{ y: -50, duration: 500 }}
+						alt="customer"
+						src={img[`alien_${customer[0]}_${customer[1]}`]}
+						style="
+							top: {ind * 2.5}%;
+							left: {ind * 2.5}%;
+							z-index:{ind}"
+					/>
+				{/each}
+			</div>
 		</div>
 	</div>
 
@@ -129,7 +161,7 @@
 				<div class="tooltip">
 					<Tooltip text={["restock_tooltip"]} />
 				</div>
-					<p>{$t("restockPrice_stat")}: {fMoney(sshop.getRestockPrice())}</p>
+				<p>{$t("restockPrice_stat")}: {fMoney(sshop.getRestockPrice())}</p>
 				{#each Object.keys($restockSheet) as key}
 					{@render restockItem(key)}
 				{/each}
@@ -155,11 +187,7 @@
 			</Dropdown>
 		</div>
 		<div class="col">
-			<UpgradesPanel
-				wshop={sshop}
-				umKey="localShop"
-				money={totalMoney}
-			/>
+			<UpgradesPanel wshop={sshop} umKey="localShop" money={totalMoney} />
 		</div>
 	</div>
 </main>
@@ -234,6 +262,29 @@
 		img[alt="rat"] {
 			top: 24%;
 			right: 30%;
+		}
+
+		#coffees {
+			transform-origin: center;
+			transform: rotateX(54deg) rotateY(0deg) rotateZ(45deg);
+			width: 44.5%;
+			height: 32.7%;
+			right: 16.8%;
+			top: 29.2%;
+			img {
+				transform: rotateZ(-45deg) rotateY(-54deg);
+				width: 18%;
+			}
+		}
+
+		.customers {
+			border: 1px solid var(--accent);
+
+			img {
+				border: 1px solid whitesmoke;
+				width: 20%;
+				height: auto;
+			}
 		}
 	}
 </style>
