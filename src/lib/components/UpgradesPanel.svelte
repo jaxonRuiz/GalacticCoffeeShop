@@ -36,7 +36,7 @@
 	});
 </script>
 
-<div class="col block fixed">
+<div id="upgrades-panel" class="col block fixed">
 	<h1>{$t("upgrades_title")}</h1>
 	<p>{$t("money_stat")}: {fMoney($money)}</p>
 	<div class="row">
@@ -91,6 +91,10 @@
 </div>
 
 <style>
+	#upgrades-panel {
+		height: 100%;
+	}
+
 	.tab {
 		cursor: var(--cpointer), pointer;
 		padding-bottom: 0.7em;
