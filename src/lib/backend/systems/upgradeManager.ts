@@ -97,6 +97,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as IPreshop).lifetimeCoffeeSold >= 250 / 2; // divide by 2 for playtest
 			},
 			upgrade: (shop) => {
+				(shop as IPreshop).money -= 600;
 				(shop as IScene).endScene();
 			},
 			maxLevel: 1,
@@ -615,7 +616,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		brazilian_beans: {
 			unlock_condition: (shop) => {
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
-						150 && ((shop.upgrades.get("local_shop_nicer_coffee") ?? 0) >= 3);
+					150 && ((shop.upgrades.get("local_shop_nicer_coffee") ?? 0) >= 3);
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).coffeePrice += 0.5;
@@ -628,7 +629,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		civet_coffee: {
 			unlock_condition: (shop) => {
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
-						200 && shop.upgrades.has("brazilian_beans");
+					200 && shop.upgrades.has("brazilian_beans");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).coffeePrice += 0.8;
