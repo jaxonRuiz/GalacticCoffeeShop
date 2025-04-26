@@ -43,7 +43,7 @@
 			console.log("app saving");
 			saveState();
 		}
-		if (event.key === " ") {
+		if (event.key === "[") {
 			goto(`${base}/`);
 		}
 		// if (event.key === "r") {

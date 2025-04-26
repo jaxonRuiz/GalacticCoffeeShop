@@ -178,12 +178,16 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.audioManager.addSFX("grind", aud.crunch);
 		this.audioManager.addSFX("papers", aud.papers);
 		this.audioManager.addSFX("boil", aud.boiling);
-		this.audioManager.addSFX("cashRegister", aud.cashRegister);
+		this.audioManager.addSFX("cashRegister", aud.new_cash);
 		this.audioManager.addSFX("grind2", aud.crunch2);
-		this.audioManager.addAmbience("crowd", aud.new_crowd);
+		this.audioManager.addAmbience("crowd", aud.preshop_crowd);
 
 		this.audioManager.playAudio("bgm");
 		this.audioManager.playAudio("crowd");
+		//fixed initial blast issue
+		setTimeout(() => {
+			this.audioManager.setVolume("crowd", 0);
+		}, 0);
 
 		// UI
 		this.uiManager = new UIManager();
@@ -250,7 +254,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 				// Scale crowd volume by the number of customers and global/music volume
 				const crowdVolume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
-				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.25);
+				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.5);
 				this.audioManager.setVolume("crowd", scaledVolume);
 				
 				// ui

@@ -245,7 +245,6 @@ export class Shop implements ILocalShop {
 				shop.boilTimer -= 1;
 			} else {
 				shop.playBoiler = false;
-				shop.audioManager.stopAudio("boiling");
 			}
 		}
 
@@ -396,7 +395,6 @@ export class Shop implements ILocalShop {
 	}
 
 	promote() {
-		this.audioManager.playAudio("ding");
 		this.appeal +=
 			this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);

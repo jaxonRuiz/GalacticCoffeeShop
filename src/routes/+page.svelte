@@ -9,10 +9,40 @@
 	import { img } from "$lib/assets/img";
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
+	import { AudioManager } from "$lib/backend/systems/audioManager";
+	import { aud } from "$lib/assets/aud";
+	import { onMount, onDestroy } from "svelte";
 
 	let page = $state("title");
 	let text = $state(-1);
 	const script = ["intro1", "intro2", "intro3", "intro4"];
+	let menuAudioManager: AudioManager;
+	let menuMusicStarted = false;
+
+	function startMenuMusic() {
+		if (!menuMusicStarted && menuAudioManager) {
+			menuAudioManager.playAudio("menu");
+			menuMusicStarted = true;
+		}
+	}
+
+	onMount(() => {
+		menuAudioManager = new AudioManager();
+		menuAudioManager.addMusic("menu", aud.cafe_crumble);
+
+		const handler = () => {
+			startMenuMusic();
+			window.removeEventListener("pointerdown", handler);
+		};
+		window.addEventListener("pointerdown", handler);
+	});
+
+	onDestroy(() => {
+		if (menuAudioManager) {
+			menuAudioManager.stopAudio("menu");
+			menuAudioManager.destroy();
+		}
+	});
 </script>
 
 <svelte:window
