@@ -22,6 +22,11 @@ export function startNewGame() {
 	resetState();
 	console.log("starting new game");
 	if (stageManager.currentSceneIndex == 0) {
+		console.log("stage manager was at 0");
+		stageManager.nextScene();
+	} else {
+		console.error("stage manager was not at 0, resetting to 0 - this should not happen, alert jaxon");
+		stageManager.currentSceneIndex = 0;
 		stageManager.nextScene();
 	}
 }
@@ -56,7 +61,8 @@ export function resetState() {
 
 	// reset variables to erase data inside them
 	timer = new Timer();
-	stageManager = new StageManager(timer);
+	// stageManager = new StageManager(timer);
+	stageManager.reset(timer);
 }
 
 // also acts as unpause game
