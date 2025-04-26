@@ -35,4 +35,11 @@ export const img: { [key: string] : string } = {
 	alien_catorbiter_1: new URL('./img/catorbiter/catorbiter_1.svg', import.meta.url).href,
 	alien_catorbiter_2: new URL('./img/catorbiter/catorbiter_2.svg', import.meta.url).href,	
 	alien_catorbiter_3: new URL('./img/catorbiter/catorbiter_3.svg', import.meta.url).href,
+	loading_coffee: new URL('./img/loading/loading_coffee.svg', import.meta.url).href,
+	loading_stars_1: new URL('./img/loading/loading_stars_1.svg', import.meta.url).href,
+	loading_stars_2: new URL('./img/loading/loading_stars_2.svg', import.meta.url).href,
+	loading_stars_3: new URL('./img/loading/loading_stars_3.svg', import.meta.url).href,
+	loading_steam_1: new URL('./img/loading/loading_steam_1.svg', import.meta.url).href,
+	loading_steam_2: new URL('./img/loading/loading_steam_2.svg', import.meta.url).href,
+	loading_steam_3: new URL('./img/loading/loading_steam_3.svg', import.meta.url).href,
 };
