@@ -19,8 +19,8 @@
 	import Boops from "$lib/components/Boops.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
-  import LoadingScreen from "$lib/components/LoadingScreen.svelte";
-  import { loading, loadingScreen } from "$lib/components/LoadingScreen";
+	import LoadingScreen from "$lib/components/LoadingScreen.svelte";
+	import { loading, loadingScreen } from "$lib/components/LoadingScreen";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -162,7 +162,11 @@
 	</div>
 </div>
 
-<div id="content" style={pointerStyle}>
+<div
+	id="content"
+	style={pointerStyle}
+	class={$loading || $optionsWindowOpen ? "paused" : "playing"}
+>
 	{@render children()}
 </div>
 

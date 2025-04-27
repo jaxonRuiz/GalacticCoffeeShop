@@ -164,3 +164,13 @@ button:hover:not(:disabled) {
 		}
 	}
 }
+
+#content {
+	&.paused * {
+		animation-play-state: paused !important;
+	}
+
+	&.playing * {
+		animation-play-state: running !important;
+	}
+}
