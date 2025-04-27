@@ -1,8 +1,9 @@
 <script>
 	import { img } from "$lib/assets/img";
+	import { loading } from "./LoadingScreen";
 </script>
 
-<div id="loading-screen">
+<div id="loading-screen" class={$loading ? "loading" : "loaded"}>
 	<div class="text-container imgs">
 		<div class="text">
 			<h2>space fact</h2>
@@ -23,8 +24,8 @@
 	</div>
 	<div class="bg imgs">
 		<img src={img.loading_stars_1} alt="bg1" style="animation-delay: 0s;" />
-		<img src={img.loading_stars_2} alt="bg2" style="animation-delay: 4s;" />
-		<img src={img.loading_stars_3} alt="bg3" style="animation-delay: 3s;" />
+		<img src={img.loading_stars_2} alt="bg2" style="animation-delay: -5s;" />
+		<img src={img.loading_stars_3} alt="bg3" style="animation-delay: -3s;" />
 	</div>
 </div>
 
@@ -43,6 +44,19 @@
 		display: grid;
 		place-items: center;
 
+		&.loading {
+			opacity: 1;
+			* {
+				animation-play-state: running !important;
+			}
+		}
+		&.loaded {
+			opacity: 0;
+			* {
+				animation-play-state: paused !important;
+			}
+		}
+
 		.imgs {
 			width: 0;
 			height: 0;
@@ -57,6 +71,7 @@
 		}
 
 		.bg img {
+			opacity: 0;
 			animation: blink 5s infinite;
 		}
 

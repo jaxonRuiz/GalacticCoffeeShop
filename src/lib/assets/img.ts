@@ -41,5 +41,4 @@ export const img: { [key: string] : string } = {
 	loading_stars_3: new URL('./img/loading/loading_stars_3.svg', import.meta.url).href,
 	loading_steam_1: new URL('./img/loading/loading_steam_1.svg', import.meta.url).href,
 	loading_steam_2: new URL('./img/loading/loading_steam_2.svg', import.meta.url).href,
-	loading_steam_3: new URL('./img/loading/loading_steam_3.svg', import.meta.url).href,
 };

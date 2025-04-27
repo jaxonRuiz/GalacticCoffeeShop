@@ -20,6 +20,7 @@
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
   import LoadingScreen from "$lib/components/LoadingScreen.svelte";
+  import { loading, loadingScreen } from "$lib/components/LoadingScreen";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -46,6 +47,10 @@
 		}
 		if (event.key === "[") {
 			goto(`${base}/`);
+		}
+		if (event.key === "]") {
+			loading.set(!get(loading));
+			console.log(get(loading));
 		}
 		// if (event.key === "r") {
 		//   resetState();
