@@ -19,6 +19,7 @@
 	import Boops from "$lib/components/Boops.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
+  import LoadingScreen from "$lib/components/LoadingScreen.svelte";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -76,6 +77,8 @@
 </script>
 
 <svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
+
+<LoadingScreen />
 
 <div id="overlays" class="fl" style={pointerStyle}>
 	{#if $optionsWindowOpen}
