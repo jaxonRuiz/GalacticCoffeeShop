@@ -165,7 +165,7 @@ export class Shop implements ILocalShop {
 	playBoiler: boolean = false;
 	isSelected: boolean = false;
 
-	constructor(multiShop: MultiShop) {
+	constructor(multiShop: MultiShop, audioManager: AudioManager) {
 		this.multiShop = multiShop;
 		// setting up default roles
 		this.roles.set("barista", {
@@ -198,8 +198,7 @@ export class Shop implements ILocalShop {
 			},
 		});
 
-		// Clean up other audio managers
-		cleanupAudioManagers(this.audioManager);
+		this.audioManager = audioManager;
 
 		// Setting up audio
 		this.audioManager.addSFX("boiling", aud.boiling);
@@ -214,7 +213,7 @@ export class Shop implements ILocalShop {
 					Array.from({ length: 12 }, (_, col) => [row + 6, col])
 				).flat(),
 				...Array.from({ length: 6 }, (_, row) =>
-					Array.from({ length: 2 }, (_, col) => [row, col+10])
+					Array.from({ length: 2 }, (_, col) => [row, col + 10])
 				).flat(),
 			]);
 	}
@@ -232,8 +231,10 @@ export class Shop implements ILocalShop {
 		this.drawCustomers();
 
 		// only play audio if selected
-		if (this.isSelected) audioUpdate(this);
-		else {
+		if (this.isSelected) {
+			this.audioManager.enableAudio();
+			audioUpdate(this);
+		} else {
 			this.audioManager.disableAudio();
 		}
 

@@ -66,10 +66,10 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
-		this.shops.push(new Shop(this));
+		this.shops.push(new Shop(this, this.audioManager));
 		this.weeklyRecap[this.shops.length - 1] = {
-		income: 0,
-		expenses: 0,
+			income: 0,
+			expenses: 0,
 		};
 
 		// Clean up other audio managers
@@ -95,7 +95,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			// this.applyExpenses();
 			// this.shops.forEach((shop) => shop.restock());
 
-		
+
 		}
 	}
 
@@ -135,7 +135,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// multishop actions /////////////////////////////////////////////////////////
 	addShop(applyUpgrades: boolean = true) {
 		this.audioManager.playAudio("ding");
-		let newShop = new Shop(this);
+		let newShop = new Shop(this, this.audioManager);
 		if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
 		if (applyUpgrades) {
 			this.upgrades.forEach((value, key) => {
