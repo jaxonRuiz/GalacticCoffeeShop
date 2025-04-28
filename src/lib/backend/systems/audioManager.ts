@@ -239,6 +239,8 @@ export class AudioManager {
 
     /**
      * Fades the volume of an audio element or a group of audio elements to a target volume over a specified duration.
+     * If a fade is already in progress for the same audio, it will be cancelled and the new fade will start
+     * from the volume at the time of cancelling.
      * 
      * @param name - The name of the audio element or group to fade. This can refer to SFX, music, or ambience.
      * @param duration - The duration of the fade effect in milliseconds.
@@ -261,6 +263,11 @@ export class AudioManager {
         }
 
         if (!audio) return false;
+        
+        const targetAudio = Array.isArray(audio) ? audio[0] : audio;
+		if (this.audioEffects.has(targetAudio)) {
+            this.cancelFadeAudio(name);
+        }
         
         if (Array.isArray(audio)) {
             audio.forEach((a) => this.fadeAudioInstance(a, duration, targetVolume, onComplete));
@@ -292,6 +299,7 @@ export class AudioManager {
         const stepTime = Math.min(duration, 100);
         const initialVolume = audio.volume;
         const volumeStep = (targetVolume - initialVolume) / (duration / stepTime);
+
         const fadeTask = setInterval(() => {
             // If the audio is paused or ended, clear the interval and remove the task
             if (audio.paused || audio.ended || (initialVolume !== 0 && audio.volume <= 0)) {
