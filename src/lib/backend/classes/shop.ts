@@ -172,6 +172,7 @@ export class Shop implements ILocalShop {
 		// Setting up audio
 		this.audioManager.addSFX("boiling", aud.boiling);
 		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addSFX("papers", aud.papers);
 
 		// setting up default roles
 		this.roles.set("barista", {
@@ -394,7 +395,7 @@ export class Shop implements ILocalShop {
 	}
 
 	promote() {
-		this.audioManager.playAudio("ding");
+		this.audioManager.playAudio("papers");
 		this.appeal +=
 			this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
