@@ -35,9 +35,8 @@
 				{#each $boughtBuildings as building, i (building)}
 					<div class="building-card">
 						<p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
-						<p>{building.desc}</p>
 						<p>Area Size: {building.areaSize} acres</p>
-						<p>{building.whatDo()}</p>
+						<p>{dev.readBuilding(building)}</p>
 						<p>Rent: {fMoney(building.rent)}/day</p>
 						<div class="row">
 							<Button
@@ -57,9 +56,8 @@
 				{#each $availBuildings as building, i (building)}
 					<div class="building-card">
 						<p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
-						<p>{building.desc}</p>
 						<p>Area Size: {building.areaSize} acres</p>
-						<p>{building.whatDo()}</p>
+						<p>{dev.readBuilding(building)}</p>
 						<p>Rent: {fMoney(building.rent)}/day</p>
 						<div class="row">
 							<Button

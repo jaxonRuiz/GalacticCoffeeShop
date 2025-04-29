@@ -656,6 +656,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	multiShop: {
 		establish_franchise: {
 			unlock_condition: (multishop) => {
+				return true;
 				if (unlockStages) return true;
 				return (multishop as IMultiShop).shops!.length > 2;
 			},
@@ -663,7 +664,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IScene).endScene();
 			},
 			maxLevel: 1,
-			cost: 5000,
+			cost: 10,
 			costMultiplier: 1,
 			image: "establish_franchise.jpg",
 		},

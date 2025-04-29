@@ -33,9 +33,58 @@ export class Region implements ISubscriber, IRegion {
 	w_accessibilityLevel: Writable<number> = writable(10);
 	w_importCapacity: Writable<number> = writable(1000);
 	w_exportCapacity: Writable<number> = writable(1000);
+	w_deliveriesPerHour: Writable<number> = writable(1000);
 	w_beans: Writable<number> = writable(0);
 	w_unlocked: Writable<boolean> = writable(false);
 	w_population: Writable<number> = writable(1000);
+
+	//farm
+	w_water: Writable<number> = writable(0);
+	w_beansPerHour: Writable<number> = writable(0);
+	w_waterPerHour: Writable<number> = writable(0);
+
+	get water() {
+		return get(this.w_water);
+	}
+	set water(value) {
+		this.w_water.set(value);
+	}
+	get beansPerHour() {
+		return get(this.w_beansPerHour);
+	}
+	set beansPerHour(value) {
+		this.w_beansPerHour.set(value);
+	}
+	get waterPerHour() {
+		return get(this.w_waterPerHour);
+	}
+	set waterPerHour(value) {
+		this.w_waterPerHour.set(value);
+	}
+
+	//city
+	w_maxCoffeePerHour: Writable<number> = writable(0);
+	w_populationPurchasingPower: Writable<number> = writable(1);
+	w_coffeesSoldLastHour: Writable<number> = writable(0);
+
+	get maxCoffeePerHour() {
+		return get(this.w_maxCoffeePerHour);
+	}
+	set maxCoffeePerHour(value) {
+		this.w_maxCoffeePerHour.set(value);
+	}
+	get populationPurchasingPower() {
+		return get(this.w_populationPurchasingPower);
+	}
+	set populationPurchasingPower(value) {
+		this.w_populationPurchasingPower.set(value);
+	}
+	get coffeesSoldLastHour() {
+		return get(this.w_coffeesSoldLastHour);
+	}
+	set coffeesSoldLastHour(value) {
+		this.w_coffeesSoldLastHour.set(value);
+	}
 
 	//getters and setters
 	get totalArea() {
@@ -73,6 +122,12 @@ export class Region implements ISubscriber, IRegion {
 	}
 	set exportCapacity(value) {
 		this.w_exportCapacity.set(value);
+	}
+	get deliveriesPerHour() {
+		return get(this.w_deliveriesPerHour);
+	}
+	set deliveriesPerHour(value) {
+		this.w_deliveriesPerHour.set(value);
 	}
 	get unusedLand() {
 		return get(this.w_unusedLand);
@@ -130,6 +185,7 @@ export class Region implements ISubscriber, IRegion {
 		this.timer = timer;
 		this.franchise = franchise;
 		this.population = 1000;
+		this.coffeesSoldLastHour = 0;
 
 		this.initializeRegion(climate);
 	}
@@ -145,7 +201,8 @@ export class Region implements ISubscriber, IRegion {
 		}
 	}
 
-	tick() {
+	tick(){
+		
 	}
 
 	initializeRegion(climate: ClimateType) {

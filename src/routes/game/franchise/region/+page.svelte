@@ -21,10 +21,23 @@
 	let exportCapacity = $region?.w_exportCapacity;
 	let beans = $region?.w_beans;
 	let population = $region?.w_population;
+	let water = $region?.w_water;
+	let waterPerHour = $region?.w_waterPerHour;
+	let beansPerHour = $region?.w_beansPerHour;
+	let coffeeSold = $region?.w_coffeesSoldLastHour;
+	let maxCoffee = $region?.w_maxCoffeePerHour;
 </script>
 
 <div class="region row">
 	<div class="left block">
+		<div class = "stats">
+			<h1>Rates</h1>
+			<p>Coffees sold last hour: {$coffeeSold}</p>
+			<p>Max coffees/hour: {$maxCoffee}</p>
+			<p>Beans/hour: {$beansPerHour}</p>
+			<p>Gallons of water/hour: {$waterPerHour}</p>
+			<p>Estimated customers/hour: {($population ?? 0) / 20}</p>
+		</div>
 		<div class = "stats">
 			<h1>Stats</h1>
 			<p>money: ${$money}.00</p>
@@ -33,7 +46,8 @@
 			<p>accessibility level: {$accessibilityLevel}</p>
 			<p>import capacity: {$importCapacity}</p>
 			<p>export capacity: {$exportCapacity}</p>
-			<p>stockpiled beans: {$beans}</p>
+			<p>beans: {$beans}</p>
+			<p>water: {$water}</p>
 			<p>population: {$population}</p>
 		</div>
 		<div class = "env">

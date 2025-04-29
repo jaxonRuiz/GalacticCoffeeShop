@@ -181,45 +181,29 @@ interface TimeData {
 
 interface Building {
   name: string;
-  desc: string;
+  type: BuildingType;
   areaSize: number;
   buyCost: number;
   sellCost: number;
   rent: number;
-  onBuy: () => void;
-  onSell: () => void;
-  onTick: () => void;
-  onHour: () => void;
-  onDay: () => void;
-  onWeek: () => void;
-  whatDo: () => string;
+  num: number;
 }
 
-interface CoffeeBuilding extends Building{
-  maxCoffeePerHour: number;
-}
+type BuildingType =
+	| "coffeeBuilding"
+	| "housingBuilding"
+	| "importBuilding"
+	| "exportBuilding"
+	| "deliveryBuilding"
+	| "waterBuilding"
+	| "farmBuilding";
 
-interface HousingBuilding extends Building{
-  populationIncrease: number;
-}
+type BuildingSize = "small" | "medium" | "large";
 
-interface BeanBuilding extends Building{
-  beansPerHour: number;
-  beanCost: number;
-}
-
-interface ImportBuilding extends Building{
-  importIncrease: number;
-}
-
-interface ExportBuilding extends Building{
-  exportIncrease: number;
-}
-
-interface WaterBuilding extends Building {
-  waterPerHour: number;
-}
-
-interface FarmBuilding extends Building {
-  beansPerHour: number;
-}
+type BuildingData = {
+	names: string[];
+	cost: number;
+	num: number;
+	areaSize: number;
+	rent: number;
+};
