@@ -61,6 +61,7 @@ export class Franchise implements ISubscriber, IScene {
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		console.log("franchise constructor()");
 		timer.subscribe(this, "tick");
+		timer.subscribe(this, "day");
 		this.timer = timer;
 		this.sceneManager = sceneManager;
 
@@ -72,10 +73,17 @@ export class Franchise implements ISubscriber, IScene {
 	}
 
 	notify(event: string, data?: any) {
+		if (event === "day") {
+			this.day();
+		}
 	}
 
 	tick() {
 		this.world.tick();
+	}
+
+	day() {
+		this.world.day();
 	}
 
 	// franchise actions /////////////////////////////////////////////////////////
@@ -115,6 +123,9 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	unlockRegion(regionIndex: number){
 		this.currentCountry?.unlockRegion(regionIndex);
+	}
+	attemptDiplomacyUpgrade(index:number){
+		this.currentCountry?.attemptDiplomacyUpgrade(index);
 	}
 
 	//Region stuff

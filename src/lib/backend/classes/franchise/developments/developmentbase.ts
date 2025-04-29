@@ -28,19 +28,19 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 	}
 
 	// buildings
-	w_boughtBuildings: Writable<Building[]> = writable([]);
-	w_availableBuildings: Writable<Building[]> = writable([]);
+	w_boughtBuildings: Writable<IBuilding[]> = writable([]);
+	w_availableBuildings: Writable<IBuilding[]> = writable([]);
 
 	get boughtBuildings() {
 		return get(this.w_boughtBuildings);
 	}
-	set boughtBuildings(value: Building[]) {
+	set boughtBuildings(value: IBuilding[]) {
 		this.w_boughtBuildings.set(value);
 	}
 	get availableBuildings() {
 		return get(this.w_availableBuildings);
 	}
-	set availableBuildings(value: Building[]) {
+	set availableBuildings(value: IBuilding[]) {
 		this.w_availableBuildings.set(value);
 	}
 
@@ -95,7 +95,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
 	}
 
-	buyBuilding(building: Building){
+	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
 		this.franchise.money -= building.buyCost; //pay your dues
@@ -108,7 +108,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 		}
 	}
 
-	sellBuilding(building: Building){
+	sellBuilding(building: IBuilding){
 		this.franchise.money += building.sellCost;
 		this.developmentArea += building.areaSize;
 		const index = this.boughtBuildings.indexOf(building);
@@ -128,7 +128,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
 	}
 
-	readBuilding(building: Building){
+	readBuilding(building: IBuilding){
 		switch (building.type) {
 			case "coffeeBuilding":
 				return `Sells up to ${building.num} coffees/hour`;

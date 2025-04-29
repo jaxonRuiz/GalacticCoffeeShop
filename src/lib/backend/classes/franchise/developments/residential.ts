@@ -36,7 +36,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 	}
 
 	tick(){
-		this.sellCoffee(Math.floor(Math.min(this.parent.maxCoffeePerHour, this.hourlyCustomerEstimate) / 16));
+		this.sellCoffee(Math.floor(Math.min(this.parent.maxCoffeePerHour, this.hourlyCustomerEstimate) / 16)); //FIX!! only sells multiples of 16 when youre starting off
 	}
 
 	hour(){
@@ -44,7 +44,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 		this.coffeeSoldThisHour = 0;
 	}
 
-	buyBuilding(building: Building){
+	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
 		this.franchise.money -= building.buyCost; //pay your dues
@@ -63,7 +63,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 		}
 	}
 
-	sellBuilding(building: Building){
+	sellBuilding(building: IBuilding){
 		this.franchise.money += building.sellCost;
 		this.developmentArea += building.areaSize;
 		const index = this.boughtBuildings.indexOf(building);

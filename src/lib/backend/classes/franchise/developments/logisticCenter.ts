@@ -13,7 +13,7 @@ export class LogisticCenter extends DevelopmentBase{
 		this.initializeDevelopment();
 	}
 
-	buyBuilding(building: Building){
+	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
 		this.franchise.money -= building.buyCost; //pay your dues
@@ -35,7 +35,7 @@ export class LogisticCenter extends DevelopmentBase{
 		}
 	}
 
-	sellBuilding(building: Building){
+	sellBuilding(building: IBuilding){
 		this.franchise.money += building.sellCost;
 		this.developmentArea += building.areaSize;
 		const index = this.boughtBuildings.indexOf(building);

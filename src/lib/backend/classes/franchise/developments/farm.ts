@@ -19,7 +19,7 @@ export class Farm extends DevelopmentBase {
 		this.parent.beans += Math.floor(this.parent.beansPerHour/16);
 	}
 
-	buyBuilding(building: Building){
+	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
 		this.franchise.money -= building.buyCost; //pay your dues
@@ -38,7 +38,7 @@ export class Farm extends DevelopmentBase {
 		}
 	}
 
-	sellBuilding(building: Building){
+	sellBuilding(building: IBuilding){
 		this.franchise.money += building.sellCost;
 		this.developmentArea += building.areaSize;
 		const index = this.boughtBuildings.indexOf(building);

@@ -44,13 +44,13 @@ export class World implements ISubscriber, IWorld {
 			if (isSpaced) {
 				var countryName = `country ${created + 1}`;
 				if (this.firstCountry) {
-					var newCountry = new Country(this, this.franchise, newCoords, 1000);
+					var newCountry = new Country(this, this.franchise, newCoords, 500, true);
 					this.countries[countryName] = newCountry;
 					created++;
 					this.firstCountry = false;
 				}
 				else{
-					var newCountry = new Country(this, this.franchise, newCoords, Math.floor(Math.random() * 200));
+					var newCountry = new Country(this, this.franchise, newCoords, Math.floor(Math.random() * 200), false);
 					this.countries[countryName] = newCountry;
 					created++;
 				}
@@ -65,6 +65,13 @@ export class World implements ISubscriber, IWorld {
 		for (const countryKey in this.countries) {
 			const country = this.countries[countryKey];
 			country.tick();
+		}
+	}
+
+	day() {
+		for (const countryKey in this.countries) {
+			const country = this.countries[countryKey];
+			country.day();
 		}
 	}
 
