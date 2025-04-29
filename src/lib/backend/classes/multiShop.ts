@@ -195,6 +195,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	withdrawAll() {
 		let shopIndex = 0;
 		console.log("withdraw all");
+		this.audioManager.playAudio("ding");
 		this.shops.forEach((shop) => {
 			this.money += shop.money;
 			this.weeklyRecap[shopIndex].income = shop.money;
@@ -254,13 +255,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	localPromote() {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.promote();
 	}
 
 	localProduceCoffee() {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.produceCoffee();
 	}
@@ -273,13 +274,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	localAddWorker(role: string) {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.addWorker(role);
 	}
 
 	localRemoveWorker(role: string) {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.removeWorker(role);
 	}
