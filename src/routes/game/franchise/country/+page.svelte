@@ -104,7 +104,7 @@
 		
 					{#if !region.unlocked}
 						<Button
-							on:click={() => {
+							onclick={() => {
 								if (region.parentCountry.diplomacy >= 500) {
 									franchise.buyRegion(region);
 									region.unlocked = true;
