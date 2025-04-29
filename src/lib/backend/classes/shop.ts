@@ -167,6 +167,15 @@ export class Shop implements ILocalShop {
 
 	constructor(multiShop: MultiShop, audioManager: AudioManager) {
 		this.multiShop = multiShop;
+		this.audioManager = audioManager;
+
+		// Setting up audio
+		this.audioManager.addSFX("boiling", aud.boiling);
+		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addAmbience("crowd", aud.new_crowd);
+
+		this.audioManager.playAudio("crowd");
+
 		// setting up default roles
 		this.roles.set("barista", {
 			name: "Barista",
@@ -198,14 +207,6 @@ export class Shop implements ILocalShop {
 			},
 		});
 
-		this.audioManager = audioManager;
-
-		// Setting up audio
-		this.audioManager.addSFX("boiling", aud.boiling);
-		this.audioManager.addSFX("ding", aud.ding);
-		this.audioManager.addAmbience("crowd", aud.new_crowd);
-
-		this.audioManager.playAudio("crowd");
 		this.uiManager = new UIManager();
 		this.uiManager.setCoffeeLocations(
 			[
@@ -349,7 +350,6 @@ export class Shop implements ILocalShop {
 	}
 
 	deselectShop() {
-		this.audioManager.disableAudio();
 		this.multiShop.deselectShop();
 		this.multiShop.finishedFirstShop = true;
 	}

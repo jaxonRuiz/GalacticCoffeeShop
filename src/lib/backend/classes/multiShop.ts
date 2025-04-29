@@ -66,16 +66,17 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
+		// Setting up audio
+		this.audioManager.addMusic("bgm", aud.shop_music);
+		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addSFX("cashRegister", aud.new_cash);
+		this.audioManager.playAudio("bgm");
+
 		this.shops.push(new Shop(this, this.audioManager));
 		this.weeklyRecap[this.shops.length - 1] = {
 			income: 0,
 			expenses: 0,
 		};
-
-		// Setting up audio
-		this.audioManager.addMusic("bgm", aud.shop_music);
-		this.audioManager.addSFX("ding", aud.ding);
-		this.audioManager.playAudio("bgm");
 	}
 
 	notify(event: string, data?: any) {
