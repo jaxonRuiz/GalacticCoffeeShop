@@ -170,6 +170,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.selectedShop = shop;
 		this.selectedShop.isSelected = true;
 		this.selectedShopIndex = this.shops.indexOf(shop);
+		this.audioManager.playAudio("crowd");
 	}
 
 	selectShopIndex(index: number) {
@@ -179,7 +180,10 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	deselectShop() {
-		if (this.selectedShop) this.selectedShop!.isSelected = false;
+		if (this.selectedShop) {
+			this.selectedShop.isSelected = false;
+			this.audioManager.stopAudio("crowd");
+		}
 		this.selectedShop = null;
 		this.selectedShopIndex = -1;
 	}
