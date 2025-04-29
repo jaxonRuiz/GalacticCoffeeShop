@@ -25,7 +25,7 @@
 <div class="country row">
 	<div class="left block">
 		<div class="block">
-			<h1>Stats</h1>
+			<h1>Country</h1>
 			<p style="font-size: 1.2rem;">Tax rate: {$taxRate}</p>
 			<p style="font-size: 1.2rem;">Tariff rate: {$tariffRate}</p>
 		</div>
@@ -87,55 +87,53 @@
 	
 	<div class="center-column">
 		<div class="right block">
-			<h1>Country</h1>
-		
-			{#if $regions}
-				{#each $regions as region, i (region)}
-					<Button
-						onclick={() => { if (region.unlocked) franchise.selectRegion(region); }}
-						style="
-							position: absolute;
-							left: {region.coordinates[0]/11}%;
-							top: {region.coordinates[1]/11}%;
-						"
-					>
-						region {i + 1}
-					</Button>
-		
-					{#if !region.unlocked}
+			<div>
+				{#if $regions}
+					{#each $regions as region, i (region)}
 						<Button
-							onclick={() => {
-								if (region.parentCountry.diplomacy >= 500) {
-									franchise.buyRegion(region);
-									region.unlocked = true;
-								}
-							}}
-							disabled={region.parentCountry.diplomacy < 500}
+							onclick={() => { if (region.unlocked) franchise.selectRegion(region); }}
 							style="
 								position: absolute;
-								left: {region.coordinates[0] / 11}%;
-								top: {region.coordinates[1] / 11 + 4}%;
-								background-color: {region.parentCountry.diplomacy < 500 ? '#aaa' : 'green'};
-								color: white;
-								cursor: {region.parentCountry.diplomacy < 500 ? 'not-allowed' : 'pointer'};
+								left: {region.coordinates[0]/13}%;
+								top: {region.coordinates[1]/11}%;
 							"
 						>
-							Unlock for: ${region.unlockCost}
+							region {i + 1}
 						</Button>
-					{/if}
-				{/each}
-			{/if}
-		</div>
-		
-		<div class="rightright">
-			<div class="block">
-				<h1>Events:</h1>
-				{#if eventList}
-					{#each $eventList as eventString}
-						<p>{eventString}</p>
+			
+						{#if !region.unlocked}
+							<Button
+								onclick={() => {
+									if (region.parentCountry.diplomacy >= 500) {
+										franchise.buyRegion(region);
+										region.unlocked = true;
+									}
+								}}
+								disabled={region.parentCountry.diplomacy < 500}
+								style="
+									position: absolute;
+									left: {region.coordinates[0] / 13}%;
+									top: {region.coordinates[1] / 11 + 5}%;
+									background-color: {region.parentCountry.diplomacy < 500 ? '#aaa' : 'green'};
+									color: white;
+									cursor: {region.parentCountry.diplomacy < 500 ? 'not-allowed' : 'pointer'};
+								"
+							>
+								Unlock for: ${region.unlockCost}
+							</Button>
+						{/if}
 					{/each}
 				{/if}
 			</div>
+		</div>
+		
+		<div class="rightright">
+			<h1>Events:</h1>
+			{#if eventList}
+				{#each $eventList as eventString}
+					<p>{eventString}</p>
+				{/each}
+			{/if}
 		</div>
 	</div>
 </div>
@@ -160,7 +158,7 @@
 	div.right {
 		position: relative; 
 		width: 40vw;
-		height: 40vw;
+		height: 35vw;
 		border: 1px solid #ccc;
 		padding: 1rem;
 		border-radius: 0.5rem;
@@ -169,7 +167,8 @@
 	}
 	div.rightright{
 		position: relative; 
-		width: 100%;
+		width: 50%;
+		height: 10vw;
 		border: 1px solid #ccc;
 		padding: 1rem;
 		border-radius: 0.5rem;
