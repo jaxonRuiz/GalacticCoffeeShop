@@ -7,6 +7,7 @@ export class Country{
 	parent: World;
 	w_taxRate: Writable<number> = writable(0.2);
 	w_tariffRate: Writable<number> = writable(0.1);
+	w_diplomacy: Writable<number> = writable(0);
 
 	get taxRate() {
 		return get(this.w_taxRate);
@@ -27,7 +28,7 @@ export class Country{
 	housingModifier: number = 1.0;
 	coordinates: [number, number];
 	franchise: Franchise;
-	firstRegion: boolean;
+	firstRegions: number;
 	
 	w_regionList: Writable<Region[]> = writable([]);
 	// need to figure out how to represent regions in a graph
@@ -37,13 +38,20 @@ export class Country{
 	set regionList(value: Region[]) {
 		this.w_regionList.set(value);
 	}
+	get diplomacy() {
+		return get(this.w_diplomacy);
+	}
+	set diplomacy(value) {
+		this.w_diplomacy.set(value);
+	}
 
 
-	constructor(parent: World, franchise: Franchise, coordinates: [number, number]) {
+	constructor(parent: World, franchise: Franchise, coordinates: [number, number], diplomacy: number) {
 		this.parent = parent;
 		this.coordinates = coordinates;
 		this.franchise = franchise;
-		this.firstRegion = true;
+		this.firstRegions = 3;
+		this.diplomacy = diplomacy;
 
 		this.initializeRegions(4 + Math.floor(Math.random() * 3));
 	}
@@ -70,12 +78,12 @@ export class Country{
 			});
 
 			if (isSpaced) {
-				if (this.firstRegion){
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2000 * Math.floor(Math.random() * 1000), 2, newCoords);
-					this.firstRegion = false;
+				if (this.firstRegions > 0){
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2000 * Math.floor(Math.random() * 1000), 2, newCoords, true);
+					this.firstRegions--;
 				}
 				else{
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), 2000 * Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords);
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), 2000 + Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords, false);
 				}
 				this.regionList = [...this.regionList, newRegion];
 				// this.regionList.push(newRegion);

@@ -28,6 +28,8 @@
 	let maxCoffee = $region?.w_maxCoffeePerHour;
 </script>
 
+<div class = "money">💰 ${$money}</div>
+
 <div class="region row">
 	<div class="left block">
 		<div class = "stats">
@@ -40,7 +42,6 @@
 		</div>
 		<div class = "stats">
 			<h1>Stats</h1>
-			<p>money: ${$money}.00</p>
 			<p>total area: {$totalArea} acres</p>
 			<p>unused land: {$unusedLand}</p>
 			<p>accessibility level: {$accessibilityLevel}</p>
@@ -125,8 +126,20 @@
 		box-sizing: border-box;
 	}
 	.col.scroll {
-	overflow-y: auto;
-	max-height: 100%;
-}
+		overflow-y: auto;
+		max-height: 100%;
+	}
+	div.money {
+		position: fixed;
+		top: 30px;
+		right: 60px;
+		background-color: #222;
+		color: white;
+		padding: 10px 16px;
+		border-radius: 8px;
+		box-shadow: 0 0 10px rgba(0,0,0,0.3);
+		font-weight: bold;
+		z-index: 1000;
+	}
 
 </style>

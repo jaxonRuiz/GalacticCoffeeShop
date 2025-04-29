@@ -6,6 +6,7 @@ import { dictProxy } from "$lib/backend/proxies";
 export class World implements ISubscriber, IWorld {
 	w_countries: Writable<{ [key: string]: any }> = writable({});
 	franchise: Franchise;
+	firstCountry: boolean;
 
 	get countries() {
 		return dictProxy(this.w_countries);
@@ -19,6 +20,7 @@ export class World implements ISubscriber, IWorld {
 
 	constructor(franchise: Franchise) {
 		this.franchise = franchise;
+		this.firstCountry = true;
 		this.initializeCountries(4 + Math.floor(Math.random() * 2));
 	}
 
@@ -40,12 +42,18 @@ export class World implements ISubscriber, IWorld {
 			});
 
 			if (isSpaced) {
-				const countryName = `country ${created + 1}`;
-
-				const newCountry = new Country(this, this.franchise, newCoords);
-
-				this.countries[countryName] = newCountry;
-				created++;
+				var countryName = `country ${created + 1}`;
+				if (this.firstCountry) {
+					var newCountry = new Country(this, this.franchise, newCoords, 1000);
+					this.countries[countryName] = newCountry;
+					created++;
+					this.firstCountry = false;
+				}
+				else{
+					var newCountry = new Country(this, this.franchise, newCoords, Math.floor(Math.random() * 200));
+					this.countries[countryName] = newCountry;
+					created++;
+				}
 			}
 		}
 	}

@@ -144,4 +144,8 @@ export class Franchise implements ISubscriber, IScene {
 	deselectDevelopment(){
 		this.currentDevelopment = null;
 	}
+
+	buyRegion(region: Region): boolean{
+		return region.unlockRegion();
+	}
 }

@@ -172,6 +172,7 @@ export class Region implements ISubscriber, IRegion {
 		cost: number,
 		climate: ClimateType,
 		coordinates: [number, number],
+		unlocked: boolean
 	) {
 		console.log("region constructor()");
 		timer = franchise.timer;
@@ -186,6 +187,7 @@ export class Region implements ISubscriber, IRegion {
 		this.franchise = franchise;
 		this.population = 1000;
 		this.coffeesSoldLastHour = 0;
+		this.unlocked = unlocked;
 
 		this.initializeRegion(climate);
 	}
@@ -261,14 +263,16 @@ export class Region implements ISubscriber, IRegion {
 		this.developmentList["logistic"] = new LogisticCenter(this.timer, this, 4, this.franchise);
 	}
 
-	unlockRegion(){
-		if (this.unlocked) return;
+	unlockRegion(): boolean {
+		if (this.unlocked) return false;
 		if (this.franchise.money >= this.unlockCost){
 			this.unlocked = true;
 			this.franchise.money -= this.unlockCost;
+			return true;
 		}
 		else{
 			console.log("You are too broke to afford this propery");
+			return false;
 		}
 	}
 }
