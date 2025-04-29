@@ -72,9 +72,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			expenses: 0,
 		};
 
-		// Clean up other audio managers
-		cleanupAudioManagers(this.audioManager);
-
 		// Setting up audio
 		this.audioManager.addMusic("bgm", aud.shop_music);
 		this.audioManager.addSFX("ding", aud.ding);
