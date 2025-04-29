@@ -233,10 +233,10 @@ export class Shop implements ILocalShop {
 
 		// only play audio if selected
 		if (this.isSelected) {
-			this.audioManager.enableAudio();
+			// this.audioManager.enableAudio();
 			audioUpdate(this);
 		} else {
-			this.audioManager.disableAudio();
+			// this.audioManager.disableAudio();
 		}
 
 		// progress updaters
@@ -356,9 +356,9 @@ export class Shop implements ILocalShop {
 
 	// player actions ////////////////////////////////////////////////////////////
 	produceCoffee(amount: number = 1) {
-		this.audioManager.playAudio("boiling");
 		if (this.boilTimer === 0) {
 			this.boilTimer += 7;
+			this.audioManager.playAudio("boiling");
 		}
 
 		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
