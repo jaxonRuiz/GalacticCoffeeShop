@@ -19,7 +19,6 @@ export class ResearchLab{
 	}
 
 	franchise: Franchise;
-	allTaskList: IResearchTask[] = [];
 	researchLevel: number = 0;
 
 	taskNames: string[] = ["Analyze coffee molecules", "Dissect cocoa plants", "Optimize atomic structure of coffee"];
@@ -31,6 +30,12 @@ export class ResearchLab{
 
 	tick(){
 		this.tickTasks();
+	}
+
+	allocateResearchers(num: number, index: number){
+		const res = Math.min(this.franchise.researchers, num);
+		this.currentTaskList[index].researchersAllocated += res;
+		this.franchise.researchers -= res;
 	}
 
 	tickTasks(){
@@ -54,10 +59,7 @@ export class ResearchLab{
 	updateTasks() {
 		this.researchLevel++;
 		for (let index = 0; index < 3; index++) {
-			const task = this.allTaskList.pop();
-			if (task){
-				this.currentTaskList.push(this.createTask(this.researchLevel));
-			}
+			this.currentTaskList.push(this.createTask(this.researchLevel));
 		}
 	}
 

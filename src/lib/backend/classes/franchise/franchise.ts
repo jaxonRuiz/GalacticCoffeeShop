@@ -177,4 +177,9 @@ export class Franchise implements ISubscriber, IScene {
 	buyRegion(region: Region): boolean{
 		return region.unlockRegion();
 	}
+
+	//Research stuff
+	allocateResearchers(num: number, index: number) {
+		this.researchLab.allocateResearchers(num, index);
+	}
 }
