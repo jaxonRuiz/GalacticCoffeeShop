@@ -44,6 +44,10 @@ export class Residential extends DevelopmentBase implements IResidential{
 		this.coffeeSoldThisHour = 0;
 	}
 
+	day() {
+		this.franchise.researchers += this.parent.researchersPerDay;
+	}
+
 	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
@@ -61,6 +65,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 		if (building.type == "housingBuilding"){
 			this.parent.population += building.num;
 		}
+		if (building.type == "universityBuilding"){
+			this.parent.researchersPerDay +=  building.num;
+		}
 	}
 
 	sellBuilding(building: IBuilding){
@@ -76,6 +83,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 		}
 		if (building.type == "housingBuilding"){
 			this.parent.population -= building.num;
+		}
+		if (building.type == "universityBuilding"){
+			this.parent.researchersPerDay -=  building.num;
 		}
 	}
 
@@ -100,6 +110,8 @@ export class Residential extends DevelopmentBase implements IResidential{
 		possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
 		possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
 		possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
+		possibleBuildings.push(this.MakeBuilding("universityBuilding", "small"));
+		possibleBuildings.push(this.MakeBuilding("universityBuilding", "small"));
 
 		this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
 	}

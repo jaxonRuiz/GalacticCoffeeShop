@@ -5,11 +5,14 @@ import { World } from "./world";
 import { Country } from "./country";
 import { Region } from "./region";
 import { DevelopmentBase } from "./developments/developmentbase";
+import { ResearchLab } from "./researchLab";
 
 export class Franchise implements ISubscriber, IScene {
 	// writable resources
 	w_money: Writable<number> = writable(10000);
 	w_beans: Writable<number> = writable(0);
+	w_researchers: Writable<number> = writable(0);
+	w_sciencePoints: Writable<number> = writable(0);
 
 	// writable getters/setters
 	get money() {
@@ -24,6 +27,18 @@ export class Franchise implements ISubscriber, IScene {
 	set beans(value) {
 		this.w_beans.set(value);
 	}
+	get researchers() {
+		return get(this.w_researchers);
+	}
+	set researchers(value) {
+		this.w_researchers.set(value);
+	}
+	get sciencePoints() {
+		return get(this.w_sciencePoints);
+	}
+	set sciencePoints(value) {
+		this.w_sciencePoints.set(value);
+	}
 
 	// internal stats ////////////////////////////////////////////////////////////
 
@@ -31,6 +46,7 @@ export class Franchise implements ISubscriber, IScene {
 	audioManager: AudioManager = new AudioManager();
 	timer: Publisher;
 	world: World;
+	researchLab: ResearchLab;
 	firstFarm: boolean = true;
 	firstCity: boolean = true;
 
@@ -66,6 +82,7 @@ export class Franchise implements ISubscriber, IScene {
 		this.sceneManager = sceneManager;
 
 		this.world = new World(this);
+		this.researchLab = new ResearchLab(this);
 
 		// setting starting country and region. may need to change when loading existing saves.
 		this.currentCountry = this.world.countries["country 1"];
@@ -80,6 +97,7 @@ export class Franchise implements ISubscriber, IScene {
 
 	tick() {
 		this.world.tick();
+		this.researchLab.tick();
 	}
 
 	day() {

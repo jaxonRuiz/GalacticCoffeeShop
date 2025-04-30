@@ -26,6 +26,7 @@
 	let beansPerHour = $region?.w_beansPerHour;
 	let coffeeSold = $region?.w_coffeesSoldLastHour;
 	let maxCoffee = $region?.w_maxCoffeePerHour;
+	let researchers = $region?.w_researchersPerDay;
 </script>
 
 <div class = "money">💰 ${$money}</div>
@@ -39,6 +40,7 @@
 			<p>Beans/hour: {$beansPerHour}</p>
 			<p>Gallons of water/hour: {$waterPerHour}</p>
 			<p>Estimated customers/hour: {($population ?? 0) / 20}</p>
+			<p>Researchers/day: {$researchers}</p>
 		</div>
 		<div class = "stats">
 			<h1>Stats</h1>

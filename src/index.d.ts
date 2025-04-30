@@ -197,7 +197,8 @@ type BuildingType =
 	| "exportBuilding"
 	| "deliveryBuilding"
 	| "waterBuilding"
-	| "farmBuilding";
+	| "farmBuilding"
+	| "universityBuilding";
 
 type BuildingSize = "small" | "medium" | "large";
 
@@ -222,3 +223,9 @@ interface IDiplomacyEvent {
 	Effect(country: Country): void;
   }
   
+interface IResearchTask {
+	desc: string;
+	researchUnits: number;
+	researchersAllocated: number;
+	sciencePoints: number;
+}

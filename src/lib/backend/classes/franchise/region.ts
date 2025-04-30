@@ -42,6 +42,7 @@ export class Region implements ISubscriber, IRegion {
 	w_water: Writable<number> = writable(0);
 	w_beansPerHour: Writable<number> = writable(0);
 	w_waterPerHour: Writable<number> = writable(0);
+	w_researchersPerDay: Writable<number> = writable(0);
 
 	get water() {
 		return get(this.w_water);
@@ -60,6 +61,12 @@ export class Region implements ISubscriber, IRegion {
 	}
 	set waterPerHour(value) {
 		this.w_waterPerHour.set(value);
+	}
+	get researchersPerDay() {
+		return get(this.w_researchersPerDay);
+	}
+	set researchersPerDay(value) {
+		this.w_researchersPerDay.set(value);
 	}
 
 	//city
