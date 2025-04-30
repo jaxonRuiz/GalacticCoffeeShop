@@ -4,7 +4,7 @@ import type { Franchise } from "./franchise";
 export class ResearchLab{
 	w_currentTaskList: Writable<IResearchTask[]> = writable([]);
 	w_UpgradeList: Writable<IResearchUpgrade[]> = writable([]);
-	w_researcherSpeed: Writable<number> = writable(50);
+	w_researcherSpeed: Writable<number> = writable(1);
 	
 	get currentTaskList() {
 		return get(this.w_currentTaskList);
@@ -38,31 +38,40 @@ export class ResearchLab{
 
 	tick(){
 		this.tickTasks();
+		console.log('tick');
 	}
 
-	allocateResearchers(num: number, index: number){
+	allocateResearchers(num: number, index: number) {
 		const res = Math.min(this.franchise.researchers, num);
-		this.currentTaskList[index].researchersAllocated += res;
-		this.franchise.researchers -= res;
-	}
 
-	tickTasks(){
-		for (let i = this.currentTaskList.length - 1; i >= 0; i--) {
-			const element = this.currentTaskList[i];
-			element.researchUnits -= element.researchersAllocated * this.researcherSpeed;
-		
-			if (element.researchUnits <= 0) {
-				this.franchise.sciencePoints += element.sciencePoints;
-				this.currentTaskList.splice(i, 1);
-				this.currentTaskList = [... this.currentTaskList]; //update fo svelte!
+		this.w_currentTaskList.update(list => {
+			list[index].researchersAllocated += res;
+			this.franchise.researchers -= res;
+			return list;
+		});
+	}
+	
+
+	tickTasks() {
+		this.w_currentTaskList.update(taskList => {
+			for (let i = taskList.length - 1; i >= 0; i--) {
+				const task = taskList[i];
+				task.researchUnits -= task.researchersAllocated * this.researcherSpeed;
+	
+				if (task.researchUnits <= 0) {
+					this.franchise.sciencePoints += task.sciencePoints;
+					taskList.splice(i, 1); // remove completed task
+				}
 			}
 
-			if (this.currentTaskList.length == 0) {
+			if (taskList.length === 0) {
 				this.updateTasks();
 			}
-		}
-		
+	
+			return taskList;
+		});
 	}
+	
 
 	updateTasks() {
 		for (let index = 0; index < 3; index++) {
@@ -73,9 +82,9 @@ export class ResearchLab{
 
 	createTask(researchLevel: number): IResearchTask {
 		const desc = this.taskNames[Math.floor(Math.random() * this.taskNames.length)];
-		const researchUnits = 10000 * Math.pow(5, researchLevel);
+		const researchUnits = Math.floor(10000 * Math.pow(5, researchLevel));
 		const researchersAllocated = 0;
-		const sciencePoints = 100 * Math.pow(2.3, researchLevel);
+		const sciencePoints = Math.floor(100 * Math.pow(2.3, researchLevel));
 		return {
 			desc: desc,
 			researchUnits: researchUnits,
@@ -89,7 +98,15 @@ export class ResearchLab{
 		if (this.franchise.sciencePoints >= up.cost){
 			up.effect(this.franchise);
 			this.franchise.sciencePoints -= up.cost;
+			this.upgradeList.splice(index, 1);
+			this.upgradeList = [...this.upgradeList]
 		}
+	}
+
+	estimateTime(index: number): number {
+		const task = this.currentTaskList[index];
+
+		return task.researchUnits / (task.researchersAllocated * this.researcherSpeed * 4); //4 ticks per second
 	}
 
 	initializeUpgrades() {

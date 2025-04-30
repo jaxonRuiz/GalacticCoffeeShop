@@ -36,7 +36,7 @@ export class Region implements ISubscriber, IRegion {
 	w_deliveriesPerHour: Writable<number> = writable(1000);
 	w_beans: Writable<number> = writable(0);
 	w_unlocked: Writable<boolean> = writable(false);
-	w_population: Writable<number> = writable(1000);
+	w_population: Writable<number> = writable(500);
 
 	//farm
 	w_water: Writable<number> = writable(0);

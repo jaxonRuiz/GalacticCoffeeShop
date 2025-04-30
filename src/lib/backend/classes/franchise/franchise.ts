@@ -82,8 +82,21 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	
 	//upgradable stats
-	populationDivisor: number = 20; //divide population by this to get estimated hourly customers
-	coffeeMultiplier: number = 1;
+	w_populationDivisor: Writable<number> = writable(20); //divide population by this to get estimated hourly customers
+	w_coffeeMultiplier: Writable<number> = writable(1);
+
+	get populationDivisor() {
+		return get(this.w_populationDivisor);
+	}
+	set populationDivisor(value) {
+		this.w_populationDivisor.set(value);
+	}
+	get coffeeMultiplier() {
+		return get(this.w_coffeeMultiplier);
+	}
+	set coffeeMultiplier(value) {
+		this.w_coffeeMultiplier.set(value);
+	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		console.log("franchise constructor()");
@@ -101,13 +114,16 @@ export class Franchise implements ISubscriber, IScene {
 	}
 
 	notify(event: string, data?: any) {
+		if (event === "tick"){
+			this.tick();
+		}
 		if (event === "day") {
 			this.day();
 		}
 	}
 
 	tick() {
-		this.world.tick();
+		//this.world.tick();
 		this.researchLab.tick();
 	}
 
@@ -198,5 +214,8 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	allocateResearchers(num: number, index: number) {
 		this.researchLab.allocateResearchers(num, index);
+	}
+	buyUpgrade(index: number){
+		this.researchLab.buyUpgrade(index);
 	}
 }

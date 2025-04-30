@@ -26,7 +26,10 @@
 	let beansPerHour = $region?.w_beansPerHour;
 	let coffeeSold = $region?.w_coffeesSoldLastHour;
 	let maxCoffee = $region?.w_maxCoffeePerHour;
-	let researchers = $region?.w_researchersPerDay;
+	let researchersPD = $region?.w_researchersPerDay;
+	let researchers = franchise.w_researchers;
+	let popDiv = franchise.w_populationDivisor;
+	let coffeeMult = franchise.w_coffeeMultiplier;
 </script>
 
 <div class = "money">💰 ${$money}</div>
@@ -37,10 +40,10 @@
 			<h1>Rates</h1>
 			<p>Coffees sold last hour: {$coffeeSold}</p>
 			<p>Max coffees/hour: {$maxCoffee}</p>
-			<p>Beans/hour: {$beansPerHour}</p>
+			<p>Beans/hour: {($beansPerHour ?? 0) * $coffeeMult}</p>
 			<p>Gallons of water/hour: {$waterPerHour}</p>
-			<p>Estimated customers/hour: {($population ?? 0) / 20}</p>
-			<p>Researchers/day: {$researchers}</p>
+			<p>Estimated customers/hour: {($population ?? 0) / $popDiv}</p>
+			<p>Researchers/day: {$researchersPD}</p>
 		</div>
 		<div class = "stats">
 			<h1>Stats</h1>
@@ -52,6 +55,7 @@
 			<p>beans: {$beans}</p>
 			<p>water: {$water}</p>
 			<p>population: {$population}</p>
+			<p>Researchers: {$researchers}</p>
 		</div>
 		<div class = "env">
 			{#if $environmentalFactors}

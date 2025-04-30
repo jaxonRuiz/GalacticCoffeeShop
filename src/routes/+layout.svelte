@@ -19,6 +19,7 @@
 	import Boops from "$lib/components/Boops.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
+	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -45,6 +46,9 @@
 		}
 		if (event.key === "[") {
 			goto(`${base}/`);
+		}
+		if (event.key === "l") {
+			(stageManager.currentScene as Franchise).researchers += 100;
 		}
 		// if (event.key === "r") {
 		//   resetState();
