@@ -169,8 +169,8 @@ export class Country{
 				}, 10000);
 			}
 		}
-		else if (Math.floor(before/100) > Math.floor(after/100)){ //if you DECREASED!
-			for (let index = afterFloor; index > beforeFloor; index--) {
+		else if (beforeFloor > afterFloor){ //if you DECREASED!
+			for (let index = beforeFloor; index > afterFloor; index--) {
 				var event = this.diplomacyEventPool["bad"][Math.floor(Math.random() * this.diplomacyEventPool["bad"].length)];
 				event.Effect(this);
 				this.diplomacyEventStrings.push(event.eventString);
@@ -212,8 +212,8 @@ export class Country{
 		})
 		this.diplomacyUpgradesStatic.push({
 			desc: "Try to blow up their goverment building",
-			cost: 10000,
-			successRate: 10,
+			cost: 1000,
+			successRate: 1,
 			diplomacyIncrease: 1000,
 			diplomacyLoss: 1000
 		})
