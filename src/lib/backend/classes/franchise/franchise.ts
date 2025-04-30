@@ -54,6 +54,7 @@ export class Franchise implements ISubscriber, IScene {
 	w_currentCountry: Writable<null | Country> = writable(null);
 	w_currentRegion: Writable<null | Region> = writable(null);
 	w_currentDevelopment: Writable<null | DevelopmentBase> = writable(null);
+	w_inResearchLab: Writable<Boolean> = writable(false);
 
 	get currentCountry() {
 		return get(this.w_currentCountry);
@@ -72,6 +73,12 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	set currentDevelopment(value: DevelopmentBase | null) {
 		this.w_currentDevelopment.set(value);
+	}
+	get inResearchLab() {
+		return get(this.w_inResearchLab);
+	}
+	set inResearchLab(value) {
+		this.w_inResearchLab.set(value);
 	}
 	
 	//upgradable stats
@@ -183,6 +190,12 @@ export class Franchise implements ISubscriber, IScene {
 	}
 
 	//Research stuff
+	selectResearchLab(){
+		this.inResearchLab = true;
+	}
+	deselectResearchLab(){
+		this.inResearchLab = false;
+	}
 	allocateResearchers(num: number, index: number) {
 		this.researchLab.allocateResearchers(num, index);
 	}
