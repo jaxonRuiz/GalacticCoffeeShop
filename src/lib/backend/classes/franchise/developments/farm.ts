@@ -14,9 +14,16 @@ export class Farm extends DevelopmentBase {
 		this.initializeDevelopment();
 	}
 
+	get bpt (){
+		return this.parent.beansPerHour * this.franchise.coffeeMultiplier/16;
+	}
+	get wpt (){
+		return this.parent.waterPerHour/16;
+	}
+
 	tick(){
-		this.parent.water += Math.floor(this.parent.waterPerHour/16);
-		this.parent.beans += Math.floor(this.parent.beansPerHour/16);
+		this.parent.water += Math.floor(this.wpt);
+		this.parent.beans += Math.floor(this.bpt);
 	}
 
 	buyBuilding(building: IBuilding){

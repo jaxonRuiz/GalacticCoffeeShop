@@ -3,6 +3,7 @@ import type { Franchise } from "./franchise";
 
 export class ResearchLab{
 	w_currentTaskList: Writable<IResearchTask[]> = writable([]);
+	w_UpgradeList: Writable<IResearchUpgrade[]> = writable([]);
 	w_researcherSpeed: Writable<number> = writable(50);
 	
 	get currentTaskList() {
@@ -17,6 +18,12 @@ export class ResearchLab{
 	set researcherSpeed(value) {
 		this.w_researcherSpeed.set(value);
 	}
+	get upgradeList() {
+		return get(this.w_UpgradeList);
+	}
+	set upgradeList(value: IResearchUpgrade[]) {
+		this.w_UpgradeList.set(value);
+	}
 
 	franchise: Franchise;
 	researchLevel: number = 0;
@@ -25,6 +32,7 @@ export class ResearchLab{
 
 	constructor(franchise: Franchise){
 		this.franchise = franchise;
+		this.initializeUpgrades();
 		this.updateTasks();
 	}
 
@@ -57,10 +65,10 @@ export class ResearchLab{
 	}
 
 	updateTasks() {
-		this.researchLevel++;
 		for (let index = 0; index < 3; index++) {
 			this.currentTaskList.push(this.createTask(this.researchLevel));
 		}
+		this.researchLevel++;
 	}
 
 	createTask(researchLevel: number): IResearchTask {
@@ -74,5 +82,32 @@ export class ResearchLab{
 			researchersAllocated: researchersAllocated,
 			sciencePoints: sciencePoints
 		}
+	}
+
+	buyUpgrade(index: number){
+		const up = this.upgradeList[index];
+		if (this.franchise.sciencePoints >= up.cost){
+			up.effect(this.franchise);
+			this.franchise.sciencePoints -= up.cost;
+		}
+	}
+
+	initializeUpgrades() {
+		this.upgradeList.push({
+			name: "Try adding a magical substance to your coffee",
+			desc: "Attract 2x as many customers",
+			cost: 100,
+			effect(franchise) {
+				franchise.populationDivisor /= 2;
+			}
+		})
+		this.upgradeList.push({
+			name: "Discover how to multiply coffee molecules",
+			desc: "3x coffee production",
+			cost: 200,
+			effect(franchise) {
+				franchise.coffeeMultiplier *= 3;
+			}
+		})
 	}
 }

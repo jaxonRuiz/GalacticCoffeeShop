@@ -156,7 +156,7 @@ export class Country{
 		if (beforeFloor < afterFloor){ //100 is threshold for now
 			for (let index = beforeFloor; index < afterFloor; index++) {
 				var event = this.diplomacyEventPool["good"][Math.floor(Math.random() * this.diplomacyEventPool["good"].length)];
-				event.Effect(this);
+				event.effect(this);
 				this.diplomacyEventStrings.push(event.eventString);
 				this.diplomacyEventStrings = [... this.diplomacyEventStrings];
 
@@ -172,7 +172,7 @@ export class Country{
 		else if (beforeFloor > afterFloor){ //if you DECREASED!
 			for (let index = beforeFloor; index > afterFloor; index--) {
 				var event = this.diplomacyEventPool["bad"][Math.floor(Math.random() * this.diplomacyEventPool["bad"].length)];
-				event.Effect(this);
+				event.effect(this);
 				this.diplomacyEventStrings.push(event.eventString);
 				this.diplomacyEventStrings = [... this.diplomacyEventStrings];
 
@@ -237,13 +237,13 @@ export class Country{
 		good: [
 			{
 				eventString: "Signed a trade agreement! Tax decrease",
-				Effect(country: Country) {
+				effect(country: Country) {
 					country.taxRate *= 9/10;
 				}
 			},
 			{
 				eventString: "The president loves you! Tax decrease",
-				Effect(country: Country) {
+				effect(country: Country) {
 					country.taxRate *= 9/10;
 				}
 			}
@@ -251,13 +251,13 @@ export class Country{
 		bad: [
 			{
 				eventString: "Diplomatic incident with customs... Tax increase",
-				Effect(country: Country) {
+				effect(country: Country) {
 					country.taxRate *= 10/9;
 				}
 			},
 			{
 				eventString: "Leaked documents harm reputation... Tax increase",
-				Effect(country: Country) {
+				effect(country: Country) {
 					country.taxRate *= 10/9;
 				}
 			}

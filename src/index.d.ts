@@ -220,7 +220,7 @@ interface IDiplomacyUpgrade{
 
 interface IDiplomacyEvent {
 	eventString: string;
-	Effect(country: Country): void;
+	effect(country: Country): void;
   }
   
 interface IResearchTask {
@@ -228,4 +228,11 @@ interface IResearchTask {
 	researchUnits: number;
 	researchersAllocated: number;
 	sciencePoints: number;
+}
+
+interface IResearchUpgrade {
+	name: string;
+	desc: string;
+	cost: number;
+	effect(franchise: Franchise): void;
 }

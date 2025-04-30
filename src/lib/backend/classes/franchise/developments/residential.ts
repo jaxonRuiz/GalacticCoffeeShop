@@ -16,7 +16,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  return 5 * this.parent.populationPurchasingPower;
 	}
 	get hourlyCustomerEstimate(): number{
-	  return this.parent.population/20;
+	  return this.parent.population/this.franchise.populationDivisor;
 	}
 
 	constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {

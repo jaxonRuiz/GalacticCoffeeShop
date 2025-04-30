@@ -73,6 +73,10 @@ export class Franchise implements ISubscriber, IScene {
 	set currentDevelopment(value: DevelopmentBase | null) {
 		this.w_currentDevelopment.set(value);
 	}
+	
+	//upgradable stats
+	populationDivisor: number = 20; //divide population by this to get estimated hourly customers
+	coffeeMultiplier: number = 1;
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		console.log("franchise constructor()");
