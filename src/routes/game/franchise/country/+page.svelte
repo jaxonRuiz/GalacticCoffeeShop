@@ -116,7 +116,7 @@
 									top: {region.coordinates[1] / 11 + 5}%;
 									background-color: {region.parentCountry.diplomacy < 500 ? '#aaa' : 'green'};
 									color: white;
-									cursor: {region.parentCountry.diplomacy < 500 ? 'not-allowed' : 'pointer'};
+									cursor: {region.parentCountry.diplomacy < 500 ? '--cno' : '--cpointer'};
 								"
 							>
 								Unlock for: ${region.unlockCost}
