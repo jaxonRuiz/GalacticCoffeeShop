@@ -52,7 +52,7 @@ export class ResearchLab{
 	}
 
 	deallocateResearchers(num: number, index: number) {
-		const res = Math.min(this.franchise.researchers, num);
+		const res = Math.min(this.currentTaskList[index].researchersAllocated, num);
 
 		this.w_currentTaskList.update(list => {
 			list[index].researchersAllocated -= res;

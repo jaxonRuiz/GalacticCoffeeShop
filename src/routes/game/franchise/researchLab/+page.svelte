@@ -36,7 +36,7 @@
 		{#if tasks}
 			{#each $tasks as task, i}
 				<div class="upgrade-card">
-					<p>{task.desc}</p>
+					<p style="font-size: 1.3rem;">{task.desc}</p>
 					<p>Estimated time left: {Math.floor(task.researchUnits / (task.researchersAllocated * franchise.researchLab.researcherSpeed * 4))}</p>
 					<p>Researchers working: {task.researchersAllocated}</p>
 					<p>Reward: {task.sciencePoints}</p>
@@ -83,7 +83,7 @@
 		{#if upgrades}
 			{#each $upgrades as upgrade, i}
 				<div class="upgrade-card">
-					<p>{upgrade.name}</p>
+					<p style="font-size: 1.3rem;">{upgrade.name}</p>
 					<p>{upgrade.desc}</p>
 					<p>Costs: {upgrade.cost}</p>
 					<Button 
