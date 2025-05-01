@@ -2,6 +2,8 @@
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 	import { stageManager } from "$lib/backend/game";
 	import Button from "$lib/components/Button.svelte";
+	import ResearchTask from "$lib/components/franchise/ResearchTask.svelte";
+	import ResearchUpgrade from "$lib/components/franchise/ResearchUpgrade.svelte";
 
 	// base
 	const smanager = stageManager;
@@ -35,46 +37,7 @@
 		<header style="font-size: 2rem;">Tasks</header>
 		{#if tasks}
 			{#each $tasks as task, i}
-				<div class="upgrade-card">
-					<p style="font-size: 1.3rem;">{task.desc}</p>
-					<p>Estimated time left: {Math.floor(task.researchUnits / (task.researchersAllocated * franchise.researchLab.researcherSpeed * 4))}</p>
-					<p>Researchers working: {task.researchersAllocated}</p>
-					<p>Reward: {task.sciencePoints}</p>
-					<Button onclick={() => franchise.researchLab.allocateResearchers(1, i)}
-						disabled={$res < 1}
-						style = "
-							background-color: {$res < 1 ? '#444' : '#515151'};
-							cursor: {$res < 1 ? '--cno' : '--cpointer'};
-						">
-						Allocate 1 researcher
-					</Button>
-					<Button onclick={() => franchise.researchLab.allocateResearchers(10, i)}
-						disabled={$res < 10}
-						style = "
-							background-color: {$res < 10 ? '#444' : '#515151'};
-							cursor: {$res < 10 ? '--cno' : '--cpointer'};
-						">
-						Allocate 10 researcher
-					</Button>
-					<br>
-					<br>
-					<Button onclick={() => franchise.researchLab.deallocateResearchers(1, i)}
-						disabled={$taskRes[i].researchersAllocated < 1}
-						style = "
-							background-color: {$taskRes[i].researchersAllocated < 1 ? '#444' : '#515151'};
-							cursor: {$taskRes[i].researchersAllocated < 1 ? '--cno' : '--cpointer'};
-						">
-						Deallocate 1 researcher
-					</Button>
-					<Button onclick={() => franchise.researchLab.deallocateResearchers(10, i)}
-						disabled={$taskRes[i].researchersAllocated < 10}
-						style = "
-							background-color: {$taskRes[i].researchersAllocated < 10 ? '#444' : '#515151'};
-							cursor: {$taskRes[i].researchersAllocated < 10 ? '--cno' : '--cpointer'};
-						">
-						Deallocate 10 researcher
-					</Button>
-				</div>
+				<ResearchTask task = {task} franchise = {franchise} i = {i} ></ResearchTask>
 			{/each}
 		{/if}
 	</div>
@@ -82,20 +45,7 @@
 		<header style="font-size: 2rem;">Research</header>
 		{#if upgrades}
 			{#each $upgrades as upgrade, i}
-				<div class="upgrade-card">
-					<p style="font-size: 1.3rem;">{upgrade.name}</p>
-					<p>{upgrade.desc}</p>
-					<p>Costs: {upgrade.cost}</p>
-					<Button 
-					onclick={() => franchise.buyUpgrade(i)}
-					disabled={$sciencePoints < upgrade.cost}
-					style = "
-						background-color: {$sciencePoints < upgrade.cost ? '#444' : '#515151'};
-						cursor: {$sciencePoints < upgrade.cost ? '--cno' : '--cpointer'};
-					">
-						Unlock
-					</Button>
-				</div>
+				<ResearchUpgrade upgrade = {upgrade} franchise = {franchise} sciencePoints = {sciencePoints} i = {i}></ResearchUpgrade>
 			{/each}
 		{/if}
 	</div>
@@ -137,12 +87,5 @@
 		background-color:rgb(28, 28, 28);
 		box-sizing: border-box;
 	}
-	div.upgrade-card{
-		border: 1px solid #444;
-		padding: 0.75rem;
-		margin-bottom: 1rem;
-		border-radius: 0.4rem;
-		background-color:rgb(28, 28, 28);
-		box-sizing: border-box;
-	}
+	
 </style>
