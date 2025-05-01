@@ -58,6 +58,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	sceneManager: Publisher;
 	audioManager: AudioManager = new AudioManager();
+	lastPlayedMeow: string | null = null;
 	uiManager: UIManager;
 
 	// abstracting svelte store from normal usage (allows use of writables in backend)
@@ -272,15 +273,13 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 				//play random meow audio (Stipulation that no cat audio can be played 3 times in a row if so play a different random one)
 				const meowSounds = ["meow1", "meow2", "meow3", "meow4"];
-				const lastPlayedMeows: string[] = [];
 				const randomMeow = () => {
-					let meow;
-					do {
-						meow = meowSounds[Math.floor(Math.random() * meowSounds.length)];
-					} while (lastPlayedMeows.length >= 2 && lastPlayedMeows[1] === meow);
-					lastPlayedMeows.push(meow);
-					if (lastPlayedMeows.length > 3) lastPlayedMeows.shift();
-					//get volume for meow
+					let availableMeows = meowSounds;
+					if (this.lastPlayedMeow) {
+						availableMeows = meowSounds.filter(m => m !== this.lastPlayedMeow);
+					}
+					const meow = availableMeows[Math.floor(Math.random() * availableMeows.length)];
+					this.lastPlayedMeow = meow;
 					const meowAudio = this.audioManager.getVolume(meow);
 					console.log(meow + meowAudio);
 					this.audioManager.playAudio(meow);
