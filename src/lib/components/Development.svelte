@@ -3,6 +3,7 @@
 	import type { DevelopmentBase } from "$lib/backend/classes/franchise/developments/developmentbase";
 	import Button from "./Button.svelte";
 	import { fMoney } from "./Styles.svelte";
+	import Building from "./franchise/Building.svelte";
 
 	let { dev } = $props();
 
@@ -33,42 +34,14 @@
 			<div class="bought-dev col inner-block">
 				<h3>Bought Buildings</h3>
 				{#each $boughtBuildings as building, i (building)}
-					<div class="building-card">
-						<p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
-						<p>Area Size: {building.areaSize} acres</p>
-						<p>{dev.readBuilding(building)}</p>
-						<p>Rent: {fMoney(building.rent)}/day</p>
-						<div class="row">
-							<Button
-								onclick={() => {
-									d.sellBuilding(building);
-								}}
-							>
-								Sell for: {fMoney(building.sellCost)}
-							</Button>
-						</div>
-					</div>
+					<Building development = {d} building = {building} bought = {true}></Building>
 				{/each}
 			</div>
 
 			<div class="avail-dev col inner-block">
 				<h3>Available Buildings</h3>
 				{#each $availBuildings as building, i (building)}
-					<div class="building-card">
-						<p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
-						<p>Area Size: {building.areaSize} acres</p>
-						<p>{dev.readBuilding(building)}</p>
-						<p>Rent: {fMoney(building.rent)}/day</p>
-						<div class="row">
-							<Button
-								onclick={() => {
-									d.buyBuilding(building);
-								}}
-							>
-								Buy for: {fMoney(building.buyCost)}
-							</Button>
-						</div>
-					</div>
+					<Building development = {d} building = {building} bought = {false}></Building>
 				{/each}
 			</div>
 		</div>
@@ -110,15 +83,6 @@
 	.bought-dev,
 	.avail-dev {
 		flex: 1;
-	}
-
-	.building-card {
-		border: 1px solid #444;
-		padding: 0.75rem;
-		margin-bottom: 1rem;
-		border-radius: 0.4rem;
-		background-color:rgb(43, 43, 43);
-		box-sizing: border-box;
 	}
 
 	.dev-header {
