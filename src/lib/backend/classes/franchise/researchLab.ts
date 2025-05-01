@@ -70,6 +70,7 @@ export class ResearchLab{
 	
 				if (task.researchUnits <= 0) {
 					this.franchise.sciencePoints += task.sciencePoints;
+					this.franchise.researchers += task.researchersAllocated;
 					taskList.splice(i, 1); // remove completed task
 				}
 			}
