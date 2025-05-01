@@ -144,8 +144,8 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 				return `Produces ${building.num} gallons of water/hour`
 			case "farmBuilding":
 				return `Produces up to ${building.num} beans/hour`
-			case "universityBuilding":
-				return `Produces ${building.num} researchers/day`
+			case "researchBuilding":
+				return `Increase researcher population by ${building.num}`
 			default:
 				break;
 		}
@@ -216,10 +216,10 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 			medium: { names: ["Regional Farm", "Commercial Orchard"], cost: 2000, num: 60, areaSize: 3, rent: 360 },
 			large: { names: ["Industrial Farm Complex", "Agro-Enterprise Zone"], cost: 5000, num: 120, areaSize: 5, rent: 800 }
 		},
-		universityBuilding: {
-			small: { names: ["Community Learning Center", "Bright Minds Institute"], cost: 1000, num: 50, areaSize: 1, rent: 110 },
-			medium: { names: ["Urban Scholars Hall", "Central Knowledge Center"], cost: 2000, num: 100, areaSize: 2, rent: 220 },
-			large: { names: ["The Grand Academy", "The University of Progress"], cost: 5000, num: 200, areaSize: 4, rent: 500 }
+		researchBuilding: {
+			small: { names: ["R&Deez", "Lil Lab"], cost: 1000, num: 50, areaSize: 1, rent: 110 },
+			medium: { names: ["The Idea Generator", "The Research Gallery"], cost: 2000, num: 100, areaSize: 2, rent: 220 },
+			large: { names: ["The Big Think", "Super Mega Lab"], cost: 5000, num: 200, areaSize: 4, rent: 500 }
 		}
 	};
 }

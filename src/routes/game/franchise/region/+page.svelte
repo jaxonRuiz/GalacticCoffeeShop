@@ -26,7 +26,6 @@
 	let beansPerHour = $region?.w_beansPerHour;
 	let coffeeSold = $region?.w_coffeesSoldLastHour;
 	let maxCoffee = $region?.w_maxCoffeePerHour;
-	let researchersPD = $region?.w_researchersPerDay;
 	let researchers = franchise.w_researchers;
 	let popDiv = franchise.w_populationDivisor;
 	let coffeeMult = franchise.w_coffeeMultiplier;
@@ -43,7 +42,6 @@
 			<p>Beans/hour: {($beansPerHour ?? 0) * $coffeeMult}</p>
 			<p>Gallons of water/hour: {$waterPerHour}</p>
 			<p>Estimated customers/hour: {($population ?? 0) / $popDiv}</p>
-			<p>Researchers/day: {$researchersPD}</p>
 		</div>
 		<div class = "stats">
 			<h1>Stats</h1>

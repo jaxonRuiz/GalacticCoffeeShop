@@ -198,7 +198,7 @@ type BuildingType =
 	| "deliveryBuilding"
 	| "waterBuilding"
 	| "farmBuilding"
-	| "universityBuilding";
+	| "researchBuilding";
 
 type BuildingSize = "small" | "medium" | "large";
 

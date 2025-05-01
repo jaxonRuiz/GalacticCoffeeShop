@@ -215,6 +215,9 @@ export class Franchise implements ISubscriber, IScene {
 	allocateResearchers(num: number, index: number) {
 		this.researchLab.allocateResearchers(num, index);
 	}
+	deallocateResearchers(num: number, index: number) {
+		this.researchLab.deallocateResearchers(num, index);
+	}
 	buyUpgrade(index: number){
 		this.researchLab.buyUpgrade(index);
 	}

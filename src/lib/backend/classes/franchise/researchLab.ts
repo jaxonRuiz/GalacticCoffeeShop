@@ -50,6 +50,16 @@ export class ResearchLab{
 			return list;
 		});
 	}
+
+	deallocateResearchers(num: number, index: number) {
+		const res = Math.min(this.franchise.researchers, num);
+
+		this.w_currentTaskList.update(list => {
+			list[index].researchersAllocated -= res;
+			this.franchise.researchers += res;
+			return list;
+		});
+	}
 	
 
 	tickTasks() {

@@ -36,6 +36,9 @@ export class LogisticCenter extends DevelopmentBase{
 		if (building.type == "deliveryBuilding"){
 			this.parent.deliveriesPerHour += building.num;
 		}
+		if (building.type == "researchBuilding"){
+			this.franchise.researchers += building.num;
+		}
 	}
 
 	sellBuilding(building: IBuilding){
@@ -55,6 +58,9 @@ export class LogisticCenter extends DevelopmentBase{
 		if (building.type == "deliveryBuilding"){
 			this.parent.deliveriesPerHour -= building.num;
 		}
+		if (building.type == "researchBuilding"){
+			this.franchise.researchers -= building.num;
+		}
 	}
 
 	initializeDevelopment(): void {
@@ -71,6 +77,8 @@ export class LogisticCenter extends DevelopmentBase{
 		possibleBuildings.push(this.MakeBuilding("importBuilding", "small"));
 		possibleBuildings.push(this.MakeBuilding("exportBuilding", "small"));
 		possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
+		possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
+		possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
 
 		this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
 	}
