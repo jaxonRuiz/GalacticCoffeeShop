@@ -27,14 +27,6 @@
 	{/if}
 </div>
 
-<Button
-	static={true}
-	onclick={() => {
-		franchise.selectResearchLab();
-	}}
->
-	go to research lab
-</Button>
 <div class="franchise">
 	{@render children()}
 </div>

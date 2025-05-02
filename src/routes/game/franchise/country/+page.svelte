@@ -22,6 +22,15 @@
 
 <div class = "money">💰 ${$money}</div>
 
+<Button
+	static={true}
+	onclick={() => {
+		franchise.selectResearchLab();
+	}}
+>
+	go to research lab
+</Button>
+
 <div class="country row">
 	<div class="left block">
 		<div class="block">

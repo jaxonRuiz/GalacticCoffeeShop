@@ -13,9 +13,17 @@
 	let tasks = franchise.researchLab.w_currentTaskList;
 	let upgrades = franchise.researchLab.w_UpgradeList;
 	let res = franchise.w_researchers;
-	let taskRes = franchise.researchLab.w_currentTaskList;
 	let sciencePoints = franchise.w_sciencePoints;
 </script>
+
+<Button
+			static={true}
+			onclick={() => {
+				franchise.deselectResearchLab();
+			}}
+		>
+			leave
+		</Button>
 
 <h1>Research Lab</h1>
 
@@ -24,14 +32,6 @@
 		<header style="font-size: 2rem;">Stats</header>
 		<p>Science points: {$sciencePoints}</p>
 		<p>Researchers: {$res}</p>
-		<Button
-			static={true}
-			onclick={() => {
-				franchise.deselectResearchLab();
-			}}
-		>
-			leave
-		</Button>
 	</div>
 	<div class="middle">
 		<header style="font-size: 2rem;">Tasks</header>

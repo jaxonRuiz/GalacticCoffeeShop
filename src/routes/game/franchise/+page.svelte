@@ -12,6 +12,15 @@
 
 <div class = "money">💰 ${$money}</div>
 
+<Button
+	static={true}
+	onclick={() => {
+		franchise.selectResearchLab();
+	}}
+>
+	go to research lab
+</Button>
+
 <div class="col block" style = "position: relative; height: 100vh;">
 	<h1>World View</h1>
 	{#each Object.keys($countries) as country (country)}
