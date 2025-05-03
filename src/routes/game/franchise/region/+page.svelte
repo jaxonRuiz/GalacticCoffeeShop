@@ -13,7 +13,9 @@
 	// define variables
 	let money = franchise.w_money;
 	let totalArea = $region?.w_totalArea;
-	let unusedLand = $region?.w_unusedLand;
+	let usableLand = $region?.w_usableLand;
+	let unusableLand = $region?.w_unusableLand;
+	let unusableCost = $region?.w_unusableBuyCost;
 	let devlopmentList = $region?.w_developmentList;
 	let environmentalFactors = $region?.w_environmentalFactors;
 	let accessibilityLevel = $region?.w_accessibilityLevel;
@@ -29,6 +31,7 @@
 	let researchers = franchise.w_researchers;
 	let popDiv = franchise.w_populationDivisor;
 	let coffeeMult = franchise.w_coffeeMultiplier;
+	let delPerHour = $region?.w_deliveriesPerHour;
 </script>
 
 <div class = "money">💰 ${$money}</div>
@@ -51,11 +54,13 @@
 			<p>Beans/hour: {($beansPerHour ?? 0) * $coffeeMult}</p>
 			<p>Gallons of water/hour: {$waterPerHour}</p>
 			<p>Estimated customers/hour: {($population ?? 0) / $popDiv}</p>
+			<p>Max bean deliveries/hour: {$delPerHour}</p>
 		</div>
 		<div class = "stats">
 			<h1>Stats</h1>
 			<p>total area: {$totalArea} acres</p>
-			<p>unused land: {$unusedLand}</p>
+			<p>usable land: {$usableLand}</p>
+			<p>unusable land: {$unusableLand}</p>
 			<p>accessibility level: {$accessibilityLevel}</p>
 			<p>import capacity: {$importCapacity}</p>
 			<p>export capacity: {$exportCapacity}</p>
@@ -72,11 +77,18 @@
 				<p>average temperature: {$environmentalFactors.averageTemp}</p>
 			{/if}
 		</div>
-		<br />
+		<br>
+		<Button onclick={() => franchise.buyUnusable()}
+			disabled={$money < ($unusableCost ?? 1000)}
+			style = "
+				background-color: {$money < ($unusableCost ?? 1000) ? '#444' : '#515151'};
+				cursor: {$money < ($unusableCost ?? 1000) ? '--cno' : '--cpointer'};
+			">
+			Buy unusable land for: {($unusableCost ?? 1000)}
+		</Button>
 
-		<p>regions currently don't have a name</p>
-
-		<br />
+		<br>
+		<br>
 		<Button
 			static={false}
 			onclick={() => {

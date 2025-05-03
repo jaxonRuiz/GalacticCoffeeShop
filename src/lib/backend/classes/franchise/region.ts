@@ -20,8 +20,11 @@ export enum ClimateType {
 
 export class Region implements ISubscriber, IRegion {
 	//writables
-	w_totalArea: Writable<number> = writable(30);
-	w_unusedLand: Writable<number> = writable(30);
+	w_totalArea: Writable<number> = writable(0);
+	w_usableLand: Writable<number> = writable(0);
+	w_unusableLand: Writable<number> = writable(0);
+	w_boughtUnusable: Writable<number> = writable(0);
+	w_unusableBuyCost: Writable<number> = writable(0);
 	w_developmentList: Writable<{ [key: string]: DevelopmentBase }> = writable({
 		// developments should be predefined, but set with area size of zero.
 	});
@@ -33,7 +36,8 @@ export class Region implements ISubscriber, IRegion {
 	w_accessibilityLevel: Writable<number> = writable(10);
 	w_importCapacity: Writable<number> = writable(1000);
 	w_exportCapacity: Writable<number> = writable(1000);
-	w_deliveriesPerHour: Writable<number> = writable(1000);
+	w_deliveriesPerHour: Writable<number> = writable(100);
+	w_deliveriesThisHour: Writable<number> = writable(0);
 	w_beans: Writable<number> = writable(0);
 	w_unlocked: Writable<boolean> = writable(false);
 	w_population: Writable<number> = writable(500);
@@ -129,11 +133,30 @@ export class Region implements ISubscriber, IRegion {
 	set deliveriesPerHour(value) {
 		this.w_deliveriesPerHour.set(value);
 	}
-	get unusedLand() {
-		return get(this.w_unusedLand);
+	get deliveriesThisHour() {
+		return get(this.w_deliveriesThisHour);
 	}
-	set unusedLand(value) {
-		this.w_unusedLand.set(value);
+	set deliveriesThisHour(value) {
+		this.w_deliveriesThisHour.set(value);
+	}
+	get usableLand() {
+		return get(this.w_usableLand);
+	}
+	set usableLand(value) {
+		this.w_usableLand.set(value);
+	}
+	get unusableLand() {
+		return get(this.w_unusableLand);
+	}
+	set unusableLand(value) {
+		this.w_unusableLand.set(value);
+	}
+	get boughtUnusable() {
+		return get(this.w_boughtUnusable);
+	}
+	set boughtUnusable(value) {
+		this.w_boughtUnusable.set(value);
+		this.w_unusableBuyCost.set(Math.floor(1000 * Math.pow(1.3, value)));
 	}
 	get beans() {
 		return get(this.w_beans);
@@ -181,6 +204,9 @@ export class Region implements ISubscriber, IRegion {
 		timer.subscribe(this, "week");
 		this.parentCountry = country;
 		this.totalArea = areaSize;
+		this.unusableLand = Math.floor(this.totalArea/3); //probably change
+		this.usableLand = this.totalArea - this.unusableLand;
+		this.boughtUnusable = 0;
 		this.unlockCost = cost;
 		this.coordinates = coordinates;
 		this.timer = timer;
@@ -196,6 +222,9 @@ export class Region implements ISubscriber, IRegion {
 		if (event === "tick") {
 			this.tick();
 		}
+		if (event === "hour"){
+			this.hour();
+		}
 		if (event === "day") {
 			this.resetImportExport();
 		}
@@ -205,6 +234,10 @@ export class Region implements ISubscriber, IRegion {
 
 	tick(){
 		
+	}
+
+	hour() {
+		this.deliveriesThisHour = 0;
 	}
 
 	initializeRegion(climate: ClimateType) {
@@ -273,6 +306,15 @@ export class Region implements ISubscriber, IRegion {
 		else{
 			console.log("You are too broke to afford this propery");
 			return false;
+		}
+	}
+
+	buyUnusable(){
+		if (this.franchise.money >= get(this.w_unusableBuyCost)){
+			this.franchise.money -= get(this.w_unusableBuyCost);
+			this.boughtUnusable++;
+			this.unusableLand--;
+			this.usableLand++;
 		}
 	}
 }

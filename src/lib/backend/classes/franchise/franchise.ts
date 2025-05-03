@@ -186,6 +186,9 @@ export class Franchise implements ISubscriber, IScene {
 	deselectRegion(){
 		this.currentRegion = null;
 	}
+	buyUnusable() {
+		this.currentRegion?.buyUnusable();
+	}
 
 	//Development stuff
 	buyBuilding(index: number){ // let me know if you'd rather have the building reference as a parameter

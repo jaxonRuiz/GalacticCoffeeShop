@@ -28,10 +28,11 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  if (coffeeAmount > this.parent.beans){
 		this.parent.parentCountry.importBeansTo(coffeeAmount - this.parent.beans, this.parent); //try to import as much as possible
 	  }
-	  var coffeeSold = Math.min(coffeeAmount, this.parent.beans);
+	  var coffeeSold = Math.min(coffeeAmount, this.parent.beans, this.parent.deliveriesPerHour - this.parent.deliveriesThisHour);
 
 	  this.parent.beans -= coffeeSold;
 	  this.coffeeSoldThisHour += coffeeSold;
+	  this.parent.deliveriesThisHour += coffeeSold;
 	  this.franchise.money += coffeeSold * this.coffeePrice;
 	}
 

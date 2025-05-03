@@ -55,7 +55,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 		this.parent = region;
 		this.developmentArea = areaSize;
 		this.franchise = franchise;
-		this.parent.unusedLand -= areaSize;
+		this.parent.usableLand -= areaSize;
 	}
 
 	notify(event: string, data?: any) {
@@ -152,16 +152,16 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 	}
 
 	increaseDevelopmentArea(areaSize: number = 1) {
-		if (this.parent.unusedLand >= areaSize) {
+		if (this.parent.usableLand >= areaSize) {
 			this.developmentArea += areaSize;
-			this.parent.unusedLand -= areaSize;
+			this.parent.usableLand -= areaSize;
 		}
 	}
 
 	decreaseDevelopmentArea(areaSize: number = 1) {
 		if (this.developmentArea - areaSize >= 0) {
 			this.developmentArea -= areaSize;
-			this.parent.unusedLand += areaSize;
+			this.parent.usableLand += areaSize;
 		}
 	}
 
