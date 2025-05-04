@@ -13,6 +13,8 @@ export class Country{
 	w_maxInfluenceTasks: Writable<number> = writable(1);
 	w_unlocked: Writable<boolean> = writable(false);
 
+	w_policyEvents: Writable<IPolicyEvent[]> = writable([]);
+
 	get taxRate() {
 		return get(this.w_taxRate);
 	}
@@ -43,6 +45,12 @@ export class Country{
 	set maxInfluenceTasks(value){
 		this.w_maxInfluenceTasks.set(value);
 	}
+	get policyEvents(){
+		return get(this.w_policyEvents);
+	}
+	set policyEvents(value: IPolicyEvent[]){
+		this.w_policyEvents.set(value);
+	}
 
 	influenceTasksStatic: IInfluenceTask[];
 
@@ -53,6 +61,7 @@ export class Country{
 	coordinates: [number, number];
 	franchise: Franchise;
 	firstRegions: number;
+	unlockCost: number = 500;
 	
 	w_regionList: Writable<Region[]> = writable([]);
 	// need to figure out how to represent regions in a graph
@@ -76,11 +85,20 @@ export class Country{
 		this.franchise = franchise;
 		if (firstCountry) this.firstRegions = 3;
 		else this.firstRegions = 0;
+		this.w_unlocked.set(firstCountry);
 		this.influence = influence;
 		this.influenceTasksStatic = [];
-		this.w_unlocked.set(firstCountry);
 		this.initializeInfluenceTasks();
 		this.refreshInfluenceTasks(3);
+		this.policyEvents.push({
+			desc: 'aahahhahaa',
+			time: 10,
+			currentInfluence: 10,
+			totalInfluence: 20,
+			effect(country) {
+				country.influence += 100000;
+			},
+		})
 
 		this.initializeRegions(4 + Math.floor(Math.random() * 3));
 	}
@@ -90,6 +108,7 @@ export class Country{
 			region.tick();
 		}
 		this.tickInfluenceTasks();
+		this.tickPolicyEvents();
 	}
 	
 	day() {
@@ -135,6 +154,13 @@ export class Country{
 		return numBeans - beansLeft; //return the number of beans imported
 	}
 
+	unlockCountry(){
+		if (this.influence >= this.unlockCost){
+			this.w_unlocked.set(true);
+			this.influence -= this.unlockCost;
+		}
+	}
+
 	unlockRegion(regionIndex: number){
 		this.regionList[regionIndex].unlockRegion();
 	}
@@ -154,7 +180,6 @@ export class Country{
 	}
 
 	tickInfluenceTasks(){
-		console.log("tickin datasks");
 		for (let index = 0; index < this.currInfluenceTasks.length; index++) {
 			const task = this.currInfluenceTasks[index];
 			task.time -= 0.25;
@@ -181,20 +206,70 @@ export class Country{
 		this.influenceTasksStatic.push({
 			desc: "Shake hands with the president",
 			cost: 1000,
-			influence: 100,
+			influence: 1000,
 			time: 20,
 		});
 		this.influenceTasksStatic.push({
 			desc: "Put out a video glazing their president",
 			cost: 2000,
-			influence: 300,
+			influence: 3000,
 			time: 30,
 		});
 		this.influenceTasksStatic.push({
 			desc: "Send the president a corn dog",
 			cost: 500,
-			influence: 50,
+			influence: 500,
 			time: 10,
 		});
 	}	  
+
+	startPolicyEvent(event: IPolicyEvent) {
+		this.policyEvents.push(event);
+		this.policyEvents = [... this.policyEvents];
+	}
+
+	voteForPolicy(index: number){
+		if (this.influence <= 0 || this.policyEvents[index].currentInfluence >= this.policyEvents[index].totalInfluence) return;
+		this.influence -= 1;
+		this.policyEvents[index].currentInfluence += 1;
+		this.policyEvents = [... this.policyEvents];
+	}
+
+	voteAgainstPolicy(index: number){
+		if (this.influence <= 0 || this.policyEvents[index].currentInfluence <= 0) return;
+		this.influence -= 1;
+		this.policyEvents[index].currentInfluence -= 1;
+		this.policyEvents = [... this.policyEvents];
+	}
+
+	tickPolicyEvents(){
+		for (let index = 0; index < this.policyEvents.length; index++) {
+			const event = this.policyEvents[index];
+			event.time -= 0.25;
+			if (event.time <= 0){
+				//call da effect here if enough votes
+				if (Math.random() < event.currentInfluence/event.totalInfluence){
+					event.effect(this);
+				}
+				this.policyEvents.splice(index, 1);
+			}
+		}
+		this.policyEvents = [... this.policyEvents];
+	}
+
+	startRegionalVote(index: number){
+		const self = this;
+		if (this.franchise.money < this.regionList[index].unlockCost) return;
+		this.franchise.money -= this.regionList[index].unlockCost;
+		this.policyEvents.push({
+			desc: `A vote to unlock region ${index + 1}`,
+			time: 20,
+			currentInfluence: 100,
+			totalInfluence: 300,
+			effect(country) {
+				country.unlockRegion(index);
+				country.regionList[index].unlocked = country.regionList[index].unlocked;
+			},
+		})
+	}
 }

@@ -218,7 +218,10 @@ interface IInfluenceTask{
 }
 
 interface IPolicyEvent {
-	eventString: string;
+	desc: string;
+	time: number;
+	totalInfluence: number;
+	currentInfluence: number;
 	effect(country: Country): void;
   }
   

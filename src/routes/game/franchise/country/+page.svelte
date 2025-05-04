@@ -19,6 +19,7 @@
 	let currinfluenceTasks = $country?.w_currInfluenceTasks ?? writable([]);
 	let influence = $country?.w_influence ?? writable(0);
 	let maxInfluenceTasks = $country?.w_maxInfluenceTasks;
+	let policyEvents = $country?.w_policyEvents ?? writable([]);
 	let unlocked = $country?.w_unlocked;
 
 </script>
@@ -107,6 +108,16 @@
 				>
 					deselect country
 			</Button>
+			{#if !$unlocked}
+			<Button
+					static={false}
+					onclick={() => {
+						franchise.unlockCountry();
+					}}
+				>
+					Unlock country for: {franchise.currentCountry?.unlockCost}
+			</Button>
+		{/if}
 		</div>
 	</div>
 	
@@ -130,22 +141,21 @@
 							<Button
 								onclick={() => {
 									if ($unlocked) {
-										if (franchise.buyRegion(region)){
-											region.unlocked = true;
-										}
+										franchise.startRegionalVote(i);
+										region.unlocked = region.unlocked;
 									}
 								}}
-								disabled={$unlocked}
+								disabled={!$unlocked}
 								style="
 									position: absolute;
 									left: {region.coordinates[0] / 13}%;
 									top: {region.coordinates[1] / 11 + 5}%;
-									background-color: {unlocked ? '#aaa' : 'green'};
+									background-color: {!$unlocked ? '#aaa' : 'green'};
 									color: white;
-									cursor: {unlocked ? '--cno' : '--cpointer'};
+									cursor: {!$unlocked ? '--cno' : '--cpointer'};
 								"
 							>
-								Unlock for: ${region.unlockCost}
+								Start vote for: ${region.unlockCost}
 							</Button>
 						{/if}
 					{/each}
@@ -153,9 +163,43 @@
 			</div>
 		</div>
 		
-		<div class="rightright">
-			<h1>Events:</h1>
-		</div>
+		
+	</div>
+	<div class="rightright">
+		<h1>Events:</h1>
+			{#if policyEvents}
+				{#each $policyEvents as event, i}
+					<div class="upgrade-card">
+						<p><strong>{event.desc}</strong></p>
+						<p>Time: {event.time}</p>
+						<div
+							style="
+								width: 100%;
+								height: 24px;
+								background-color: #ddd;
+								border-radius: 12px;
+								overflow: hidden;
+								margin-bottom: 4px;
+							"
+						>
+							<div
+								style="
+									width: {event.currentInfluence/event.totalInfluence * 100}%;
+									height: 100%;
+									background-color: #4caf50;
+									transition: width 0.3s;
+								"
+							></div>
+						</div>
+						<Button onclick={() => franchise.voteAgainstPolicy(i)}>
+							Vote against
+						</Button>
+						<Button onclick={() => franchise.voteForPolicy(i)}>
+							Vote for
+						</Button>
+					</div>
+				{/each}
+			{/if}
 	</div>
 </div>
 
@@ -188,8 +232,8 @@
 	}
 	div.rightright{
 		position: relative; 
-		width: 50%;
-		height: 10vw;
+		width: 25vw;
+		height: 50vw;
 		border: 1px solid #ccc;
 		padding: 1rem;
 		border-radius: 0.5rem;

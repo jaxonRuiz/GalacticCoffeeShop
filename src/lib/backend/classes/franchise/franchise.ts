@@ -170,11 +170,23 @@ export class Franchise implements ISubscriber, IScene {
 	unlockRegion(regionIndex: number){
 		this.currentCountry?.unlockRegion(regionIndex);
 	}
+	unlockCountry(){
+		this.currentCountry?.unlockCountry();
+	}
 	startInfluenceTask(index: number){
 		this.currentCountry?.startInfluenceTask(index);
 	}
 	stopInfluenceTask(index: number){
 		this.currentCountry?.stopInfluenceTask(index);
+	}
+	voteForPolicy(index: number){
+		this.currentCountry?.voteForPolicy(index);
+	}
+	voteAgainstPolicy(index: number){
+		this.currentCountry?.voteAgainstPolicy(index);
+	}
+	startRegionalVote(index: number){
+		this.currentCountry?.startRegionalVote(index);
 	}
 
 	//Region stuff
@@ -206,10 +218,6 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	deselectDevelopment(){
 		this.currentDevelopment = null;
-	}
-
-	buyRegion(region: Region): boolean{
-		return region.unlockRegion();
 	}
 
 	//Research stuff

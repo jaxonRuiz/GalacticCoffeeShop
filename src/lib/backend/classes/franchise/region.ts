@@ -296,17 +296,8 @@ export class Region implements ISubscriber, IRegion {
 		this.developmentList["logistic"] = new LogisticCenter(this.timer, this, 4, this.franchise);
 	}
 
-	unlockRegion(): boolean {
-		if (this.unlocked) return false;
-		if (this.franchise.money >= this.unlockCost){
-			this.unlocked = true;
-			this.franchise.money -= this.unlockCost;
-			return true;
-		}
-		else{
-			console.log("You are too broke to afford this propery");
-			return false;
-		}
+	unlockRegion() {
+		this.unlocked = true;
 	}
 
 	buyUnusable(){
