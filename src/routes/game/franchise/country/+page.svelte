@@ -15,9 +15,12 @@
 	let tariffRate = $country?.w_tariffRate;
 	let regions = $country?.w_regionList;
 	let money = franchise.w_money;
-	let dUpgrades = $country?.w_diplomacyUpgradeList ?? writable([]);
-	let diplomacy = $country?.w_diplomacy ?? writable(0);
-	let eventList = $country?.w_diplomacyEventStrings ?? writable("");
+	let influenceTasks = $country?.w_influenceTaskList ?? writable([]);
+	let currinfluenceTasks = $country?.w_currInfluenceTasks ?? writable([]);
+	let influence = $country?.w_influence ?? writable(0);
+	let maxInfluenceTasks = $country?.w_maxInfluenceTasks;
+	let unlocked = $country?.w_unlocked;
+
 </script>
 
 <div class = "money">💰 ${$money}</div>
@@ -37,10 +40,11 @@
 			<h1>Country</h1>
 			<p style="font-size: 1.2rem;">Tax rate: {$taxRate}</p>
 			<p style="font-size: 1.2rem;">Tariff rate: {$tariffRate}</p>
+			<p style="font-size: 1.2rem;">Max influence tasks: {$maxInfluenceTasks}</p>
 		</div>
 		<div class = "block">
 			{#if $country}
-				<h2>Diplomacy (need 500+ to buy regions)</h2>
+				<h2>Influence</h2>
 				<div
 					style="
 						width: 100%;
@@ -53,29 +57,41 @@
 				>
 					<div
 						style="
-							width: {Math.min($diplomacy / 1000 * 100, 100)}%;
+							width: {Math.min($influence / 1000 * 100, 100)}%;
 							height: 100%;
-							background-color: {$diplomacy >= 500 ? 'green' : 'orange'};
+							background-color: {$influence >= 500 ? 'green' : 'orange'};
 							transition: width 0.3s;
 						"
 					></div>
 				</div>
-				<p>{$diplomacy} / 1000</p>
+				<p>{$influence} / 1000</p>
 			{/if}
 		</div>
 		<div class="block">
-			<h1>Be a Diplomat!</h1>
+			<h1>Influence the government</h1>
 		
-			{#if dUpgrades}
-				{#each $dUpgrades as upgrade, i}
+			{#if influenceTasks}
+				{#each $influenceTasks as task, i}
 					<div class="upgrade-card">
-						<p><strong>{upgrade.desc}</strong></p>
-						<p>💰 Cost: {upgrade.cost}</p>
-						<p>🎯 Success Rate: {upgrade.successRate}%</p>
-						<p>📈 Diplomacy Gain: +{upgrade.diplomacyIncrease}</p>
-						<p>📉 Diplomacy Loss on Fail: -{upgrade.diplomacyLoss}</p>
-						<Button onclick={() => franchise.attemptDiplomacyUpgrade(i)}>
-							Attempt
+						<p><strong>{task.desc}</strong></p>
+						<p>💰 Cost: {task.cost}</p>
+						<p>📈 Influence Gain: +{task.influence}</p>
+						<p>Time: {task.time}</p>
+						<Button onclick={() => franchise.startInfluenceTask(i)}>
+							Start
+						</Button>
+					</div>
+				{/each}
+			{/if}
+			{#if currinfluenceTasks}
+				{#each $currinfluenceTasks as task, i}
+					<div class="upgrade-card">
+						<p><strong>{task.desc}</strong></p>
+						<p>💰 Cost: {task.cost}</p>
+						<p>📈 Influence Gain: +{task.influence}</p>
+						<p>Time: {task.time}</p>
+						<Button onclick={() => franchise.stopInfluenceTask(i)}>
+							Cancel
 						</Button>
 					</div>
 				{/each}
@@ -113,19 +129,20 @@
 						{#if !region.unlocked}
 							<Button
 								onclick={() => {
-									if (region.parentCountry.diplomacy >= 500) {
-										franchise.buyRegion(region);
-										region.unlocked = true;
+									if ($unlocked) {
+										if (franchise.buyRegion(region)){
+											region.unlocked = true;
+										}
 									}
 								}}
-								disabled={region.parentCountry.diplomacy < 500}
+								disabled={$unlocked}
 								style="
 									position: absolute;
 									left: {region.coordinates[0] / 13}%;
 									top: {region.coordinates[1] / 11 + 5}%;
-									background-color: {region.parentCountry.diplomacy < 500 ? '#aaa' : 'green'};
+									background-color: {unlocked ? '#aaa' : 'green'};
 									color: white;
-									cursor: {region.parentCountry.diplomacy < 500 ? '--cno' : '--cpointer'};
+									cursor: {unlocked ? '--cno' : '--cpointer'};
 								"
 							>
 								Unlock for: ${region.unlockCost}
@@ -138,11 +155,6 @@
 		
 		<div class="rightright">
 			<h1>Events:</h1>
-			{#if eventList}
-				{#each $eventList as eventString}
-					<p>{eventString}</p>
-				{/each}
-			{/if}
 		</div>
 	</div>
 </div>

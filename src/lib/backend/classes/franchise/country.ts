@@ -7,9 +7,11 @@ export class Country{
 	parent: World;
 	w_taxRate: Writable<number> = writable(0.2);
 	w_tariffRate: Writable<number> = writable(0.1);
-	w_diplomacy: Writable<number> = writable(0);
-	w_diplomacyUpgradeList: Writable<IDiplomacyUpgrade[]> = writable([]);
-	w_diplomacyEventStrings: Writable<string[]> = writable([]);
+	w_influence: Writable<number> = writable(0);
+	w_influenceTaskList: Writable<IInfluenceTask[]> = writable([]);
+	w_currInfluenceTasks: Writable<IInfluenceTask[]> = writable([]);
+	w_maxInfluenceTasks: Writable<number> = writable(1);
+	w_unlocked: Writable<boolean> = writable(false);
 
 	get taxRate() {
 		return get(this.w_taxRate);
@@ -23,20 +25,26 @@ export class Country{
 	set tariffRate(value) {
 		this.w_tariffRate.set(value);
 	}
-	get diplomacyUpgradeList() {
-		return get(this.w_diplomacyUpgradeList);
+	get influenceTaskList() {
+		return get(this.w_influenceTaskList);
 	}
-	set diplomacyUpgradeList(value: IDiplomacyUpgrade[]) {
-		this.w_diplomacyUpgradeList.set(value);
+	set influenceTaskList(value: IInfluenceTask[]) {
+		this.w_influenceTaskList.set(value);
 	}
-	get diplomacyEventStrings() {
-		return get(this.w_diplomacyEventStrings);
+	get currInfluenceTasks(){
+		return get(this.w_currInfluenceTasks);
 	}
-	set diplomacyEventStrings(value: string[]) {
-		this.w_diplomacyEventStrings.set(value);
+	set currInfluenceTasks(value){
+		this.w_currInfluenceTasks.set(value);
+	}
+	get maxInfluenceTasks(){
+		return get(this.w_maxInfluenceTasks);
+	}
+	set maxInfluenceTasks(value){
+		this.w_maxInfluenceTasks.set(value);
 	}
 
-	diplomacyUpgradesStatic: IDiplomacyUpgrade[];
+	influenceTasksStatic: IInfluenceTask[];
 
 	// modifiers represent taxes and subsidies. scaler to development building costs
 	farmModifier: number = 1.0;
@@ -54,24 +62,25 @@ export class Country{
 	set regionList(value: Region[]) {
 		this.w_regionList.set(value);
 	}
-	get diplomacy() {
-		return get(this.w_diplomacy);
+	get influence() {
+		return get(this.w_influence);
 	}
-	set diplomacy(value) {
-		this.w_diplomacy.set(value);
+	set influence(value) {
+		this.w_influence.set(value);
 	}
 
 
-	constructor(parent: World, franchise: Franchise, coordinates: [number, number], diplomacy: number, firstCountry: boolean) {
+	constructor(parent: World, franchise: Franchise, coordinates: [number, number], influence: number, firstCountry: boolean) {
 		this.parent = parent;
 		this.coordinates = coordinates;
 		this.franchise = franchise;
 		if (firstCountry) this.firstRegions = 3;
 		else this.firstRegions = 0;
-		this.diplomacy = diplomacy;
-		this.diplomacyUpgradesStatic = [];
-		this.initializeDiplomacyUpgrades();
-		this.refreshDiplomacyUpgrades(3);
+		this.influence = influence;
+		this.influenceTasksStatic = [];
+		this.w_unlocked.set(firstCountry);
+		this.initializeInfluenceTasks();
+		this.refreshInfluenceTasks(3);
 
 		this.initializeRegions(4 + Math.floor(Math.random() * 3));
 	}
@@ -80,10 +89,11 @@ export class Country{
 		for (const region of this.regionList) {
 			region.tick();
 		}
+		this.tickInfluenceTasks();
 	}
 	
 	day() {
-		this.refreshDiplomacyUpgrades(3);
+		this.refreshInfluenceTasks(3);
 	}
 
 	initializeRegions(count: number){
@@ -129,140 +139,62 @@ export class Country{
 		this.regionList[regionIndex].unlockRegion();
 	}
 
-	attemptDiplomacyUpgrade(index: number){
-		console.log(Math.random() * 100);
-		var upgrade = this.diplomacyUpgradeList[index];
-		var og = this.diplomacy;
-
-		if (this.franchise.money >= upgrade.cost){
-			console.log("attempting diplomacy upgrade");
-			this.franchise.money -= upgrade.cost;
-			if (Math.random() * 100 <= upgrade.successRate){
-				this.diplomacy = Math.min(upgrade.diplomacyIncrease + this.diplomacy, 1000);
-			}
-			else{
-				this.diplomacy = Math.max(this.diplomacy - upgrade.diplomacyLoss, 0);
-			}
-			this.diplomacyUpgradeList.splice(index, 1);
-			this.diplomacyUpgradeList = [...this.diplomacyUpgradeList];
-
-			this.diplomacyEvent(og, this.diplomacy);
-		}
+	startInfluenceTask(index: number){
+		if (this.franchise.money < this.influenceTaskList[index].cost || this.currInfluenceTasks.length >= this.maxInfluenceTasks) return;
+		this.franchise.money -= this.influenceTaskList[index].cost;
+		this.currInfluenceTasks.push(this.influenceTaskList[index]);
+		this.currInfluenceTasks = [... this.currInfluenceTasks];
+		this.influenceTaskList.splice(index, 1);
+		this.influenceTaskList = [... this.influenceTaskList];
 	}
 
-	diplomacyEvent(before: number, after: number){
-		var beforeFloor = Math.floor(before/100);
-		var afterFloor = Math.floor(after/100)
-		if (beforeFloor < afterFloor){ //100 is threshold for now
-			for (let index = beforeFloor; index < afterFloor; index++) {
-				var event = this.diplomacyEventPool["good"][Math.floor(Math.random() * this.diplomacyEventPool["good"].length)];
-				event.effect(this);
-				this.diplomacyEventStrings.push(event.eventString);
-				this.diplomacyEventStrings = [... this.diplomacyEventStrings];
-
-				setTimeout(() => {
-					const index = this.diplomacyEventStrings.indexOf(event.eventString);
-					if (index !== -1) {
-						this.diplomacyEventStrings.pop();
-						this.diplomacyEventStrings = [... this.diplomacyEventStrings];
-					}
-				}, 10000);
-			}
-		}
-		else if (beforeFloor > afterFloor){ //if you DECREASED!
-			for (let index = beforeFloor; index > afterFloor; index--) {
-				var event = this.diplomacyEventPool["bad"][Math.floor(Math.random() * this.diplomacyEventPool["bad"].length)];
-				event.effect(this);
-				this.diplomacyEventStrings.push(event.eventString);
-				this.diplomacyEventStrings = [... this.diplomacyEventStrings];
-
-				setTimeout(() => {
-					const index = this.diplomacyEventStrings.indexOf(event.eventString);
-					if (index !== -1) {
-						this.diplomacyEventStrings.pop();
-						this.diplomacyEventStrings = [... this.diplomacyEventStrings];
-					}
-				}, 10000);
-			}
-		}
-		else{
-			return;
-		}
+	stopInfluenceTask(index: number){
+		this.currInfluenceTasks.splice(index, 1);
+		this.currInfluenceTasks = [... this.currInfluenceTasks];
 	}
 
-	refreshDiplomacyUpgrades(amount: number) {
-		if (this.diplomacy >= 1000) return;
-		const shuffled = [...this.diplomacyUpgradesStatic];
+	tickInfluenceTasks(){
+		console.log("tickin datasks");
+		for (let index = 0; index < this.currInfluenceTasks.length; index++) {
+			const task = this.currInfluenceTasks[index];
+			task.time -= 0.25;
+			if (task.time <= 0){
+				this.influence += task.influence;
+				this.currInfluenceTasks.splice(index, 1);
+			}
+		}
+		this.currInfluenceTasks = [... this.currInfluenceTasks];
+	}
+
+	refreshInfluenceTasks(amount: number) {
+		const shuffled = [...this.influenceTasksStatic];
 
 		for (let i = shuffled.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1));
 			[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
 		}
 
-		this.diplomacyUpgradeList = shuffled.slice(0, amount);
+		this.influenceTaskList = shuffled.slice(0, amount);
 	}
 
-	initializeDiplomacyUpgrades() {
-		this.diplomacyUpgradesStatic.push({
+	initializeInfluenceTasks() {
+		this.influenceTasksStatic.push({
 			desc: "Shake hands with the president",
 			cost: 1000,
-			successRate: 90,
-			diplomacyIncrease: 50,
-			diplomacyLoss: 20
-		})
-		this.diplomacyUpgradesStatic.push({
-			desc: "Try to blow up their goverment building",
-			cost: 1000,
-			successRate: 1,
-			diplomacyIncrease: 1000,
-			diplomacyLoss: 1000
-		})
-		this.diplomacyUpgradesStatic.push({
+			influence: 100,
+			time: 20,
+		});
+		this.influenceTasksStatic.push({
 			desc: "Put out a video glazing their president",
 			cost: 2000,
-			successRate: 70,
-			diplomacyIncrease: 50,
-			diplomacyLoss: 20
-		})
-		this.diplomacyUpgradesStatic.push({
+			influence: 300,
+			time: 30,
+		});
+		this.influenceTasksStatic.push({
 			desc: "Send the president a corn dog",
 			cost: 500,
-			successRate: 60,
-			diplomacyIncrease: 20,
-			diplomacyLoss: 5
-		})
-	}
-	
-	diplomacyEventPool: Record<"good" | "bad", IDiplomacyEvent[]> = {
-		good: [
-			{
-				eventString: "Signed a trade agreement! Tax decrease",
-				effect(country: Country) {
-					country.taxRate *= 9/10;
-				}
-			},
-			{
-				eventString: "The president loves you! Tax decrease",
-				effect(country: Country) {
-					country.taxRate *= 9/10;
-				}
-			}
-		],
-		bad: [
-			{
-				eventString: "Diplomatic incident with customs... Tax increase",
-				effect(country: Country) {
-					country.taxRate *= 10/9;
-				}
-			},
-			{
-				eventString: "Leaked documents harm reputation... Tax increase",
-				effect(country: Country) {
-					country.taxRate *= 10/9;
-				}
-			}
-		]
-	};
-	  
-	  
+			influence: 50,
+			time: 10,
+		});
+	}	  
 }

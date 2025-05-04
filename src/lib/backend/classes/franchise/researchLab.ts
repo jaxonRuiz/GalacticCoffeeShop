@@ -38,7 +38,6 @@ export class ResearchLab{
 
 	tick(){
 		this.tickTasks();
-		console.log('tick');
 	}
 
 	allocateResearchers(num: number, index: number) {

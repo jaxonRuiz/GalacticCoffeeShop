@@ -52,9 +52,9 @@
 	>
 		<div
 			style="
-				width: {Math.min($countries[country].diplomacy / 1000 * 100, 100)}%;
+				width: {Math.min($countries[country].influence / 1000 * 100, 100)}%;
 				height: 100%;
-				background-color: {$countries[country].diplomacy >= 500 ? 'green' : 'orange'};
+				background-color: {$countries[country].influence >= 500 ? 'green' : 'orange'};
 				transition: width 0.3s;
 			"
 		></div>

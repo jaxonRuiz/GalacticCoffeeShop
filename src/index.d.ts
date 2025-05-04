@@ -164,7 +164,7 @@ interface ICountry{
 	// taxRate: number;
 	// tariffRate: number;
 	// regionList: Region[];
-	diplomacyUpgradeList: IDiplomacyUpgrade[];
+	diplomacyUpgradeList: IInfluenceTask[];
 }
 
 interface IWorld {
@@ -210,15 +210,14 @@ type BuildingData = {
 	rent: number;
 };
 
-interface IDiplomacyUpgrade{
+interface IInfluenceTask{
 	desc: string;
 	cost: number;
-	successRate: number;
-	diplomacyIncrease: number;
-	diplomacyLoss: number;
+	influence: number;
+	time: number;
 }
 
-interface IDiplomacyEvent {
+interface IPolicyEvent {
 	eventString: string;
 	effect(country: Country): void;
   }

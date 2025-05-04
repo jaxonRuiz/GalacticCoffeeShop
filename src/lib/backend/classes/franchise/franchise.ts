@@ -125,6 +125,7 @@ export class Franchise implements ISubscriber, IScene {
 	tick() {
 		//this.world.tick();
 		this.researchLab.tick();
+		this.world.tick();
 	}
 
 	day() {
@@ -169,8 +170,11 @@ export class Franchise implements ISubscriber, IScene {
 	unlockRegion(regionIndex: number){
 		this.currentCountry?.unlockRegion(regionIndex);
 	}
-	attemptDiplomacyUpgrade(index:number){
-		this.currentCountry?.attemptDiplomacyUpgrade(index);
+	startInfluenceTask(index: number){
+		this.currentCountry?.startInfluenceTask(index);
+	}
+	stopInfluenceTask(index: number){
+		this.currentCountry?.stopInfluenceTask(index);
 	}
 
 	//Region stuff
