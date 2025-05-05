@@ -91,6 +91,7 @@ export class Country{
 		this.influenceTasksStatic = [];
 		this.initializeInfluenceTasks();
 		this.refreshInfluenceTasks(3);
+		this.startRandomEvents();
 		this.policyEvents.push({
 			desc: 'aahahhahaa',
 			time: 10,
@@ -298,21 +299,96 @@ export class Country{
 		})
 	}
 
-	startRandomEvents() {
-		this.policyEvents.push({
-			desc: 'aahahhahaa',
-			time: 10,
-			currentInfluence: 10,
-			totalInfluence: 20,
+	wait(seconds: number): Promise<void> {
+		return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+	}
+
+	async startRandomEvents() {
+		await this.wait(Math.floor(20 + Math.random() * 40));
+		this.policyEvents.push(this.getRandomEvent());
+		this.policyEvents = [... this.policyEvents];
+		await this.startRandomEvents();
+	}
+
+	getRandomEvent(): IPolicyEvent{
+		const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+		return {
+			desc: event.desc,
+			time: event.time,
+			currentInfluence: Math.floor(event.totalInfluence * (0.25 + Math.random() * 0.5)),
+			totalInfluence: event.totalInfluence,
 			won(country) {
-				
+				event.won(country);
 			},
 			lost(country) {
-				
+				event.lost(country);
 			},
 			eitherWay(country) {
-				
+				event.eitherWay(country);
 			},
-		})
+		}
 	}
 }
+
+const randomEvents: IPolicyEvent[] = [
+	{
+		desc: 'tax increase!',
+		time: 50,
+		currentInfluence: 0,
+		totalInfluence: 100,
+		won(country) {
+			country.taxRate *= 1.5;
+		},
+		lost(country) {
+			
+		},
+		eitherWay(country) {
+			
+		},
+	},
+	{
+		desc: 'tax decrease!',
+		time: 60,
+		currentInfluence: 0,
+		totalInfluence: 100,
+		won(country) {
+			country.taxRate /= 1.5;
+		},
+		lost(country) {
+			
+		},
+		eitherWay(country) {
+			
+		},
+	},
+	{
+		desc: 'tax increase!',
+		time: 50,
+		currentInfluence: 10,
+		totalInfluence: 200,
+		won(country) {
+			country.taxRate *= 2;
+		},
+		lost(country) {
+			
+		},
+		eitherWay(country) {
+			
+		},
+	},
+	{
+		desc: 'tariff decrease!',
+		time: 100,
+		currentInfluence: 10,
+		totalInfluence: 200,
+		won(country) {
+			country.tariffRate /= 2;
+		},
+		lost(country) {
+			
+		},
+		eitherWay(country) {
+			
+		},
+	},
+]
