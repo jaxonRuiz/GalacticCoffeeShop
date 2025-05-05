@@ -4,6 +4,7 @@
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 	import Button from "$lib/components/Button.svelte";
 	import { writable } from "svelte/store";
+	import Region from "$lib/components/franchise/Region.svelte";
 
 	// base
 	let smanager = stageManager;
@@ -115,7 +116,7 @@
 						franchise.unlockCountry();
 					}}
 				>
-					Unlock country for: {franchise.currentCountry?.unlockCost}
+					Unlock country for: {franchise.currentCountry?.unlockCost} influence
 			</Button>
 		{/if}
 		</div>
@@ -125,39 +126,8 @@
 		<div class="right block">
 			<div>
 				{#if $regions}
-					{#each $regions as region, i (region)}
-						<Button
-							onclick={() => { if (region.unlocked) franchise.selectRegion(region); }}
-							style="
-								position: absolute;
-								left: {region.coordinates[0]/13}%;
-								top: {region.coordinates[1]/11}%;
-							"
-						>
-							region {i + 1}
-						</Button>
-			
-						{#if !region.unlocked}
-							<Button
-								onclick={() => {
-									if ($unlocked) {
-										franchise.startRegionalVote(i);
-										region.unlocked = region.unlocked;
-									}
-								}}
-								disabled={!$unlocked}
-								style="
-									position: absolute;
-									left: {region.coordinates[0] / 13}%;
-									top: {region.coordinates[1] / 11 + 5}%;
-									background-color: {!$unlocked ? '#aaa' : 'green'};
-									color: white;
-									cursor: {!$unlocked ? '--cno' : '--cpointer'};
-								"
-							>
-								Start vote for: ${region.unlockCost}
-							</Button>
-						{/if}
+					{#each $regions as region, i}
+						<Region {region} {franchise} {unlocked} {i}></Region>
 					{/each}
 				{/if}
 			</div>
@@ -191,11 +161,41 @@
 								"
 							></div>
 						</div>
-						<Button onclick={() => franchise.voteAgainstPolicy(i)}>
-							Vote against
+						<Button onclick={() => franchise.voteAgainstPolicy(i, 10)} 
+							disabled={$influence < 10}
+							style="
+								background-color: {!$unlocked ? '#aaa' : 'green'};
+								color: white;
+								cursor: {!$unlocked ? '--cno' : '--cpointer'};
+							">
+							-10 votes
 						</Button>
-						<Button onclick={() => franchise.voteForPolicy(i)}>
-							Vote for
+						<Button onclick={() => franchise.voteAgainstPolicy(i, 1)}
+							disabled={$influence < 1}
+							style="
+								background-color: {!$unlocked ? '#aaa' : 'green'};
+								color: white;
+								cursor: {!$unlocked ? '--cno' : '--cpointer'};
+							">
+							-1 vote
+						</Button>
+						<Button onclick={() => franchise.voteForPolicy(i, 1)}
+							disabled={$influence < 1}
+							style="
+								background-color: {!$unlocked ? '#aaa' : 'green'};
+								color: white;
+								cursor: {!$unlocked ? '--cno' : '--cpointer'};
+							">
+							+1 vote
+						</Button>
+						<Button onclick={() => franchise.voteForPolicy(i, 10)}
+							disabled={$influence < 10}
+							style="
+								background-color: {!$unlocked ? '#aaa' : 'green'};
+								color: white;
+								cursor: {!$unlocked ? '--cno' : '--cpointer'};
+							">
+							+10 votes
 						</Button>
 					</div>
 				{/each}

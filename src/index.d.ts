@@ -222,7 +222,9 @@ interface IPolicyEvent {
 	time: number;
 	totalInfluence: number;
 	currentInfluence: number;
-	effect(country: Country): void;
+	won(country: Country): void;
+	lost(country: Country): void;
+	eitherWay(country: Country): void;
   }
   
 interface IResearchTask {

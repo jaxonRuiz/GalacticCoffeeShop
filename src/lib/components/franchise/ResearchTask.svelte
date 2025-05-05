@@ -11,7 +11,7 @@
     <p style="font-size: 1.3rem;">{task.desc}</p>
     <p>Estimated time left: {Math.floor(task.researchUnits / (task.researchersAllocated * franchise.researchLab.researcherSpeed * 4))}</p>
     <p>Researchers working: {task.researchersAllocated}</p>
-    <p>Reward: {task.sciencePoints}</p>
+    <p>Reward: {task.sciencePoints} science points</p>
     <Button onclick={() => franchise.researchLab.allocateResearchers(1, i)}
         disabled={$res < 1}
         style = "

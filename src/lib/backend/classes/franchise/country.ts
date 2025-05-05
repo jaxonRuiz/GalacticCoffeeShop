@@ -83,6 +83,7 @@ export class Country{
 		this.parent = parent;
 		this.coordinates = coordinates;
 		this.franchise = franchise;
+
 		if (firstCountry) this.firstRegions = 3;
 		else this.firstRegions = 0;
 		this.w_unlocked.set(firstCountry);
@@ -95,8 +96,14 @@ export class Country{
 			time: 10,
 			currentInfluence: 10,
 			totalInfluence: 20,
-			effect(country) {
-				country.influence += 100000;
+			won(country) {
+				
+			},
+			lost(country) {
+				
+			},
+			eitherWay(country) {
+				
 			},
 		})
 
@@ -122,7 +129,6 @@ export class Country{
 				Math.floor(Math.random() * 1000)
 			];
 
-			// Check if newCoords are far enough from all existing regions
 			const isSpaced = this.regionList.every(region => {
 				const [x1, y1] = region.coordinates;
 				const [x2, y2] = newCoords;
@@ -165,7 +171,7 @@ export class Country{
 		this.regionList[regionIndex].unlockRegion();
 	}
 
-	startInfluenceTask(index: number){
+	startInfluenceTask(index: number){ // begin a task
 		if (this.franchise.money < this.influenceTaskList[index].cost || this.currInfluenceTasks.length >= this.maxInfluenceTasks) return;
 		this.franchise.money -= this.influenceTaskList[index].cost;
 		this.currInfluenceTasks.push(this.influenceTaskList[index]);
@@ -174,24 +180,32 @@ export class Country{
 		this.influenceTaskList = [... this.influenceTaskList];
 	}
 
-	stopInfluenceTask(index: number){
+	stopInfluenceTask(index: number){ // cancel a task
 		this.currInfluenceTasks.splice(index, 1);
 		this.currInfluenceTasks = [... this.currInfluenceTasks];
 	}
 
-	tickInfluenceTasks(){
+	addInfluence(amount: number) {
+		this.influence = Math.min(1000, this.influence + amount)
+	}
+
+	subtractInfluence(amount: number) {
+		this.influence = Math.max(0, this.influence - amount)
+	}
+
+	tickInfluenceTasks(){ // keep tasks up to date
 		for (let index = 0; index < this.currInfluenceTasks.length; index++) {
 			const task = this.currInfluenceTasks[index];
 			task.time -= 0.25;
 			if (task.time <= 0){
-				this.influence += task.influence;
+				this.addInfluence(task.influence);
 				this.currInfluenceTasks.splice(index, 1);
 			}
 		}
 		this.currInfluenceTasks = [... this.currInfluenceTasks];
 	}
 
-	refreshInfluenceTasks(amount: number) {
+	refreshInfluenceTasks(amount: number) { // refresh list of tasks
 		const shuffled = [...this.influenceTasksStatic];
 
 		for (let i = shuffled.length - 1; i > 0; i--) {
@@ -202,7 +216,7 @@ export class Country{
 		this.influenceTaskList = shuffled.slice(0, amount);
 	}
 
-	initializeInfluenceTasks() {
+	initializeInfluenceTasks() { // initialize a list of tasks that will be pulled from in refreshInfluenceTasks
 		this.influenceTasksStatic.push({
 			desc: "Shake hands with the president",
 			cost: 1000,
@@ -223,52 +237,81 @@ export class Country{
 		});
 	}	  
 
-	startPolicyEvent(event: IPolicyEvent) {
+	startPolicyEvent(event: IPolicyEvent) { // start a policy event
 		this.policyEvents.push(event);
 		this.policyEvents = [... this.policyEvents];
 	}
 
-	voteForPolicy(index: number){
-		if (this.influence <= 0 || this.policyEvents[index].currentInfluence >= this.policyEvents[index].totalInfluence) return;
-		this.influence -= 1;
-		this.policyEvents[index].currentInfluence += 1;
+	voteForPolicy(index: number, num: number){ // spend influence to vote for a policy
+		const amount = Math.min(this.policyEvents[index].totalInfluence - this.policyEvents[index].currentInfluence, num);
+		if (this.influence < amount || this.policyEvents[index].currentInfluence >= this.policyEvents[index].totalInfluence) return;
+		this.influence -= amount;
+		this.policyEvents[index].currentInfluence += amount;
 		this.policyEvents = [... this.policyEvents];
 	}
 
-	voteAgainstPolicy(index: number){
-		if (this.influence <= 0 || this.policyEvents[index].currentInfluence <= 0) return;
-		this.influence -= 1;
-		this.policyEvents[index].currentInfluence -= 1;
+	voteAgainstPolicy(index: number, num: number){ // spend influence to vote against a policy
+		const amount = Math.min(this.policyEvents[index].currentInfluence, num);
+		if (this.influence < amount || this.policyEvents[index].currentInfluence <= 0) return;
+		this.influence -= amount;
+		this.policyEvents[index].currentInfluence -= amount;
 		this.policyEvents = [... this.policyEvents];
 	}
 
-	tickPolicyEvents(){
+	tickPolicyEvents(){ // update the list of policy events
 		for (let index = 0; index < this.policyEvents.length; index++) {
 			const event = this.policyEvents[index];
 			event.time -= 0.25;
 			if (event.time <= 0){
-				//call da effect here if enough votes
 				if (Math.random() < event.currentInfluence/event.totalInfluence){
-					event.effect(this);
+					event.won(this);
 				}
+				else {
+					event.lost(this);
+				}
+				event.eitherWay(this);
 				this.policyEvents.splice(index, 1);
 			}
 		}
 		this.policyEvents = [... this.policyEvents];
 	}
 
-	startRegionalVote(index: number){
+	startRegionalVote(index: number){ // add a policy event to the list for the region unlock
 		const self = this;
 		if (this.franchise.money < this.regionList[index].unlockCost) return;
 		this.franchise.money -= this.regionList[index].unlockCost;
+		this.regionList[index].voteInProgress = true; //MUST MATCH WITH THE EVENT
 		this.policyEvents.push({
 			desc: `A vote to unlock region ${index + 1}`,
 			time: 20,
 			currentInfluence: 100,
 			totalInfluence: 300,
-			effect(country) {
+			won(country) {
 				country.unlockRegion(index);
-				country.regionList[index].unlocked = country.regionList[index].unlocked;
+			},
+			lost(country) {
+			
+			},
+			eitherWay(country) {
+				country.regionList[index].voteInProgress = false;
+			},
+		})
+	}
+
+	startRandomEvents() {
+		this.policyEvents.push({
+			desc: 'aahahhahaa',
+			time: 10,
+			currentInfluence: 10,
+			totalInfluence: 20,
+			won(country) {
+				
+			},
+			lost(country) {
+				
+			},
+			eitherWay(country) {
+				
 			},
 		})
 	}

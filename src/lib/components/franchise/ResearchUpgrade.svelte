@@ -7,7 +7,7 @@
 <div class="upgrade-card">
     <p style="font-size: 1.3rem;">{upgrade.name}</p>
     <p>{upgrade.desc}</p>
-    <p>Costs: {upgrade.cost}</p>
+    <p>Cost: {upgrade.cost} science points</p>
     <Button 
     onclick={() => franchise.buyUpgrade(i)}
     disabled={$sciencePoints < upgrade.cost}

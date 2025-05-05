@@ -49,6 +49,7 @@
 		}
 		if (event.key === "l") {
 			(stageManager.currentScene as Franchise).researchers += 100;
+			(stageManager.currentScene as Franchise).money += 10000;
 		}
 		// if (event.key === "r") {
 		//   resetState();

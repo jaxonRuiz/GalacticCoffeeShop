@@ -179,11 +179,11 @@ export class Franchise implements ISubscriber, IScene {
 	stopInfluenceTask(index: number){
 		this.currentCountry?.stopInfluenceTask(index);
 	}
-	voteForPolicy(index: number){
-		this.currentCountry?.voteForPolicy(index);
+	voteForPolicy(index: number, num: number){
+		this.currentCountry?.voteForPolicy(index, num);
 	}
-	voteAgainstPolicy(index: number){
-		this.currentCountry?.voteAgainstPolicy(index);
+	voteAgainstPolicy(index: number, num: number){
+		this.currentCountry?.voteAgainstPolicy(index, num);
 	}
 	startRegionalVote(index: number){
 		this.currentCountry?.startRegionalVote(index);

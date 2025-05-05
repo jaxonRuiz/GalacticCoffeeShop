@@ -41,6 +41,14 @@ export class Region implements ISubscriber, IRegion {
 	w_beans: Writable<number> = writable(0);
 	w_unlocked: Writable<boolean> = writable(false);
 	w_population: Writable<number> = writable(500);
+	w_voteInProgress: Writable<boolean> = writable(false);
+
+	get voteInProgress() {
+		return get(this.w_voteInProgress);
+	}
+	set voteInProgress(value) {
+		this.w_voteInProgress.set(value);
+	} 
 
 	//farm
 	w_water: Writable<number> = writable(0);
@@ -233,7 +241,7 @@ export class Region implements ISubscriber, IRegion {
 	}
 
 	tick(){
-		
+
 	}
 
 	hour() {
