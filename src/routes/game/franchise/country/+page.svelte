@@ -70,7 +70,7 @@
 			{/if}
 		</div>
 		<div class="block">
-			<h1>Influence the government</h1>
+			<h1>Possible tasks</h1>
 		
 			{#if influenceTasks}
 				{#each $influenceTasks as task, i}
@@ -85,6 +85,9 @@
 					</div>
 				{/each}
 			{/if}
+			<br>
+			<br>
+			<h1>Ongoing tasks</h1>
 			{#if currinfluenceTasks}
 				{#each $currinfluenceTasks as task, i}
 					<div class="upgrade-card">

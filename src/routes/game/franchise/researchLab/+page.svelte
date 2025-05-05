@@ -44,7 +44,7 @@
 	<div class="right">
 		<header style="font-size: 2rem;">Research</header>
 		{#if upgrades}
-			{#each $upgrades as upgrade, i}
+			{#each $upgrades.slice(0, 5) as upgrade, i}
 				<ResearchUpgrade upgrade = {upgrade} franchise = {franchise} sciencePoints = {sciencePoints} i = {i}></ResearchUpgrade>
 			{/each}
 		{/if}

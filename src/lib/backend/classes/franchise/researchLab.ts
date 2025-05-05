@@ -26,14 +26,16 @@ export class ResearchLab{
 	}
 
 	franchise: Franchise;
-	researchLevel: number = 0;
+	tasksAdded: number = 0;
 
 	taskNames: string[] = ["Analyze coffee molecules", "Dissect cocoa plants", "Optimize atomic structure of coffee"];
 
 	constructor(franchise: Franchise){
 		this.franchise = franchise;
 		this.initializeUpgrades();
-		this.updateTasks();
+		this.addNewTask();
+		this.addNewTask();
+		this.addNewTask();
 	}
 
 	tick(){
@@ -70,12 +72,9 @@ export class ResearchLab{
 				if (task.researchUnits <= 0) {
 					this.franchise.sciencePoints += task.sciencePoints;
 					this.franchise.researchers += task.researchersAllocated;
+					this.addNewTask();
 					taskList.splice(i, 1); // remove completed task
 				}
-			}
-
-			if (taskList.length === 0) {
-				this.updateTasks();
 			}
 	
 			return taskList;
@@ -83,18 +82,16 @@ export class ResearchLab{
 	}
 	
 
-	updateTasks() {
-		for (let index = 0; index < 3; index++) {
-			this.currentTaskList.push(this.createTask(this.researchLevel));
-		}
-		this.researchLevel++;
+	addNewTask(){
+		this.currentTaskList.push(this.createTask(Math.floor(this.tasksAdded/3)));
+		this.tasksAdded++;
 	}
 
 	createTask(researchLevel: number): IResearchTask {
 		const desc = this.taskNames[Math.floor(Math.random() * this.taskNames.length)];
-		const researchUnits = Math.floor(10000 * Math.pow(5, researchLevel));
+		const researchUnits = Math.floor(10000 * Math.pow(3, researchLevel));
 		const researchersAllocated = 0;
-		const sciencePoints = Math.floor(100 * Math.pow(2.3, researchLevel));
+		const sciencePoints = Math.floor(100 * Math.pow(2, researchLevel));
 		return {
 			desc: desc,
 			researchUnits: researchUnits,
@@ -131,6 +128,22 @@ export class ResearchLab{
 		this.upgradeList.push({
 			name: "Discover how to multiply coffee molecules",
 			desc: "3x coffee production",
+			cost: 200,
+			effect(franchise) {
+				franchise.coffeeMultiplier *= 3;
+			}
+		})
+		this.upgradeList.push({
+			name: "Discover how to multiply coffee molecules (testing)",
+			desc: "3x coffee production",
+			cost: 200,
+			effect(franchise) {
+				franchise.coffeeMultiplier *= 3;
+			}
+		})
+		this.upgradeList.push({
+			name: "Discover how to multiply coffee molecules (testing)",
+			desc: "3x coffee production", 
 			cost: 200,
 			effect(franchise) {
 				franchise.coffeeMultiplier *= 3;
