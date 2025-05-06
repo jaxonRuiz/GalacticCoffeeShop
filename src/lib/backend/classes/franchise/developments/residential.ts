@@ -19,7 +19,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 	constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
 			super(timer, region, areaSize, franchise);
 			this.initializeDevelopment();
-		}
+	}
+
+	coffeeAccumulator: number = 0;
 
 	sellCoffee(coffeeAmount: number){
 	  if (coffeeAmount > this.parent.beans){
@@ -33,8 +35,19 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  this.franchise.money += coffeeSold * this.coffeePrice;
 	}
 
+	tickCoffee() {
+		const coffeePerTick = Math.min(this.parent.maxCoffeePerHour, this.parent.expectedCustomersPerHour) / 16;
+		this.coffeeAccumulator += coffeePerTick;
+
+		if (this.coffeeAccumulator >= 1){
+			const wholeCoffees = Math.floor(this.coffeeAccumulator);
+			this.sellCoffee(wholeCoffees);
+			this.coffeeAccumulator -= wholeCoffees;
+		}
+	}
+
 	tick(){
-		this.sellCoffee(Math.floor(Math.min(this.parent.maxCoffeePerHour, this.parent.expectedCustomersPerHour) / 16)); //FIX!! only sells multiples of 16 when youre starting off
+		this.tickCoffee();
 	}
 
 	hour(){

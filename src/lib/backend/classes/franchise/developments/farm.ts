@@ -15,15 +15,42 @@ export class Farm extends DevelopmentBase {
 	}
 
 	get bpt (){
-		return Math.floor(this.parent.beansPerHour/16);
+		return this.parent.beansPerHour/16;
 	}
 	get wpt (){
-		return Math.floor(this.parent.waterPerHour/16);
+		return this.parent.waterPerHour/16;
 	}
 
+	beanAccumulator: number = 0;
+	waterAccumulator: number = 0;
+
 	tick(){
-		this.parent.water += this.wpt;
-		this.parent.beans += this.bpt;
+		this.tickBeans();
+		this.tickWater();
+	}
+
+	hour() {
+	}
+
+	tickBeans() {
+		this.beanAccumulator += this.bpt;
+
+		if (this.beanAccumulator >= 1) {
+			const wholeBeans = Math.floor(this.beanAccumulator);
+			console.log(this.bpt);
+			this.parent.beans += wholeBeans;
+			this.beanAccumulator -= wholeBeans;
+		}
+	}
+
+	tickWater() {
+		this.waterAccumulator += this.wpt;
+
+		if (this.waterAccumulator >= 1) {
+			const wholeWater = Math.floor(this.waterAccumulator);
+			this.parent.water += wholeWater;
+			this.waterAccumulator -= wholeWater;
+		}
 	}
 
 	buyBuilding(building: IBuilding){
