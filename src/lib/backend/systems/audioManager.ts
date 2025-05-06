@@ -148,7 +148,7 @@ export class AudioManager {
 	// Adds sound effects (can overlap)
 	addSFX(name: string, path: string) {
 		const audioInstances = [new Audio(path), new Audio(path), new Audio(path)];
-		audioInstances.forEach(audio => audio.name = name); 
+		audioInstances.forEach(audio => audio.name = name);
 		this.SFX.set(name, audioInstances);
 	}
 
@@ -156,7 +156,7 @@ export class AudioManager {
 	addMusic(name: string, path: string) {
 		const audio = new Audio(path);
 		audio.loop = true;
-		audio.name = name; 
+		audio.name = name;
 		this.music.set(name, audio);
 	}
 
@@ -164,7 +164,7 @@ export class AudioManager {
 	addAmbience(name: string, path: string) {
 		const audio = new Audio(path);
 		audio.loop = true;
-		audio.name = name; 
+		audio.name = name;
 		this.ambience.set(name, audio);
 	}
 
@@ -172,8 +172,14 @@ export class AudioManager {
 	playAudio(name: string) {
 		if (this.SFX.has(name)) {
 			const audioInstances = this.SFX.get(name)!;
-			const audio = audioInstances.find((a) => a.paused) || audioInstances[0];
-			audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", audio.name); // Applies globalVolumeScale
+			let audio = audioInstances.find((a) => a.paused);
+			if (!audio) {
+				// All are playing, forcibly reset the first one
+				audio = audioInstances[0];
+				audio.pause();
+				audio.currentTime = 0;
+			}
+			audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", audio.name);
 			audio.currentTime = 0;
 			audio.play();
 		} else if (this.music.has(name)) {
