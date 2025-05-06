@@ -72,11 +72,11 @@ export class AudioManager {
 			audio.play();
 		} else if (this.music.has(name)) {
 			const audio = this.music.get(name)!;
-			audio.volume = this.applyVolumeScale(this.musicVolume, "music", audio.name); // Applies globalVolumeScale
+			audio.volume = this.applyVolumeScale(this.musicVolume, "music", audio.name); 
 			audio.play();
 		} else if (this.ambience.has(name)) {
 			const audio = this.ambience.get(name)!;
-			audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", audio.name); // Applies globalVolumeScale
+			audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", audio.name);
 			audio.play();
 		}
 	}
@@ -309,7 +309,6 @@ export class AudioManager {
 		}
 		this.bgMusic.forEach((audio) => (audio.volume = 0));
 		for (let [audio, task] of this.audioEffects.entries()) {
-			// No need to clear the interval as it will be cleared in the task when the audio is paused or ended
 			audio?.pause();
 			this.audioEffects.delete(audio);
 		}
