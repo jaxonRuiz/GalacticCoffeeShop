@@ -83,7 +83,6 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 	}
 
 	day(){
-
 		this.updateAvailableBuildings(3);
 	}
 
@@ -143,7 +142,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 			case "waterBuilding":
 				return `Produces ${building.num} gallons of water/hour`
 			case "farmBuilding":
-				return `Produces up to ${building.num * this.franchise.coffeeMultiplier} beans/hour`
+				return `Produces up to ${building.num} beans/hour`
 			case "researchBuilding":
 				return `Increase researcher population by ${building.num}`
 			default:

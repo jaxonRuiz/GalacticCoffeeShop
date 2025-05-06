@@ -42,6 +42,7 @@ export class Region implements ISubscriber, IRegion {
 	w_unlocked: Writable<boolean> = writable(false);
 	w_population: Writable<number> = writable(500);
 	w_voteInProgress: Writable<boolean> = writable(false);
+	w_expectedCustomersPerHour: Writable<number> = writable();
 
 	get voteInProgress() {
 		return get(this.w_voteInProgress);
@@ -195,7 +196,15 @@ export class Region implements ISubscriber, IRegion {
 		return get(this.w_population);
 	}
 	set population(value){
+		const old = this.population;
 		this.w_population.set(value);
+		this.expectedCustomersPerHour *= value/old;
+	}
+	get expectedCustomersPerHour() {
+		return get(this.w_expectedCustomersPerHour)
+	}
+	set expectedCustomersPerHour(value) {
+		this.w_expectedCustomersPerHour.set(value);
 	}
 
 	//internal variables
@@ -237,6 +246,7 @@ export class Region implements ISubscriber, IRegion {
 		this.population = 1000;
 		this.coffeesSoldLastHour = 0;
 		this.unlocked = unlocked;
+		this.expectedCustomersPerHour = this.population/franchise.populationDivisor;
 
 		this.initializeRegion(climate);
 	}

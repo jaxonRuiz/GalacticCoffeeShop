@@ -28,7 +28,7 @@
                     development.buyBuilding(building);
                 }}
             >
-                Buy for: {fMoney(building.sellCost)}
+                Buy for: {fMoney(building.buyCost)}
             </Button>
         {/if}
         

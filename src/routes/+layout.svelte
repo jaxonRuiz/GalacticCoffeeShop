@@ -48,8 +48,9 @@
 			goto(`${base}/`);
 		}
 		if (event.key === "l") {
-			(stageManager.currentScene as Franchise).researchers += 100;
+			(stageManager.currentScene as Franchise).researchers += 1000;
 			(stageManager.currentScene as Franchise).money += 10000;
+			(stageManager.currentScene as Franchise).sciencePoints += 1000;
 		}
 		// if (event.key === "r") {
 		//   resetState();

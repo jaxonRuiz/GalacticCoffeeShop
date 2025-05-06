@@ -30,7 +30,7 @@
 	let maxCoffee = $region?.w_maxCoffeePerHour;
 	let researchers = franchise.w_researchers;
 	let popDiv = franchise.w_populationDivisor;
-	let coffeeMult = franchise.w_coffeeMultiplier;
+	let custPerHour = $region?.w_expectedCustomersPerHour;
 	let delPerHour = $region?.w_deliveriesPerHour;
 </script>
 
@@ -51,9 +51,9 @@
 			<h1>Rates</h1>
 			<p>Coffees sold last hour: {$coffeeSold}</p>
 			<p>Max coffees/hour: {$maxCoffee}</p>
-			<p>Beans/hour: {($beansPerHour ?? 0) * $coffeeMult}</p>
+			<p>Beans/hour: {$beansPerHour}</p>
 			<p>Gallons of water/hour: {$waterPerHour}</p>
-			<p>Estimated customers/hour: {($population ?? 0) / $popDiv}</p>
+			<p>Estimated customers/hour: {$custPerHour}</p>
 			<p>Max bean deliveries/hour: {$delPerHour}</p>
 		</div>
 		<div class = "stats">

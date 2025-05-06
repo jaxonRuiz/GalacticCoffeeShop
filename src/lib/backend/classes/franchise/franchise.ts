@@ -90,19 +90,57 @@ export class Franchise implements ISubscriber, IScene {
 		return get(this.w_populationDivisor);
 	}
 	set populationDivisor(value) {
+		const old = this.populationDivisor;
 		this.w_populationDivisor.set(value);
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.expectedCustomersPerHour /= value/old;
+			});
+		}
 	}
 	get coffeeMultiplier() {
 		return get(this.w_coffeeMultiplier);
 	}
 	set coffeeMultiplier(value) {
+		const old = this.coffeeMultiplier;
 		this.w_coffeeMultiplier.set(value);
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.beansPerHour *= value/old;
+				region.developmentList["farm"].boughtBuildings.forEach(building => {
+					if (building.type === 'farmBuilding'){
+						building.num *= value/old;
+					}
+				});
+				region.developmentList["farm"].availableBuildings.forEach(building => {
+					if (building.type === 'farmBuilding'){
+						building.num *= value/old;
+					}
+				});
+			});
+		}
 	}
 	get waterMultiplier() {
 		return get(this.w_waterMultiplier);
 	}
 	set waterMultiplier(value) {
+		const old = this.waterMultiplier;
 		this.w_waterMultiplier.set(value);
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.waterPerHour *= value/old;
+				region.developmentList["farm"].boughtBuildings.forEach(building => {
+					if (building.type === 'waterBuilding'){
+						building.num *= value/old;
+					}
+				});
+				region.developmentList["farm"].availableBuildings.forEach(building => {
+					if (building.type === 'waterBuilding'){
+						building.num *= value/old;
+					}
+				});
+			});
+		}
 	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {

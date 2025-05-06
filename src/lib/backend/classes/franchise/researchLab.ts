@@ -1,5 +1,6 @@
 import { get, writable, type Writable } from "svelte/store";
 import type { Franchise } from "./franchise";
+import type { Region } from "./region";
 
 export class ResearchLab{
 	w_currentTaskList: Writable<IResearchTask[]> = writable([]);
@@ -146,7 +147,11 @@ export class ResearchLab{
 			desc: "5x population increase", 
 			cost: 1000,
 			effect(franchise) {
-				
+				for (let cKey in franchise.world.countries){
+					franchise.world.countries[cKey].regionList.forEach((region: Region) => {
+						region.population *= 5;
+					});
+				}
 			}
 		})
 	}

@@ -15,9 +15,6 @@ export class Residential extends DevelopmentBase implements IResidential{
 	get coffeePrice(): number{
 	  return 5 * this.parent.populationPurchasingPower;
 	}
-	get hourlyCustomerEstimate(): number{
-	  return this.parent.population/this.franchise.populationDivisor;
-	}
 
 	constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
 			super(timer, region, areaSize, franchise);
@@ -37,15 +34,12 @@ export class Residential extends DevelopmentBase implements IResidential{
 	}
 
 	tick(){
-		this.sellCoffee(Math.floor(Math.min(this.parent.maxCoffeePerHour, this.hourlyCustomerEstimate) / 16)); //FIX!! only sells multiples of 16 when youre starting off
+		this.sellCoffee(Math.floor(Math.min(this.parent.maxCoffeePerHour, this.parent.expectedCustomersPerHour) / 16)); //FIX!! only sells multiples of 16 when youre starting off
 	}
 
 	hour(){
 		this.parent.coffeesSoldLastHour = this.coffeeSoldThisHour;
 		this.coffeeSoldThisHour = 0;
-	}
-
-	day() {
 	}
 
 	buyBuilding(building: IBuilding){

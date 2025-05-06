@@ -12,9 +12,6 @@ export class LogisticCenter extends DevelopmentBase{
 		super(timer, region, areaSize, franchise);
 		this.initializeDevelopment();
 	}
-	day(){
-
-	}
 
 	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
