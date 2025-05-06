@@ -92,21 +92,6 @@ export class Country{
 		this.initializeInfluenceTasks();
 		this.refreshInfluenceTasks(3);
 		this.startRandomEvents();
-		this.policyEvents.push({
-			desc: 'aahahhahaa',
-			time: 10,
-			currentInfluence: 10,
-			totalInfluence: 20,
-			won(country) {
-				
-			},
-			lost(country) {
-				
-			},
-			eitherWay(country) {
-				
-			},
-		})
 
 		this.initializeRegions(4 + Math.floor(Math.random() * 3));
 	}
@@ -139,11 +124,11 @@ export class Country{
 
 			if (isSpaced) {
 				if (this.firstRegions > 0){
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2000 * Math.floor(Math.random() * 1000), 2, newCoords, true);
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2000 * Math.floor(Math.random() * 1000), 2, newCoords, true, 1);
 					this.firstRegions--;
 				}
 				else{
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), 2000 + Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords, false);
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), 2000 + Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords, false, 1.5);
 				}
 				this.regionList = [...this.regionList, newRegion];
 				// this.regionList.push(newRegion);

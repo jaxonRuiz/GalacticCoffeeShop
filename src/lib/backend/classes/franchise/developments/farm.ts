@@ -18,7 +18,7 @@ export class Farm extends DevelopmentBase {
 		return this.parent.beansPerHour * this.franchise.coffeeMultiplier/16;
 	}
 	get wpt (){
-		return this.parent.waterPerHour/16;
+		return this.parent.waterPerHour * this.franchise.waterMultiplier/16;
 	}
 
 	tick(){

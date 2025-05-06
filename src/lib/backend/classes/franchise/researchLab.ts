@@ -120,33 +120,33 @@ export class ResearchLab{
 		this.upgradeList.push({
 			name: "Try adding a magical substance to your coffee",
 			desc: "Attract 2x as many customers",
-			cost: 100,
+			cost: 300,
 			effect(franchise) {
 				franchise.populationDivisor /= 2;
 			}
 		})
 		this.upgradeList.push({
-			name: "Discover how to multiply coffee molecules",
+			name: "Discover how to multiply coffee beans",
 			desc: "3x coffee production",
-			cost: 200,
+			cost: 400,
 			effect(franchise) {
 				franchise.coffeeMultiplier *= 3;
 			}
 		})
 		this.upgradeList.push({
-			name: "Discover how to multiply coffee molecules (testing)",
-			desc: "3x coffee production",
-			cost: 200,
+			name: "Start recycling waste water",
+			desc: "3x water production",
+			cost: 500,
 			effect(franchise) {
-				franchise.coffeeMultiplier *= 3;
+				franchise.waterMultiplier *= 3;
 			}
 		})
 		this.upgradeList.push({
-			name: "Discover how to multiply coffee molecules (testing)",
-			desc: "3x coffee production", 
-			cost: 200,
+			name: "Add an extra 5 stories to all of your buildings",
+			desc: "5x population increase", 
+			cost: 1000,
 			effect(franchise) {
-				franchise.coffeeMultiplier *= 3;
+				
 			}
 		})
 	}

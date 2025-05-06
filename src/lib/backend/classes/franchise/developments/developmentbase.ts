@@ -143,7 +143,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 			case "waterBuilding":
 				return `Produces ${building.num} gallons of water/hour`
 			case "farmBuilding":
-				return `Produces up to ${building.num} beans/hour`
+				return `Produces up to ${building.num * this.franchise.coffeeMultiplier} beans/hour`
 			case "researchBuilding":
 				return `Increase researcher population by ${building.num}`
 			default:
@@ -173,9 +173,9 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 			name: randomName,
 			type: buildingType,
 			areaSize: data.areaSize,
-			buyCost: data.cost * (1 + Math.floor(Math.random() * 10) / 10),
-			sellCost: data.cost * (1 - Math.floor(Math.random() * 10) / 10),
-			rent: data.rent,
+			buyCost: data.cost * (1 + Math.floor(Math.random() * 10) / 10) * Math.pow(1.5, this.parent.populationPurchasingPower),
+			sellCost: data.cost * (1 - Math.floor(Math.random() * 10) / 10) * Math.pow(1.5, this.parent.populationPurchasingPower),
+			rent: data.rent * Math.pow(1.5, this.parent.populationPurchasingPower),
 			num: data.num
 		};
 	}

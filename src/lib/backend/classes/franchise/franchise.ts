@@ -84,6 +84,7 @@ export class Franchise implements ISubscriber, IScene {
 	//upgradable stats
 	w_populationDivisor: Writable<number> = writable(20); //divide population by this to get estimated hourly customers
 	w_coffeeMultiplier: Writable<number> = writable(1);
+	w_waterMultiplier: Writable<number> = writable(1);
 
 	get populationDivisor() {
 		return get(this.w_populationDivisor);
@@ -96,6 +97,12 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	set coffeeMultiplier(value) {
 		this.w_coffeeMultiplier.set(value);
+	}
+	get waterMultiplier() {
+		return get(this.w_waterMultiplier);
+	}
+	set waterMultiplier(value) {
+		this.w_waterMultiplier.set(value);
 	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {

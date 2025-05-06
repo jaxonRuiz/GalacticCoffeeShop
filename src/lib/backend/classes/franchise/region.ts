@@ -89,7 +89,20 @@ export class Region implements ISubscriber, IRegion {
 		return get(this.w_populationPurchasingPower);
 	}
 	set populationPurchasingPower(value) {
+		const old = this.populationPurchasingPower ?? 1;
 		this.w_populationPurchasingPower.set(value);
+		for (let key in this.developmentList){
+			this.developmentList[key].boughtBuildings.forEach(element => {
+				element.buyCost *= value/old;
+				element.sellCost *= value/old;
+				element.rent *= value/old;
+			});
+			this.developmentList[key].availableBuildings.forEach(element => {
+				element.buyCost *= value/old;
+				element.sellCost *= value/old;
+				element.rent *= value/old;
+			});
+		}
 	}
 	get coffeesSoldLastHour() {
 		return get(this.w_coffeesSoldLastHour);
@@ -203,19 +216,21 @@ export class Region implements ISubscriber, IRegion {
 		cost: number,
 		climate: ClimateType,
 		coordinates: [number, number],
-		unlocked: boolean
+		unlocked: boolean,
+		purchasingPower: number
 	) {
 		console.log("region constructor()");
 		timer = franchise.timer;
 		timer.subscribe(this, "tick");
 		timer.subscribe(this, "hour");
 		timer.subscribe(this, "week");
+		this.populationPurchasingPower = purchasingPower;
 		this.parentCountry = country;
 		this.totalArea = areaSize;
 		this.unusableLand = Math.floor(this.totalArea/3); //probably change
 		this.usableLand = this.totalArea - this.unusableLand;
 		this.boughtUnusable = 0;
-		this.unlockCost = cost;
+		this.unlockCost = cost * purchasingPower;
 		this.coordinates = coordinates;
 		this.timer = timer;
 		this.franchise = franchise;
