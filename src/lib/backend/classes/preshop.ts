@@ -58,6 +58,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	sceneManager: Publisher;
 	audioManager: AudioManager = new AudioManager();
+	lastPlayedMeow: string | null = null;
 	uiManager: UIManager;
 
 	// abstracting svelte store from normal usage (allows use of writables in backend)
@@ -180,7 +181,17 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.audioManager.addSFX("boil", aud.boiling);
 		this.audioManager.addSFX("cashRegister", aud.new_cash);
 		this.audioManager.addSFX("grind2", aud.crunch2);
+		this.audioManager.addSFX("meow1", aud.meow_1);
+		this.audioManager.addSFX("meow2", aud.meow_2);
+		this.audioManager.addSFX("meow3", aud.meow_3);
+		this.audioManager.addSFX("meow4", aud.meow_4);
 		this.audioManager.addAmbience("crowd", aud.preshop_crowd);
+
+		//set meow audio volume to 0.5
+		this.audioManager.setMaxVolumeScale("meow1", 0.4);
+		this.audioManager.setMaxVolumeScale("meow2", 0.1);
+		this.audioManager.setMaxVolumeScale("meow3", 0.1);
+		this.audioManager.setMaxVolumeScale("meow4", 0.1);
 
 		this.audioManager.playAudio("bgm");
 		this.audioManager.playAudio("crowd");
@@ -256,9 +267,24 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				const crowdVolume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
 				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.5);
 				this.audioManager.setVolume("crowd", scaledVolume);
-				
+
 				// ui
 				this.uiManager.newCustomer(this.waitingCustomers);
+
+				//play random meow audio (Stipulation that no cat audio can be played 3 times in a row if so play a different random one)
+				const meowSounds = ["meow1", "meow2", "meow3", "meow4"];
+				const randomMeow = () => {
+					let availableMeows = meowSounds;
+					if (this.lastPlayedMeow) {
+						availableMeows = meowSounds.filter(m => m !== this.lastPlayedMeow);
+					}
+					const meow = availableMeows[Math.floor(Math.random() * availableMeows.length)];
+					this.lastPlayedMeow = meow;
+					const meowAudio = this.audioManager.getVolume(meow);
+					console.log(meow + meowAudio);
+					this.audioManager.playAudio(meow);
+				};
+				randomMeow();
 			}
 		}
 	}
@@ -311,7 +337,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups--;
 			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
-			
+
 			// ui
 			this.uiManager.coffeeSold();
 		}

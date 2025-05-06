@@ -278,8 +278,6 @@
 		}
 
 		.customers {
-			border: 1px solid var(--accent);
-
 			img {
 				border: 1px solid whitesmoke;
 				width: 20%;

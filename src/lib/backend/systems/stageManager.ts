@@ -24,6 +24,13 @@ export class StageManager extends Publisher {
 		this.subscribe(this.sceneWatcher, "nextScene");
 	}
 
+	reset(timer: Timer) {
+		this.timer = timer;
+		console.log("resetting stage manager");
+		this.currentScene = {} as IScene;
+		this.currentSceneIndex = 0;
+	}
+
 	// specifically handles loading stages from save state
 	loadStage(stageIndex: number, loadState: boolean = true) {
 		// if changing stages necessary

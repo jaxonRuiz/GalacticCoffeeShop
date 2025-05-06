@@ -165,8 +165,15 @@ export class Shop implements ILocalShop {
 	playBoiler: boolean = false;
 	isSelected: boolean = false;
 
-	constructor(multiShop: MultiShop) {
+	constructor(multiShop: MultiShop, audioManager: AudioManager) {
 		this.multiShop = multiShop;
+		this.audioManager = audioManager;
+
+		// Setting up audio
+		this.audioManager.addSFX("boiling", aud.boiling);
+		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addSFX("papers", aud.papers);
+
 		// setting up default roles
 		this.roles.set("barista", {
 			name: "Barista",
@@ -198,15 +205,6 @@ export class Shop implements ILocalShop {
 			},
 		});
 
-		// Clean up other audio managers
-		cleanupAudioManagers(this.audioManager);
-
-		// Setting up audio
-		this.audioManager.addSFX("boiling", aud.boiling);
-		this.audioManager.addSFX("ding", aud.ding);
-		this.audioManager.addAmbience("crowd", aud.new_crowd);
-
-		this.audioManager.playAudio("crowd");
 		this.uiManager = new UIManager();
 		this.uiManager.setCoffeeLocations(
 			[
@@ -214,7 +212,7 @@ export class Shop implements ILocalShop {
 					Array.from({ length: 12 }, (_, col) => [row + 6, col])
 				).flat(),
 				...Array.from({ length: 6 }, (_, row) =>
-					Array.from({ length: 2 }, (_, col) => [row, col+10])
+					Array.from({ length: 2 }, (_, col) => [row, col + 10])
 				).flat(),
 			]);
 	}
@@ -232,9 +230,11 @@ export class Shop implements ILocalShop {
 		this.drawCustomers();
 
 		// only play audio if selected
-		if (this.isSelected) audioUpdate(this);
-		else {
-			this.audioManager.disableAudio();
+		if (this.isSelected) {
+			// this.audioManager.enableAudio();
+			audioUpdate(this);
+		} else {
+			// this.audioManager.disableAudio();
 		}
 
 		// progress updaters
@@ -348,7 +348,6 @@ export class Shop implements ILocalShop {
 	}
 
 	deselectShop() {
-		this.audioManager.disableAudio();
 		this.multiShop.deselectShop();
 		this.multiShop.finishedFirstShop = true;
 	}
@@ -356,8 +355,8 @@ export class Shop implements ILocalShop {
 	// player actions ////////////////////////////////////////////////////////////
 	produceCoffee(amount: number = 1) {
 		if (this.boilTimer === 0) {
-			this.audioManager.playAudio("boiling");
 			this.boilTimer += 7;
+			this.audioManager.playAudio("boiling");
 		}
 
 		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
@@ -374,9 +373,10 @@ export class Shop implements ILocalShop {
 	}
 
 	sellCoffee(amount: number = 1) {
-		if (this.isSelected) {
-			this.audioManager.playAudio("ding");
-		}
+		this.audioManager.playAudio("ding");
+		// if (this.isSelected) {
+			
+		// }
 		let numToSell = Math.floor(
 			Math.min(amount, this.waitingCustomers, this.coffeeCups)
 		);
@@ -395,12 +395,14 @@ export class Shop implements ILocalShop {
 	}
 
 	promote() {
+		this.audioManager.playAudio("papers");
 		this.appeal +=
 			this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
 	addWorker(role: string) {
+		this.audioManager.playAudio("ding");
 		if (!this.roles.has(role)) throw new Error(`${role} does not exist`);
 		let numWorkers = this.workerAmounts[role + "Current"];
 		let maxWorkers = this.workerAmounts[role + "Max"];
@@ -413,6 +415,7 @@ export class Shop implements ILocalShop {
 	}
 
 	removeWorker(role: string) {
+		this.audioManager.playAudio("ding");
 		if (!this.roles.has(role)) throw new Error("Role does not exist");
 		let roleObj = this.roles.get(role)!;
 		if (this.workerAmounts[role + "Current"] > 0) {
@@ -421,6 +424,7 @@ export class Shop implements ILocalShop {
 	}
 
 	choresForBeans() {
+		this.audioManager.playAudio("ding");
 		this.emptyCups += 1;
 		this.beans += 1;
 	}

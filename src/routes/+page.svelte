@@ -12,6 +12,7 @@
 	import { AudioManager } from "$lib/backend/systems/audioManager";
 	import { aud } from "$lib/assets/aud";
 	import { onMount, onDestroy } from "svelte";
+    import { menu } from "@tauri-apps/api";
 
 	let page = $state("title");
 	let text = $state(-1);
@@ -22,7 +23,12 @@
 	function startMenuMusic() {
 		if (!menuMusicStarted && menuAudioManager) {
 			menuAudioManager.playAudio("menu");
+            menuAudioManager.setVolume("menu", 0);
 			menuMusicStarted = true;
+            menuAudioManager.fadeAudio("menu", 5000, 1, (c) => {
+                console.log("Menu music fade done, was cancelled? ", c);
+                console.log(menuAudioManager.getVolume("menu"));
+            });
 		}
 	}
 
@@ -39,8 +45,11 @@
 
 	onDestroy(() => {
 		if (menuAudioManager) {
-			menuAudioManager.stopAudio("menu");
-			menuAudioManager.destroy();
+            console.log("Destroying menu audio manager");
+            menuAudioManager.fadeAudio("menu", 1000, 0, (c) => {
+                menuAudioManager.stopAudio("menu");
+                menuAudioManager.destroy();
+            } );
 		}
 	});
 </script>

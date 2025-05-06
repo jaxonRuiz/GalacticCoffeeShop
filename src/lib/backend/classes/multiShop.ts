@@ -66,19 +66,20 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
-		this.shops.push(new Shop(this));
-		this.weeklyRecap[this.shops.length - 1] = {
-		income: 0,
-		expenses: 0,
-		};
-
 		// Clean up other audio managers
 		cleanupAudioManagers(this.audioManager);
 
 		// Setting up audio
 		this.audioManager.addMusic("bgm", aud.shop_music);
 		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addSFX("cashRegister", aud.new_cash);
 		this.audioManager.playAudio("bgm");
+
+		this.shops.push(new Shop(this, this.audioManager));
+		this.weeklyRecap[this.shops.length - 1] = {
+			income: 0,
+			expenses: 0,
+		};
 	}
 
 	notify(event: string, data?: any) {
@@ -95,7 +96,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			// this.applyExpenses();
 			// this.shops.forEach((shop) => shop.restock());
 
-		
+
 		}
 	}
 
@@ -135,7 +136,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// multishop actions /////////////////////////////////////////////////////////
 	addShop(applyUpgrades: boolean = true) {
 		this.audioManager.playAudio("ding");
-		let newShop = new Shop(this);
+		let newShop = new Shop(this, this.audioManager);
 		if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
 		if (applyUpgrades) {
 			this.upgrades.forEach((value, key) => {
@@ -169,6 +170,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.selectedShop = shop;
 		this.selectedShop.isSelected = true;
 		this.selectedShopIndex = this.shops.indexOf(shop);
+		this.audioManager.playAudio("crowd");
 	}
 
 	selectShopIndex(index: number) {
@@ -178,7 +180,10 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	deselectShop() {
-		if (this.selectedShop) this.selectedShop!.isSelected = false;
+		if (this.selectedShop) {
+			this.selectedShop.isSelected = false;
+			this.audioManager.stopAudio("crowd");
+		}
 		this.selectedShop = null;
 		this.selectedShopIndex = -1;
 	}
@@ -194,6 +199,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	withdrawAll() {
 		let shopIndex = 0;
 		console.log("withdraw all");
+		this.audioManager.playAudio("ding");
 		this.shops.forEach((shop) => {
 			this.money += shop.money;
 			this.weeklyRecap[shopIndex].income = shop.money;
@@ -253,13 +259,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	localPromote() {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.promote();
 	}
 
 	localProduceCoffee() {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.produceCoffee();
 	}
@@ -272,13 +278,13 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	}
 
 	localAddWorker(role: string) {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.addWorker(role);
 	}
 
 	localRemoveWorker(role: string) {
-		this.audioManager.playAudio("ding");
+		// this.audioManager.playAudio("ding");
 		if (!this.selectedShop) return;
 		this.selectedShop.removeWorker(role);
 	}
