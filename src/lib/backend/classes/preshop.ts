@@ -86,12 +86,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 	set coffeeCups(value) {
 		this.w_coffeeCups.set(value);
+		this.uiManager.setCoffeeCount(value);
 	}
 	get waitingCustomers() {
 		return get(this.w_waitingCustomers);
 	}
 	set waitingCustomers(value) {
 		this.w_waitingCustomers.set(value);
+		this.uiManager.setCustomerCount(value);
 	}
 
 	// stats
@@ -216,7 +218,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (event === "hour") {
 			if (this.waitingCustomers > 0) {
 				this.waitingCustomers--;
-				this.uiManager.customerLeaving();
 			}
 			// this.decayAppeal();
 		}
@@ -268,9 +269,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.5);
 				this.audioManager.setVolume("crowd", scaledVolume);
 
-				// ui
-				this.uiManager.newCustomer(this.waitingCustomers);
-
 				//play random meow audio (Stipulation that no cat audio can be played 3 times in a row if so play a different random one)
 				const meowSounds = ["meow1", "meow2", "meow3", "meow4"];
 				const randomMeow = () => {
@@ -312,7 +310,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				this.makeCoffeeTime = 0;
 				this.makeCoffeeCount = 0;
 				this.canMakeCoffee = true;
-				this.uiManager.coffeeMade(this.coffeeCups);
 			} else {
 				// next coffee batch
 				this.makeCoffee();
@@ -337,9 +334,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups--;
 			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
-
-			// ui
-			this.uiManager.coffeeSold();
 		}
 	}
 
@@ -521,8 +515,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.lifetimeGrindBeans = state.lifetimeGrindBeans;
 		this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
 		this.lifetimeCoffeeMade = state.lifetimeCoffeeMade;
-
-		this.uiManager.coffeeMade(this.coffeeCups);
 	}
 
 	clearState() {
