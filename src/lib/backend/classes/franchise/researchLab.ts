@@ -154,5 +154,18 @@ export class ResearchLab{
 				}
 			}
 		})
+		this.upgradeList.push({
+			name: "Hire super baristas",
+			desc: "3x coffee sell rates",
+			cost: 1000,
+			effect(franchise) {
+				for (let cKey in franchise.world.countries){
+					franchise.world.countries[cKey].regionList.forEach((region: Region) => {
+						region.maxCoffeePerHour *= 3;
+					});
+				}
+			}
+		})
+
 	}
 }

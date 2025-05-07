@@ -108,19 +108,19 @@ export class Farm extends DevelopmentBase {
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		if (this.franchise.moneyPerHour < 150)	{
+		if (this.franchise.moneyPerHour < (100 * this.parent.populationPurchasingPower))	{
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
 		}
-		else if (this.franchise.moneyPerHour >= 150){
+		else if (this.franchise.moneyPerHour >= 150 * this.parent.populationPurchasingPower){
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "medium"));
 		}
-		else if (this.franchise.moneyPerHour >= 200){
+		else if (this.franchise.moneyPerHour >= 200 * this.parent.populationPurchasingPower){
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "large"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "large"));
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));

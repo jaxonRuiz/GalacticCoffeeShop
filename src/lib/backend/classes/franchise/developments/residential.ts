@@ -112,19 +112,19 @@ export class Residential extends DevelopmentBase implements IResidential{
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		if (this.franchise.moneyPerHour < 150)	{
+		if (this.franchise.moneyPerHour < 150 * this.parent.populationPurchasingPower)	{
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
 		}
-		else if (this.franchise.moneyPerHour >= 150){
+		else if (this.franchise.moneyPerHour >= 150 * this.parent.populationPurchasingPower){
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "medium"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "medium"));
 		}
-		else if (this.franchise.moneyPerHour >= 200){
+		else if (this.franchise.moneyPerHour >= 200 * this.parent.populationPurchasingPower){
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "large"));
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "medium"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "large"));
