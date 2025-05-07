@@ -83,7 +83,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 	}
 
 	day(){
-		this.updateAvailableBuildings(3);
+		
 	}
 
 	week(){
@@ -172,8 +172,8 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 			name: randomName,
 			type: buildingType,
 			areaSize: data.areaSize,
-			buyCost: data.cost * (1 + Math.floor(Math.random() * 10) / 10) * Math.pow(1.5, this.parent.populationPurchasingPower),
-			sellCost: data.cost * (1 - Math.floor(Math.random() * 10) / 10) * Math.pow(1.5, this.parent.populationPurchasingPower),
+			buyCost: data.cost * (1 + Math.floor(Math.random() * 10) / 20) * Math.pow(1.5, this.parent.populationPurchasingPower),
+			sellCost: data.cost * (1 - Math.floor(Math.random() * 10) / 20) * Math.pow(1.5, this.parent.populationPurchasingPower),
 			rent: data.rent * Math.pow(1.5, this.parent.populationPurchasingPower),
 			num: data.num
 		};
@@ -181,44 +181,44 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 
 	BuildingList: Record<BuildingType, Record<BuildingSize, BuildingData>> = {
 		coffeeBuilding: {
-			small: { names: ["Little Bean", "Mini Mocha"], cost: 1000, num: 20, areaSize: 1, rent: 100 },
-			medium: { names: ["Central Perk", "Daily Grind"], cost: 2000, num: 40, areaSize: 2, rent: 200 },
-			large: { names: ["Coffee Empire", "Mocha Megaplex"], cost: 5000, num: 80, areaSize: 4, rent: 500 }
+			small: { names: ["Little Bean", "Mini Mocha"], cost: 2000, num: 20, areaSize: 1, rent: 50 },
+			medium: { names: ["Central Perk", "Daily Grind"], cost: 4000, num: 40, areaSize: 2, rent: 100 },
+			large: { names: ["Coffee Empire", "Mocha Megaplex"], cost: 7000, num: 80, areaSize: 4, rent: 200 }
 		},
 		housingBuilding: {
-			small: { names: ["Tiny Homes", "Cozy Cabins"], cost: 1000, num: 300, areaSize: 1, rent: 150 },
-			medium: { names: ["Suburb House", "Town Villa"], cost: 2000, num: 500, areaSize: 2, rent: 300 },
-			large: { names: ["Luxury Apartments", "Highrise Living"], cost: 5000, num: 1000, areaSize: 4, rent: 700 }
+			small: { names: ["Tiny Homes", "Cozy Cabins"], cost: 2000, num: 300, areaSize: 1, rent: 50 },
+			medium: { names: ["Suburb House", "Town Villa"], cost: 4000, num: 500, areaSize: 2, rent: 100 },
+			large: { names: ["Luxury Apartments", "Highrise Living"], cost: 7000, num: 1000, areaSize: 4, rent: 200 }
 		},
 		importBuilding: {
-			small: { names: ["Mini Dock", "Petite Port"], cost: 1000, num: 1000, areaSize: 2, rent: 250 },
-			medium: { names: ["City Import Hub", "Regional Docks"], cost: 2000, num: 2000, areaSize: 3, rent: 500 },
-			large: { names: ["International Port", "Global Exchange"], cost: 5000, num: 4000, areaSize: 5, rent: 1000 }
+			small: { names: ["Mini Dock", "Petite Port"], cost: 2000, num: 1000, areaSize: 2, rent: 50 },
+			medium: { names: ["City Import Hub", "Regional Docks"], cost: 4000, num: 2000, areaSize: 3, rent: 100 },
+			large: { names: ["International Port", "Global Exchange"], cost: 7000, num: 4000, areaSize: 5, rent: 200 }
 		},
 		exportBuilding: {
-			small: { names: ["Small Shipping Co.", "Local Exporters"], cost: 1000, num: 1000, areaSize: 2, rent: 250 },
-			medium: { names: ["Export Hub", "Regional Traders"], cost: 2000, num: 2000, areaSize: 3, rent: 500 },
-			large: { names: ["Worldwide Export HQ", "Global Freight Center"], cost: 5000, num: 4000, areaSize: 5, rent: 1000 }
+			small: { names: ["Small Shipping Co.", "Local Exporters"], cost: 2000, num: 1000, areaSize: 2, rent: 50 },
+			medium: { names: ["Export Hub", "Regional Traders"], cost: 4000, num: 2000, areaSize: 3, rent: 100 },
+			large: { names: ["Worldwide Export HQ", "Global Freight Center"], cost: 7000, num: 4000, areaSize: 5, rent: 200 }
 		},
 		deliveryBuilding: {
-			small: { names: ["Courier Station", "Tiny Depot"], cost: 1000, num: 100, areaSize: 1, rent: 120 },
-			medium: { names: ["Regional Logistics", "Citywide Express"], cost: 2000, num: 200, areaSize: 2, rent: 250 },
-			large: { names: ["National Dispatch Center", "Continental Couriers"], cost: 5000, num: 400, areaSize: 4, rent: 600 }
+			small: { names: ["Courier Station", "Tiny Depot"], cost: 2000, num: 100, areaSize: 1, rent: 50 },
+			medium: { names: ["Regional Logistics", "Citywide Express"], cost: 4000, num: 200, areaSize: 2, rent: 100 },
+			large: { names: ["National Dispatch Center", "Continental Couriers"], cost: 7000, num: 400, areaSize: 4, rent: 200 }
 		},
 		waterBuilding: {
-			small: { names: ["Small Water Plant", "Tiny Aqueduct"], cost: 1000, num: 50, areaSize: 1, rent: 110 },
-			medium: { names: ["City Waterworks", "Municipal Reservoir"], cost: 2000, num: 100, areaSize: 2, rent: 220 },
-			large: { names: ["Mega Water Facility", "Continental Hydration"], cost: 5000, num: 200, areaSize: 4, rent: 500 }
+			small: { names: ["Small Water Plant", "Tiny Aqueduct"], cost: 2000, num: 50, areaSize: 1, rent: 50 },
+			medium: { names: ["City Waterworks", "Municipal Reservoir"], cost: 4000, num: 100, areaSize: 2, rent: 100 },
+			large: { names: ["Mega Water Facility", "Continental Hydration"], cost: 7000, num: 200, areaSize: 4, rent: 200 }
 		},
 		farmBuilding: {
-			small: { names: ["Family Farm", "Urban Garden"], cost: 1000, num: 30, areaSize: 2, rent: 180 },
-			medium: { names: ["Regional Farm", "Commercial Orchard"], cost: 2000, num: 60, areaSize: 3, rent: 360 },
-			large: { names: ["Industrial Farm Complex", "Agro-Enterprise Zone"], cost: 5000, num: 120, areaSize: 5, rent: 800 }
+			small: { names: ["Family Farm", "Urban Garden"], cost: 2000, num: 30, areaSize: 2, rent: 50 },
+			medium: { names: ["Regional Farm", "Commercial Orchard"], cost: 4000, num: 60, areaSize: 3, rent: 100 },
+			large: { names: ["Industrial Farm Complex", "Agro-Enterprise Zone"], cost: 7000, num: 120, areaSize: 5, rent: 200 }
 		},
 		researchBuilding: {
-			small: { names: ["R&Deez", "Lil Lab"], cost: 1000, num: 50, areaSize: 1, rent: 110 },
-			medium: { names: ["The Idea Generator", "The Research Gallery"], cost: 2000, num: 100, areaSize: 2, rent: 220 },
-			large: { names: ["The Big Think", "Super Mega Lab"], cost: 5000, num: 200, areaSize: 4, rent: 500 }
+			small: { names: ["R&Deez", "Lil Lab"], cost: 2000, num: 50, areaSize: 1, rent: 50 },
+			medium: { names: ["The Idea Generator", "The Research Gallery"], cost: 4000, num: 100, areaSize: 2, rent: 100 },
+			large: { names: ["The Big Think", "Super Mega Lab"], cost: 7000, num: 200, areaSize: 4, rent: 200 }
 		}
 	};
 }

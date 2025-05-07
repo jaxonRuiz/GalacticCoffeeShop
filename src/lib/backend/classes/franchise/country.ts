@@ -51,6 +51,15 @@ export class Country{
 	set policyEvents(value: IPolicyEvent[]){
 		this.w_policyEvents.set(value);
 	}
+	get unlocked(){
+		return get(this.w_unlocked);
+	}
+	set unlocked(value) {
+		this.w_unlocked.set(value);
+		if (value) {
+			this.startRandomEvents();
+		}
+	}
 
 	influenceTasksStatic: IInfluenceTask[];
 
@@ -62,6 +71,7 @@ export class Country{
 	franchise: Franchise;
 	firstRegions: number;
 	unlockCost: number = 500;
+	countryNum: number = 0;
 	
 	w_regionList: Writable<Region[]> = writable([]);
 	// need to figure out how to represent regions in a graph
@@ -79,19 +89,19 @@ export class Country{
 	}
 
 
-	constructor(parent: World, franchise: Franchise, coordinates: [number, number], influence: number, firstCountry: boolean) {
+	constructor(parent: World, franchise: Franchise, coordinates: [number, number], influence: number, countryNum: number) {
 		this.parent = parent;
 		this.coordinates = coordinates;
 		this.franchise = franchise;
-
-		if (firstCountry) this.firstRegions = 3;
+		this.countryNum = countryNum;
+		if (countryNum === 1) this.firstRegions = 3;
 		else this.firstRegions = 0;
-		this.w_unlocked.set(firstCountry);
+		this.unlocked = (countryNum === 1);
 		this.influence = influence;
+		if (countryNum === 1) this.influence = 500;
 		this.influenceTasksStatic = [];
 		this.initializeInfluenceTasks();
 		this.refreshInfluenceTasks(3);
-		this.startRandomEvents();
 
 		this.initializeRegions(4 + Math.floor(Math.random() * 3));
 	}
@@ -124,11 +134,11 @@ export class Country{
 
 			if (isSpaced) {
 				if (this.firstRegions > 0){
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2000 * Math.floor(Math.random() * 1000), 2, newCoords, true, 1);
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2, newCoords, true, 1);
 					this.firstRegions--;
 				}
 				else{
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), 2000 + Math.floor(Math.random() * 1000), Math.floor(Math.random() * 3.99), newCoords, false, 1.5);
+					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), Math.floor(Math.random() * 3.99), newCoords, false, Math.pow(1.5, this.countryNum));
 				}
 				this.regionList = [...this.regionList, newRegion];
 				// this.regionList.push(newRegion);
@@ -148,7 +158,7 @@ export class Country{
 
 	unlockCountry(){
 		if (this.influence >= this.unlockCost){
-			this.w_unlocked.set(true);
+			this.unlocked = true;
 			this.influence -= this.unlockCost;
 		}
 	}
@@ -289,6 +299,7 @@ export class Country{
 	}
 
 	async startRandomEvents() {
+		if (!this.unlocked) return;
 		await this.wait(Math.floor(20 + Math.random() * 40));
 		this.policyEvents.push(this.getRandomEvent());
 		this.policyEvents = [... this.policyEvents];

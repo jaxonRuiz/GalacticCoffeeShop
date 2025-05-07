@@ -9,7 +9,7 @@ import { ResearchLab } from "./researchLab";
 
 export class Franchise implements ISubscriber, IScene {
 	// writable resources
-	w_money: Writable<number> = writable(10000);
+	w_money: Writable<number> = writable(20000);
 	w_beans: Writable<number> = writable(0);
 	w_researchers: Writable<number> = writable(0);
 	w_sciencePoints: Writable<number> = writable(0);
@@ -31,7 +31,22 @@ export class Franchise implements ISubscriber, IScene {
 		return get(this.w_researchers);
 	}
 	set researchers(value) {
+		const old = this.researchers;
 		this.w_researchers.set(value);
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.developmentList["logistic"].boughtBuildings.forEach(building => {
+					if (building.type === 'researchBuilding'){
+						building.num *= value/old;
+					}
+				});
+				region.developmentList["logistic"].availableBuildings.forEach(building => {
+					if (building.type === 'researchBuilding'){
+						building.num *= value/old;
+					}
+				});
+			});
+		}
 	}
 	get sciencePoints() {
 		return get(this.w_sciencePoints);
@@ -162,6 +177,9 @@ export class Franchise implements ISubscriber, IScene {
 		if (event === "tick"){
 			this.tick();
 		}
+		if (event == "hour") {
+			this.hour();
+		}
 		if (event === "day") {
 			this.day();
 		}
@@ -171,6 +189,11 @@ export class Franchise implements ISubscriber, IScene {
 		//this.world.tick();
 		this.researchLab.tick();
 		this.world.tick();
+	}
+
+	hour() {
+		this.updateMoneyPerHour();
+		
 	}
 
 	day() {
@@ -280,5 +303,18 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	buyUpgrade(index: number){
 		this.researchLab.buyUpgrade(index);
+	}
+
+
+	//franchise functions
+	moneyPerHour: number = 0;
+	updateMoneyPerHour(){
+		let mph = 0;
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				mph += region.coffeesSoldLastHour * region.populationPurchasingPower;
+			});
+		}
+		this.moneyPerHour = Math.max(mph, this.moneyPerHour);
 	}
 }

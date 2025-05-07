@@ -55,6 +55,10 @@ export class Residential extends DevelopmentBase implements IResidential{
 		this.coffeeSoldThisHour = 0;
 	}
 
+	day() {
+		this.updateAvailableBuildings(3);
+	}
+
 	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
@@ -94,6 +98,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 		//put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
 		const self = this;
 		if (this.franchise.firstCity){
+			console.log("first city!");
 			this.buyBuilding(this.MakeBuilding("housingBuilding", "small"));
 			this.buyBuilding(this.MakeBuilding("coffeeBuilding", "small"));
 			this.franchise.firstCity = false;
@@ -107,10 +112,24 @@ export class Residential extends DevelopmentBase implements IResidential{
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
+		if (this.franchise.moneyPerHour < 150)	{
+			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
+		}
+		else if (this.franchise.moneyPerHour >= 150){
+			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("housingBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "medium"));
+		}
+		else if (this.franchise.moneyPerHour >= 200){
+			possibleBuildings.push(this.MakeBuilding("housingBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("housingBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "medium"));
+		}
 
 		this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
 	}

@@ -13,6 +13,10 @@ export class LogisticCenter extends DevelopmentBase{
 		this.initializeDevelopment();
 	}
 
+	day() {
+		this.updateAvailableBuildings(5);
+	}
+
 	buyBuilding(building: IBuilding){
 		if (building.areaSize > this.developmentArea || building.buyCost > this.franchise.money) {return;}
 
@@ -62,7 +66,7 @@ export class LogisticCenter extends DevelopmentBase{
 
 	initializeDevelopment(): void {
 		//put all the city specific initializations in here; much will be procedurally generated based on parent region's environment/allocated area size
-		this.updateAvailableBuildings(3); //these should be displayed on the frontend
+		this.updateAvailableBuildings(5); //these should be displayed on the frontend
 	}
 
 	updateAvailableBuildings(buildingCount: number): void {
@@ -70,12 +74,30 @@ export class LogisticCenter extends DevelopmentBase{
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("importBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("exportBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
+		if (this.franchise.moneyPerHour < 150)	{
+			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("importBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("exportBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
+		}
+		else if (this.franchise.moneyPerHour >= 150){
+			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("importBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("exportBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("researchBuilding", "medium"));
+		}
+		else if (this.franchise.moneyPerHour >= 200){
+			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("importBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("exportBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("researchBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("researchBuilding", "medium"));
+		}
 
 		this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
 	}

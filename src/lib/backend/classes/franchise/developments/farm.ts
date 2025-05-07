@@ -15,7 +15,7 @@ export class Farm extends DevelopmentBase {
 	}
 
 	get bpt (){
-		return this.parent.beansPerHour/16;
+		return this.parent.beansPerHour/16; //16 ticks per hour
 	}
 	get wpt (){
 		return this.parent.waterPerHour/16;
@@ -29,6 +29,10 @@ export class Farm extends DevelopmentBase {
 		this.tickWater();
 	}
 
+	day() {
+		this.updateAvailableBuildings(3);
+	}
+
 	hour() {
 	}
 
@@ -37,7 +41,6 @@ export class Farm extends DevelopmentBase {
 
 		if (this.beanAccumulator >= 1) {
 			const wholeBeans = Math.floor(this.beanAccumulator);
-			console.log(this.bpt);
 			this.parent.beans += wholeBeans;
 			this.beanAccumulator -= wholeBeans;
 		}
@@ -105,10 +108,24 @@ export class Farm extends DevelopmentBase {
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
-		possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
+		if (this.franchise.moneyPerHour < 150)	{
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
+		}
+		else if (this.franchise.moneyPerHour >= 150){
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("waterBuilding", "medium"));
+		}
+		else if (this.franchise.moneyPerHour >= 200){
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("waterBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("waterBuilding", "medium"));
+		}
 
 		this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
 	}

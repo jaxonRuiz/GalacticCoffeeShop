@@ -222,13 +222,11 @@ export class Region implements ISubscriber, IRegion {
 		country: Country,
 		franchise: Franchise,
 		areaSize: number,
-		cost: number,
 		climate: ClimateType,
 		coordinates: [number, number],
 		unlocked: boolean,
 		purchasingPower: number
 	) {
-		console.log("region constructor()");
 		timer = franchise.timer;
 		timer.subscribe(this, "tick");
 		timer.subscribe(this, "hour");
@@ -239,7 +237,7 @@ export class Region implements ISubscriber, IRegion {
 		this.unusableLand = Math.floor(this.totalArea/3); //probably change
 		this.usableLand = this.totalArea - this.unusableLand;
 		this.boughtUnusable = 0;
-		this.unlockCost = cost * purchasingPower;
+		this.unlockCost = (2000 + Math.floor(Math.random() * 1000)) * purchasingPower;
 		this.coordinates = coordinates;
 		this.timer = timer;
 		this.franchise = franchise;
