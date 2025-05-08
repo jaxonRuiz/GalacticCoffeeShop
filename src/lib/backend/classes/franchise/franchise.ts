@@ -31,22 +31,7 @@ export class Franchise implements ISubscriber, IScene {
 		return get(this.w_researchers);
 	}
 	set researchers(value) {
-		const old = this.researchers;
 		this.w_researchers.set(value);
-		for (let cKey in this.world.countries){
-			this.world.countries[cKey].regionList.forEach(region => {
-				region.developmentList["logistic"].boughtBuildings.forEach(building => {
-					if (building.type === 'researchBuilding'){
-						building.num *= value/old;
-					}
-				});
-				region.developmentList["logistic"].availableBuildings.forEach(building => {
-					if (building.type === 'researchBuilding'){
-						building.num *= value/old;
-					}
-				});
-			});
-		}
 	}
 	get sciencePoints() {
 		return get(this.w_sciencePoints);
@@ -100,6 +85,9 @@ export class Franchise implements ISubscriber, IScene {
 	w_populationDivisor: Writable<number> = writable(20); //divide population by this to get estimated hourly customers
 	w_coffeeMultiplier: Writable<number> = writable(1);
 	w_waterMultiplier: Writable<number> = writable(1);
+	_maxCoffeeMultiplier: number = 1;
+	_populationMultiplier: number = 1;
+	_researcherMultiplier: number = 1;
 
 	get populationDivisor() {
 		return get(this.w_populationDivisor);
@@ -129,6 +117,72 @@ export class Franchise implements ISubscriber, IScene {
 				});
 				region.developmentList["farm"].availableBuildings.forEach(building => {
 					if (building.type === 'farmBuilding'){
+						building.num *= value/old;
+					}
+				});
+			});
+		}
+	}
+	get maxCoffeeMultiplier() {
+		return this._maxCoffeeMultiplier;
+	}
+	set maxCoffeeMultiplier(value) {
+		const old = this._maxCoffeeMultiplier;
+		this._maxCoffeeMultiplier = value;
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.maxCoffeePerHour *= value/old;
+				region.developmentList["residential"].boughtBuildings.forEach(building => {
+					if (building.type === 'coffeeBuilding'){
+						building.num *= value/old;
+					}
+				});
+				region.developmentList["residential"].availableBuildings.forEach(building => {
+					if (building.type === 'coffeeBuilding'){
+						building.num *= value/old;
+					}
+				});
+			});
+		}
+	}
+	get researcherMultiplier() {
+		return this._maxCoffeeMultiplier;
+	}
+	set researcherMultiplier(value) {
+		const old = this.researcherMultiplier;
+		this.researcherMultiplier = value;
+		this.researchers *= value/old;
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.developmentList["logistic"].boughtBuildings.forEach(building => {
+					if (building.type === 'researchBuilding'){
+						building.num *= value/old;
+					}
+				});
+				region.developmentList["logistic"].availableBuildings.forEach(building => {
+					if (building.type === 'researchBuilding'){
+						building.num *= value/old;
+					}
+				});
+			});
+		}
+	}
+	get populationMultiplier() {
+		return this._populationMultiplier;
+	}
+	set populationMultiplier(value) {
+		const old = this.populationMultiplier;
+		this._populationMultiplier = value;
+		for (let cKey in this.world.countries){
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.population *= value/old;
+				region.developmentList["residential"].boughtBuildings.forEach(building => {
+					if (building.type === 'housingBuilding'){
+						building.num *= value/old;
+					}
+				});
+				region.developmentList["residential"].availableBuildings.forEach(building => {
+					if (building.type === 'housingBuilding'){
 						building.num *= value/old;
 					}
 				});

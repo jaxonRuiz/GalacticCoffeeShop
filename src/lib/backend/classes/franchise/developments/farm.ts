@@ -36,12 +36,28 @@ export class Farm extends DevelopmentBase {
 	hour() {
 	}
 
+	clickBuilding(building: IBuilding) {
+		switch (building.type) {
+			case "waterBuilding":
+				this.parent.water += Math.floor(building.num/10);
+				return;
+			case "farmBuilding":
+				const bean = Math.floor(Math.min(building.num/10, this.parent.water));
+				this.parent.beans += bean;
+				this.parent.water -= bean;
+				return;
+			default:
+				return;
+		}
+	}
+
 	tickBeans() {
 		this.beanAccumulator += this.bpt;
 
 		if (this.beanAccumulator >= 1) {
-			const wholeBeans = Math.floor(this.beanAccumulator);
+			const wholeBeans = Math.min(this.parent.water, Math.floor(this.beanAccumulator));
 			this.parent.beans += wholeBeans;
+			this.parent.water -= wholeBeans;
 			this.beanAccumulator -= wholeBeans;
 		}
 	}
@@ -108,19 +124,19 @@ export class Farm extends DevelopmentBase {
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		if (this.franchise.moneyPerHour < (100 * this.parent.populationPurchasingPower))	{
+		if (this.franchise.moneyPerHour < (150 * this.parent.populationPurchasingPower))	{
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
 		}
-		else if (this.franchise.moneyPerHour >= 150 * this.parent.populationPurchasingPower){
+		else if (this.franchise.moneyPerHour >= (150 * this.parent.populationPurchasingPower)){
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "medium"));
 		}
-		else if (this.franchise.moneyPerHour >= 200 * this.parent.populationPurchasingPower){
+		else if (this.franchise.moneyPerHour >= (200 * this.parent.populationPurchasingPower)){
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "large"));
 			possibleBuildings.push(this.MakeBuilding("waterBuilding", "large"));
 			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));

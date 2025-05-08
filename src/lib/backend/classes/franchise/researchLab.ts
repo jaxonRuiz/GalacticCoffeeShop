@@ -143,15 +143,19 @@ export class ResearchLab{
 			}
 		})
 		this.upgradeList.push({
+			name: "Clone your researchers",
+			desc: "3x researcher count",
+			cost: 700,
+			effect(franchise) {
+				franchise.researcherMultiplier *= 3;
+			}
+		})
+		this.upgradeList.push({
 			name: "Add an extra 5 stories to all of your buildings",
 			desc: "5x population increase", 
 			cost: 1000,
 			effect(franchise) {
-				for (let cKey in franchise.world.countries){
-					franchise.world.countries[cKey].regionList.forEach((region: Region) => {
-						region.population *= 5;
-					});
-				}
+				franchise.populationMultiplier *= 5;
 			}
 		})
 		this.upgradeList.push({
@@ -159,13 +163,8 @@ export class ResearchLab{
 			desc: "3x coffee sell rates",
 			cost: 1000,
 			effect(franchise) {
-				for (let cKey in franchise.world.countries){
-					franchise.world.countries[cKey].regionList.forEach((region: Region) => {
-						region.maxCoffeePerHour *= 3;
-					});
-				}
+				franchise.maxCoffeeMultiplier *= 3;
 			}
 		})
-
 	}
 }

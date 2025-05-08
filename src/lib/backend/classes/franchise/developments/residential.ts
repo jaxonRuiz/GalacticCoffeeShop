@@ -32,7 +32,7 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  this.parent.beans -= coffeeSold;
 	  this.coffeeSoldThisHour += coffeeSold;
 	  this.parent.deliveriesThisHour += coffeeSold;
-	  this.franchise.money += coffeeSold * this.coffeePrice;
+	  this.franchise.money += coffeeSold * this.coffeePrice * (1 - this.parent.parentCountry.taxRate);
 	}
 
 	tickCoffee() {
@@ -57,6 +57,16 @@ export class Residential extends DevelopmentBase implements IResidential{
 
 	day() {
 		this.updateAvailableBuildings(3);
+	}
+
+	clickBuilding(building: IBuilding) {
+		switch (building.type) {
+			case "coffeeBuilding":
+				this.sellCoffee(Math.floor(building.num/10));
+				return;
+			default:
+				return;
+		}
 	}
 
 	buyBuilding(building: IBuilding){
@@ -112,19 +122,19 @@ export class Residential extends DevelopmentBase implements IResidential{
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		if (this.franchise.moneyPerHour < 150 * this.parent.populationPurchasingPower)	{
+		if (this.franchise.moneyPerHour < (150 * this.parent.populationPurchasingPower))	{
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
 		}
-		else if (this.franchise.moneyPerHour >= 150 * this.parent.populationPurchasingPower){
+		else if (this.franchise.moneyPerHour >= (150 * this.parent.populationPurchasingPower)){
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "medium"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "medium"));
 		}
-		else if (this.franchise.moneyPerHour >= 200 * this.parent.populationPurchasingPower){
+		else if (this.franchise.moneyPerHour >= (200 * this.parent.populationPurchasingPower)){
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "large"));
 			possibleBuildings.push(this.MakeBuilding("housingBuilding", "medium"));
 			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "large"));

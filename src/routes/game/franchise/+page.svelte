@@ -3,6 +3,7 @@
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 	import { stageManager } from "$lib/backend/game";
 	import Button from "$lib/components/Button.svelte";
+	import { fMoney } from "$lib/components/Styles.svelte";
 
 	let franchise = stageManager.currentScene as Franchise;
 	let countries = franchise.world.w_countries;
@@ -10,7 +11,7 @@
 
 </script>
 
-<div class = "money">💰 ${$money}</div>
+<div class = "money">💰 {fMoney($money)}</div>
 
 <Button
 	static={true}

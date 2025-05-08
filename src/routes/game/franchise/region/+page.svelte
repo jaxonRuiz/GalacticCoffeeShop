@@ -4,6 +4,7 @@
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 	import Development from "$lib/components/Development.svelte";
 	import Button from "$lib/components/Button.svelte";
+	import { fMoney } from "$lib/components/Styles.svelte";
 
 	// base
 	const smanager = stageManager;
@@ -33,7 +34,7 @@
 	let delPerHour = $region?.w_deliveriesPerHour;
 </script>
 
-<div class = "money">💰 ${$money}</div>
+<div class = "money">💰 {fMoney($money)}</div>
 
 <Button
 	static={true}
@@ -52,7 +53,7 @@
 			<p>Max coffees/hour: {$maxCoffee}</p>
 			<p>Beans/hour: {$beansPerHour}</p>
 			<p>Gallons of water/hour: {$waterPerHour}</p>
-			<p>Estimated customers/hour: {$custPerHour}</p>
+			<p>Estimated customers/hour: {Math.floor($custPerHour ?? 1)}</p>
 			<p>Max bean deliveries/hour: {$delPerHour}</p>
 		</div>
 		<div class = "stats">

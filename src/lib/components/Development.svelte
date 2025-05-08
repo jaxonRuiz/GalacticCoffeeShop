@@ -39,7 +39,7 @@
 			</div>
 
 			<div class="avail-dev col inner-block">
-				<h3>Available Buildings</h3>
+				<h3>Available Buildings (resets daily)</h3>
 				{#each $availBuildings as building, i (building)}
 					<Building development = {d} building = {building} bought = {false}></Building>
 				{/each}

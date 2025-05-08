@@ -74,7 +74,7 @@ export class LogisticCenter extends DevelopmentBase{
 		this.availableBuildings = [];
 
 		let possibleBuildings = [];
-		if (this.franchise.moneyPerHour < 150 * this.parent.populationPurchasingPower)	{
+		if (this.franchise.moneyPerHour < (150 * this.parent.populationPurchasingPower))	{
 			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("importBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("exportBuilding", "small"));
@@ -82,7 +82,7 @@ export class LogisticCenter extends DevelopmentBase{
 			possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
 		}
-		else if (this.franchise.moneyPerHour >= 150 * this.parent.populationPurchasingPower){
+		else if (this.franchise.moneyPerHour >= (150 * this.parent.populationPurchasingPower)){
 			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("importBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("exportBuilding", "small"));
@@ -90,7 +90,7 @@ export class LogisticCenter extends DevelopmentBase{
 			possibleBuildings.push(this.MakeBuilding("researchBuilding", "small"));
 			possibleBuildings.push(this.MakeBuilding("researchBuilding", "medium"));
 		}
-		else if (this.franchise.moneyPerHour >= 200 * this.parent.populationPurchasingPower){
+		else if (this.franchise.moneyPerHour >= (200 * this.parent.populationPurchasingPower)){
 			possibleBuildings.push(this.MakeBuilding("deliveryBuilding", "large"));
 			possibleBuildings.push(this.MakeBuilding("importBuilding", "medium"));
 			possibleBuildings.push(this.MakeBuilding("exportBuilding", "medium"));

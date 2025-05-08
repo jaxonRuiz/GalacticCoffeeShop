@@ -13,17 +13,32 @@
     <p>{development.readBuilding(building)}</p>
     <p>Rent: {fMoney(building.rent)}/day</p>
     <div class="row">
-        {#if bought === true}
-            <Button
-                onclick={() => {
-                    development.sellBuilding(building);
-                }}
-            >
-                Sell for: {fMoney(building.sellCost)}
-            </Button>
-        {/if}
+        <div class="buttons">
+            {#if bought === true}
+                <Button
+                    style = "background-color:rgb(70, 70, 70);"
+                    onclick={() => {
+                        development.sellBuilding(building);
+                    }}
+                >
+                    Sell for: {fMoney(building.sellCost)}
+                </Button>
+                {#if development.buildingClickable(building)}
+                    <Button
+                        style = "background-color:rgb(70, 70, 70);"
+                        onclick={() => {
+                            development.clickBuilding(building);
+                        }}
+                    >
+                        {development.clickText(building)}
+                    </Button>
+                {/if}
+            {/if}
+        </div>
+            
         {#if bought === false}
             <Button
+                style = "background-color:rgb(70, 70, 70);"
                 onclick={() => {
                     development.buyBuilding(building);
                 }}
@@ -37,11 +52,15 @@
 
 <style>
     .building-card {
-		border: 1px solid #444;
+		border: 1px solid #393939;
 		padding: 0.75rem;
 		margin-bottom: 1rem;
 		border-radius: 0.4rem;
 		background-color:rgb(43, 43, 43);
 		box-sizing: border-box;
 	}
+    div.buttons{
+        gap: 2rem;
+        display: flex;
+    }
 </style>

@@ -2,6 +2,7 @@ import { Publisher } from "../../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import type { Region } from "../region";
 import { Franchise } from "../franchise";
+import { build } from "$service-worker";
 
 export enum DevelopmentType{
 	Residential = "Residential",
@@ -9,7 +10,7 @@ export enum DevelopmentType{
 	Logistic = "Logistic"
 }
 
-export class DevelopmentBase implements ISubscriber, IDevelopment{
+export class DevelopmentBase implements IDevelopment{
 	// statistics
 	w_developmentArea: Writable<number> = writable(10);
 	w_developmentType: Writable<DevelopmentType> = writable();
@@ -52,22 +53,6 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 		this.developmentArea = areaSize;
 		this.franchise = franchise;
 		this.parent.usableLand -= areaSize;
-	}
-
-	notify(event: string, data?: any) {
-		// maybe optimize better :/ dont need to call every shop every tick
-		if (event === "tick") {
-			this.tick();
-		}
-		if (event === "hour"){
-			this.hour();
-		}
-		if (event === "day") {
-			this.day();
-		}
-		if (event === "week") {
-			this.week();
-		}
 	}
 
 	tick(){
@@ -134,16 +119,56 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 			case "exportBuilding":
 				return `Increase export capacity by ${building.num}`;
 			case "deliveryBuilding":
-				return `Increase deliveries by ${building.num}/hour`
+				return `Increase deliveries by ${building.num}/hour`;
 			case "waterBuilding":
-				return `Produces ${building.num} gallons of water/hour`
+				return `Produces ${building.num} gallons of water/hour`;
 			case "farmBuilding":
-				return `Produces up to ${building.num} beans/hour`
+				return `Produces up to ${building.num} beans/hour`;
 			case "researchBuilding":
-				return `Increase researcher population by ${building.num}`
+				return `Increase researcher population by ${building.num}`;
 			default:
 				break;
 		}
+	}
+
+	buildingClickable(building: IBuilding): boolean{
+		switch (building.type) {
+			case "coffeeBuilding":
+				return true;
+			case "housingBuilding":
+				return false;
+			case "importBuilding":
+				return false;
+			case "exportBuilding":
+				return false;
+			case "deliveryBuilding":
+				return false;
+			case "waterBuilding":
+				return true;
+			case "farmBuilding":
+				return true;
+			case "researchBuilding":
+				return false;
+			default:
+				return false;
+		}
+	}
+
+	clickText(building: IBuilding){
+		switch (building.type) {
+			case "coffeeBuilding":
+				return `Click to sell ${Math.floor(building.num/10)} coffees`;
+			case "waterBuilding":
+				return `Click to pump ${Math.floor(building.num/10)} gallons`;
+			case "farmBuilding":
+				return `Click to farm ${Math.floor(building.num/10)} beans`;
+			default:
+				return;
+		}
+	}
+
+	clickBuilding(building: IBuilding) {
+		
 	}
 
 	increaseDevelopmentArea(areaSize: number = 1) {
@@ -163,6 +188,12 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 	MakeBuilding(buildingType: BuildingType, buildingSize: BuildingSize) {
 		var data = this.BuildingList[buildingType][buildingSize];
 		var randomName = data.names[Math.floor(Math.random() * data.names.length)];
+		var multiplier = 1;
+		if (buildingType == 'coffeeBuilding') multiplier = this.franchise.maxCoffeeMultiplier;
+		else if (buildingType == 'farmBuilding') multiplier = this.franchise.coffeeMultiplier;
+		else if (buildingType == 'waterBuilding') multiplier = this.franchise.waterMultiplier;
+		else if (buildingType == 'housingBuilding') multiplier = this.franchise.populationMultiplier;
+		else if (buildingType == 'researchBuilding') multiplier = this.franchise.researcherMultiplier;
 		
 		return {
 			name: randomName,
@@ -171,7 +202,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 			buyCost: data.cost * (1 + Math.floor(Math.random() * 10) / 20) * Math.pow(1.5, this.parent.populationPurchasingPower),
 			sellCost: data.cost * (1 - Math.floor(Math.random() * 10) / 20) * Math.pow(1.5, this.parent.populationPurchasingPower),
 			rent: data.rent * Math.pow(1.5, this.parent.populationPurchasingPower),
-			num: data.num
+			num: Math.floor(data.num * (1 + Math.random() * 0.5) * multiplier)
 		};
 	}
 

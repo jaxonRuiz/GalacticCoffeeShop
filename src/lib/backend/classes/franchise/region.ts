@@ -84,20 +84,7 @@ export class Region implements IRegion {
 		return get(this.w_maxCoffeePerHour);
 	}
 	set maxCoffeePerHour(value) {
-		const old = this.maxCoffeePerHour;
 		this.w_maxCoffeePerHour.set(value);
-		for (let key in this.developmentList){
-			this.developmentList[key].boughtBuildings.forEach(building => {
-				if (building.type == 'coffeeBuilding'){
-					building.num *= value/old;
-				}
-			});
-			this.developmentList[key].availableBuildings.forEach(building => {
-				if (building.type == 'coffeeBuilding'){
-					building.num *= value/old;
-				}
-			});
-		}
 	}
 	get populationPurchasingPower() {
 		return get(this.w_populationPurchasingPower);

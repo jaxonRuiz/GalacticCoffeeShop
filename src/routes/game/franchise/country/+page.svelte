@@ -5,6 +5,7 @@
 	import Button from "$lib/components/Button.svelte";
 	import { writable } from "svelte/store";
 	import Region from "$lib/components/franchise/Region.svelte";
+	import { fMoney } from "$lib/components/Styles.svelte";
 
 	// base
 	let smanager = stageManager;
@@ -25,7 +26,7 @@
 
 </script>
 
-<div class = "money">💰 ${$money}</div>
+<div class = "money">💰 {fMoney($money)}</div>
 
 <Button
 	static={true}
@@ -35,8 +36,16 @@
 >
 	go to research lab
 </Button>
+<Button
+		static={false}
+		onclick={() => {
+			franchise.deselectCountry();
+		}}
+	>
+		deselect country
+	</Button>
 
-<div class="country row">
+<div class="countryrow">
 	<div class="left block">
 		<div class="block">
 			<h1>Country</h1>
@@ -69,7 +78,7 @@
 				<p>{$influence} / 1000</p>
 			{/if}
 		</div>
-		<div class="block">
+		<div class="erm">
 			<h1>Possible tasks</h1>
 		
 			{#if influenceTasks}
@@ -103,16 +112,7 @@
 			{/if}
 		</div>
 		
-		<div class= "block">
-			<Button
-					static={false}
-					onclick={() => {
-						franchise.deselectCountry();
-					}}
-				>
-					deselect country
-			</Button>
-			{#if !$unlocked}
+		{#if !$unlocked}
 			<Button
 					static={false}
 					onclick={() => {
@@ -122,22 +122,19 @@
 					Unlock country for: {franchise.currentCountry?.unlockCost} influence
 			</Button>
 		{/if}
-		</div>
+
 	</div>
 	
-	<div class="center-column">
-		<div class="right block">
-			<div>
-				{#if $regions}
-					{#each $regions as region, i}
-						<Region {region} {franchise} {unlocked} {i}></Region>
-					{/each}
-				{/if}
-			</div>
+	<div class="right block">
+		<div>
+			{#if $regions}
+				{#each $regions as region, i}
+					<Region {region} {franchise} {unlocked} {i}></Region>
+				{/each}
+			{/if}
 		</div>
-		
-		
 	</div>
+		
 	<div class="rightright">
 		<h1>Events:</h1>
 			{#if policyEvents}
@@ -207,21 +204,21 @@
 </div>
 
 <style>
-	.center-column {
-		width: 40%;
+	div.countryrow{
 		display: flex;
-		flex-direction: column;
 		gap: 1rem;
+		width: 100%;
 	}
 
 	div.left{
 		width: 30%;
-		height: 50vw;
+		height: 45vw;
 		border: 1px solid #ccc;
 		padding: 1rem;
 		border-radius: 0.5rem;
 		background-color: #1a1a1a;
 		box-sizing: border-box;
+		overflow: auto;
 	}
 	div.right {
 		position: relative; 
@@ -236,7 +233,7 @@
 	div.rightright{
 		position: relative; 
 		width: 25vw;
-		height: 50vw;
+		height: 40vw;
 		border: 1px solid #ccc;
 		padding: 1rem;
 		border-radius: 0.5rem;

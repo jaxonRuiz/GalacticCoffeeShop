@@ -19,7 +19,7 @@ export class Country{
 		return get(this.w_taxRate);
 	}
 	set taxRate(value) {
-		this.w_taxRate.set(value);
+		this.w_taxRate.set(Math.min(value, 0.5));
 	}
 	get tariffRate() {
 		return get(this.w_tariffRate);
@@ -225,19 +225,19 @@ export class Country{
 		this.influenceTasksStatic.push({
 			desc: "Shake hands with the president",
 			cost: 1000,
-			influence: 1000,
+			influence: 100,
 			time: 20,
 		});
 		this.influenceTasksStatic.push({
 			desc: "Put out a video glazing their president",
 			cost: 2000,
-			influence: 3000,
+			influence: 200,
 			time: 30,
 		});
 		this.influenceTasksStatic.push({
 			desc: "Send the president a corn dog",
 			cost: 500,
-			influence: 500,
+			influence: 50,
 			time: 10,
 		});
 	}	  
@@ -309,7 +309,7 @@ export class Country{
 
 	async startRandomEvents() {
 		if (!this.unlocked) return;
-		await this.wait(Math.floor(20 + Math.random() * 40));
+		await this.wait(Math.floor(40 + Math.random() * 20));
 		this.policyEvents.push(this.getRandomEvent());
 		this.policyEvents = [... this.policyEvents];
 		await this.startRandomEvents();
