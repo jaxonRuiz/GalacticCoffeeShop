@@ -29,7 +29,6 @@
 	let coffeeSold = $region?.w_coffeesSoldLastHour;
 	let maxCoffee = $region?.w_maxCoffeePerHour;
 	let researchers = franchise.w_researchers;
-	let popDiv = franchise.w_populationDivisor;
 	let custPerHour = $region?.w_expectedCustomersPerHour;
 	let delPerHour = $region?.w_deliveriesPerHour;
 </script>
@@ -78,14 +77,16 @@
 			{/if}
 		</div>
 		<br>
-		<Button onclick={() => franchise.buyUnusable()}
-			disabled={$money < ($unusableCost ?? 1000)}
-			style = "
-				background-color: {$money < ($unusableCost ?? 1000) ? '#444' : '#515151'};
-				cursor: {$money < ($unusableCost ?? 1000) ? '--cno' : '--cpointer'};
-			">
-			Buy unusable land for: {($unusableCost ?? 1000)}
-		</Button>
+		{#if ($unusableLand ?? 1) > 0}
+			<Button onclick={() => franchise.buyUnusable()}
+				disabled={$money < ($unusableCost ?? 1000)}
+				style = "
+					background-color: {$money < ($unusableCost ?? 1000) ? '#444' : '#515151'};
+					cursor: {$money < ($unusableCost ?? 1000) ? '--cno' : '--cpointer'};
+				">
+				Buy unusable land for: {($unusableCost ?? 1000)}
+			</Button>
+		{/if}
 
 		<br>
 		<br>

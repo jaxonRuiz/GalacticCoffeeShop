@@ -345,7 +345,7 @@ export class Region implements ISubscriber, IRegion {
 	}
 
 	buyUnusable(){
-		if (this.franchise.money >= get(this.w_unusableBuyCost)){
+		if (this.franchise.money >= get(this.w_unusableBuyCost) && this.unusableLand > 0){
 			this.franchise.money -= get(this.w_unusableBuyCost);
 			this.boughtUnusable++;
 			this.unusableLand--;
