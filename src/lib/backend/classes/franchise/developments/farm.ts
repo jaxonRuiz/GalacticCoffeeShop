@@ -9,8 +9,8 @@ export class Farm extends DevelopmentBase {
 		return DevelopmentType.Farm;
 	}
 
-	constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
-		super(timer, region, areaSize, franchise);
+	constructor(region: Region, areaSize: number, franchise: Franchise) {
+		super(region, areaSize, franchise);
 		this.initializeDevelopment();
 	}
 

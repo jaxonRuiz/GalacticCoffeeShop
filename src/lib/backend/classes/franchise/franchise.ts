@@ -161,6 +161,7 @@ export class Franchise implements ISubscriber, IScene {
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		console.log("franchise constructor()");
 		timer.subscribe(this, "tick");
+		timer.subscribe(this, "hour");
 		timer.subscribe(this, "day");
 		this.timer = timer;
 		this.sceneManager = sceneManager;
@@ -186,14 +187,13 @@ export class Franchise implements ISubscriber, IScene {
 	}
 
 	tick() {
-		//this.world.tick();
 		this.researchLab.tick();
 		this.world.tick();
 	}
 
 	hour() {
 		this.updateMoneyPerHour();
-		
+		this.world.hour();
 	}
 
 	day() {

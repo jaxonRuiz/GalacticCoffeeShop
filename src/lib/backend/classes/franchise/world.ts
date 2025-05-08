@@ -58,6 +58,13 @@ export class World implements ISubscriber, IWorld {
 		}
 	}
 
+	hour() {
+		for (const countryKey in this.countries) {
+			const country = this.countries[countryKey];
+			country.hour();
+		}
+	}
+
 	day() {
 		for (const countryKey in this.countries) {
 			const country = this.countries[countryKey];

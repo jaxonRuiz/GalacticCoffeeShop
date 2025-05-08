@@ -16,8 +16,8 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  return 5 * this.parent.populationPurchasingPower;
 	}
 
-	constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
-			super(timer, region, areaSize, franchise);
+	constructor(region: Region, areaSize: number, franchise: Franchise) {
+			super(region, areaSize, franchise);
 			this.initializeDevelopment();
 	}
 

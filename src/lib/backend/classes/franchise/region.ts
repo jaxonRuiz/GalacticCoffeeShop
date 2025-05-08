@@ -18,7 +18,7 @@ export enum ClimateType {
 	Tropical = 3,
 }
 
-export class Region implements ISubscriber, IRegion {
+export class Region implements IRegion {
 	//writables
 	w_totalArea: Writable<number> = writable(0);
 	w_usableLand: Writable<number> = writable(0);
@@ -226,12 +226,10 @@ export class Region implements ISubscriber, IRegion {
 	unlockCost: number;
 	coordinates: [number, number];
 
-	timer: Publisher;
 	parentCountry: Country;
 	franchise: Franchise;
 
 	constructor(
-		timer: Publisher,
 		country: Country,
 		franchise: Franchise,
 		areaSize: number,
@@ -240,10 +238,6 @@ export class Region implements ISubscriber, IRegion {
 		unlocked: boolean,
 		purchasingPower: number
 	) {
-		timer = franchise.timer;
-		timer.subscribe(this, "tick");
-		timer.subscribe(this, "hour");
-		timer.subscribe(this, "week");
 		this.populationPurchasingPower = purchasingPower;
 		this.parentCountry = country;
 		this.totalArea = areaSize;
@@ -252,7 +246,6 @@ export class Region implements ISubscriber, IRegion {
 		this.boughtUnusable = 0;
 		this.unlockCost = (2000 + Math.floor(Math.random() * 1000)) * purchasingPower;
 		this.coordinates = coordinates;
-		this.timer = timer;
 		this.franchise = franchise;
 		this.population = 1000;
 		this.coffeesSoldLastHour = 0;
@@ -262,26 +255,23 @@ export class Region implements ISubscriber, IRegion {
 		this.initializeRegion(climate);
 	}
 
-	notify(event: string, data?: any) {
-		if (event === "tick") {
-			this.tick();
-		}
-		if (event === "hour"){
-			this.hour();
-		}
-		if (event === "day") {
-			this.resetImportExport();
-		}
-		if (event === "week") {
-		}
-	}
-
 	tick(){
-
+		for (let devkey in this.developmentList) {
+			this.developmentList[devkey].tick();
+		}
 	}
 
 	hour() {
 		this.deliveriesThisHour = 0;
+		for (let devkey in this.developmentList) {
+			this.developmentList[devkey].hour();
+		}
+	}
+
+	day() {
+		for (let devkey in this.developmentList) {
+			this.developmentList[devkey].day();
+		}
 	}
 
 	initializeRegion(climate: ClimateType) {
@@ -335,9 +325,9 @@ export class Region implements ISubscriber, IRegion {
 	}
 
 	initializeDevelopments() {
-		this.developmentList["farm"] = new Farm(this.timer, this, 7, this.franchise);
-		this.developmentList["residential"] = new Residential(this.timer, this, 5, this.franchise);
-		this.developmentList["logistic"] = new LogisticCenter(this.timer, this, 4, this.franchise);
+		this.developmentList["farm"] = new Farm(this, 7, this.franchise);
+		this.developmentList["residential"] = new Residential(this, 5, this.franchise);
+		this.developmentList["logistic"] = new LogisticCenter(this, 4, this.franchise);
 	}
 
 	unlockRegion() {

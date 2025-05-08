@@ -47,11 +47,7 @@ export class DevelopmentBase implements ISubscriber, IDevelopment{
 	parent: Region;
 	franchise: Franchise;
 	
-	constructor(timer: Publisher, region: Region, areaSize: number, franchise: Franchise) {
-		timer.subscribe(this, "tick");
-		timer.subscribe(this, "hour");
-		timer.subscribe(this, "day");
-		timer.subscribe(this, "week");
+	constructor(region: Region, areaSize: number, franchise: Franchise) {
 		this.parent = region;
 		this.developmentArea = areaSize;
 		this.franchise = franchise;

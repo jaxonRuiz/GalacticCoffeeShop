@@ -113,8 +113,17 @@ export class Country{
 		this.tickInfluenceTasks();
 		this.tickPolicyEvents();
 	}
+
+	hour() {
+		for (const region of this.regionList) {
+			region.hour();
+		}
+	}
 	
 	day() {
+		for (const region of this.regionList) {
+			region.day();
+		}
 		this.refreshInfluenceTasks(3);
 	}
 
@@ -134,11 +143,11 @@ export class Country{
 
 			if (isSpaced) {
 				if (this.firstRegions > 0){
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 30, 2, newCoords, true, 1);
+					var newRegion = new Region(this, this.franchise, 30, 2, newCoords, true, 1);
 					this.firstRegions--;
 				}
 				else{
-					var newRegion = new Region(this.franchise.timer, this, this.franchise, 10 + Math.floor(Math.random() * 30), Math.floor(Math.random() * 3.99), newCoords, false, Math.pow(1.5, this.countryNum));
+					var newRegion = new Region(this, this.franchise, 10 + Math.floor(Math.random() * 30), Math.floor(Math.random() * 3.99), newCoords, false, Math.pow(1.5, this.countryNum));
 				}
 				this.regionList = [...this.regionList, newRegion];
 				// this.regionList.push(newRegion);
