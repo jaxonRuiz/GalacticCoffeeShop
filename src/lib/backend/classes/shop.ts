@@ -39,12 +39,14 @@ export class Shop implements ILocalShop {
 	}
 	set coffeeCups(value) {
 		this.w_coffeeCups.set(value);
+		this.uiManager.setCoffeeCount(value);
 	}
 	get waitingCustomers() {
 		return get(this.w_waitingCustomers);
 	}
 	set waitingCustomers(value) {
 		this.w_waitingCustomers.set(value);
+		this.uiManager.setCustomerCount(value);
 	}
 	get money() {
 		return get(this.w_money);
@@ -365,8 +367,6 @@ export class Shop implements ILocalShop {
 			this.emptyCups -= numToMake;
 			this.coffeeCups += numToMake;
 			this.lifetimeStats["coffeeMade"] += numToMake;
-			//TODO will break if amt > 1
-			this.uiManager.coffeeMade(this.coffeeCups);
 			return true;
 		}
 		return false;
@@ -387,8 +387,6 @@ export class Shop implements ILocalShop {
 			this.lifetimeStats["moneyMade"] +=
 				this.coffeePrice * numToSell * this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
-			// TODO will break if amt > 1
-			this.uiManager.coffeeSold();
 			return true;
 		}
 		return false;
