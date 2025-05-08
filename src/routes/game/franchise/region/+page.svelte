@@ -55,32 +55,32 @@
 	<div class="left block">
 		<div class = "stats">
 			<h1>Rates</h1>
-			<p>Coffees sold last hour: {$coffeeSold}</p>
-			<p>Max coffees/hour: {$maxCoffee}</p>
-			<p>Beans/hour: {$beansPerHour}</p>
-			<p>Gallons of water/hour: {$waterPerHour}</p>
-			<p>Estimated customers/hour: {Math.floor($custPerHour ?? 1)}</p>
-			<p>Max bean deliveries/hour: {$delPerHour}</p>
+			<p>Coffees sold last hour: {$coffeeSold} coffees</p>
+			<p>Max coffees/hour: {$maxCoffee} coffees</p>
+			<p>Beans/hour: {$beansPerHour} beans</p>
+			<p>Gallons of water/hour: {$waterPerHour} gallons</p>
+			<p>Estimated customers/hour: {Math.floor($custPerHour ?? 1)} customers</p>
+			<p>Max bean deliveries/hour: {$delPerHour} beans</p>
 		</div>
 		<div class = "stats">
 			<h1>Stats</h1>
-			<p>total area: {$totalArea} acres</p>
-			<p>usable land: {$usableLand}</p>
-			<p>unusable land: {$unusableLand}</p>
-			<p>accessibility level: {$accessibilityLevel}</p>
-			<p>import capacity: {$importCapacity}</p>
-			<p>export capacity: {$exportCapacity}</p>
-			<p>beans: {$beans}</p>
-			<p>water: {$water}</p>
-			<p>population: {$population}</p>
-			<p>Researchers: {$researchers}</p>
+			<p>Total area: {$totalArea} acres</p>
+			<p>Usable land: {$usableLand} acres</p>
+			<p>Unusable land: {$unusableLand} acres</p>
+			<!-- <p>Accessibility level: {$accessibilityLevel}</p> -->
+			<p>Import capacity: {$importCapacity} beans</p>
+			<p>Export capacity: {$exportCapacity} beans</p>
+			<p>Bean count: {$beans} beans</p>
+			<p>Water: {$water} gallons</p>
+			<p>Population: {$population} people</p>
+			<p>Researchers: {$researchers} researchers</p>
 		</div>
 		<div class = "env">
 			{#if $environmentalFactors}
 				<h1>Environment</h1>
-				<p>soil richness: {$environmentalFactors.soilRichness}</p>
-				<p>water availability: {$environmentalFactors.waterAvailability}</p>
-				<p>average temperature: {$environmentalFactors.averageTemp}</p>
+				<p>soil richness: {$environmentalFactors.soilRichness.toFixed(2)}</p>
+				<p>water availability: {$environmentalFactors.waterAvailability.toFixed(2)}</p>
+				<p>average temperature: {$environmentalFactors.averageTemp.toFixed(2)}</p>
 			{/if}
 		</div>
 		<br>

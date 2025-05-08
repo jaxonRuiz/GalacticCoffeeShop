@@ -308,7 +308,7 @@ export class Country{
 	}
 
 	async startRandomEvents() {
-		if (!this.unlocked) return;
+		if (!this.unlocked || this.policyEvents.length >= 2) return;
 		await this.wait(Math.floor(40 + Math.random() * 20));
 		this.policyEvents.push(this.getRandomEvent());
 		this.policyEvents = [... this.policyEvents];

@@ -49,13 +49,13 @@
 	<div class="left block">
 		<div class="block">
 			<h1>Country</h1>
-			<p style="font-size: 1.2rem;">Tax rate: {$taxRate}</p>
-			<p style="font-size: 1.2rem;">Tariff rate: {$tariffRate}</p>
+			<p style="font-size: 1.2rem;">Tax rate: {($taxRate ?? 1) * 100}%</p>
+			<p style="font-size: 1.2rem;">Tariff rate: {($tariffRate ?? 1) * 100}%</p>
 			<p style="font-size: 1.2rem;">Max influence tasks: {$maxInfluenceTasks}</p>
 		</div>
 		<div class = "block">
 			{#if $country}
-				<h2>Influence</h2>
+				<h2 style="font-size: 2rem">Influence</h2>
 				<div
 					style="
 						width: 100%;
@@ -84,7 +84,7 @@
 			{#if influenceTasks}
 				{#each $influenceTasks as task, i}
 					<div class="upgrade-card">
-						<p><strong>{task.desc}</strong></p>
+						<p style="font-size: 1.2rem"><strong>{task.desc}</strong></p>
 						<p>💰 Cost: {task.cost}</p>
 						<p>📈 Influence Gain: +{task.influence}</p>
 						<p>Time: {task.time}</p>
@@ -100,7 +100,7 @@
 			{#if currinfluenceTasks}
 				{#each $currinfluenceTasks as task, i}
 					<div class="upgrade-card">
-						<p><strong>{task.desc}</strong></p>
+						<p style="font-size: 1.2rem"><strong>{task.desc}</strong></p>
 						<p>💰 Cost: {task.cost}</p>
 						<p>📈 Influence Gain: +{task.influence}</p>
 						<p>Time: {task.time}</p>
@@ -136,7 +136,7 @@
 	</div>
 		
 	<div class="rightright">
-		<h1>Events:</h1>
+		<h1>Events: (random ones will pop up)</h1>
 			{#if policyEvents}
 				{#each $policyEvents as event, i}
 					<div class="upgrade-card">
@@ -211,7 +211,7 @@
 	}
 
 	div.left{
-		width: 30%;
+		width: 30vw;
 		height: 45vw;
 		border: 1px solid #ccc;
 		padding: 1rem;
@@ -219,6 +219,7 @@
 		background-color: #1a1a1a;
 		box-sizing: border-box;
 		overflow: auto;
+		position: relative;
 	}
 	div.right {
 		position: relative; 
