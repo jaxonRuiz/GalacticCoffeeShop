@@ -189,11 +189,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.audioManager.addSFX("meow4", aud.meow_4);
 		this.audioManager.addAmbience("crowd", aud.preshop_crowd);
 
-		//set meow audio volume to 0.5
+		//set meow audio volume
 		this.audioManager.setMaxVolumeScale("meow1", 0.4);
 		this.audioManager.setMaxVolumeScale("meow2", 0.085);
 		this.audioManager.setMaxVolumeScale("meow3", 0.085);
 		this.audioManager.setMaxVolumeScale("meow4", 0.085);
+
+		//set cash register volume
+		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
 
 		this.audioManager.playAudio("bgm");
 		this.audioManager.playAudio("crowd");
@@ -272,7 +275,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.5);
 				this.audioManager.setVolume("crowd", scaledVolume);
 
-				//play random meow audio (Stipulation that no cat audio can be played 3 times in a row if so play a different random one)
+				//play random meow audio (Stipulation that no cat audio can be played back to back)
 				const meowSounds = ["meow1", "meow2", "meow3", "meow4"];
 				const randomMeow = () => {
 					let availableMeows = meowSounds;
@@ -384,7 +387,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	buyBeans() {
 		// possibly make bean cost scale or change over time(?)
 
-		this.audioManager.setVolume("cashRegister", 0.5);
+		
 		this.audioManager.playAudio("cashRegister");
 		if (this.money < this.beanPrice) return;
 		this.beans += this.beansPerBuy;
