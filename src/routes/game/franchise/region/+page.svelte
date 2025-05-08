@@ -44,6 +44,12 @@
 >
 	go to research lab
 </Button>
+<Button
+			static={false}
+			onclick={() => {
+				franchise.deselectRegion();
+			}}>deselect region</Button
+		>
 
 <div class="region row">
 	<div class="left block">
@@ -88,15 +94,6 @@
 				Buy unusable land for: {($unusableCost ?? 1000)}
 			</Button>
 		{/if}
-
-		<br>
-		<br>
-		<Button
-			static={false}
-			onclick={() => {
-				franchise.deselectRegion();
-			}}>deselect region</Button
-		>
 	</div>
 
 	<div class="right block">

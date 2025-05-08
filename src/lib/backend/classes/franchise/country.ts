@@ -342,7 +342,22 @@ const randomEvents: IPolicyEvent[] = [
 		currentInfluence: 0,
 		totalInfluence: 100,
 		won(country) {
-			country.taxRate *= 1.5;
+			country.taxRate *= 1.1;
+		},
+		lost(country) {
+			
+		},
+		eitherWay(country) {
+			
+		},
+	},
+	{
+		desc: 'tax increase!',
+		time: 50,
+		currentInfluence: 0,
+		totalInfluence: 200,
+		won(country) {
+			country.taxRate *= 1.2;
 		},
 		lost(country) {
 			
@@ -357,7 +372,7 @@ const randomEvents: IPolicyEvent[] = [
 		currentInfluence: 0,
 		totalInfluence: 100,
 		won(country) {
-			country.taxRate /= 1.5;
+			country.taxRate /= 1.3;
 		},
 		lost(country) {
 			
@@ -367,12 +382,12 @@ const randomEvents: IPolicyEvent[] = [
 		},
 	},
 	{
-		desc: 'tax increase!',
+		desc: 'tax decrease!',
 		time: 50,
 		currentInfluence: 10,
 		totalInfluence: 200,
 		won(country) {
-			country.taxRate *= 2;
+			country.taxRate /= 1.4;
 		},
 		lost(country) {
 			

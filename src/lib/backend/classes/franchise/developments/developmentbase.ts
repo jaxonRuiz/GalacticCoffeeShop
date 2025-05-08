@@ -212,9 +212,9 @@ export class DevelopmentBase implements IDevelopment{
 			large: { names: ["Coffee Empire", "Mocha Megaplex"], cost: 7000, num: 80, areaSize: 4, rent: 200 }
 		},
 		housingBuilding: {
-			small: { names: ["Tiny Homes", "Cozy Cabins"], cost: 2000, num: 300, areaSize: 1, rent: 50 },
-			medium: { names: ["Suburb House", "Town Villa"], cost: 4000, num: 500, areaSize: 2, rent: 100 },
-			large: { names: ["Luxury Apartments", "Highrise Living"], cost: 7000, num: 1000, areaSize: 4, rent: 200 }
+			small: { names: ["Tiny Homes", "Cozy Cabins"], cost: 2000, num: 1000, areaSize: 1, rent: 50 },
+			medium: { names: ["Suburb House", "Town Villa"], cost: 4000, num: 2000, areaSize: 2, rent: 100 },
+			large: { names: ["Luxury Apartments", "Highrise Living"], cost: 7000, num: 5000, areaSize: 4, rent: 200 }
 		},
 		importBuilding: {
 			small: { names: ["Mini Dock", "Petite Port"], cost: 2000, num: 1000, areaSize: 2, rent: 50 },
