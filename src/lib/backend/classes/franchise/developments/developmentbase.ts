@@ -2,7 +2,6 @@ import { Publisher } from "../../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import type { Region } from "../region";
 import { Franchise } from "../franchise";
-import { build } from "$service-worker";
 
 export enum DevelopmentType{
 	Residential = "Residential",
