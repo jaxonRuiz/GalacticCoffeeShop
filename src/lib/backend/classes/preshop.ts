@@ -189,9 +189,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 		//set meow audio volume to 0.5
 		this.audioManager.setMaxVolumeScale("meow1", 0.4);
-		this.audioManager.setMaxVolumeScale("meow2", 0.1);
-		this.audioManager.setMaxVolumeScale("meow3", 0.1);
-		this.audioManager.setMaxVolumeScale("meow4", 0.1);
+		this.audioManager.setMaxVolumeScale("meow2", 0.085);
+		this.audioManager.setMaxVolumeScale("meow3", 0.085);
+		this.audioManager.setMaxVolumeScale("meow4", 0.085);
 
 		this.audioManager.playAudio("bgm");
 		this.audioManager.playAudio("crowd");
@@ -199,6 +199,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		setTimeout(() => {
 			this.audioManager.setVolume("crowd", 0);
 		}, 0);
+
+		 // Store reference for cross-scene fade
+		(window as any).__lastPreshopAudioManager = this.audioManager;
 
 		// UI
 		this.uiManager = new UIManager();
@@ -281,7 +284,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 					const meow = availableMeows[Math.floor(Math.random() * availableMeows.length)];
 					this.lastPlayedMeow = meow;
 					const meowAudio = this.audioManager.getVolume(meow);
-					console.log(meow + meowAudio);
 					this.audioManager.playAudio(meow);
 				};
 				randomMeow();
@@ -405,6 +407,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	endScene() {
 		console.log("preshop endScene()");
+		// Fade out preshop bgm and crowd
+		this.audioManager.fadeAudio("bgm", 1000, 0, () => this.audioManager.stopAudio("bgm"));
+		this.audioManager.fadeAudio("crowd", 1000, 0, () => this.audioManager.stopAudio("crowd"));
 		this.audioManager.disableAudio();
 		this.sceneManager.emit("nextScene");
 	}
