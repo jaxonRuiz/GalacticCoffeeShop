@@ -3,6 +3,8 @@ import { once } from "@tauri-apps/api/event";
 import { on } from "svelte/events";
 import { get, writable } from "svelte/store";
 
+type NamedAudio = HTMLAudioElement & { name: string };
+
 export const globalVolumeScale = writable(
 	parseFloat(localStorage.getItem("globalVolumeScale") || "1")
 );
@@ -38,7 +40,6 @@ export class AudioManager {
 	SFX: Map<string, HTMLAudioElement[]> = new Map();
 	ambience: Map<string, HTMLAudioElement> = new Map();
 	music: Map<string, HTMLAudioElement> = new Map();
-	bgMusic: HTMLAudioElement[] = [];
 	audioEffects: Map<HTMLAudioElement, { task: number, callback: ((cancelled: boolean) => void) | undefined }> = new Map();
 
 	sfxVolume: number = 1;
@@ -62,21 +63,20 @@ export class AudioManager {
 			const audioInstances = this.SFX.get(name)!;
 			let audio = audioInstances.find((a) => a.paused);
 			if (!audio) {
-				// All are playing, forcibly reset the first one
 				audio = audioInstances[0];
 				audio.pause();
 				audio.currentTime = 0;
 			}
-			audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", audio.name);
+			audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", name);
 			audio.currentTime = 0;
 			audio.play();
 		} else if (this.music.has(name)) {
 			const audio = this.music.get(name)!;
-			audio.volume = this.applyVolumeScale(this.musicVolume, "music", audio.name); 
+			audio.volume = this.applyVolumeScale(this.musicVolume, "music", name); 
 			audio.play();
 		} else if (this.ambience.has(name)) {
 			const audio = this.ambience.get(name)!;
-			audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", audio.name);
+			audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", name);
 			audio.play();
 		}
 	}
@@ -109,20 +109,20 @@ export class AudioManager {
 				if (this.audioEffects.has(audio)) {
 					this.cancelFadeAudio(name);
 				}
-				audio.volume = this.applyVolumeScale(volume, "sfx", audio.name);
+				audio.volume = this.applyVolumeScale(volume, "sfx", name);
 			});
 		} else if (this.music.has(name)) {
 			const audio = this.music.get(name)!;
 			if (this.audioEffects.has(audio)) {
 				this.cancelFadeAudio(name);
 			}
-			audio.volume = this.applyVolumeScale(volume, "music", audio.name);
+			audio.volume = this.applyVolumeScale(volume, "music", name);
 		} else if (this.ambience.has(name)) {
 			const audio = this.ambience.get(name)!;
 			if (this.audioEffects.has(audio)) {
 				this.cancelFadeAudio(name);
 			}
-			audio.volume = this.applyVolumeScale(volume, "music", audio.name);
+			audio.volume = this.applyVolumeScale(volume, "ambience", name);
 		}
 	}
 
@@ -141,28 +141,23 @@ export class AudioManager {
 	}
 
 	updateAllVolumes() {
-		for (let audios of this.SFX.values()) {
+		for (let [name, audios] of this.SFX.entries()) {
 			audios.forEach((audio) => {
 				if (!audio.paused) {
-					audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", audio.name);
+					audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", name);
 				}
 			});
 		}
-		for (let audio of this.ambience.values()) {
+		for (let [name, audio] of this.ambience.entries()) {
 			if (!audio.paused) {
-				audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", audio.name);
+				audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", name);
 			}
 		}
-		for (let audio of this.music.values()) {
+		for (let [name, audio] of this.music.entries()) {
 			if (!audio.paused) {
-				audio.volume = this.applyVolumeScale(this.musicVolume, "music", audio.name);
+				audio.volume = this.applyVolumeScale(this.musicVolume, "music", name);
 			}
 		}
-		this.bgMusic.forEach((audio) => {
-			if (!audio.paused) {
-				audio.volume = this.applyVolumeScale(this.musicVolume, "music", audio.name);
-			}
-		});
 	}
 
 	applyVolumeScale(volume: number, type: "music" | "sfx" | "ambience", name?: string): number {
@@ -182,13 +177,13 @@ export class AudioManager {
 		let audio: HTMLAudioElement | HTMLAudioElement[] | undefined;
 		if (this.SFX.has(name)) {
 			audio = this.SFX.get(name)!;
-			targetVolume = this.applyVolumeScale(targetVolume, "sfx", audio);
+			targetVolume = this.applyVolumeScale(targetVolume, "sfx", name);
 		} else if (this.music.has(name)) {
 			audio = this.music.get(name)!;
-			targetVolume = this.applyVolumeScale(targetVolume, "music", audio);
+			targetVolume = this.applyVolumeScale(targetVolume, "music", name);
 		} else if (this.ambience.has(name)) {
 			audio = this.ambience.get(name)!;
-			targetVolume = this.applyVolumeScale(targetVolume, "ambience", audio);
+			targetVolume = this.applyVolumeScale(targetVolume, "ambience", name);
 		}
 
 		if (!audio) return false;
@@ -261,19 +256,19 @@ export class AudioManager {
 	// --- Add/Remove Audio Assets ---
 	addSFX(name: string, path: string) {
 		const audioInstances = [new Audio(path), new Audio(path), new Audio(path)];
-		audioInstances.forEach(audio => audio.name = name);
+		audioInstances.forEach(audio => (audio as NamedAudio).name = name);
 		this.SFX.set(name, audioInstances);
 	}
 
 	addMusic(name: string, path: string) {
-		const audio = new Audio(path);
+		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
 		audio.name = name;
 		this.music.set(name, audio);
 	}
 
 	addAmbience(name: string, path: string) {
-		const audio = new Audio(path);
+		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
 		audio.name = name;
 		this.ambience.set(name, audio);
@@ -285,16 +280,15 @@ export class AudioManager {
 
 	// --- Enable/Disable/Cleanup ---
 	enableAudio() {
-		for (let audios of this.SFX.values()) {
-			audios.forEach((audio) => (audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", audio.name)));
+		for (let [name, audios] of this.SFX.entries()) {
+			audios.forEach((audio) => (audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", name)));
 		}
-		for (let audio of this.ambience.values()) {
-			audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", audio.name);
+		for (let [name, audio] of this.ambience.entries()) {
+			audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", name);
 		}
-		for (let audio of this.music.values()) {
-			audio.volume = this.applyVolumeScale(this.musicVolume, "music", audio.name);
+		for (let [name, audio] of this.music.entries()) {
+			audio.volume = this.applyVolumeScale(this.musicVolume, "music", name);
 		}
-		this.bgMusic.forEach((audio) => (audio.volume = this.applyVolumeScale(this.musicVolume, "music", audio.name)));
 	}
 
 	disableAudio() {
@@ -307,7 +301,6 @@ export class AudioManager {
 		for (let audio of this.music.values()) {
 			audio.volume = 0;
 		}
-		this.bgMusic.forEach((audio) => (audio.volume = 0));
 		for (let [audio, task] of this.audioEffects.entries()) {
 			audio?.pause();
 			this.audioEffects.delete(audio);
@@ -323,7 +316,6 @@ export class AudioManager {
 		this.SFX.clear();
 		this.ambience.clear();
 		this.music.clear();
-		this.bgMusic = [];
 		this.audioEffects.clear();
 	}
 }
