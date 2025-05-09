@@ -7,6 +7,9 @@
 	"options_title": "游戏选项",
 	"closeOptions_btn": "返回",
 	"returnToMenu_btn": "主页",
+	"credits": "感谢游玩！",
+	"developed_by": "游戏由 Rat Bones Studios 开发",
+	"external_collaborators": "以及外部协作人员",
 
 	"opt_lang": "语言",
 	"opt_volume": "音量",

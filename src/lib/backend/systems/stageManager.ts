@@ -3,6 +3,7 @@ import { Publisher } from "./observer";
 import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
+import { resetState } from "../game";
 
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
@@ -13,6 +14,14 @@ export class StageManager extends Publisher {
 	}
 	set currentSceneIndex(value) {
 		this.w_currentSceneIndex.set(value);
+	}
+
+	w_gameOver: Writable<boolean> = writable(false);
+	get gameOver() {
+		return get(this.w_gameOver);
+	}
+	set gameOver(value) {
+		this.w_gameOver.set(value);
 	}
 
 	timer: Timer;
