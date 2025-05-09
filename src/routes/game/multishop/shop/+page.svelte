@@ -97,8 +97,8 @@
 						alt="customer"
 						src={img[`alien_${customer[0]}_${customer[1]}`]}
 						style="
-							top: {ind * 2.5}%;
-							left: {ind * 2.5}%;
+							top: {23 + ind * 10}%;
+							right: {29 + ind * 10}%;
 							z-index:{ind}"
 					/>
 				{/each}
@@ -279,8 +279,7 @@
 
 		.customers {
 			img {
-				border: 1px solid whitesmoke;
-				width: 20%;
+				width: 55%;
 				height: auto;
 			}
 		}

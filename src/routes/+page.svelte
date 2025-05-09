@@ -10,6 +10,7 @@
 	import { AudioManager } from "$lib/backend/systems/audioManager";
 	import { aud } from "$lib/assets/aud";
 	import { onMount, onDestroy } from "svelte";
+	import { menu } from "@tauri-apps/api";
 	import TextDisplay from "$lib/components/TextDisplay.svelte";
 
 	let page = $state("title");
@@ -21,10 +22,7 @@
 			menuAudioManager.playAudio("menu");
 			menuAudioManager.setVolume("menu", 0);
 			menuMusicStarted = true;
-			menuAudioManager.fadeAudio("menu", 5000, 1, (c) => {
-				console.log("Menu music fade done, was cancelled? ", c);
-				console.log(menuAudioManager.getVolume("menu"));
-			});
+			menuAudioManager.fadeAudio("menu", 5000, 1);
 		}
 	}
 

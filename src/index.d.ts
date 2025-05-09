@@ -100,12 +100,12 @@ interface ILocalShop extends IShop {
   promoterUnlocked: boolean;
   supplierUnlocked: boolean;
   moneyMultiplier: number;
+  autoRestockUnlocked: boolean;
 
 
   roles: Map<string, Role>;
   unlockPromoter(): void;
   unlockSupplier(): void;
-  unlockAutoRestock(): void;
 }
 
 interface IScene {
