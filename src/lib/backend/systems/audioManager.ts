@@ -20,18 +20,15 @@ export const sfxVolume = writable(
 export const audioManagerRegistry: Set<AudioManager> = new Set();
 
 globalVolumeScale.subscribe((value) => {
-	console.log("Global volume scale updated:", value);
 	localStorage.setItem("globalVolumeScale", value.toString());
 });
 
 musicVolume.subscribe((value) => {
-	console.log("Music volume updated:", value);
 	localStorage.setItem("musicVolume", value.toString());
 	audioManagerRegistry.forEach((manager) => manager.updateAllVolumes());
 });
 
 sfxVolume.subscribe((value) => {
-	console.log("SFX volume updated:", value);
 	localStorage.setItem("sfxVolume", value.toString());
 	audioManagerRegistry.forEach((manager) => manager.updateAllVolumes());
 });
@@ -72,7 +69,7 @@ export class AudioManager {
 			audio.play();
 		} else if (this.music.has(name)) {
 			const audio = this.music.get(name)!;
-			audio.volume = this.applyVolumeScale(this.musicVolume, "music", name); 
+			audio.volume = this.applyVolumeScale(this.musicVolume, "music", name);
 			audio.play();
 		} else if (this.ambience.has(name)) {
 			const audio = this.ambience.get(name)!;
@@ -322,15 +319,11 @@ export class AudioManager {
 
 export function cleanupAudioManagers(activeAudioManager: AudioManager) {
 	console.log("Cleaning up audio managers");
-	console.log("Active audio manager:", activeAudioManager);
-	logAudioManagers();
 	for (const manager of audioManagerRegistry) {
 		if (manager !== activeAudioManager) {
-			console.log("Destroying audio manager:", manager);
 			manager.destroy();
 		}
 	}
-	logAudioManagers();
 }
 
 export function logAudioManagers() {

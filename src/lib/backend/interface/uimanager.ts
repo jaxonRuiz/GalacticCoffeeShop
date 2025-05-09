@@ -27,18 +27,18 @@ export class UIManager {
 
 	setCustomerCount(customers: number) {
 		const currAliens = this.alienGenerator.alienCount;
-		
-		for (let i = 0; i < Math.floor(customers-currAliens); ++i) {
+
+		for (let i = 0; i < Math.floor(customers - currAliens); ++i) {
 			this.alienGenerator.addAlien();
 		}
 		for (let i = currAliens; i > customers; --i) {
 			this.alienGenerator.removeAlien();
-		} 
+		}
 	}
 
 	setCoffeeCount(coffees: number) {
 		const currCoffee = this.coffeeGenerator.coffeeCount;
-	
+
 		for (let i = 0; i < Math.floor(coffees - currCoffee); ++i) {
 			this.coffeeGenerator.addCoffee();
 		}
@@ -126,7 +126,6 @@ class AlienGenerator {
 		}
 		this.aliens.update((aliens) => {
 			const type = this.alienTypes[Math.floor(Math.random() * this.alienTypes.length)];
-			console.log(type, aTypeCounts[type], Math.floor(Math.random() * aTypeCounts[type]));
 			aliens = [...aliens, [type, Math.floor(Math.random() * aTypeCounts[type])]];
 			return aliens;
 		});

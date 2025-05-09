@@ -12,6 +12,7 @@
 		saveState,
 		stageManager,
 		pauseGame,
+		resumeGame,
 	} from "$lib/backend/game";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
@@ -30,7 +31,11 @@
 	function onKeyDown(event: KeyboardEvent) {
 		if (event.key === "Escape") {
 			$optionsWindowOpen = !get(optionsWindowOpen);
-			pauseGame();
+			if ($optionsWindowOpen) {
+				pauseGame();
+			} else {
+				resumeGame();
+			}
 		}
 		if (event.key === "t") {
 			testWindowOpen = !testWindowOpen;
@@ -90,6 +95,7 @@
 							onclick={() => {
 								$optionsWindowOpen = false;
 								saveState();
+								// resumeGame();
 								goto(`${base}/`);
 							}}
 						>

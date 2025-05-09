@@ -63,7 +63,7 @@
 			</div>
 			<div class="customers abs">
 				{#each $customersInLine as customer, ind (customer)}
-				{console.log(`alien_${customer[0]}_${customer[1]}`)}
+					{console.log(`alien_${customer[0]}_${customer[1]}`)}
 					<img
 						in:fly={{ y: -50, duration: 500 }}
 						out:fly={{ y: -50, duration: 500 }}
@@ -195,9 +195,8 @@
 		}
 
 		.customers {
-
 			img {
-				width: 55%
+				width: 55%;
 			}
 		}
 	}
