@@ -217,6 +217,7 @@ export class Shop implements ILocalShop {
 					Array.from({ length: 2 }, (_, col) => [row, col + 10])
 				).flat(),
 			]);
+		this.uiManager.setAlienTypes(["catorbiter"]);
 	}
 
 	// multishop utility /////////////////////////////////////////////////////////
@@ -375,7 +376,7 @@ export class Shop implements ILocalShop {
 	sellCoffee(amount: number = 1) {
 		this.audioManager.playAudio("ding");
 		// if (this.isSelected) {
-			
+
 		// }
 		let numToSell = Math.floor(
 			Math.min(amount, this.waitingCustomers, this.coffeeCups)
