@@ -23,8 +23,8 @@ export function startNewGame() {
 	console.log("starting new game");
 	if (get(gamePaused)) {
 		console.error("game paused on new game");
+		resumeGame();
 	}
-	resumeGame();
 	if (stageManager.currentSceneIndex == 0) {
 		console.log("stage manager was at 0");
 		stageManager.nextScene();
@@ -49,8 +49,8 @@ export function loadState() {
 	console.log("game loading state");
 	if (get(gamePaused)) {
 		console.error("game paused on load game");
+		resumeGame();
 	}
-	resumeGame();
 	if (!localStorage.getItem("GameSaveData")) {
 		console.error("No save data found");
 		startNewGame();
@@ -77,14 +77,12 @@ export function resetState() {
 export function pauseGame() {
 	if (!get(gamePaused)) {
 		gamePaused.set(true);
-		console.log("game paused");
 		timer.pause();
 	} else console.log("game already paused");
 }
 
 export function resumeGame() {
 	if (get(gamePaused)) {
-		console.log("game unpaused");
 		gamePaused.set(false);
 		timer.resume();
 	} else console.log("game already unpaused");

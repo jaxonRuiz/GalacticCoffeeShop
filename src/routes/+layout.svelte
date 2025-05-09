@@ -95,7 +95,7 @@
 							onclick={() => {
 								$optionsWindowOpen = false;
 								saveState();
-								resumeGame();
+								// resumeGame();
 								goto(`${base}/`);
 							}}
 						>
