@@ -442,10 +442,6 @@ export class Shop implements ILocalShop {
 		this.w_promoterUnlocked.set(true);
 	}
 
-	unlockAutoRestock() {
-		this.autoRestockUnlocked = true;
-	}
-
 	unlockSupplier() {
 		this.supplierUnlocked = true;
 		this.roles.set("supplier", {
