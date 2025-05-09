@@ -3,7 +3,7 @@ import { Publisher } from "./observer";
 import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
-import { resetState } from "../game";
+import { endGame } from "../game";
 
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
@@ -14,14 +14,6 @@ export class StageManager extends Publisher {
 	}
 	set currentSceneIndex(value) {
 		this.w_currentSceneIndex.set(value);
-	}
-
-	w_gameOver: Writable<boolean> = writable(false);
-	get gameOver() {
-		return get(this.w_gameOver);
-	}
-	set gameOver(value) {
-		this.w_gameOver.set(value);
 	}
 
 	timer: Timer;
@@ -57,7 +49,9 @@ export class StageManager extends Publisher {
 					this.currentScene = new MultiShop(this.timer.timeEvents, this);
 					break;
 				case 3:
+					endGame();
 					console.log("game over reload");
+
 					break;
 				default:
 					console.log("game is over relaod");
@@ -97,6 +91,7 @@ export class StageManager extends Publisher {
 			case 2: // multishop to gameover
 				console.log("multishop to game over");
 				this.currentSceneIndex = 3;
+				endGame();
 				break;
 
 			default:

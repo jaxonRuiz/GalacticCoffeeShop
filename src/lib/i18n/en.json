@@ -20,8 +20,8 @@
 	"intro4": "Good luck.",
 
 	"outro1": "You stare into the depths of the universe.",
-	"outro2": "There is no place coffee is not.",
-	"outro3": "Success...?",
+	"outro2": "Your coffee will soon expand",
+	"outro3": "To be continued (full ending in development)",
 
 	"preshop_title": "Coffee Stand",
 	"localShop_title": "Coffee Shop",
@@ -170,12 +170,15 @@
 	"brazilian_beans_upgName": "Brazilian Coffee Beans",
 	"brazilian_beans_upgDesc": "No better beans than Brazilian beans",
 	"civet_coffee_upgName": "Civet Coffee",
-	"civet_coffee_upgDesc": "Poop has never tasted better",
+	"civet_coffee_upgDesc": "Coffee has never tasted better",
 
 	"window_flowers_upgName": "Buy Flowers",
 	"window_flowers_upgDesc": "Some beautiful roses for the window",
 	"bumpin_music_upgName": "Hire a Live Performer",
 	"bumpin_music_upgDesc": "He says he's Frank Sinatra but I'm not sure I believe him",
 	"drug_the_coffee_upgName": "Drug the Coffee",
-	"drug_the_coffee_upgDesc": "It looks like sugar so nobody will know"
+	"drug_the_coffee_upgDesc": "It looks like sugar so nobody will know",
+
+	"end_game_upgName": "End Game",
+	"end_game_upgDesc": "The End - for now"
 }

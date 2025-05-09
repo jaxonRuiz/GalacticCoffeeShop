@@ -19,8 +19,6 @@
 		{goto(`${base}/game/preshop`)}
 	{:else if $stage == 2}
 		{goto(`${base}/game/multishop`)}
-	{:else if $stage == 3}
-		{goto(`${base}/test`)}
 	{/if}
 </div>
 

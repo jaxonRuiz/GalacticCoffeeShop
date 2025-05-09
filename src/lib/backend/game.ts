@@ -64,11 +64,9 @@ export function resetState() {
 
 	// reset variables to erase data inside them
 	timer = new Timer();
-	// stageManager = new StageManager(timer);
 	stageManager.reset(timer);
 }
 
-// also acts as unpause game
 export function pauseGame() {
 	if (!get(gamePaused)) {
 		gamePaused.set(true);
