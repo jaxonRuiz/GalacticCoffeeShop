@@ -6,6 +6,10 @@
 	import { writable } from "svelte/store";
 	import Region from "$lib/components/franchise/Region.svelte";
 	import { fMoney } from "$lib/components/Styles.svelte";
+	import { timer } from "$lib/backend/game";
+
+	let hour = timer.w_hour;
+	let day = timer.w_day;
 
 	// base
 	let smanager = stageManager;
@@ -37,13 +41,24 @@
 	go to research lab
 </Button>
 <Button
-		static={false}
-		onclick={() => {
-			franchise.deselectCountry();
-		}}
-	>
-		deselect country
-	</Button>
+	static={false}
+	onclick={() => {
+		franchise.deselectCountry();
+	}}
+>
+	deselect country
+</Button>
+
+<p style="position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 1000;">
+	Day: {timer.getDay($day)} {$hour}:00
+</p>
 
 <div class="countryrow">
 	<div class="left block">

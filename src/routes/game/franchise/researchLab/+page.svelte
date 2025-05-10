@@ -4,6 +4,10 @@
 	import Button from "$lib/components/Button.svelte";
 	import ResearchTask from "$lib/components/franchise/ResearchTask.svelte";
 	import ResearchUpgrade from "$lib/components/franchise/ResearchUpgrade.svelte";
+	import { timer } from "$lib/backend/game";
+
+	let hour = timer.w_hour;
+	let day = timer.w_day;
 
 	// base
 	const smanager = stageManager;
@@ -17,13 +21,24 @@
 </script>
 
 <Button
-			static={true}
-			onclick={() => {
-				franchise.deselectResearchLab();
-			}}
-		>
-			leave
-		</Button>
+	static={true}
+	onclick={() => {
+		franchise.deselectResearchLab();
+	}}
+>
+	leave
+</Button>
+
+<p style="position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 1000;">
+	Day: {timer.getDay($day)} {$hour}:00
+</p>
 
 <h1>Research Lab</h1>
 

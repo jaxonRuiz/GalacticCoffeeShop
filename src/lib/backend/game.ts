@@ -10,7 +10,7 @@ import { StageManager } from "./systems/stageManager";
 // let tester = new Tester();
 // tester.preshopTest01();
 
-let timer = new Timer();
+export let timer = new Timer();
 let gamePaused = writable(false);
 export let firstTime = true;
 export let stageManager = new StageManager(timer);

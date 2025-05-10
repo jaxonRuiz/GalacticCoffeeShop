@@ -138,6 +138,10 @@ export class Timer {
 		this.year = data.year;
 	}
 
+	getDay(day: number){
+		return this.days[day];
+	}
+
 	// getters
 	get calanderDay() {
 		return this.days[this.day];

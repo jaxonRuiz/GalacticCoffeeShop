@@ -4,10 +4,14 @@
 	import { stageManager } from "$lib/backend/game";
 	import Button from "$lib/components/Button.svelte";
 	import { fMoney } from "$lib/components/Styles.svelte";
+	import { timer } from "$lib/backend/game";
 
+	let hour = timer.w_hour;
+	let day = timer.w_day;
 	let franchise = stageManager.currentScene as Franchise;
 	let countries = franchise.world.w_countries;
 	let money = franchise.w_money;
+	
 
 </script>
 
@@ -21,6 +25,16 @@
 >
 	go to research lab
 </Button>
+<p style="position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 1000;">
+	Day: {timer.getDay($day)} {$hour}:00
+</p>
 
 <div class="col block" style = "position: relative; height: 100vh;">
 	<h1>World View</h1>

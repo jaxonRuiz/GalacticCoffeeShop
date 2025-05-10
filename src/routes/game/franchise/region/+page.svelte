@@ -5,6 +5,10 @@
 	import Development from "$lib/components/Development.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import { fMoney } from "$lib/components/Styles.svelte";
+	import { timer } from "$lib/backend/game";
+
+	let hour = timer.w_hour;
+	let day = timer.w_day;
 
 	// base
 	const smanager = stageManager;
@@ -44,6 +48,18 @@
 >
 	go to research lab
 </Button>
+
+<p style="position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 1000;">
+	Day: {timer.getDay($day)} {$hour}:00
+</p>
+
 <Button
 			static={false}
 			onclick={() => {
