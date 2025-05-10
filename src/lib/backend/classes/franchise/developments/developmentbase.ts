@@ -207,14 +207,14 @@ export class DevelopmentBase implements IDevelopment{
 
 	BuildingList: Record<BuildingType, Record<BuildingSize, BuildingData>> = {
 		coffeeBuilding: {
-			small: { names: ["Little Bean", "Mini Mocha"], cost: 2000, num: 20, areaSize: 1, rent: 50 },
-			medium: { names: ["Central Perk", "Daily Grind"], cost: 4000, num: 40, areaSize: 2, rent: 100 },
-			large: { names: ["Coffee Empire", "Mocha Megaplex"], cost: 7000, num: 80, areaSize: 4, rent: 200 }
+			small: { names: ["The Bean Bros", "Mocha Mart"], cost: 2000, num: 20, areaSize: 1, rent: 50 },
+			medium: { names: ["Big Bean Bar", "Cocoa Company"], cost: 4000, num: 40, areaSize: 2, rent: 100 },
+			large: { names: ["The Bean.", "The Coffee Cacophony"], cost: 7000, num: 80, areaSize: 4, rent: 200 }
 		},
 		housingBuilding: {
-			small: { names: ["Tiny Homes", "Cozy Cabins"], cost: 2000, num: 1000, areaSize: 1, rent: 50 },
-			medium: { names: ["Suburb House", "Town Villa"], cost: 4000, num: 2000, areaSize: 2, rent: 100 },
-			large: { names: ["Luxury Apartments", "Highrise Living"], cost: 7000, num: 5000, areaSize: 4, rent: 200 }
+			small: { names: ["Da Motel", "Cozy Cabins"], cost: 2000, num: 1000, areaSize: 1, rent: 50 },
+			medium: { names: ["Suburbia", "Town Villa"], cost: 4000, num: 2000, areaSize: 2, rent: 100 },
+			large: { names: ["100 Story Skyscraper", "Rich People Houses"], cost: 7000, num: 5000, areaSize: 4, rent: 200 }
 		},
 		importBuilding: {
 			small: { names: ["Mini Dock", "Petite Port"], cost: 2000, num: 1000, areaSize: 2, rent: 50 },
@@ -242,7 +242,7 @@ export class DevelopmentBase implements IDevelopment{
 			large: { names: ["Industrial Farm Complex", "Agro-Enterprise Zone"], cost: 7000, num: 120, areaSize: 5, rent: 200 }
 		},
 		researchBuilding: {
-			small: { names: ["R&Deez", "Lil Lab"], cost: 2000, num: 50, areaSize: 1, rent: 50 },
+			small: { names: ["R&Deez Beans", "Lil Lab"], cost: 2000, num: 50, areaSize: 1, rent: 50 },
 			medium: { names: ["The Idea Generator", "The Research Gallery"], cost: 4000, num: 100, areaSize: 2, rent: 100 },
 			large: { names: ["The Big Think", "Super Mega Lab"], cost: 7000, num: 200, areaSize: 4, rent: 200 }
 		}

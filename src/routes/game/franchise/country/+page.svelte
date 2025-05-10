@@ -102,7 +102,7 @@
 						<p style="font-size: 1.2rem"><strong>{task.desc}</strong></p>
 						<p>💰 Cost: {task.cost}</p>
 						<p>📈 Influence Gain: +{task.influence}</p>
-						<p>Time: {task.time}</p>
+						<p>Time: {Math.floor(task.time)}</p>
 						<Button onclick={() => franchise.startInfluenceTask(i)}>
 							Start
 						</Button>
@@ -116,9 +116,9 @@
 				{#each $currinfluenceTasks as task, i}
 					<div class="upgrade-card">
 						<p style="font-size: 1.2rem"><strong>{task.desc}</strong></p>
-						<p>💰 Cost: {task.cost}</p>
+						<p>💰 Cost: {Math.floor(task.cost)}</p>
 						<p>📈 Influence Gain: +{task.influence}</p>
-						<p>Time: {task.time}</p>
+						<p>Time: {Math.floor(task.time)}</p>
 						<Button onclick={() => franchise.stopInfluenceTask(i)}>
 							Cancel
 						</Button>
@@ -155,8 +155,8 @@
 			{#if policyEvents}
 				{#each $policyEvents as event, i}
 					<div class="upgrade-card">
-						<p><strong>{event.desc}</strong></p>
-						<p>Time: {event.time}</p>
+						<p style="font-size: 1.2rem;"><strong>{event.desc}</strong></p>
+						<p>Time: {Math.floor(event.time)}</p>
 						<div
 							style="
 								width: 100%;

@@ -223,19 +223,31 @@ export class Country{
 
 	initializeInfluenceTasks() { // initialize a list of tasks that will be pulled from in refreshInfluenceTasks
 		this.influenceTasksStatic.push({
-			desc: "Shake hands with the president",
+			desc: "Shake hands with da president",
 			cost: 1000,
 			influence: 100,
 			time: 20,
 		});
 		this.influenceTasksStatic.push({
-			desc: "Put out a video glazing their president",
+			desc: "Put out a video praising the infrastructure",
 			cost: 2000,
 			influence: 200,
 			time: 30,
 		});
 		this.influenceTasksStatic.push({
-			desc: "Send the president a corn dog",
+			desc: 'Send their president a corn dog (and write "not a bomb" on the label so he knows)',
+			cost: 500,
+			influence: 50,
+			time: 10,
+		});
+		this.influenceTasksStatic.push({
+			desc: "Do a backflip in front of their congress",
+			cost: 1000,
+			influence: 100,
+			time: 20,
+		});
+		this.influenceTasksStatic.push({
+			desc: "Call their president and tell them you love them",
 			cost: 500,
 			influence: 50,
 			time: 10,
@@ -337,7 +349,7 @@ export class Country{
 
 const randomEvents: IPolicyEvent[] = [
 	{
-		desc: 'tax increase!',
+		desc: 'President wants to impose a cafe specific tax',
 		time: 50,
 		currentInfluence: 0,
 		totalInfluence: 100,
@@ -352,7 +364,7 @@ const randomEvents: IPolicyEvent[] = [
 		},
 	},
 	{
-		desc: 'tax increase!',
+		desc: 'President wants a coffee bean tax',
 		time: 50,
 		currentInfluence: 0,
 		totalInfluence: 200,
@@ -367,7 +379,7 @@ const randomEvents: IPolicyEvent[] = [
 		},
 	},
 	{
-		desc: 'tax decrease!',
+		desc: 'President feels bad about imposing coffee bean taxes and wants to lower them again',
 		time: 60,
 		currentInfluence: 0,
 		totalInfluence: 100,
@@ -382,7 +394,7 @@ const randomEvents: IPolicyEvent[] = [
 		},
 	},
 	{
-		desc: 'tax decrease!',
+		desc: 'Congress wants to lower taxes for some reason',
 		time: 50,
 		currentInfluence: 10,
 		totalInfluence: 200,
@@ -397,7 +409,7 @@ const randomEvents: IPolicyEvent[] = [
 		},
 	},
 	{
-		desc: 'tariff decrease!',
+		desc: 'Congress wants to import cocoa beans for cheaper',
 		time: 100,
 		currentInfluence: 10,
 		totalInfluence: 200,
