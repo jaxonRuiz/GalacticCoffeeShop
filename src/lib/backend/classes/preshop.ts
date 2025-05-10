@@ -86,12 +86,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 	set coffeeCups(value) {
 		this.w_coffeeCups.set(value);
+		this.uiManager.setCoffeeCount(value);
 	}
 	get waitingCustomers() {
 		return get(this.w_waitingCustomers);
 	}
 	set waitingCustomers(value) {
 		this.w_waitingCustomers.set(value);
+		this.uiManager.setCustomerCount(value);
 	}
 
 	// stats
@@ -187,11 +189,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.audioManager.addSFX("meow4", aud.meow_4);
 		this.audioManager.addAmbience("crowd", aud.preshop_crowd);
 
-		//set meow audio volume to 0.5
+		//set meow audio volume
 		this.audioManager.setMaxVolumeScale("meow1", 0.4);
-		this.audioManager.setMaxVolumeScale("meow2", 0.1);
-		this.audioManager.setMaxVolumeScale("meow3", 0.1);
-		this.audioManager.setMaxVolumeScale("meow4", 0.1);
+		this.audioManager.setMaxVolumeScale("meow2", 0.085);
+		this.audioManager.setMaxVolumeScale("meow3", 0.085);
+		this.audioManager.setMaxVolumeScale("meow4", 0.085);
+
+		//set cash register volume
+		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
 
 		this.audioManager.playAudio("bgm");
 		this.audioManager.playAudio("crowd");
@@ -199,6 +204,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		setTimeout(() => {
 			this.audioManager.setVolume("crowd", 0);
 		}, 0);
+
+		 // Store reference for cross-scene fade
+		(window as any).__lastPreshopAudioManager = this.audioManager;
 
 		// UI
 		this.uiManager = new UIManager();
@@ -216,7 +224,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (event === "hour") {
 			if (this.waitingCustomers > 0) {
 				this.waitingCustomers--;
-				this.uiManager.customerLeaving();
 			}
 			// this.decayAppeal();
 		}
@@ -268,10 +275,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.5);
 				this.audioManager.setVolume("crowd", scaledVolume);
 
-				// ui
-				this.uiManager.newCustomer(this.waitingCustomers);
-
-				//play random meow audio (Stipulation that no cat audio can be played 3 times in a row if so play a different random one)
+				//play random meow audio (Stipulation that no cat audio can be played back to back)
 				const meowSounds = ["meow1", "meow2", "meow3", "meow4"];
 				const randomMeow = () => {
 					let availableMeows = meowSounds;
@@ -281,7 +285,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 					const meow = availableMeows[Math.floor(Math.random() * availableMeows.length)];
 					this.lastPlayedMeow = meow;
 					const meowAudio = this.audioManager.getVolume(meow);
-					console.log(meow + meowAudio);
 					this.audioManager.playAudio(meow);
 				};
 				randomMeow();
@@ -312,7 +315,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				this.makeCoffeeTime = 0;
 				this.makeCoffeeCount = 0;
 				this.canMakeCoffee = true;
-				this.uiManager.coffeeMade(this.coffeeCups);
 			} else {
 				// next coffee batch
 				this.makeCoffee();
@@ -337,9 +339,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups--;
 			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
-
-			// ui
-			this.uiManager.coffeeSold();
 		}
 	}
 
@@ -388,7 +387,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	buyBeans() {
 		// possibly make bean cost scale or change over time(?)
 
-		this.audioManager.setVolume("cashRegister", 0.5);
+		
 		this.audioManager.playAudio("cashRegister");
 		if (this.money < this.beanPrice) return;
 		this.beans += this.beansPerBuy;
@@ -405,6 +404,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	endScene() {
 		console.log("preshop endScene()");
+		// Fade out preshop bgm and crowd
+		this.audioManager.fadeAudio("bgm", 1000, 0, () => this.audioManager.stopAudio("bgm"));
+		this.audioManager.fadeAudio("crowd", 1000, 0, () => this.audioManager.stopAudio("crowd"));
 		this.audioManager.disableAudio();
 		this.sceneManager.emit("nextScene");
 	}
@@ -521,8 +523,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.lifetimeGrindBeans = state.lifetimeGrindBeans;
 		this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
 		this.lifetimeCoffeeMade = state.lifetimeCoffeeMade;
-
-		this.uiManager.coffeeMade(this.coffeeCups);
 	}
 
 	clearState() {

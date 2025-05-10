@@ -5,30 +5,24 @@
 	import { fade } from "svelte/transition";
 	import { loadState, startNewGame } from "$lib/backend/game";
 	import { optionsWindowOpen } from "$lib/components/Options";
-	import { pointerStyle } from "$lib/components/Styles.svelte";
 	import { img } from "$lib/assets/img";
 	import Button from "$lib/components/Button.svelte";
-	import Options from "$lib/components/Options.svelte";
 	import { AudioManager } from "$lib/backend/systems/audioManager";
 	import { aud } from "$lib/assets/aud";
 	import { onMount, onDestroy } from "svelte";
-    import { menu } from "@tauri-apps/api";
+	import { menu } from "@tauri-apps/api";
+	import TextDisplay from "$lib/components/TextDisplay.svelte";
 
 	let page = $state("title");
-	let text = $state(-1);
-	const script = ["intro1", "intro2", "intro3", "intro4"];
 	let menuAudioManager: AudioManager;
 	let menuMusicStarted = false;
 
 	function startMenuMusic() {
 		if (!menuMusicStarted && menuAudioManager) {
 			menuAudioManager.playAudio("menu");
-            menuAudioManager.setVolume("menu", 0);
+			menuAudioManager.setVolume("menu", 0);
 			menuMusicStarted = true;
-            menuAudioManager.fadeAudio("menu", 5000, 1, (c) => {
-                console.log("Menu music fade done, was cancelled? ", c);
-                console.log(menuAudioManager.getVolume("menu"));
-            });
+			menuAudioManager.fadeAudio("menu", 5000, 1);
 		}
 	}
 
@@ -45,39 +39,25 @@
 
 	onDestroy(() => {
 		if (menuAudioManager) {
-            console.log("Destroying menu audio manager");
-            menuAudioManager.fadeAudio("menu", 1000, 0, (c) => {
-                menuAudioManager.stopAudio("menu");
-                menuAudioManager.destroy();
-            } );
+			console.log("Destroying menu audio manager");
+			menuAudioManager.fadeAudio("menu", 1000, 0, (c) => {
+				menuAudioManager.stopAudio("menu");
+				menuAudioManager.destroy();
+			});
 		}
 	});
 </script>
 
-<svelte:window
-	onmousedown={() => {
-		if (page == "intro" && text >= 0) {
-			text++;
-			if (text == script.length) {
-				startNewGame();
-				goto(`${base}/game`);
-			}
-		}
-	}}
-/>
-
-<main
-	class="fl col {text >= 0 ? 'intro' : ''}"
-	style={pointerStyle}
-	transition:fade
->
-	{#if text >= 0}
+<main class="fl col" transition:fade>
+	{#if page == "intro"}
 		<div id="intro" class="col">
-			{#each script as key, i (key)}
-				{#if text >= i}
-					<h2 class="intro" transition:fade>{$t(key)}</h2>
-				{/if}
-			{/each}
+			<TextDisplay
+				script={["intro1", "intro2", "intro3", "intro4"]}
+				callback={() => {
+					startNewGame();
+					goto(`${base}/game`);
+				}}
+			/>
 		</div>
 	{:else}
 		<div transition:fade class="row" id="title-screen">
@@ -90,7 +70,6 @@
 					move={false}
 					onclick={() => {
 						page = "intro";
-						text++;
 					}}
 				>
 					<p>{$t("newGame_btn")}</p>
@@ -132,16 +111,10 @@
 		width: 100%;
 		height: 100%;
 	}
-	main.intro {
-		cursor: var(--cpointer), pointer;
-	}
 
 	#intro {
 		position: fixed;
 		width: 100%;
 		height: 100%;
-		.intro {
-			text-align: center;
-		}
 	}
 </style>

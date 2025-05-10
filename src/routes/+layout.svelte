@@ -12,6 +12,8 @@
 		saveState,
 		stageManager,
 		pauseGame,
+		resumeGame,
+    endGame,
 	} from "$lib/backend/game";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
@@ -31,7 +33,11 @@
 	function onKeyDown(event: KeyboardEvent) {
 		if (event.key === "Escape") {
 			$optionsWindowOpen = !get(optionsWindowOpen);
-			pauseGame();
+			if ($optionsWindowOpen) {
+				pauseGame();
+			} else {
+				resumeGame();
+			}
 		}
 		if (event.key === "t") {
 			testWindowOpen = !testWindowOpen;
@@ -44,8 +50,9 @@
 			console.log("app saving");
 			saveState();
 		}
-		if (event.key === "[") {
-			goto(`${base}/`);
+		if (event.key === "]") {
+			endGame();
+			goto(`${base}/game`);
 		}
 		if (event.key === "l") {
 			(stageManager.currentScene as Franchise).researchers += 1000;
@@ -96,6 +103,7 @@
 							onclick={() => {
 								$optionsWindowOpen = false;
 								saveState();
+								// resumeGame();
 								goto(`${base}/`);
 							}}
 						>

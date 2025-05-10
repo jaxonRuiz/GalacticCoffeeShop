@@ -4,6 +4,7 @@ import { aud } from "../../assets/aud";
 
 const unlockStages: boolean = false;
 const playtesterMode: boolean = false;
+const unlockAllUpgrades: boolean = true; // for testing purposes
 
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
@@ -68,6 +69,7 @@ export class UpgradeManager {
 		);
 
 		return unpurchasedUpgrades.filter((id: string) => {
+			if (unlockAllUpgrades) return true;
 			return this.allUpgrades[id].unlock_condition(shopObject);
 		});
 	}
@@ -645,7 +647,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as ILocalShop).lifetimeStats.totalRestocked >= 100;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).unlockAutoRestock();
+				(shop as ILocalShop).autoRestockUnlocked = true;
 			},
 			maxLevel: 1,
 			cost: 200,

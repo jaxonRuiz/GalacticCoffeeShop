@@ -87,25 +87,25 @@ interface ILocalShop extends IShop {
 	maxAppeal: number;
 	appealDecay: number;
 
-	coffeePrice: number;
-	beansPrice: number;
-	cupsPrice: number;
-	totalWorkers: number;
-	maxCustomers: number;
-	promotionEffectiveness: number;
-	appealDecay: number;
-	multiShopUnlocked: boolean;
-	lifetimeStats: { [key: string]: number };
-	workerAmounts: { [key: string]: number };
-	promoterUnlocked: boolean;
-	supplierUnlocked: boolean;
-	moneyMultiplier: number;
+  coffeePrice: number;
+  beansPrice: number;
+  cupsPrice: number;
+  totalWorkers: number;
+  maxCustomers: number;
+  promotionEffectiveness: number;
+  appealDecay: number;
+  multiShopUnlocked: boolean;
+  lifetimeStats: { [key: string]: number };
+  workerAmounts: { [key: string]: number };
+  promoterUnlocked: boolean;
+  supplierUnlocked: boolean;
+  moneyMultiplier: number;
+  autoRestockUnlocked: boolean;
 
 
-	roles: Map<string, Role>;
-	unlockPromoter(): void;
-	unlockSupplier(): void;
-	unlockAutoRestock(): void;
+  roles: Map<string, Role>;
+  unlockPromoter(): void;
+  unlockSupplier(): void;
 }
 
 interface IScene {

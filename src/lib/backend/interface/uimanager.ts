@@ -25,31 +25,26 @@ export class UIManager {
 		this.alienGenerator.updateTypes(types);
 	}
 
-	newCustomer(totalCustomers: number) {
-		console.log("new customer", totalCustomers);
+	setCustomerCount(customers: number) {
 		const currAliens = this.alienGenerator.alienCount;
-		for (let i = 0; i < Math.floor(totalCustomers - currAliens); ++i) {
-			console.log('adding alien');
+
+		for (let i = 0; i < Math.floor(customers - currAliens); ++i) {
 			this.alienGenerator.addAlien();
 		}
-	}
-
-	customerLeaving() {
-		// TODO will break if customers left > 1
-		this.alienGenerator.removeAlien();
-	}
-
-	coffeeMade(totalCoffees: number) {
-		const currCoffee = this.coffeeGenerator.coffeeCount;
-		for (let i = 0; i < Math.floor(totalCoffees - currCoffee); ++i) {
-			this.coffeeGenerator.addCoffee();
+		for (let i = currAliens; i > customers; --i) {
+			this.alienGenerator.removeAlien();
 		}
 	}
 
-	coffeeSold() {
-		// TODO will need to update if coffee sell unit > 1
-		this.customerLeaving();
-		this.coffeeGenerator.removeCoffee();
+	setCoffeeCount(coffees: number) {
+		const currCoffee = this.coffeeGenerator.coffeeCount;
+
+		for (let i = 0; i < Math.floor(coffees - currCoffee); ++i) {
+			this.coffeeGenerator.addCoffee();
+		}
+		for (let i = currCoffee; i > coffees; --i) {
+			this.coffeeGenerator.removeCoffee();
+		}
 	}
 }
 
@@ -131,7 +126,6 @@ class AlienGenerator {
 		}
 		this.aliens.update((aliens) => {
 			const type = this.alienTypes[Math.floor(Math.random() * this.alienTypes.length)];
-			console.log(type, aTypeCounts[type], Math.floor(Math.random() * aTypeCounts[type]));
 			aliens = [...aliens, [type, Math.floor(Math.random() * aTypeCounts[type])]];
 			return aliens;
 		});

@@ -1,26 +1,24 @@
-import { Preshop } from "./classes/preshop";
 import { Timer } from "./systems/time";
-import { UpgradeManager } from "./systems/upgradeManager";
-import { Tester } from "./tester";
-import { Publisher } from "./systems/observer";
-import { MultiShop } from "./classes/multiShop";
 import { get, type Writable, writable } from "svelte/store";
 import { StageManager } from "./systems/stageManager";
-
-// let tester = new Tester();
-// tester.preshopTest01();
 
 export let timer = new Timer();
 let gamePaused = writable(false);
 export let firstTime = true;
 export let stageManager = new StageManager(timer);
+export let gameOver: Writable<boolean> = writable(false);
 
 console.log("hello world");
 
 // make sure startGame is only called on a new save
 export function startNewGame() {
 	resetState();
+	gameOver.set(false);
 	console.log("starting new game");
+	if (get(gamePaused)) {
+		console.error("game paused on new game");
+		resumeGame();
+	}
 	if (stageManager.currentSceneIndex == 0) {
 		console.log("stage manager was at 0");
 		stageManager.nextScene();
@@ -32,6 +30,7 @@ export function startNewGame() {
 }
 
 export function saveState() {
+	if (get(gameOver)) return;
 	console.log("game saving state");
 	let saveData: SaveData = {
 		currentStageIndex: stageManager.currentSceneIndex,
@@ -43,8 +42,12 @@ export function saveState() {
 
 export function loadState() {
 	console.log("game loading state");
+	if (get(gamePaused)) {
+		console.error("game paused on load game");
+		resumeGame();
+	}
 	if (!localStorage.getItem("GameSaveData")) {
-		console.log("No save data found");
+		console.error("No save data found");
 		startNewGame();
 		return;
 	}
@@ -67,15 +70,23 @@ export function resetState() {
 
 // also acts as unpause game
 export function pauseGame() {
+	if (!get(gamePaused)) {
+		gamePaused.set(true);
+		timer.pause();
+	} else console.log("game already paused");
+}
+
+export function resumeGame() {
 	if (get(gamePaused)) {
-		console.log("game unpaused");
 		gamePaused.set(false);
 		timer.resume();
-	} else {
-		gamePaused.set(true);
-		console.log("game paused");
-		timer.pause();
-	}
+	} else console.log("game already unpaused");
+}
+
+// triggers the game over cutscene
+export function endGame() {
+	resetState();
+	gameOver.set(true);
 }
 
 interface SaveData {

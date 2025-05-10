@@ -39,12 +39,14 @@ export class Shop implements ILocalShop {
 	}
 	set coffeeCups(value) {
 		this.w_coffeeCups.set(value);
+		this.uiManager.setCoffeeCount(value);
 	}
 	get waitingCustomers() {
 		return get(this.w_waitingCustomers);
 	}
 	set waitingCustomers(value) {
 		this.w_waitingCustomers.set(value);
+		this.uiManager.setCustomerCount(value);
 	}
 	get money() {
 		return get(this.w_money);
@@ -215,6 +217,7 @@ export class Shop implements ILocalShop {
 					Array.from({ length: 2 }, (_, col) => [row, col + 10])
 				).flat(),
 			]);
+		this.uiManager.setAlienTypes(["catorbiter"]);
 	}
 
 	// multishop utility /////////////////////////////////////////////////////////
@@ -365,8 +368,6 @@ export class Shop implements ILocalShop {
 			this.emptyCups -= numToMake;
 			this.coffeeCups += numToMake;
 			this.lifetimeStats["coffeeMade"] += numToMake;
-			//TODO will break if amt > 1
-			this.uiManager.coffeeMade(this.coffeeCups);
 			return true;
 		}
 		return false;
@@ -375,7 +376,7 @@ export class Shop implements ILocalShop {
 	sellCoffee(amount: number = 1) {
 		this.audioManager.playAudio("ding");
 		// if (this.isSelected) {
-			
+
 		// }
 		let numToSell = Math.floor(
 			Math.min(amount, this.waitingCustomers, this.coffeeCups)
@@ -387,8 +388,6 @@ export class Shop implements ILocalShop {
 			this.lifetimeStats["moneyMade"] +=
 				this.coffeePrice * numToSell * this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
-			// TODO will break if amt > 1
-			this.uiManager.coffeeSold();
 			return true;
 		}
 		return false;
@@ -444,10 +443,6 @@ export class Shop implements ILocalShop {
 		this.w_promoterUnlocked.set(true);
 	}
 
-	unlockAutoRestock() {
-		this.autoRestockUnlocked = true;
-	}
-
 	unlockSupplier() {
 		this.supplierUnlocked = true;
 		this.roles.set("supplier", {
@@ -490,6 +485,10 @@ export class Shop implements ILocalShop {
 
 		for (let key in this.workerStats) {
 			saveObj.workerStats[key] = this.workerStats[key];
+		}
+
+		for (let key in this.workerAmounts) {
+			saveObj.workerAmounts[key] = this.workerAmounts[key];
 		}
 
 		return saveObj;
