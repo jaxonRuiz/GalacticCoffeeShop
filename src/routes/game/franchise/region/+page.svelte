@@ -126,6 +126,7 @@
 
 <style>
 	div.left{
+		overflow: auto;
 		width: 50%;
 		height: 90vh;
 		border: 1px solid #444;
