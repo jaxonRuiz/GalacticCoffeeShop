@@ -25,4 +25,8 @@ export const aud: { [key: string]: string } = {
 	meow_2: new URL('./sfx/meow_2.wav', import.meta.url).href,
 	meow_3: new URL('./sfx/meow_3.wav', import.meta.url).href,
 	meow_4: new URL('./sfx/meow_4.wav', import.meta.url).href,
+	meow_5: new URL('./sfx/meow_5.wav', import.meta.url).href,
+	meow_6: new URL('./sfx/meow_6.wav', import.meta.url).href,
+	meow_7: new URL('./sfx/meow_7.wav', import.meta.url).href,
+	meow_8: new URL('./sfx/meow_8.wav', import.meta.url).href,
 };
