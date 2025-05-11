@@ -157,7 +157,6 @@ export class AudioManager {
 		}
 	}
 
-	// filepath: d:\Capstone2\GalacticCoffeeShop\src\lib\backend\systems\audioManager.ts
 	applyVolumeScale(volume: number, type: "music" | "sfx" | "ambience", name?: string): number {
 		let maxScale = 1;
 		if (name && this.maxVolumeScales.has(name)) {
