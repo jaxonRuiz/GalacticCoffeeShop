@@ -5,6 +5,7 @@ import { msPerTick } from "../systems/time";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
+import { addCoffee, addMoney } from "../analytics";
 
 export class Preshop implements ISubscriber, IScene, IPreshop {
 	moneyMultiplier: number = 1;
@@ -24,6 +25,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	w_makeCoffeeCount: Writable<number> = writable(0);
 	w_beansPerBuy: Writable<number> = writable(3);
 	w_coffeePrice: Writable<number> = writable(3.5);
+	w_maxCoffeeCups: Writable<number> = writable(36);
+	w_maxCustomers: Writable<number> = writable(5);
+	w_makeCoffeeMaxBatches: Writable<number> = writable(1);// how many cups of coffee are made per run
 
 	// internal stats
 	coffeePerBean: number = 2.5;
@@ -32,12 +36,10 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	customerProgress: number = 0; // progress to next customer
 	promotionEffectiveness: number = 0.1; // current rate of customer generation
 	appealDecay: number = 0.05; // rate of decay of customer appeal
-	maxCustomers: number = 5;
 	maxAppeal: number = 0.7;
 	minAppeal: number = 0; // minimum appeal (after decay)
 	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
 	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
-	makeCoffeeBatches: number = 1; // how many cups of coffee are made per run
 	runTutorial: boolean = true;
 
 	autogrindingEnabled: boolean = false; // whether or not to grind automatically
@@ -145,6 +147,24 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	set coffeePrice(value) {
 		this.w_coffeePrice.set(value);
 	}
+	get maxCoffeeCups() {
+		return get(this.w_maxCoffeeCups);
+	}
+	set maxCoffeeCups(value) {
+		this.w_maxCoffeeCups.set(value);
+	}
+	get maxCustomers() {
+		return get(this.w_maxCustomers);
+	}
+	set maxCustomers(value) {
+		this.w_maxCustomers.set(value);
+	}
+	get makeCoffeeMaxBatches() {
+		return get(this.w_makeCoffeeMaxBatches);
+	}
+	set makeCoffeeMaxBatches(value) {
+		this.w_makeCoffeeMaxBatches.set(value);
+	}
 
 	// stat counters
 	get lifetimeGrindBeans() {
@@ -187,25 +207,27 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.audioManager.addSFX("meow2", aud.meow_2);
 		this.audioManager.addSFX("meow3", aud.meow_3);
 		this.audioManager.addSFX("meow4", aud.meow_4);
-		this.audioManager.addAmbience("crowd", aud.preshop_crowd);
+		this.audioManager.addSFX("meow5", aud.meow_5);
+		this.audioManager.addSFX("meow6", aud.meow_6);
+		this.audioManager.addSFX("meow7", aud.meow_7);
+		this.audioManager.addSFX("meow8", aud.meow_8);
 
 		//set meow audio volume
 		this.audioManager.setMaxVolumeScale("meow1", 0.4);
 		this.audioManager.setMaxVolumeScale("meow2", 0.085);
-		this.audioManager.setMaxVolumeScale("meow3", 0.085);
-		this.audioManager.setMaxVolumeScale("meow4", 0.085);
+		this.audioManager.setMaxVolumeScale("meow3", 0.07);
+		this.audioManager.setMaxVolumeScale("meow4", 0.06);
+		this.audioManager.setMaxVolumeScale("meow5", 0.2);
+		this.audioManager.setMaxVolumeScale("meow6", 0.2);
+		this.audioManager.setMaxVolumeScale("meow7", 0.2);
+		this.audioManager.setMaxVolumeScale("meow8", 0.2);
 
 		//set cash register volume
 		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
 
 		this.audioManager.playAudio("bgm");
-		this.audioManager.playAudio("crowd");
-		//fixed initial blast issue
-		setTimeout(() => {
-			this.audioManager.setVolume("crowd", 0);
-		}, 0);
 
-		 // Store reference for cross-scene fade
+		// Store reference for cross-scene fade
 		(window as any).__lastPreshopAudioManager = this.audioManager;
 
 		// UI
@@ -270,13 +292,8 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				);
 				this.customerProgress %= 1;
 
-				// Scale crowd volume by the number of customers and global/music volume
-				const crowdVolume = Math.min(this.waitingCustomers / this.maxCustomers, 1);
-				const scaledVolume = crowdVolume * (get(globalVolumeScale)) * (get(musicVolume) * 0.5);
-				this.audioManager.setVolume("crowd", scaledVolume);
-
 				//play random meow audio (Stipulation that no cat audio can be played back to back)
-				const meowSounds = ["meow1", "meow2", "meow3", "meow4"];
+				const meowSounds = ["meow1", "meow2", "meow3", "meow4", "meow5", "meow6", "meow7", "meow8"];
 				const randomMeow = () => {
 					let availableMeows = meowSounds;
 					if (this.lastPlayedMeow) {
@@ -284,8 +301,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 					}
 					const meow = availableMeows[Math.floor(Math.random() * availableMeows.length)];
 					this.lastPlayedMeow = meow;
-					const meowAudio = this.audioManager.getVolume(meow);
 					this.audioManager.playAudio(meow);
+					const meowAudio = this.audioManager.getVolume(meow);
+					console.log("meowAudio: ", meowAudio);
 				};
 				randomMeow();
 			}
@@ -309,7 +327,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups += this.coffeeToMake;
 			this.makeCoffeeTime = 0;
 
-			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1) {
+			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1 || this.coffeeCups >= this.maxCoffeeCups) {
 				// finished making coffee
 				this.audioManager.stopAudio("boil");
 				this.makeCoffeeTime = 0;
@@ -340,6 +358,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
 		}
+		//ANALYTICS
+		addCoffee(1);
+		addMoney(this.coffeePrice * this.moneyMultiplier);
 	}
 
 	beansToGrind: number = 0;
@@ -375,11 +396,11 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (this.canMakeCoffee) {
 			this.canMakeCoffee = false;
 			this.audioManager.playAudio("boil");
-			this.makeCoffeeCount = this.makeCoffeeBatches;
+			this.makeCoffeeCount = this.makeCoffeeMaxBatches;
+			this.makeCoffeeCount = this.makeCoffeeMaxBatches;
 		}
 
-		// possibly add cooldown or timer effect
-		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity);
+		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity, this.maxCoffeeCups - this.coffeeCups);
 		this.groundCoffee -= this.coffeeToMake;
 		this.makeCoffeeTime = 0;
 	}
@@ -387,7 +408,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	buyBeans() {
 		// possibly make bean cost scale or change over time(?)
 
-		
+
 		this.audioManager.playAudio("cashRegister");
 		if (this.money < this.beanPrice) return;
 		this.beans += this.beansPerBuy;
@@ -404,9 +425,8 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	endScene() {
 		console.log("preshop endScene()");
-		// Fade out preshop bgm and crowd
+		// Fade out preshop bgm
 		this.audioManager.fadeAudio("bgm", 1000, 0, () => this.audioManager.stopAudio("bgm"));
-		this.audioManager.fadeAudio("crowd", 1000, 0, () => this.audioManager.stopAudio("crowd"));
 		this.audioManager.disableAudio();
 		this.sceneManager.emit("nextScene");
 	}
@@ -452,7 +472,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			appealDecay: this.appealDecay,
 			makeCoffeeQuantity: this.makeCoffeeQuantity,
 			makeCoffeeCooldown: this.makeCoffeeCooldown,
-			makeCoffeeBatches: this.makeCoffeeBatches,
+			makeCoffeeBatches: this.makeCoffeeMaxBatches,
 
 			autogrindingEnabled: this.autogrindingEnabled,
 			autogrindInterval: this.autogrindInterval,
@@ -510,7 +530,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.maxAppeal = state.maxAppeal;
 		this.makeCoffeeQuantity = state.makeCoffeeQuantity;
 		this.makeCoffeeCooldown = state.makeCoffeeCooldown;
-		this.makeCoffeeBatches = state.makeCoffeeBatches;
+		this.makeCoffeeMaxBatches = state.makeCoffeeBatches;
 
 		this.autogrindingEnabled = state.autogrindingEnabled;
 		this.autogrindInterval = state.autogrindInterval;

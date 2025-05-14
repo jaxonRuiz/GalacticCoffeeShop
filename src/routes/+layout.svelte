@@ -21,10 +21,13 @@
 	import Boops from "$lib/components/Boops.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
+	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
+	import { onDestroy, onMount } from "svelte";
+	import { addCoffee, addMoney, endSession, startSession } from "$lib/backend/analytics";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
-	let tabs = ["game", "preshop", "shop", "multishop", "test"];
+	let tabs = ["game", "preshop", "shop", "multishop", "franchise", "test"];
 	let url = $derived(page.url.pathname);
 
 	let { children } = $props();
@@ -49,12 +52,16 @@
 			console.log("app saving");
 			saveState();
 		}
-		if (event.key === "[") {
-			goto(`${base}/`);
-		}
 		if (event.key === "]") {
 			endGame();
 			goto(`${base}/game`);
+		}
+		if (event.key === "l") {
+			(stageManager.currentScene as Franchise).researchers += 1000;
+			(stageManager.currentScene as Franchise).money += 1000;
+			addMoney(1000);
+			addCoffee(1000);
+			(stageManager.currentScene as Franchise).sciencePoints += 1000;
 		}
 		// if (event.key === "r") {
 		//   resetState();
@@ -148,9 +155,10 @@
 									smanager.currentScene as MultiShop
 								).shops[0].multiShopUnlocked = true;
 								break;
-							// case 4:
-							//   smanager.loadStage(4, false);
-							//   break;
+							case 4:
+								 // franchise
+							  smanager.loadStage(3, false);
+							  break;
 						}
 						testWindowOpen = false;
 					}}>{tab}</a
