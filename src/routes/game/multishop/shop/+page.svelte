@@ -11,7 +11,7 @@
 		fSellableCoffee,
 		pointerStyle,
 	} from "$lib/components/Styles.svelte";
-	import Dropdown from "$lib/components/Dropdown.svelte";
+	import Block from "$lib/components/Block.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Tooltip from "$lib/components/Tooltip.svelte";
 	import Worker from "$lib/components/Worker.svelte";
@@ -108,7 +108,7 @@
 
 	<div class="shop right row">
 		<div class="col scroll">
-			<Dropdown title={$t("making_title")}>
+			<Block title={$t("making_title")}>
 				<div class="tooltip">
 					<Tooltip text={["makeCoffee3_tooltip", "hire_tooltip"]} />
 				</div>
@@ -124,9 +124,9 @@
 				{#if true}
 					<Worker worker="barista" {sshop} />
 				{/if}
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("selling_title")}>
+			<Block title={$t("selling_title")}>
 				<div class="tooltip">
 					<Tooltip
 						text={["promote_tooltip", "sellCoffee_tooltip", "hire_tooltip"]}
@@ -155,9 +155,9 @@
 				{#if true}
 					<Worker worker="server" {sshop} />
 				{/if}
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("restocking_title")}>
+			<Block title={$t("restocking_title")}>
 				<div class="tooltip">
 					<Tooltip text={["restock_tooltip"]} />
 				</div>
@@ -184,7 +184,7 @@
 						}}>{$t("choresForBeans_btn")}</Button
 					>
 				{/if}
-			</Dropdown>
+			</Block>
 		</div>
 		<div class="col">
 			<UpgradesPanel wshop={sshop} umKey="localShop" money={totalMoney} />

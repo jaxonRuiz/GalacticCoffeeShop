@@ -4,7 +4,7 @@
 	import { Preshop } from "$lib/backend/classes/preshop";
 	import { stageManager } from "$lib/backend/game";
 	import Tooltip from "$lib/components/Tooltip.svelte";
-	import Dropdown from "$lib/components/Dropdown.svelte";
+	import Block from "$lib/components/Block.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import {
 		fMoney,
@@ -81,7 +81,7 @@
 
 	<div class="shop right row">
 		<div class="col scroll">
-			<Dropdown title={$t("making_title")}>
+			<Block title={$t("making_title")}>
 				<div class="tooltip">
 					<Tooltip text={["makeCoffee1_tooltip", "makeCoffee2_tooltip"]} />
 				</div>
@@ -110,11 +110,11 @@
 						pshop.makeCoffee();
 					}}>{$t("makeCoffee_btn")}</Button
 				>
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("promoting_title")}>
+			<Block title={$t("selling_title")}>
 				<div class="tooltip">
-					<Tooltip text={["promote_tooltip"]} />
+					<Tooltip text={["promote_tooltip", "sellCoffee_tooltip"]} />
 				</div>
 				<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
 				<Button
@@ -123,12 +123,6 @@
 						pshop.promoteShop();
 					}}>{$t("promote_btn")}</Button
 				>
-			</Dropdown>
-
-			<Dropdown title={$t("selling_title")}>
-				<div class="tooltip">
-					<Tooltip text={["sellCoffee_tooltip"]} />
-				</div>
 				<p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
 				<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
 				<Button
@@ -140,9 +134,9 @@
 						pshop.sellCoffee();
 					}}>{$t("sellCoffee_btn")}</Button
 				>
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("shop_title")}>
+			<Block title={$t("shop_title")}>
 				<div class="tooltip">
 					<Tooltip text={["shop_tooltip"]} />
 				</div>
@@ -163,7 +157,7 @@
 						}}>{$t("choresForBeans_btn")}</Button
 					>
 				{/if}
-			</Dropdown>
+			</Block>
 		</div>
 
 		<div class="col">
