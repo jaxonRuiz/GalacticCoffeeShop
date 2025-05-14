@@ -161,21 +161,21 @@
 				<div class="tooltip">
 					<Tooltip text={["restock_tooltip"]} />
 				</div>
-				<p>{$t("restockPrice_stat")}: {fMoney(sshop.getRestockPrice())}</p>
-				{#each Object.keys($restockSheet) as key}
-					{@render restockItem(key)}
-				{/each}
-				<Button
-					data-btn="coin"
-					disabled={$restockSheet.beans * sshop.beansPrice +
-						$restockSheet.emptyCups * sshop.cupsPrice >
-					$mshopMoney + $money
-						? true
-						: false}
-					onclick={() => {
-						sshop.restock();
-					}}>{$t("restock_btn")}</Button
-				>
+				{#key $restockSheet}
+					<p>{$t("restockPrice_stat")}: {fMoney(sshop.getRestockPrice())}</p>
+					{#each Object.keys($restockSheet) as key}
+						{@render restockItem(key)}
+					{/each}
+					<Button
+						data-btn="coin"
+						disabled={sshop.getRestockPrice() > $mshopMoney + $money
+							? true
+							: false}
+						onclick={() => {
+							sshop.restock();
+						}}>{$t("restock_btn")}</Button
+					>
+				{/key}
 				{#if ($coffee < 1 && (($money < sshop.cupsPrice && $emptyCups < 1) || ($money < sshop.beansPrice && $beans < 1))) || ($money < sshop.beansPrice + sshop.cupsPrice && $coffee < 3 && $beans < 3 && $emptyCups < 3)}
 					<Button
 						data-btn="plus"
