@@ -33,7 +33,7 @@ interface IShop {
 }
 
 interface IPreshop extends IShop {
-  	money: number;
+	money: number;
 	beans: number;
 	groundCoffee: number;
 	coffeeCups: number;
@@ -42,7 +42,7 @@ interface IPreshop extends IShop {
 	beanPrice: number;
 	grindProgress: number;
 	makeCoffeeCooldown: number;
-	makeCoffeeBatches: number;
+	makeCoffeeMaxBatches: number;
 	coffeePrice: number;
 	beansPerBuy: number;
 	coffeePerBean: number;
@@ -74,7 +74,7 @@ interface IContainerShop extends IShop {
 }
 
 interface IMultiShop extends IContainerShop {
-  	money: number;
+	money: number;
 }
 
 interface ILocalShop extends IShop {
@@ -87,25 +87,25 @@ interface ILocalShop extends IShop {
 	maxAppeal: number;
 	appealDecay: number;
 
-  coffeePrice: number;
-  beansPrice: number;
-  cupsPrice: number;
-  totalWorkers: number;
-  maxCustomers: number;
-  promotionEffectiveness: number;
-  appealDecay: number;
-  multiShopUnlocked: boolean;
-  lifetimeStats: { [key: string]: number };
-  workerAmounts: { [key: string]: number };
-  promoterUnlocked: boolean;
-  supplierUnlocked: boolean;
-  moneyMultiplier: number;
-  autoRestockUnlocked: boolean;
+	coffeePrice: number;
+	beansPrice: number;
+	cupsPrice: number;
+	totalWorkers: number;
+	maxCustomers: number;
+	promotionEffectiveness: number;
+	appealDecay: number;
+	multiShopUnlocked: boolean;
+	lifetimeStats: { [key: string]: number };
+	workerAmounts: { [key: string]: number };
+	promoterUnlocked: boolean;
+	supplierUnlocked: boolean;
+	moneyMultiplier: number;
+	autoRestockUnlocked: boolean;
 
 
-  roles: Map<string, Role>;
-  unlockPromoter(): void;
-  unlockSupplier(): void;
+	roles: Map<string, Role>;
+	unlockPromoter(): void;
+	unlockSupplier(): void;
 }
 
 interface IScene {
@@ -117,7 +117,7 @@ interface IScene {
 }
 
 interface ISubscriber {
-  notify(event: string, data?: any): void;
+	notify(event: string, data?: any): void;
 }
 /*
 classes that implement subscriber should implement a
@@ -159,7 +159,7 @@ interface IRegion {
 	// InitializeRegion(climate: ClimateType);
 }
 
-interface ICountry{
+interface ICountry {
 	// parent: World;
 	// taxRate: number;
 	// tariffRate: number;
@@ -210,7 +210,7 @@ type BuildingData = {
 	rent: number;
 };
 
-interface IInfluenceTask{
+interface IInfluenceTask {
 	desc: string;
 	cost: number;
 	influence: number;
@@ -225,8 +225,8 @@ interface IPolicyEvent {
 	won(country: Country): void;
 	lost(country: Country): void;
 	eitherWay(country: Country): void;
-  }
-  
+}
+
 interface IResearchTask {
 	desc: string;
 	researchUnits: number;

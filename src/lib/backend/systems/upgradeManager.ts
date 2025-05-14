@@ -173,7 +173,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as IPreshop).lifetimeCoffeeMade > 15;
 			},
 			upgrade: (shop) => {
-				(shop as IPreshop).makeCoffeeBatches += 1;
+				(shop as IPreshop).makeCoffeeMaxBatches += 1;
 			},
 			maxLevel: 1,
 			cost: 30,
@@ -298,7 +298,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 					(shop.upgrades.get("makeshift_coffee_refiller") ?? 0) >= 1;
 			},
 			upgrade: (shop) => {
-				(shop as IPreshop).makeCoffeeBatches += 2;
+				(shop as IPreshop).makeCoffeeMaxBatches += 2;
 			},
 			maxLevel: 3,
 			cost: 80,
