@@ -1,6 +1,7 @@
 import { Timer } from "./systems/time";
 import { get, type Writable, writable } from "svelte/store";
 import { StageManager } from "./systems/stageManager";
+import { startSession } from "./analytics";
 
 export let timer = new Timer();
 let gamePaused = writable(false);
@@ -20,12 +21,12 @@ const GA = window.gameanalytics.GameAnalytics;
 GA.setEnabledInfoLog(true);
 GA.setEnabledVerboseLog(true);
 GA.configureBuild("0.10");
-GA.configureAvailableResourceCurrencies(["money"]);
 GA.initialize('a07f4cd4e7485020da55d37998e8921f', '57d5a645ab68900bd7718a8ec09e456b570444cb');
 
 // make sure startGame is only called on a new save
 export function startNewGame() {
 	resetState();
+	startSession();
 	gameOver.set(false);
 	console.log("starting new game");
 	if (get(gamePaused)) {
@@ -55,6 +56,7 @@ export function saveState() {
 
 export function loadState() {
 	console.log("game loading state");
+	startSession();
 	if (get(gamePaused)) {
 		console.error("game paused on load game");
 		resumeGame();

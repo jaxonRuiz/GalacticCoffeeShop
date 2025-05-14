@@ -22,6 +22,8 @@
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
+	import { onDestroy, onMount } from "svelte";
+	import { addCoffee, addMoney, endSession, startSession } from "$lib/backend/analytics";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -56,7 +58,9 @@
 		}
 		if (event.key === "l") {
 			(stageManager.currentScene as Franchise).researchers += 1000;
-			(stageManager.currentScene as Franchise).money += 10000;
+			(stageManager.currentScene as Franchise).money += 1000;
+			addMoney(1000);
+			addCoffee(1000);
 			(stageManager.currentScene as Franchise).sciencePoints += 1000;
 		}
 		// if (event.key === "r") {

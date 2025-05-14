@@ -5,6 +5,7 @@ import { msPerTick } from "../systems/time";
 import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
+import { addCoffee, addMoney } from "../analytics";
 
 export class Preshop implements ISubscriber, IScene, IPreshop {
 	moneyMultiplier: number = 1;
@@ -338,6 +339,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.money += this.coffeePrice * this.moneyMultiplier;
 			this.lifetimeCoffeeSold++;
 		}
+		//ANALYTICS
+		addCoffee(1);
+		addMoney(this.coffeePrice * this.moneyMultiplier);
 	}
 
 	beansToGrind: number = 0;

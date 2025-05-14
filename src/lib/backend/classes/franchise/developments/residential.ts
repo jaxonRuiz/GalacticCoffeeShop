@@ -3,6 +3,7 @@ import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Publisher } from "$lib/backend/systems/observer";
 import type { Region } from "../region";
 import type { Franchise } from "../franchise";
+import { addCoffee, addMoney } from "$lib/backend/analytics";
 
 export class Residential extends DevelopmentBase implements IResidential{
 	get developmentType(): DevelopmentType {
@@ -33,6 +34,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 	  this.coffeeSoldThisHour += coffeeSold;
 	  this.parent.deliveriesThisHour += coffeeSold;
 	  this.franchise.money += coffeeSold * this.coffeePrice * (1 - this.parent.parentCountry.taxRate);
+	  //ANALYTICS
+	  addCoffee(coffeeSold);
+	  addMoney(coffeeSold * this.coffeePrice * (1 - this.parent.parentCountry.taxRate));
 	}
 
 	tickCoffee() {

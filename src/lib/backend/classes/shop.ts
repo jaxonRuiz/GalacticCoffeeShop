@@ -4,6 +4,7 @@ import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { dictProxy } from "../proxies";
+import { addCoffee, addMoney } from "../analytics";
 
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
@@ -388,6 +389,10 @@ export class Shop implements ILocalShop {
 			this.lifetimeStats["moneyMade"] +=
 				this.coffeePrice * numToSell * this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
+
+			//ANALYTICS
+			addCoffee(numToSell);
+			addMoney(this.coffeePrice * numToSell * this.moneyMultiplier);
 			return true;
 		}
 		return false;
