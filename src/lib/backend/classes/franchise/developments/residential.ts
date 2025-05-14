@@ -4,6 +4,8 @@ import type { Publisher } from "$lib/backend/systems/observer";
 import type { Region } from "../region";
 import type { Franchise } from "../franchise";
 import { addCoffee, addMoney } from "$lib/backend/analytics";
+import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
+import { aud } from "../../../../assets/aud";
 
 export class Residential extends DevelopmentBase implements IResidential{
 	get developmentType(): DevelopmentType {
@@ -11,6 +13,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 	}
 
 	coffeeSoldThisHour: number = 0;
+
+	//audioManager
+	audioManager: AudioManager;
 
 	//helpers
 	get coffeePrice(): number{
@@ -20,6 +25,9 @@ export class Residential extends DevelopmentBase implements IResidential{
 	constructor(region: Region, areaSize: number, franchise: Franchise) {
 			super(region, areaSize, franchise);
 			this.initializeDevelopment();
+
+			//audio
+			this.audioManager = franchise.audioManager;
 	}
 
 	coffeeAccumulator: number = 0;

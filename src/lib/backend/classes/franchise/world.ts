@@ -2,10 +2,13 @@ import { type Writable, writable } from "svelte/store";
 import { Franchise } from "./franchise";
 import { Country } from "./country";
 import { dictProxy } from "$lib/backend/proxies";
+import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
+import { aud } from "../../../assets/aud";
 
 export class World implements ISubscriber, IWorld {
 	w_countries: Writable<{ [key: string]: any }> = writable({});
 	franchise: Franchise;
+	audioManager: AudioManager;
 
 	get countries() {
 		return dictProxy(this.w_countries);
@@ -19,7 +22,11 @@ export class World implements ISubscriber, IWorld {
 
 	constructor(franchise: Franchise) {
 		this.franchise = franchise;
+		this.audioManager = franchise.audioManager;
 		this.initializeCountries(4 + Math.floor(Math.random() * 2));
+
+		//audio
+		this.audioManager = franchise.audioManager;
 	}
 
 	initializeCountries(count: number) {

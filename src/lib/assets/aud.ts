@@ -1,6 +1,7 @@
 export const aud: { [key: string]: string } = {
 	shop_music: new URL('./music/Duraznito - Quincas Moreira.mp3', import.meta.url).href,
 	preshop_music: new URL('./music/Squirm Worm - TrackTribe.mp3', import.meta.url).href,
+	franchise_music: new URL('./music/LOPKERJO - Soul of Galveston.mp3', import.meta.url).href,
 	cant_burn: new URL(`./music/Mid-Air Machine - Just Can't Burn.mp3`, import.meta.url).href,
 	moonlight: new URL('./music/snoozy beats - moonlight city.mp3', import.meta.url).href,
 	fat_caps: new URL('./music/Jason Shaw - Fat Caps.mp3', import.meta.url).href,

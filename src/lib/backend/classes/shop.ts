@@ -169,7 +169,7 @@ export class Shop implements ILocalShop {
 	roles: Map<string, Role> = new Map();
 	upgrades: Map<string, number> = new Map();
 	multiShop: MultiShop;
-	audioManager: AudioManager = new AudioManager();
+	audioManager: AudioManager;
 	uiManager: UIManager;
 	boilTimer: number = 0;
 	playBoiler: boolean = false;

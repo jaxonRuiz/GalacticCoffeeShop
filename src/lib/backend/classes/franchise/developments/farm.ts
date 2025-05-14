@@ -3,15 +3,22 @@ import { DevelopmentBase, DevelopmentType } from "./developmentbase";
 import type { Publisher } from "$lib/backend/systems/observer";
 import type { Region } from "../region";
 import type { Franchise } from "../franchise";
+import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
+import { aud } from "../../../../assets/aud";
 
 export class Farm extends DevelopmentBase {
 	get developmentType(): DevelopmentType {
 		return DevelopmentType.Farm;
 	}
 
+	//audioManager
+	audioManager: AudioManager;
+
 	constructor(region: Region, areaSize: number, franchise: Franchise) {
 		super(region, areaSize, franchise);
 		this.initializeDevelopment();
+
+		this.audioManager = franchise.audioManager;
 	}
 
 	get bpt (){
