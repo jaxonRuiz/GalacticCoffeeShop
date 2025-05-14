@@ -67,8 +67,7 @@ class CoffeeGenerator {
 	}
 
 	addCoffee() {
-		if (this.coffeeCount == this.loc.length) {
-			this.overflow++;
+		if (this.coffeeCount >= this.loc.length) {
 			return;
 		}
 		const possLoc = this.loc.filter((loc) => {
@@ -87,12 +86,6 @@ class CoffeeGenerator {
 			newCoffees.shift();
 			return newCoffees;
 		});
-		if (this.overflow > 0) {
-			this.overflow--;
-			setTimeout(() => {
-				this.addCoffee();
-			}, 200);
-		}
 	}
 }
 
@@ -103,16 +96,13 @@ const aTypeCounts: { [key: string]: number } = {
 class AlienGenerator {
 	aliens: Writable<[string, number][]> = writable([]);
 	alienTypes: string[];
-	overflow: number = 0;
-	maxAliens: number;
 
 	get alienCount() {
 		return get(this.aliens).length;
 	}
 
-	constructor(types: string[], maxAliens: number = 5) {
+	constructor(types: string[]) {
 		this.alienTypes = types;
-		this.maxAliens = maxAliens;
 	}
 
 	updateTypes(types: string[]) {
@@ -120,10 +110,6 @@ class AlienGenerator {
 	}
 
 	addAlien() {
-		if (this.alienCount == this.maxAliens) {
-			this.overflow++;
-			return;
-		}
 		this.aliens.update((aliens) => {
 			const type = this.alienTypes[Math.floor(Math.random() * this.alienTypes.length)];
 			aliens = [...aliens, [type, Math.floor(Math.random() * aTypeCounts[type])]];
@@ -137,9 +123,5 @@ class AlienGenerator {
 			newAliens.shift();
 			return newAliens;
 		});
-		if (this.overflow > 0) {
-			this.overflow--;
-			this.addAlien();
-		}
 	}
 }
