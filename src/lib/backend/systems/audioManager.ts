@@ -58,6 +58,12 @@ export class AudioManager {
 	playAudio(name: string) {
 		if (this.SFX.has(name)) {
 			const audioInstances = this.SFX.get(name)!;
+			// Remove ended instances
+			for (let i = audioInstances.length - 1; i >= 0; i--) {
+				if (audioInstances[i].ended) {
+					audioInstances.splice(i, 1);
+				}
+			}
 			let audio = audioInstances.find((a) => a.paused);
 			if (!audio) {
 				const src = audioInstances[0].src;
