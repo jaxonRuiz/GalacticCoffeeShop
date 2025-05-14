@@ -232,6 +232,10 @@ export class Franchise implements ISubscriber, IScene {
 		// Clean up other audio managers
 		cleanupAudioManagers(this.audioManager);
 		this.audioManager.addMusic("bgm", aud.franchise_music);
+		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addSFX("cashRegister", aud.new_cash);
+		this.audioManager.addSFX("boiling", aud.boiling);
+		this.audioManager.addSFX("papers", aud.papers);
 		this.audioManager.playAudio("bgm");
 		// Fade in bgm
 		this.audioManager.setVolume("bgm", 0);
@@ -335,14 +339,20 @@ export class Franchise implements ISubscriber, IScene {
 		this.currentRegion = null;
 	}
 	buyUnusable() {
+		//cash register sound
+		this.audioManager.playAudio("ding");
 		this.currentRegion?.buyUnusable();
 	}
 
 	//Development stuff
 	buyBuilding(index: number) { // let me know if you'd rather have the building reference as a parameter
+		//cash register sound
+		this.audioManager.playAudio("ding");
 		this.currentDevelopment?.buyBuilding(this.currentDevelopment.availableBuildings[index]);
 	}
 	sellBuilding(index: number) {
+		//cash register sound
+		this.audioManager.playAudio("cashRegister");
 		this.currentDevelopment?.sellBuilding(this.currentDevelopment.availableBuildings[index]);
 	}
 	selectDevelopment(development: DevelopmentBase) {
@@ -366,6 +376,8 @@ export class Franchise implements ISubscriber, IScene {
 		this.researchLab.deallocateResearchers(num, index);
 	}
 	buyUpgrade(index: number) {
+		//cash register sound
+		this.audioManager.playAudio("ding");
 		this.researchLab.buyUpgrade(index);
 	}
 

@@ -66,13 +66,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
-		 // Fade out preshop audio if present
-		const preshopAudioManager = (window as any).__lastPreshopAudioManager as AudioManager | undefined;
-		if (preshopAudioManager) {
-			preshopAudioManager.fadeAudio("bgm", 1000, 0, () => preshopAudioManager.stopAudio("bgm"));
-			preshopAudioManager.fadeAudio("crowd", 1000, 0, () => preshopAudioManager.stopAudio("crowd"));
-		}
-
 		// Clean up other audio managers
 		cleanupAudioManagers(this.audioManager);
 

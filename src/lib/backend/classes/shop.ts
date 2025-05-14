@@ -181,7 +181,6 @@ export class Shop implements ILocalShop {
 
 		// Setting up audio
 		this.audioManager.addSFX("boiling", aud.boiling);
-		this.audioManager.addSFX("ding", aud.ding);
 		this.audioManager.addSFX("papers", aud.papers);
 
 		// setting up default roles

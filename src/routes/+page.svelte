@@ -7,7 +7,7 @@
 	import { optionsWindowOpen } from "$lib/components/Options";
 	import { img } from "$lib/assets/img";
 	import Button from "$lib/components/Button.svelte";
-	import { AudioManager } from "$lib/backend/systems/audioManager";
+	import { cleanupAudioManagers, AudioManager } from "$lib/backend/systems/audioManager";
 	import { aud } from "$lib/assets/aud";
 	import { onMount, onDestroy } from "svelte";
 	import { menu } from "@tauri-apps/api";
@@ -27,6 +27,7 @@
 	}
 
 	onMount(() => {
+		cleanupAudioManagers(menuAudioManager);
 		menuAudioManager = new AudioManager();
 		menuAudioManager.addMusic("menu", aud.cafe_crumble);
 

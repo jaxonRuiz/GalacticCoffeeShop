@@ -227,9 +227,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 		this.audioManager.playAudio("bgm");
 
-		// Store reference for cross-scene fade
-		(window as any).__lastPreshopAudioManager = this.audioManager;
-
 		// UI
 		this.uiManager = new UIManager();
 		this.uiManager.coffeeGenerator.updateLocations(
