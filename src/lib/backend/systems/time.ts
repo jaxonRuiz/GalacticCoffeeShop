@@ -1,3 +1,4 @@
+import { get, writable, type Writable } from "svelte/store";
 import { Publisher } from "./observer";
 
 export const ticksPerHour = 16;
@@ -20,12 +21,50 @@ export class Timer {
 		"Saturday",
 	];
 
-	tickProgress = 0;
-	hour = 0;
-	day = 6;
-	week = 1;
-	month = 1;
-	year = 1999; // will have years of 336 days (i refuse to do leap years or async months ):<
+	w_tickProgress: Writable<number> = writable(0);
+	w_hour: Writable<number> = writable(0);
+	w_day: Writable<number> = writable(6);
+	w_week: Writable<number> = writable(2);
+	w_month: Writable<number> = writable(1);
+	w_year: Writable<number> = writable(1999);
+
+	get tickProgress() {
+		return get(this.w_tickProgress);
+	}
+	set tickProgress(value: number) {
+		this.w_tickProgress.set(value);
+	}
+	get hour() {
+		return get(this.w_hour);
+	}
+	set hour(value: number) {
+		this.w_hour.set(value);
+	}
+	get day() {
+		return get(this.w_day);
+	}
+	set day(value: number) {
+		this.w_day.set(value);
+	}
+	get week() {
+		return get(this.w_week);
+	}
+	set week(value: number) {
+		this.w_week.set(value);
+	}
+	get month() {
+		return get(this.w_month);
+	}
+	set month(value: number) {
+		this.w_month.set(value);
+	}
+	get year() {
+		return get(this.w_year);
+	}
+	set year(value: number) {
+		this.w_year.set(value);
+	}
+
 	ticker: number;
 	timeEvents: Publisher; // dont forget to subscribe relevant classes to this
 
@@ -99,6 +138,10 @@ export class Timer {
 		this.year = data.year;
 	}
 
+	getDay(day: number){
+		return this.days[day];
+	}
+
 	// getters
 	get calanderDay() {
 		return this.days[this.day];
@@ -109,7 +152,14 @@ export class Timer {
 	}
 
 	get numericDate() {
-		return [this.hour, this.day, this.week, this.month, this.year];
+		return {
+			tickProgress: this.tickProgress,
+			hour: this.hour,
+			day: this.day,
+			week: this.week,
+			month: this.month,
+			year: this.year,
+		}
 	}
 
 	get printableDate() {

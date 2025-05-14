@@ -145,7 +145,9 @@
 	"local_shop_nicer_coffee_upgName": "Nicer Coffee",
 	"local_shop_nicer_coffee_upgDesc": "Put even more love into your coffee and charge more for it!",
 
-	"add_new_shop_upgName": "Domain Expansion",
+	"establish_franchise_upgName": "Build Your Franchise",
+	"establish_franchise_upgDesg": "Time to make some real money",
+	"add_new_shop_upgName": "Domain Exapansion",
 	"add_new_shop_upgDesc": "Run another coffee shop at the same time!",
 	"cohesive_branding_upgName": "Cohesive Branding",
 	"cohesive_branding_upgDesc": "Increase appeal of all shops",
