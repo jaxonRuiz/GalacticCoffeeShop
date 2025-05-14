@@ -20,6 +20,7 @@ export class Shop implements ILocalShop {
 	w_supplierUnlocked: Writable<boolean> = writable(false);
 	w_multiShopUnlocked: Writable<boolean> = writable(false);
 	w_autoRestockUnlocked: Writable<boolean> = writable(false);
+	w_maxCoffeeCups: Writable<number> = writable(36);
 
 
 	// writable getters/setters
@@ -108,6 +109,12 @@ export class Shop implements ILocalShop {
 	}
 	set autoRestockUnlocked(value) {
 		this.w_autoRestockUnlocked.set(value);
+	}
+	get maxCoffeeCups() {
+		return get(this.w_maxCoffeeCups);
+	}
+	set maxCoffeeCups(value) {
+		this.w_maxCoffeeCups.set(value);
 	}
 
 	// variable containers ///////////////////////////////////////////////////////
@@ -363,7 +370,7 @@ export class Shop implements ILocalShop {
 			this.audioManager.playAudio("boiling");
 		}
 
-		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
+		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups, this.maxCoffeeCups - this.coffeeCups));
 		if (this.beans >= numToMake && this.emptyCups >= numToMake) {
 			this.beans -= numToMake;
 			this.emptyCups -= numToMake;
@@ -480,6 +487,7 @@ export class Shop implements ILocalShop {
 			appeal: this.appeal,
 			autoRestockUnlocked: this.autoRestockUnlocked,
 			restockSheet: {},
+			maxCoffeeCups: this.maxCoffeeCups,
 		};
 		for (let key in this.restockSheet) {
 			saveObj.restockSheet[key] = this.restockSheet[key];
@@ -517,6 +525,7 @@ export class Shop implements ILocalShop {
 		this.workerStats = state.workerStats;
 		this.appeal = state.appeal;
 		this.autoRestockUnlocked = state.autoRestockUnlocked;
+		this.maxCoffeeCups = state.maxCoffeeCups;
 
 		let restockSheetValue = get(this.w_restockSheet);
 		for (let key in state.restockSheet) {
@@ -563,4 +572,5 @@ export interface LocalShopSave {
 	workerAmounts: { [key: string]: number };
 	restockSheet: { [key: string]: number };
 	autoRestockUnlocked: boolean;
+	maxCoffeeCups: number;
 }
