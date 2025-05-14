@@ -25,6 +25,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	w_makeCoffeeCount: Writable<number> = writable(0);
 	w_beansPerBuy: Writable<number> = writable(3);
 	w_coffeePrice: Writable<number> = writable(3.5);
+	w_maxCoffee: Writable<number> = writable(36);
+	w_maxCustomers: Writable<number> = writable(5);
+	w_makeCoffeeMaxBatches: Writable<number> = writable(1);// how many cups of coffee are made per run
 
 	// internal stats
 	coffeePerBean: number = 2.5;
@@ -33,12 +36,10 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	customerProgress: number = 0; // progress to next customer
 	promotionEffectiveness: number = 0.1; // current rate of customer generation
 	appealDecay: number = 0.05; // rate of decay of customer appeal
-	maxCustomers: number = 5;
 	maxAppeal: number = 0.7;
 	minAppeal: number = 0; // minimum appeal (after decay)
 	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
 	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
-	makeCoffeeBatches: number = 1; // how many cups of coffee are made per run
 	runTutorial: boolean = true;
 
 	autogrindingEnabled: boolean = false; // whether or not to grind automatically
@@ -145,6 +146,24 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 	set coffeePrice(value) {
 		this.w_coffeePrice.set(value);
+	}
+	get maxCoffee() {
+		return get(this.w_maxCoffee);
+	}
+	set maxCoffee(value) {
+		this.w_maxCoffee.set(value);
+	}
+	get maxCustomers() {
+		return get(this.w_maxCustomers);
+	}
+	set maxCustomers(value) {
+		this.w_maxCustomers.set(value);
+	}
+	get makeCoffeeMaxBatches() {
+		return get(this.w_makeCoffeeMaxBatches);
+	}
+	set makeCoffeeMaxBatches(value) {
+		this.w_makeCoffeeMaxBatches.set(value);
 	}
 
 	// stat counters
@@ -308,7 +327,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups += this.coffeeToMake;
 			this.makeCoffeeTime = 0;
 
-			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1) {
+			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1 || this.coffeeCups >= this.maxCoffee) {
 				// finished making coffee
 				this.audioManager.stopAudio("boil");
 				this.makeCoffeeTime = 0;
@@ -377,11 +396,10 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (this.canMakeCoffee) {
 			this.canMakeCoffee = false;
 			this.audioManager.playAudio("boil");
-			this.makeCoffeeCount = this.makeCoffeeBatches;
+			this.makeCoffeeCount = this.makeCoffeeMaxBatches;
 		}
 
-		// possibly add cooldown or timer effect
-		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity);
+		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity, this.maxCoffee - this.coffeeCups);
 		this.groundCoffee -= this.coffeeToMake;
 		this.makeCoffeeTime = 0;
 	}
@@ -453,7 +471,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			appealDecay: this.appealDecay,
 			makeCoffeeQuantity: this.makeCoffeeQuantity,
 			makeCoffeeCooldown: this.makeCoffeeCooldown,
-			makeCoffeeBatches: this.makeCoffeeBatches,
+			makeCoffeeBatches: this.makeCoffeeMaxBatches,
 
 			autogrindingEnabled: this.autogrindingEnabled,
 			autogrindInterval: this.autogrindInterval,
@@ -511,7 +529,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.maxAppeal = state.maxAppeal;
 		this.makeCoffeeQuantity = state.makeCoffeeQuantity;
 		this.makeCoffeeCooldown = state.makeCoffeeCooldown;
-		this.makeCoffeeBatches = state.makeCoffeeBatches;
+		this.makeCoffeeMaxBatches = state.makeCoffeeBatches;
 
 		this.autogrindingEnabled = state.autogrindingEnabled;
 		this.autogrindInterval = state.autogrindInterval;
