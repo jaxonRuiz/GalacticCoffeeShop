@@ -397,6 +397,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.canMakeCoffee = false;
 			this.audioManager.playAudio("boil");
 			this.makeCoffeeCount = this.makeCoffeeMaxBatches;
+			this.makeCoffeeCount = this.makeCoffeeMaxBatches;
 		}
 
 		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity, this.maxCoffeeCups - this.coffeeCups);
