@@ -87,16 +87,20 @@
 	}
 }
 
-button.green {
-	border-color: var(--green);
-
-	&:disabled {
-		border-color: transparent;
+button {
+	&.green {
+		border-color: var(--green);
 	}
-}
 
-button.yellow {
-	border-color: var(--yellow);
+	&.yellow {
+		border-color: var(--yellow);
+	}
+
+	&.img {
+		background-color: transparent;
+		width: fit-content;
+		height: fit-content;
+	}
 
 	&:disabled {
 		border-color: transparent;
