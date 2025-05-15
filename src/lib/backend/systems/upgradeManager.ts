@@ -115,7 +115,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as IPreshop).makeCoffeeCooldown -= 4000;
 				(shop as IPreshop).makeCoffeeQuantity! += 1;
-
 			},
 			maxLevel: 1,
 			cost: 14,
@@ -157,7 +156,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		deluxe_coffee_pot: {
 			unlock_condition: (shop) => {
-				return (shop as IPreshop).upgrades.get("water_boiler")! >= 1 && (shop as IPreshop).lifetimeCoffeeMade > 10;
+				return (shop as IPreshop).upgrades.get("water_boiler")! >= 1 &&
+					(shop as IPreshop).lifetimeCoffeeMade > 10;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).makeCoffeeQuantity! += 4;
@@ -199,7 +199,9 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		tip_jar: {
 			unlock_condition: (shop) => {
-				return shop.upgrades.get("hire_neighborhood_kid")! >= 1 && shop.upgrades.get("deluxe_coffee_pot")! >= 1 && shop.upgrades.get("enlist_younger_sibling")! >= 1
+				return shop.upgrades.get("hire_neighborhood_kid")! >= 1 &&
+					shop.upgrades.get("deluxe_coffee_pot")! >= 1 &&
+					shop.upgrades.get("enlist_younger_sibling")! >= 1;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).coffeePrice += 1;
@@ -253,7 +255,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		sibling_incentive: {
 			unlock_condition: (shop) => {
-				return (shop.upgrades.get("enlist_younger_sibling") ?? 0) >= 1 && (shop as IPreshop).lifetimeGrindBeans > 40;
+				return (shop.upgrades.get("enlist_younger_sibling") ?? 0) >= 1 &&
+					(shop as IPreshop).lifetimeGrindBeans > 40;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).autogrindInterval -= 2;
@@ -297,7 +300,9 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		multi_grinder: {
 			unlock_condition: (shop) => {
-				return (shop.upgrades.get("efficient_grinding") ?? 0) >= 1 && (shop.upgrades.get("sibling_incentive") ?? 0) >= 1 && shop.upgrades.get("tip_jar")! >= 1;
+				return (shop.upgrades.get("efficient_grinding") ?? 0) >= 1 &&
+					(shop.upgrades.get("sibling_incentive") ?? 0) >= 1 &&
+					shop.upgrades.get("tip_jar")! >= 1;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).grindQuantity += 1;
@@ -330,7 +335,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		automatic_coffee_refiller: {
 			unlock_condition: (shop) => {
 				return (shop as IPreshop).lifetimeCoffeeMade > 40 &&
-					(shop.upgrades.get("enlist_younger_sibling") ?? 0) >= 1 && shop.upgrades.get("tip_jar")! >= 1;
+					(shop.upgrades.get("enlist_younger_sibling") ?? 0) >= 1 &&
+					shop.upgrades.get("tip_jar")! >= 1;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).makeCoffeeMaxBatches += 2;
@@ -359,7 +365,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		express_coffee_maker: {
 			unlock_condition: (shop) => {
 				return (shop as IPreshop).lifetimeCoffeeMade >= 15 &&
-					(shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 2 && shop.upgrades.get("tip_jar")! >= 1;
+					(shop.upgrades.get("deluxe_coffee_pot") ?? 0) >= 2 &&
+					shop.upgrades.get("tip_jar")! >= 1;
 			},
 			upgrade: (shop) => {
 				(shop as IPreshop).makeCoffeeCooldown -= 3500;
@@ -394,7 +401,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).multiShopUnlocked = true;
 			},
 			maxLevel: 1,
-			cost: 200,
+			cost: 400,
 			costMultiplier: 1,
 			image: "astrorat",
 			flags: ["yellow"],
@@ -412,7 +419,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				}
 			},
 			maxLevel: 1,
-			cost: 100,
+			cost: 150,
 			costMultiplier: 1,
 			image: "upg_promote",
 		},
@@ -444,7 +451,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerAmounts["serverMax"] += 1;
 			},
 			maxLevel: 3,
-			cost: 100,
+			cost: 200,
 			costMultiplier: 1.5,
 			image: "upg_sell",
 		},
@@ -456,7 +463,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerAmounts["promoterMax"] += 1;
 			},
 			maxLevel: 3,
-			cost: 100,
+			cost: 400,
 			costMultiplier: 1.5,
 			image: "upg_promote",
 		},
@@ -468,44 +475,46 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerAmounts["baristaMax"] += 1;
 			},
 			maxLevel: 3,
-			cost: 100,
+			cost: 200,
 			costMultiplier: 1.5,
 			image: "upg_brew",
 		},
 		upgrade_cash_register: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 10;
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 10 &&
+					shop.upgrades.has("expand_cashier_counter");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.1;
 			},
 			maxLevel: 1,
-			cost: 60,
+			cost: 500,
 			costMultiplier: 1.15,
 			image: "upg_sell",
 		},
 		increase_customer_flow: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 40;
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 40 &&
+					shop.upgrades.has("flashy_sign");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
 			},
 			maxLevel: 5,
-			cost: 50,
+			cost: 550,
 			costMultiplier: 1.2,
 			image: "upg_sell",
 		},
 		better_coffee_machine: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 70;
+				return shop.upgrades.has("expand_coffee_bar");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.03;
 			},
 			maxLevel: 1,
-			cost: 70,
+			cost: 800,
 			costMultiplier: 1,
 			image: "upg_brew",
 		},
@@ -519,26 +528,26 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).promotionEffectiveness += 0.05;
 			},
 			maxLevel: 3,
-			cost: 100,
+			cost: 400,
 			costMultiplier: 1.3,
 			image: "upg_promote",
 		},
 		local_shop_nicer_coffee: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >=
-					50 * (shop.upgrades.get("local_shop_nicer_coffee") ?? 0);
+				return shop.upgrades.has("better_coffee_machine");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).coffeePrice += 0.35;
 			},
 			maxLevel: 3,
-			cost: 40,
+			cost: 400,
 			costMultiplier: 1.23,
 			image: "upg_sell",
 		},
 		fancy_latte_art: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100;
+				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100 &&
+					shop.upgrades.has("local_shop_nicer_coffee");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.1;
@@ -549,8 +558,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 300,
 			costMultiplier: 1.2,
 			image: "upg_brew",
-		}
-
+		},
 		// unlock_auto_restock: {
 		// 	unlock_condition: (shop) => {
 		// 		return (shop as ILocalShop).lifetimeStats.totalRestocked >= 100;

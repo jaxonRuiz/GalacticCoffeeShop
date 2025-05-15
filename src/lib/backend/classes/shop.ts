@@ -1,6 +1,6 @@
 import { get, type Writable, writable } from "svelte/store";
 import { MultiShop } from "./multiShop";
-import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
+import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { dictProxy } from "../proxies";
@@ -20,7 +20,6 @@ export class Shop implements ILocalShop {
 	w_multiShopUnlocked: Writable<boolean> = writable(false);
 	w_autoRestockUnlocked: Writable<boolean> = writable(false);
 	w_maxCoffeeCups: Writable<number> = writable(36);
-
 
 	// writable getters/setters
 	get beans() {
@@ -183,7 +182,7 @@ export class Shop implements ILocalShop {
 				if (shop.beans >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
 						(shop.workerStats["baristaBaseProductivity"] *
-							shop.workerStats["baristaCumulativeProductivity"] +
+								shop.workerStats["baristaCumulativeProductivity"] +
 							shop.workerStats["baristaFlatProductivity"]) *
 						this.workerAmounts["baristaCurrent"];
 				}
@@ -198,7 +197,7 @@ export class Shop implements ILocalShop {
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
 						(shop.workerStats["serverBaseProductivity"] *
-							shop.workerStats["serverCumulativeProductivity"] +
+								shop.workerStats["serverCumulativeProductivity"] +
 							shop.workerStats["serverFlatProductivity"]) *
 						this.workerAmounts["serverCurrent"];
 				}
@@ -208,13 +207,16 @@ export class Shop implements ILocalShop {
 		this.uiManager = new UIManager();
 		this.uiManager.setCoffeeLocations(
 			[
-				...Array.from({ length: 2 }, (_, row) =>
-					Array.from({ length: 12 }, (_, col) => [row + 6, col])
+				...Array.from(
+					{ length: 2 },
+					(_, row) => Array.from({ length: 12 }, (_, col) => [row + 6, col]),
 				).flat(),
-				...Array.from({ length: 6 }, (_, row) =>
-					Array.from({ length: 2 }, (_, col) => [row, col + 10])
+				...Array.from(
+					{ length: 6 },
+					(_, row) => Array.from({ length: 2 }, (_, col) => [row, col + 10]),
 				).flat(),
-			]);
+			],
+		);
 		this.uiManager.setAlienTypes(["catorbiter"]);
 	}
 
@@ -294,11 +296,11 @@ export class Shop implements ILocalShop {
 			this.progressTrackers["customerProgress"] += this.appeal;
 			if (this.progressTrackers["customerProgress"] >= 1) {
 				this.waitingCustomers += Math.floor(
-					this.progressTrackers["customerProgress"]
+					this.progressTrackers["customerProgress"],
 				);
 				this.waitingCustomers = Math.min(
 					this.waitingCustomers,
-					this.maxCustomers
+					this.maxCustomers,
 				);
 				this.progressTrackers["customerProgress"] %= 1;
 			}
@@ -330,7 +332,6 @@ export class Shop implements ILocalShop {
 		this.audioManager.playAudio("ding");
 	}
 
-
 	getTotalExpenses() {
 		let totalExpenses = 0;
 		this.roles.forEach((role: Role) => {
@@ -354,7 +355,9 @@ export class Shop implements ILocalShop {
 			this.audioManager.playAudio("boiling");
 		}
 
-		let numToMake = Math.floor(Math.min(amount, this.beans, this.maxCoffeeCups - this.coffeeCups));
+		let numToMake = Math.floor(
+			Math.min(amount, this.beans, this.maxCoffeeCups - this.coffeeCups),
+		);
 		if (this.beans >= numToMake) {
 			this.beans -= numToMake;
 			this.coffeeCups += numToMake;
@@ -370,14 +373,14 @@ export class Shop implements ILocalShop {
 
 		// }
 		let numToSell = Math.floor(
-			Math.min(amount, this.waitingCustomers, this.coffeeCups)
+			Math.min(amount, this.waitingCustomers, this.coffeeCups),
 		);
 		if (this.waitingCustomers >= numToSell && this.coffeeCups >= numToSell) {
 			this.coffeeCups -= numToSell;
 			this.waitingCustomers -= numToSell;
 			this.money += this.coffeePrice * numToSell * this.moneyMultiplier;
-			this.lifetimeStats["moneyMade"] +=
-				this.coffeePrice * numToSell * this.moneyMultiplier;
+			this.lifetimeStats["moneyMade"] += this.coffeePrice * numToSell *
+				this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
 
 			//ANALYTICS
@@ -390,8 +393,8 @@ export class Shop implements ILocalShop {
 
 	promote() {
 		this.audioManager.playAudio("papers");
-		this.appeal +=
-			this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
+		this.appeal += this.promotionEffectiveness *
+			(1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
@@ -486,7 +489,6 @@ export class Shop implements ILocalShop {
 
 		return saveObj;
 	}
-
 
 	loadLocalState(state: LocalShopSave) {
 		this.money = state.money;
