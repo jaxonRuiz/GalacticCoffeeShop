@@ -10,7 +10,6 @@ export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
 	// writable resources
 	w_beans: Writable<number> = writable(50);
-	w_emptyCups: Writable<number> = writable(50);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
@@ -29,12 +28,6 @@ export class Shop implements ILocalShop {
 	}
 	set beans(value) {
 		this.w_beans.set(value);
-	}
-	get emptyCups() {
-		return get(this.w_emptyCups);
-	}
-	set emptyCups(value) {
-		this.w_emptyCups.set(value);
 	}
 	get coffeeCups() {
 		return get(this.w_coffeeCups);
@@ -126,7 +119,6 @@ export class Shop implements ILocalShop {
 	// variable containers ///////////////////////////////////////////////////////
 	w_restockSheet: Writable<{ [key: string]: number }> = writable({
 		beans: 5,
-		emptyCups: 5,
 	});
 	workerStats: { [key: string]: number } = {
 		baristaBaseProductivity: 0.1,
@@ -155,7 +147,6 @@ export class Shop implements ILocalShop {
 
 	// stats /////////////////////////////////////////////////////////////////////
 	beansPrice: number = 2.5;
-	cupsPrice: number = 0.1;
 	totalWorkers: number = 0;
 	maxCustomers: number = 7;
 	promotionEffectiveness: number = 0.2;
@@ -189,7 +180,7 @@ export class Shop implements ILocalShop {
 			wage: 50,
 			update: (shop: Shop) => {
 				let barista = shop.roles.get("barista")!;
-				if (shop.beans >= 1 && shop.emptyCups >= 1) {
+				if (shop.beans >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
 						(shop.workerStats["baristaBaseProductivity"] *
 							shop.workerStats["baristaCumulativeProductivity"] +
@@ -326,18 +317,15 @@ export class Shop implements ILocalShop {
 
 	getRestockPrice() {
 		return (
-			this.restockSheet["beans"] * this.beansPrice +
-			this.restockSheet["emptyCups"] * this.cupsPrice
+			this.restockSheet["beans"] * this.beansPrice
 		);
 	}
 
 	restock() {
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
-		this.applyCost(this.restockSheet["emptyCups"] * this.cupsPrice);
 
 		this.beans += this.restockSheet["beans"];
-		this.emptyCups += this.restockSheet["emptyCups"];
-		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"] + this.restockSheet["emptyCups"];
+		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"];
 
 		this.audioManager.playAudio("ding");
 	}
@@ -350,9 +338,6 @@ export class Shop implements ILocalShop {
 			let numWorkers = this.workerAmounts[role.name.toLowerCase() + "Current"];
 			totalExpenses += numWorkers * role.wage;
 		});
-		// restock expenses taken from restock()
-		// totalExpenses += this.beans * this.beansPrice;
-		// totalExpenses += this.emptyCups * this.cupsPrice;
 
 		return totalExpenses;
 	}
@@ -369,10 +354,9 @@ export class Shop implements ILocalShop {
 			this.audioManager.playAudio("boiling");
 		}
 
-		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups, this.maxCoffeeCups - this.coffeeCups));
-		if (this.beans >= numToMake && this.emptyCups >= numToMake) {
+		let numToMake = Math.floor(Math.min(amount, this.beans, this.maxCoffeeCups - this.coffeeCups));
+		if (this.beans >= numToMake) {
 			this.beans -= numToMake;
-			this.emptyCups -= numToMake;
 			this.coffeeCups += numToMake;
 			this.lifetimeStats["coffeeMade"] += numToMake;
 			return true;
@@ -435,7 +419,6 @@ export class Shop implements ILocalShop {
 
 	choresForBeans() {
 		this.audioManager.playAudio("ding");
-		this.emptyCups += 1;
 		this.beans += 1;
 	}
 
@@ -470,7 +453,6 @@ export class Shop implements ILocalShop {
 		let saveObj: LocalShopSave = {
 			money: this.money,
 			beans: this.beans,
-			emptyCups: this.emptyCups,
 			coffeeCups: this.coffeeCups,
 			waitingCustomers: this.waitingCustomers,
 			minAppeal: this.minAppeal,
@@ -509,7 +491,6 @@ export class Shop implements ILocalShop {
 	loadLocalState(state: LocalShopSave) {
 		this.money = state.money;
 		this.beans = state.beans;
-		this.emptyCups = state.emptyCups;
 		this.coffeeCups = state.coffeeCups;
 		this.minAppeal = state.minAppeal;
 		this.maxAppeal = state.maxAppeal;
@@ -553,7 +534,6 @@ interface Role {
 export interface LocalShopSave {
 	money: number;
 	beans: number;
-	emptyCups: number;
 	coffeeCups: number;
 	waitingCustomers: number;
 	appeal: number;
