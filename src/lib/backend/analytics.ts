@@ -41,7 +41,7 @@ let franchiseMoneyMade = 0;
 
 export function startSession() {
 	sessionStartTime = Date.now();
-	logEvent(analytics, 'start-session');
+	logEvent(analytics, 'start_session');
 }
 
 export function endSession() {
@@ -52,10 +52,10 @@ export function endSession() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:total", coffeesMade / (totalTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:total", moneyMade / (totalTime / 60));
 	
-	logEvent(analytics, 'end-session', {
-		'timer-total': totalTime,
-		'coffeePerMinute-total': coffeesMade / (totalTime / 60),
-		'moneyPerMinute-total': moneyMade / (totalTime / 60),
+	logEvent(analytics, 'end_session', {
+		'timer_total': totalTime,
+		'coffeePerMinute_total': coffeesMade / (totalTime / 60),
+		'moneyPerMinute_total': moneyMade / (totalTime / 60),
 		});
 }
 
@@ -72,10 +72,10 @@ export function preshopDone() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:preshop", preCoffee / (preTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:preshop", preMoney / (preTime / 60));
 
-	logEvent(analytics, 'preshop-over', {
-		'timer-total': preTime,
-		'coffeePerMinute-total': preCoffee / (preTime / 60),
-		'moneyPerMinute-total': preMoney / (preTime / 60),
+	logEvent(analytics, 'preshop_over', {
+		'timer_total': preTime,
+		'coffeePerMinute_total': preCoffee / (preTime / 60),
+		'moneyPerMinute_total': preMoney / (preTime / 60),
 	});
 }
 
@@ -92,10 +92,10 @@ export function multishopDone() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:multishop", multiCoffee / (multiTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:multishop", multiMoney / (multiTime / 60));
 
-	logEvent(analytics, 'preshop-over', {
-		'timer-total': multiTime,
-		'coffeePerMinute-total': multiCoffee / (multiTime / 60),
-		'moneyPerMinute-total': multiMoney / (multiTime / 60),
+	logEvent(analytics, 'multishop_over', {
+		'timer_total': multiTime,
+		'coffeePerMinute_total': multiCoffee / (multiTime / 60),
+		'moneyPerMinute_total': multiMoney / (multiTime / 60),
 	});
 }
 
@@ -112,10 +112,10 @@ export function franchiseDone() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:franchise", franchCoffee / (franchTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:franchise", franchMoney / (franchTime / 60));
 	
-	logEvent(analytics, 'preshop-over', {
-		'timer-total': franchTime,
-		'coffeePerMinute-total': franchCoffee / (franchTime / 60),
-		'moneyPerMinute-total': franchMoney / (franchTime / 60),
+	logEvent(analytics, 'franchise_over', {
+		'timer_total': franchTime,
+		'coffeePerMinute_total': franchCoffee / (franchTime / 60),
+		'moneyPerMinute_total': franchMoney / (franchTime / 60),
 	});
 }
 
@@ -126,12 +126,12 @@ export function addMoney(amount: number) {
 	if (moneyMade >= 1000 && !money1k) {
 		window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:thousand", (Date.now() - sessionStartTime) / 1000);
 		money1k = true;
-		logEvent(analytics, 'progress-money-thousand');
+		logEvent(analytics, 'progress_money_thousand');
 	}
 	if (moneyMade >= 10000 && !money10k) {
 		window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:tenthousand", (Date.now() - sessionStartTime) / 1000);
 		money10k = true;
-		logEvent(analytics, 'progress-money-tenthousand');
+		logEvent(analytics, 'progress_money_tenthousand');
 	}
 }
 
@@ -142,12 +142,12 @@ export function addCoffee(amount: number) {
 	if (coffeesMade >= 100 && !coffee100) {
 		window.gameanalytics.GameAnalytics.addDesignEvent("progress:coffee:hundred", (Date.now() - sessionStartTime) / 1000);
 		coffee100 = true;
-		logEvent(analytics, 'progress-coffee-hundred');
+		logEvent(analytics, 'progress_coffee_hundred');
 	}
 	if (coffeesMade >= 1000 && !coffee1k) {
 		window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:thousand", (Date.now() - sessionStartTime) / 1000);
 		coffee1k = true;
-		logEvent(analytics, 'progress-coffee-thousand');
+		logEvent(analytics, 'progress_coffee_thousand');
 	}
 }
 
