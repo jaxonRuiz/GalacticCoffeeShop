@@ -36,11 +36,6 @@
 	let researchers = franchise.w_researchers;
 	let custPerHour = $region?.w_expectedCustomersPerHour;
 	let delPerHour = $region?.w_deliveriesPerHour;
-
-	function handleStartClick() {
-    window.gameanalytics.GameAnalytics.addDesignEvent("button:clicked", 1);
-
-  }
 </script>
 
 <div class = "money">💰 {fMoney($money)}</div>
@@ -53,11 +48,6 @@
 >
 	go to research lab
 </Button>
-
-<Button static={true} onclick={() => {
-	handleStartClick();
-	console.log("boop");
-}}>event click please work</Button>
 
 <p style="position: fixed;
     top: 0;
