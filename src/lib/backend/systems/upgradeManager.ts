@@ -1,15 +1,24 @@
+import { AudioManager } from "./audioManager";
+import { aud } from "../../assets/aud";
+
 const unlockStages: boolean = false;
 const playtesterMode: boolean = false;
 const unlockAllUpgrades: boolean = true; // for testing purposes
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
 	allUpgrades: { [key: string]: IUpgrade };
+	audioManager: AudioManager;
 
 	constructor(subset: string) {
 		this.allUpgrades = upgradeJSON[subset];
+		this.audioManager = new AudioManager();
 	}
 
 	applyUpgrade(id: string, shopObject: IShop) {
+		this.audioManager.addSFX("upgrade", aud.upgrade);
+		this.audioManager.setVolume("upgrade", 0.5);
+		this.audioManager.playAudio("upgrade");
+		
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
 			// maybe set it up so multishop upgrades show up in local shops?

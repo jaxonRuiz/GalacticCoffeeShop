@@ -21,6 +21,7 @@ export const audioManagerRegistry: Set<AudioManager> = new Set();
 
 globalVolumeScale.subscribe((value) => {
 	localStorage.setItem("globalVolumeScale", value.toString());
+	audioManagerRegistry.forEach((manager) => manager.updateAllVolumes());
 });
 
 musicVolume.subscribe((value) => {
@@ -51,6 +52,16 @@ export class AudioManager {
 
 		// Subscribe to globalVolumeScale changes
 		globalVolumeScale.subscribe(() => {
+			this.updateAllVolumes();
+		});
+
+		// Subscribe to musicVolume changes
+		musicVolume.subscribe(() => {
+			this.updateAllVolumes();
+		});
+
+		// Subscribe to sfxVolume changes
+		sfxVolume.subscribe(() => {
 			this.updateAllVolumes();
 		});
 	}
@@ -280,59 +291,12 @@ export class AudioManager {
 
 	// --- Add/Remove Audio Assets ---
 	addSFX(name: string, path: string) {
-		// Check if name is already used
-		if (this.SFX.has(name) || this.music.has(name) || this.ambience.has(name)) {
-			console.warn(`Audio name "${name}" is already used.`);
-			return;
-		}
-		// Check if path is already used
-		for (const audios of this.SFX.values()) {
-			if (audios.some(audio => audio.src === path)) {
-				console.warn(`Audio path "${path}" is already used in SFX.`);
-				return;
-			}
-		}
-		for (const audio of this.music.values()) {
-			if (audio.src === path) {
-				console.warn(`Audio path "${path}" is already used in music.`);
-				return;
-			}
-		}
-		for (const audio of this.ambience.values()) {
-			if (audio.src === path) {
-				console.warn(`Audio path "${path}" is already used in ambience.`);
-				return;
-			}
-		}
 		const audioInstances = [new Audio(path), new Audio(path), new Audio(path)];
 		audioInstances.forEach(audio => (audio as NamedAudio).name = name);
 		this.SFX.set(name, audioInstances);
-		this.SFXIndex.set(name, 0);
 	}
 
 	addMusic(name: string, path: string) {
-		if (this.music.has(name) || this.SFX.has(name) || this.ambience.has(name)) {
-			console.warn(`Audio name "${name}" is already used.`);
-			return;
-		}
-		for (const audio of this.music.values()) {
-			if (audio.src === path) {
-				console.warn(`Audio path "${path}" is already used in music.`);
-				return;
-			}
-		}
-		for (const audios of this.SFX.values()) {
-			if (audios.some(audio => audio.src === path)) {
-				console.warn(`Audio path "${path}" is already used in SFX.`);
-				return;
-			}
-		}
-		for (const audio of this.ambience.values()) {
-			if (audio.src === path) {
-				console.warn(`Audio path "${path}" is already used in ambience.`);
-				return;
-			}
-		}
 		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
 		audio.name = name;
@@ -340,32 +304,9 @@ export class AudioManager {
 	}
 
 	addAmbience(name: string, path: string) {
-		if (this.ambience.has(name) || this.SFX.has(name) || this.music.has(name)) {
-			console.warn(`Audio name "${name}" is already used.`);
-			return;
-		}
-		for (const audio of this.ambience.values()) {
-			if (audio.src === path) {
-				console.warn(`Audio path "${path}" is already used in ambience.`);
-				return;
-			}
-		}
-		for (const audios of this.SFX.values()) {
-			if (audios.some(audio => audio.src === path)) {
-				console.warn(`Audio path "${path}" is already used in SFX.`);
-				return;
-			}
-		}
-		for (const audio of this.music.values()) {
-			if (audio.src === path) {
-				console.warn(`Audio path "${path}" is already used in music.`);
-				return;
-			}
-		}
 		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
 		audio.name = name;
-		this.ambience.set(name, audio);
 	}
 
 	setMaxVolumeScale(name: string, scale: number) {

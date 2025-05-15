@@ -300,7 +300,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 					this.lastPlayedMeow = meow;
 					this.audioManager.playAudio(meow);
 					const meowAudio = this.audioManager.getVolume(meow);
-					console.log("meowAudio: ", meowAudio);
 				};
 				randomMeow();
 			}
