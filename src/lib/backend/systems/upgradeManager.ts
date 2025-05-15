@@ -307,8 +307,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			upgrade: (shop) => {
 				(shop as IPreshop).grindQuantity += 1;
 			},
-			maxLevel: 2,
-			cost: 60,
+			maxLevel: 1,
+			cost: 90,
 			costMultiplier: 1.6,
 			image: "upg_grind",
 		},
@@ -343,7 +343,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			},
 			maxLevel: 3,
 			cost: 80,
-			costMultiplier: 1.4,
+			costMultiplier: 1.5,
 			image: "upg_brew",
 		},
 
@@ -369,11 +369,11 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 					shop.upgrades.get("tip_jar")! >= 1;
 			},
 			upgrade: (shop) => {
-				(shop as IPreshop).makeCoffeeCooldown -= 3500;
+				(shop as IPreshop).makeCoffeeCooldown -= 2000;
 			},
-			maxLevel: 1,
+			maxLevel: 2,
 			cost: 120,
-			costMultiplier: 1.2,
+			costMultiplier: 2,
 			image: "upg_brew",
 		},
 	},
@@ -401,10 +401,23 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).multiShopUnlocked = true;
 			},
 			maxLevel: 1,
-			cost: 400,
+			cost: 200,
 			costMultiplier: 1,
 			image: "astrorat",
 			flags: ["yellow"],
+		},
+		employee_orientation: {
+			unlock_condition: (shop) => {
+				return true;
+			},
+			upgrade: (shop) => {
+				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.1;
+				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.1;
+			},
+			maxLevel: 1,
+			cost: 70,
+			costMultiplier: 1.5,
+			image: "boop_star",
 		},
 		flashy_sign: {
 			unlock_condition: (shop) => {
@@ -555,7 +568,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).promotionEffectiveness += 0.1;
 			},
 			maxLevel: 1,
-			cost: 300,
+			cost: 500,
 			costMultiplier: 1.2,
 			image: "upg_brew",
 		},
