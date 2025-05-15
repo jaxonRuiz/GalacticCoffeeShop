@@ -29,14 +29,12 @@
 	let mshopMoney = mshop.w_money;
 	let beans = sshop.w_beans;
 	let appeal = sshop.w_appeal;
-	let emptyCups = sshop.w_emptyCups;
 	let coffee = sshop.w_coffeeCups;
 	let customers = sshop.w_waitingCustomers;
 	let money = sshop.w_money;
 	let restockSheet = sshop.w_restockSheet;
 	let coffeePrice = sshop.w_coffeePrice;
 	let promoterBool = sshop.w_promoterUnlocked;
-	let supplierBool = sshop.w_supplierUnlocked;
 	let multiShopUnlocked = sshop.w_multiShopUnlocked;
 	let totalMoney = derived(
 		[money, mshopMoney],
@@ -113,10 +111,9 @@
 					<Tooltip text={["makeCoffee3_tooltip", "hire_tooltip"]} />
 				</div>
 				<p>{$t("beans_stat")}: {$beans}</p>
-				<p>{$t("emptyCups_stat")}: {$emptyCups}</p>
 				<Button
 					data-btn="plus"
-					disabled={$beans > 0 && $emptyCups > 0 ? false : true}
+					disabled={$beans > 0 ? false : true}
 					onclick={() => {
 						sshop.produceCoffee();
 					}}>{$t("makeCoffee_btn")}</Button
@@ -176,7 +173,7 @@
 						}}>{$t("restock_btn")}</Button
 					>
 				{/key}
-				{#if ($coffee < 1 && (($money < sshop.cupsPrice && $emptyCups < 1) || ($money < sshop.beansPrice && $beans < 1))) || ($money < sshop.beansPrice + sshop.cupsPrice && $coffee < 3 && $beans < 3 && $emptyCups < 3)}
+				{#if ($coffee < 1 && (($money < sshop.beansPrice && $beans < 1))) || ($money < sshop.beansPrice && $coffee < 3 && $beans < 3)}
 					<Button
 						data-btn="plus"
 						onclick={() => {

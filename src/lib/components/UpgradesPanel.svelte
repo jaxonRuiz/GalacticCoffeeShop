@@ -52,8 +52,8 @@
 			<p>{$t("upgPurchased_btn")}</p>
 		</label>
 	</div>
-	{#key rupg}
-		<div class="col scroll" id="upgrade-icon">
+	<div class="col scroll" id="upgrade-icon">
+		{#key rupg}
 			{#if upgPage == 0}
 				{#each availableUpgrades as upgkey (upgkey)}
 					<Upgrade
@@ -69,7 +69,7 @@
 							availableUpgrades = umanager.checkUpgrade(wshop);
 							rupg = !rupg;
 						}}
-						onmouseover={() => {
+						onmouseenter={() => {
 							descKey = upgkey;
 						}}
 					/>
@@ -81,25 +81,31 @@
 						item={upgs[upgkey]}
 						key={upgkey}
 						level={wshop.upgrades.get(upgkey) ?? 0}
+						onmouseenter={() => {
+							descKey = upgkey;
+						}}
 					/>
 				{/each}
 			{/if}
-		</div>
-		<div class="col {availableUpgrades.length > 0 ? "" : "hidden"}" id="upgrade-desc">
+		{/key}
+	</div>
+	<div
+		class="col {availableUpgrades.length > 0 ? '' : 'hidden'}"
+		id="upgrade-desc"
+	>
+		{#key rupg}
 			{#if descKey != ""}
 				{@render upgradeDesc(descKey, upgPage === 1)}
 			{:else}
 				<h3>{$t("upgrade_tooltip")}</h3>
 			{/if}
-		</div>
-	{/key}
+		{/key}
+	</div>
 </div>
 
 {#snippet upgradeDesc(key: string, purchased: boolean)}
 	<h3>
-		{$t(`${key}_upgName`)}{upgs[key].maxLevel != 1
-			? ` LVL${wshop.upgrades.get(key) ?? 0 + (purchased ? 0 : 1)}`
-			: ""}
+		{$t(`${key}_upgName`)}
 	</h3>
 
 	<p>{$t(`${key}_upgDesc`)}</p>

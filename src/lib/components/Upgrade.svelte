@@ -3,6 +3,7 @@
   import { writable } from "svelte/store";
 	import Button from "./Button.svelte";
   import { img } from "$lib/assets/img";
+  import { fMoney } from "./Styles.svelte";
 
 	let {
 		item,
@@ -27,5 +28,16 @@
 	class={`row ${purchased ? "purchased-upg" : ""} ${flags}`}
 >
 	<img alt="upg" src={img[item.image]} />
-	<h3>{$t(`${key}_upgName`)}</h3>
+	<h3>{$t(`${key}_upgName`)}{item.maxLevel != 1
+			? ` LVL${level + (purchased ? 0 : 1)}`
+			: ""}</h3>
+	<p>{fMoney(cost)}</p>
 </Button>
+
+<style>
+	p {
+		width: fit-content;
+		margin-left: auto;
+		text-align: right;
+	}
+</style>
