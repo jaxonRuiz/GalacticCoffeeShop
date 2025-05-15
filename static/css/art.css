@@ -5,6 +5,7 @@
 .shop {
 	#main-art {
 		/* border: 1px solid red; */
+		pointer-events: none;
 		margin: auto;
 		position: relative;
 		width: 80%;
@@ -33,6 +34,7 @@
 		img[alt="rat"] {
 			width: 25%;
 			height: auto;
+			pointer-events: all;
 		}
 	}
 }

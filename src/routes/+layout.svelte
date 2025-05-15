@@ -22,8 +22,7 @@
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
-	import { onDestroy, onMount } from "svelte";
-	import { addCoffee, addMoney, endSession, startSession } from "$lib/backend/analytics";
+	import { addCoffee, addMoney } from "$lib/backend/analytics";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -80,6 +79,12 @@
 
 	function onMouseDown(event: MouseEvent) {
 		let type = "default";
+		const rat = (event.target as HTMLElement).closest("img");
+		if (rat && rat.alt == "rat" && rat.dataset.clickable == "y") {
+			console.log('rat');
+			booped(rat.x - 0.1 * rat.width, rat.y + 0.4 * rat.height, "heart");
+			return;
+		}
 		const b = (event.target as HTMLElement).closest("button");
 		if (b) {
 			type = b.dataset.btn ?? "button";

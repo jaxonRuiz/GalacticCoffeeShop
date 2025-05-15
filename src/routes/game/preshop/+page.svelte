@@ -46,7 +46,7 @@
 		</div>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeStand} />
-			<img alt="rat" src={img.astrorat} class="float" />
+			<img alt="rat" src={img.astrorat} data-clickable="y" class="float" />
 			<div id="coffees" class="abs">
 				{#each $coffeeOnTable as coffee (coffee)}
 					<img
@@ -63,7 +63,6 @@
 			</div>
 			<div class="customers abs">
 				{#each $customersInLine as customer, ind (customer)}
-					{console.log(`alien_${customer[0]}_${customer[1]}`)}
 					<img
 						in:fly={{ y: -50, duration: 500 }}
 						out:fly={{ y: -50, duration: 500 }}
@@ -171,6 +170,7 @@
 		img[alt="rat"] {
 			top: 11%;
 			right: 20%;
+			cursor: var(--cpointer), pointer;
 		}
 
 		#coffees {

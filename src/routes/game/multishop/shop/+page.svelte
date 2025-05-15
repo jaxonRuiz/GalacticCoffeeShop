@@ -73,7 +73,7 @@
 		</div>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeShop_bot} />
-			<img alt="rat" src={img.astrorat} class="float" />
+			<img alt="rat" src={img.astrorat} data-clickable="y" class="float" />
 			<div id="coffees" class="abs">
 				{#each $coffeeOnTable as coffee (coffee)}
 					<img
@@ -262,6 +262,7 @@
 		img[alt="rat"] {
 			top: 24%;
 			right: 30%;
+			cursor: var(--cpointer), pointer;
 		}
 
 		#coffees {

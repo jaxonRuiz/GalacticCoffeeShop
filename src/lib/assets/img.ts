@@ -10,6 +10,7 @@ export const img: { [key: string] : string } = {
 	boop_plus: new URL('./img/clickEffects/plus.svg', import.meta.url).href,
 	boop_minus: new URL('./img/clickEffects/minus.svg', import.meta.url).href,
 	boop_star: new URL('./img/clickEffects/star.svg', import.meta.url).href,
+	boop_heart: new URL('./img/clickEffects/heart.svg', import.meta.url).href,
 	boop_num1: new URL('./img/clickEffects/num1.svg', import.meta.url).href,
 	boop_num2: new URL('./img/clickEffects/num2.svg', import.meta.url).href,
 	boop_num3: new URL('./img/clickEffects/num3.svg', import.meta.url).href,
