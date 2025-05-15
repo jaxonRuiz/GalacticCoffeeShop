@@ -1,3 +1,29 @@
+// firebase
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics, logEvent } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+	apiKey: "AIzaSyD-L6gZzU2JwA0_AXXliTbR3p4OOR3jiNI",
+	authDomain: "galactic-coffee-shop.firebaseapp.com",
+	projectId: "galactic-coffee-shop",
+	storageBucket: "galactic-coffee-shop.firebasestorage.app",
+	messagingSenderId: "211589954121",
+	appId: "1:211589954121:web:6cd4cb8d9b8fd9163bdd98",
+	measurementId: "G-HXM9SPPHG4"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+// start
+
 let sessionStartTime = 0;
 let preshopEndTime = 0;
 let multishopEndTime = 0;
@@ -15,6 +41,7 @@ let franchiseMoneyMade = 0;
 
 export function startSession() {
 	sessionStartTime = Date.now();
+	logEvent(analytics, 'start-session');
 }
 
 export function endSession() {
@@ -24,6 +51,12 @@ export function endSession() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("timer:total", totalTime);
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:total", coffeesMade / (totalTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:total", moneyMade / (totalTime / 60));
+	
+	logEvent(analytics, 'end-session', {
+		'timer-total': totalTime,
+		'coffeePerMinute-total': coffeesMade / (totalTime / 60),
+		'moneyPerMinute-total': moneyMade / (totalTime / 60),
+		});
 }
 
 export function preshopDone() {
@@ -38,6 +71,12 @@ export function preshopDone() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("timer:preshop", preTime);
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:preshop", preCoffee / (preTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:preshop", preMoney / (preTime / 60));
+
+	logEvent(analytics, 'preshop-over', {
+		'timer-total': preTime,
+		'coffeePerMinute-total': preCoffee / (preTime / 60),
+		'moneyPerMinute-total': preMoney / (preTime / 60),
+	});
 }
 
 export function multishopDone() {
@@ -52,6 +91,12 @@ export function multishopDone() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("timer:multishop", multiTime);
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:multishop", multiCoffee / (multiTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:multishop", multiMoney / (multiTime / 60));
+
+	logEvent(analytics, 'preshop-over', {
+		'timer-total': multiTime,
+		'coffeePerMinute-total': multiCoffee / (multiTime / 60),
+		'moneyPerMinute-total': multiMoney / (multiTime / 60),
+	});
 }
 
 export function franchiseDone() {
@@ -66,34 +111,44 @@ export function franchiseDone() {
 	window.gameanalytics.GameAnalytics.addDesignEvent("timer:franchise", franchTime);
 	window.gameanalytics.GameAnalytics.addDesignEvent("coffeePerMinute:franchise", franchCoffee / (franchTime / 60));
 	window.gameanalytics.GameAnalytics.addDesignEvent("moneyPerMinute:franchise", franchMoney / (franchTime / 60));
+	
+	logEvent(analytics, 'preshop-over', {
+		'timer-total': franchTime,
+		'coffeePerMinute-total': franchCoffee / (franchTime / 60),
+		'moneyPerMinute-total': franchMoney / (franchTime / 60),
+	});
 }
 
 let money1k = false;
 let money10k = false;
 export function addMoney(amount: number) {
 	moneyMade += amount;
-    if (moneyMade >= 1000 && !money1k) {
-        window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:thousand", (Date.now() - sessionStartTime) / 1000);
-        money1k = true;
-    }
-    if (moneyMade >= 10000 && !money10k) {
-        window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:tenthousand", (Date.now() - sessionStartTime) / 1000);
-        money10k = true;
-    }
+	if (moneyMade >= 1000 && !money1k) {
+		window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:thousand", (Date.now() - sessionStartTime) / 1000);
+		money1k = true;
+		logEvent(analytics, 'progress-money-thousand');
+	}
+	if (moneyMade >= 10000 && !money10k) {
+		window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:tenthousand", (Date.now() - sessionStartTime) / 1000);
+		money10k = true;
+		logEvent(analytics, 'progress-money-tenthousand');
+	}
 }
 
 let coffee100 = false;
 let coffee1k = false
 export function addCoffee(amount: number) {
 	coffeesMade += amount;
-    if (coffeesMade >= 100 && !coffee100) {
-        window.gameanalytics.GameAnalytics.addDesignEvent("progress:coffee:hundred", (Date.now() - sessionStartTime) / 1000);
-        coffee100 = true;
-    }
-    if (coffeesMade >= 1000 && !coffee1k) {
-        window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:thousand", (Date.now() - sessionStartTime) / 1000);
-        coffee1k = true;
-    }
+	if (coffeesMade >= 100 && !coffee100) {
+		window.gameanalytics.GameAnalytics.addDesignEvent("progress:coffee:hundred", (Date.now() - sessionStartTime) / 1000);
+		coffee100 = true;
+		logEvent(analytics, 'progress-coffee-hundred');
+	}
+	if (coffeesMade >= 1000 && !coffee1k) {
+		window.gameanalytics.GameAnalytics.addDesignEvent("progress:money:thousand", (Date.now() - sessionStartTime) / 1000);
+		coffee1k = true;
+		logEvent(analytics, 'progress-coffee-thousand');
+	}
 }
 
 // let sessionStartTime = 0;
