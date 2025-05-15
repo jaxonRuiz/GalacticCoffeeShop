@@ -4,21 +4,22 @@ import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { dictProxy } from "../proxies";
+import { addCoffee, addMoney } from "../analytics";
 
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
 	// writable resources
-	w_beans: Writable<number> = writable(10);
-	w_emptyCups: Writable<number> = writable(50);
+	w_beans: Writable<number> = writable(50);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
 	w_appeal: Writable<number> = writable(0);
-	w_coffeePrice: Writable<number> = writable(5);
+	w_coffeePrice: Writable<number> = writable(7);
 	w_promoterUnlocked: Writable<boolean> = writable(false);
 	w_supplierUnlocked: Writable<boolean> = writable(false);
 	w_multiShopUnlocked: Writable<boolean> = writable(false);
 	w_autoRestockUnlocked: Writable<boolean> = writable(false);
+	w_maxCoffeeCups: Writable<number> = writable(36);
 
 
 	// writable getters/setters
@@ -28,23 +29,19 @@ export class Shop implements ILocalShop {
 	set beans(value) {
 		this.w_beans.set(value);
 	}
-	get emptyCups() {
-		return get(this.w_emptyCups);
-	}
-	set emptyCups(value) {
-		this.w_emptyCups.set(value);
-	}
 	get coffeeCups() {
 		return get(this.w_coffeeCups);
 	}
 	set coffeeCups(value) {
 		this.w_coffeeCups.set(value);
+		this.uiManager.setCoffeeCount(value);
 	}
 	get waitingCustomers() {
 		return get(this.w_waitingCustomers);
 	}
 	set waitingCustomers(value) {
 		this.w_waitingCustomers.set(value);
+		this.uiManager.setCustomerCount(value);
 	}
 	get money() {
 		return get(this.w_money);
@@ -106,11 +103,22 @@ export class Shop implements ILocalShop {
 	set autoRestockUnlocked(value) {
 		this.w_autoRestockUnlocked.set(value);
 	}
+	get maxCoffeeCups() {
+		return get(this.w_maxCoffeeCups);
+	}
+	set maxCoffeeCups(value) {
+		this.w_maxCoffeeCups.set(value);
+	}
+	get lifetimeStats() {
+		return this.multiShop.lifetimeStats;
+	}
+	set lifetimeStats(value: { [key: string]: number }) {
+		this.multiShop.lifetimeStats = value;
+	}
 
 	// variable containers ///////////////////////////////////////////////////////
 	w_restockSheet: Writable<{ [key: string]: number }> = writable({
 		beans: 5,
-		emptyCups: 5,
 	});
 	workerStats: { [key: string]: number } = {
 		baristaBaseProductivity: 0.1,
@@ -137,16 +145,8 @@ export class Shop implements ILocalShop {
 		supplierMax: 1,
 	});
 
-	lifetimeStats: { [key: string]: number } = {
-		coffeeSold: 0,
-		moneyMade: 0,
-		coffeeMade: 0,
-		totalRestocked: 0,
-	};
-
 	// stats /////////////////////////////////////////////////////////////////////
 	beansPrice: number = 2.5;
-	cupsPrice: number = 0.1;
 	totalWorkers: number = 0;
 	maxCustomers: number = 7;
 	promotionEffectiveness: number = 0.2;
@@ -159,21 +159,28 @@ export class Shop implements ILocalShop {
 	roles: Map<string, Role> = new Map();
 	upgrades: Map<string, number> = new Map();
 	multiShop: MultiShop;
-	audioManager: AudioManager = new AudioManager();
+	audioManager: AudioManager;
 	uiManager: UIManager;
 	boilTimer: number = 0;
 	playBoiler: boolean = false;
 	isSelected: boolean = false;
 
-	constructor(multiShop: MultiShop) {
+	constructor(multiShop: MultiShop, audioManager: AudioManager) {
+		console.log("local shop constructor");
 		this.multiShop = multiShop;
+		this.audioManager = audioManager;
+
+		// Setting up audio
+		this.audioManager.addSFX("boiling", aud.boiling);
+		this.audioManager.addSFX("papers", aud.papers);
+
 		// setting up default roles
 		this.roles.set("barista", {
 			name: "Barista",
 			wage: 50,
 			update: (shop: Shop) => {
 				let barista = shop.roles.get("barista")!;
-				if (shop.beans >= 1 && shop.emptyCups >= 1) {
+				if (shop.beans >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
 						(shop.workerStats["baristaBaseProductivity"] *
 							shop.workerStats["baristaCumulativeProductivity"] +
@@ -198,15 +205,6 @@ export class Shop implements ILocalShop {
 			},
 		});
 
-		// Clean up other audio managers
-		cleanupAudioManagers(this.audioManager);
-
-		// Setting up audio
-		this.audioManager.addSFX("boiling", aud.boiling);
-		this.audioManager.addSFX("ding", aud.ding);
-		this.audioManager.addAmbience("crowd", aud.new_crowd);
-
-		this.audioManager.playAudio("crowd");
 		this.uiManager = new UIManager();
 		this.uiManager.setCoffeeLocations(
 			[
@@ -214,9 +212,10 @@ export class Shop implements ILocalShop {
 					Array.from({ length: 12 }, (_, col) => [row + 6, col])
 				).flat(),
 				...Array.from({ length: 6 }, (_, row) =>
-					Array.from({ length: 2 }, (_, col) => [row, col+10])
+					Array.from({ length: 2 }, (_, col) => [row, col + 10])
 				).flat(),
 			]);
+		this.uiManager.setAlienTypes(["catorbiter"]);
 	}
 
 	// multishop utility /////////////////////////////////////////////////////////
@@ -232,9 +231,11 @@ export class Shop implements ILocalShop {
 		this.drawCustomers();
 
 		// only play audio if selected
-		if (this.isSelected) audioUpdate(this);
-		else {
-			this.audioManager.disableAudio();
+		if (this.isSelected) {
+			// this.audioManager.enableAudio();
+			audioUpdate(this);
+		} else {
+			// this.audioManager.disableAudio();
 		}
 
 		// progress updaters
@@ -316,18 +317,15 @@ export class Shop implements ILocalShop {
 
 	getRestockPrice() {
 		return (
-			this.restockSheet["beans"] * this.beansPrice +
-			this.restockSheet["emptyCups"] * this.cupsPrice
+			this.restockSheet["beans"] * this.beansPrice
 		);
 	}
 
 	restock() {
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
-		this.applyCost(this.restockSheet["emptyCups"] * this.cupsPrice);
 
 		this.beans += this.restockSheet["beans"];
-		this.emptyCups += this.restockSheet["emptyCups"];
-		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"] + this.restockSheet["emptyCups"];
+		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"];
 
 		this.audioManager.playAudio("ding");
 	}
@@ -340,15 +338,11 @@ export class Shop implements ILocalShop {
 			let numWorkers = this.workerAmounts[role.name.toLowerCase() + "Current"];
 			totalExpenses += numWorkers * role.wage;
 		});
-		// restock expenses taken from restock()
-		// totalExpenses += this.beans * this.beansPrice;
-		// totalExpenses += this.emptyCups * this.cupsPrice;
 
 		return totalExpenses;
 	}
 
 	deselectShop() {
-		this.audioManager.disableAudio();
 		this.multiShop.deselectShop();
 		this.multiShop.finishedFirstShop = true;
 	}
@@ -356,27 +350,25 @@ export class Shop implements ILocalShop {
 	// player actions ////////////////////////////////////////////////////////////
 	produceCoffee(amount: number = 1) {
 		if (this.boilTimer === 0) {
-			this.audioManager.playAudio("boiling");
 			this.boilTimer += 7;
+			this.audioManager.playAudio("boiling");
 		}
 
-		let numToMake = Math.floor(Math.min(amount, this.beans, this.emptyCups));
-		if (this.beans >= numToMake && this.emptyCups >= numToMake) {
+		let numToMake = Math.floor(Math.min(amount, this.beans, this.maxCoffeeCups - this.coffeeCups));
+		if (this.beans >= numToMake) {
 			this.beans -= numToMake;
-			this.emptyCups -= numToMake;
 			this.coffeeCups += numToMake;
 			this.lifetimeStats["coffeeMade"] += numToMake;
-			//TODO will break if amt > 1
-			this.uiManager.coffeeMade(this.coffeeCups);
 			return true;
 		}
 		return false;
 	}
 
 	sellCoffee(amount: number = 1) {
-		if (this.isSelected) {
-			this.audioManager.playAudio("ding");
-		}
+		this.audioManager.playAudio("ding");
+		// if (this.isSelected) {
+
+		// }
 		let numToSell = Math.floor(
 			Math.min(amount, this.waitingCustomers, this.coffeeCups)
 		);
@@ -387,20 +379,24 @@ export class Shop implements ILocalShop {
 			this.lifetimeStats["moneyMade"] +=
 				this.coffeePrice * numToSell * this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
-			// TODO will break if amt > 1
-			this.uiManager.coffeeSold();
+
+			//ANALYTICS
+			addCoffee(numToSell);
+			addMoney(this.coffeePrice * numToSell * this.moneyMultiplier);
 			return true;
 		}
 		return false;
 	}
 
 	promote() {
+		this.audioManager.playAudio("papers");
 		this.appeal +=
 			this.promotionEffectiveness * (1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
 	addWorker(role: string) {
+		this.audioManager.playAudio("ding");
 		if (!this.roles.has(role)) throw new Error(`${role} does not exist`);
 		let numWorkers = this.workerAmounts[role + "Current"];
 		let maxWorkers = this.workerAmounts[role + "Max"];
@@ -413,6 +409,7 @@ export class Shop implements ILocalShop {
 	}
 
 	removeWorker(role: string) {
+		this.audioManager.playAudio("ding");
 		if (!this.roles.has(role)) throw new Error("Role does not exist");
 		let roleObj = this.roles.get(role)!;
 		if (this.workerAmounts[role + "Current"] > 0) {
@@ -421,7 +418,7 @@ export class Shop implements ILocalShop {
 	}
 
 	choresForBeans() {
-		this.emptyCups += 1;
+		this.audioManager.playAudio("ding");
 		this.beans += 1;
 	}
 
@@ -440,10 +437,6 @@ export class Shop implements ILocalShop {
 		this.w_promoterUnlocked.set(true);
 	}
 
-	unlockAutoRestock() {
-		this.autoRestockUnlocked = true;
-	}
-
 	unlockSupplier() {
 		this.supplierUnlocked = true;
 		this.roles.set("supplier", {
@@ -460,7 +453,6 @@ export class Shop implements ILocalShop {
 		let saveObj: LocalShopSave = {
 			money: this.money,
 			beans: this.beans,
-			emptyCups: this.emptyCups,
 			coffeeCups: this.coffeeCups,
 			waitingCustomers: this.waitingCustomers,
 			minAppeal: this.minAppeal,
@@ -470,12 +462,12 @@ export class Shop implements ILocalShop {
 			upgrades: {},
 			multiShopUnlocked: this.multiShopUnlocked,
 			promoterUnlocked: this.promoterUnlocked,
-			lifetimeStats: this.lifetimeStats,
 			workerStats: this.workerStats,
 			workerAmounts: {},
 			appeal: this.appeal,
 			autoRestockUnlocked: this.autoRestockUnlocked,
 			restockSheet: {},
+			maxCoffeeCups: this.maxCoffeeCups,
 		};
 		for (let key in this.restockSheet) {
 			saveObj.restockSheet[key] = this.restockSheet[key];
@@ -488,6 +480,10 @@ export class Shop implements ILocalShop {
 			saveObj.workerStats[key] = this.workerStats[key];
 		}
 
+		for (let key in this.workerAmounts) {
+			saveObj.workerAmounts[key] = this.workerAmounts[key];
+		}
+
 		return saveObj;
 	}
 
@@ -495,7 +491,6 @@ export class Shop implements ILocalShop {
 	loadLocalState(state: LocalShopSave) {
 		this.money = state.money;
 		this.beans = state.beans;
-		this.emptyCups = state.emptyCups;
 		this.coffeeCups = state.coffeeCups;
 		this.minAppeal = state.minAppeal;
 		this.maxAppeal = state.maxAppeal;
@@ -505,10 +500,10 @@ export class Shop implements ILocalShop {
 		this.upgrades = new Map(Object.entries(state.upgrades));
 		this.multiShopUnlocked = state.multiShopUnlocked;
 		this.promoterUnlocked = state.promoterUnlocked;
-		this.lifetimeStats = state.lifetimeStats;
 		this.workerStats = state.workerStats;
 		this.appeal = state.appeal;
 		this.autoRestockUnlocked = state.autoRestockUnlocked;
+		this.maxCoffeeCups = state.maxCoffeeCups;
 
 		let restockSheetValue = get(this.w_restockSheet);
 		for (let key in state.restockSheet) {
@@ -539,7 +534,6 @@ interface Role {
 export interface LocalShopSave {
 	money: number;
 	beans: number;
-	emptyCups: number;
 	coffeeCups: number;
 	waitingCustomers: number;
 	appeal: number;
@@ -548,11 +542,11 @@ export interface LocalShopSave {
 	promotionEffectiveness: number;
 	appealDecay: number;
 	upgrades: { [key: string]: number };
-	lifetimeStats: { [key: string]: number };
 	multiShopUnlocked: boolean;
 	promoterUnlocked: boolean;
 	workerStats: { [key: string]: number };
 	workerAmounts: { [key: string]: number };
 	restockSheet: { [key: string]: number };
 	autoRestockUnlocked: boolean;
+	maxCoffeeCups: number;
 }

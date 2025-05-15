@@ -1,6 +1,7 @@
 export const aud: { [key: string]: string } = {
 	shop_music: new URL('./music/Duraznito - Quincas Moreira.mp3', import.meta.url).href,
 	preshop_music: new URL('./music/Squirm Worm - TrackTribe.mp3', import.meta.url).href,
+	franchise_music: new URL('./music/LOPKERJO - Soul of Galveston.mp3', import.meta.url).href,
 	cant_burn: new URL(`./music/Mid-Air Machine - Just Can't Burn.mp3`, import.meta.url).href,
 	moonlight: new URL('./music/snoozy beats - moonlight city.mp3', import.meta.url).href,
 	fat_caps: new URL('./music/Jason Shaw - Fat Caps.mp3', import.meta.url).href,
@@ -21,4 +22,12 @@ export const aud: { [key: string]: string } = {
 	new_crowd: new URL('./sfx/new_crowd.wav', import.meta.url).href,
 	preshop_crowd: new URL('./sfx/preshop_crowd.mp3', import.meta.url).href,
 	new_cash: new URL('./sfx/new_cash.wav', import.meta.url).href,
+	meow_1: new URL('./sfx/meow_1.wav', import.meta.url).href,
+	meow_2: new URL('./sfx/meow_2.wav', import.meta.url).href,
+	meow_3: new URL('./sfx/meow_3.wav', import.meta.url).href,
+	meow_4: new URL('./sfx/meow_4.wav', import.meta.url).href,
+	meow_5: new URL('./sfx/meow_5.wav', import.meta.url).href,
+	meow_6: new URL('./sfx/meow_6.wav', import.meta.url).href,
+	meow_7: new URL('./sfx/meow_7.wav', import.meta.url).href,
+	meow_8: new URL('./sfx/meow_8.wav', import.meta.url).href,
 };

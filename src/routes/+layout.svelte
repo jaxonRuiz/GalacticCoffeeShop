@@ -12,6 +12,8 @@
 		saveState,
 		stageManager,
 		pauseGame,
+		resumeGame,
+    endGame,
 	} from "$lib/backend/game";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
@@ -21,10 +23,12 @@
 	import Options from "$lib/components/Options.svelte";
 	import LoadingScreen from "$lib/components/LoadingScreen.svelte";
 	import { loading, loadingScreen } from "$lib/components/LoadingScreen";
+	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
+	import { addCoffee, addMoney } from "$lib/backend/analytics";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
-	let tabs = ["game", "preshop", "shop", "multishop", "test"];
+	let tabs = ["game", "preshop", "shop", "multishop", "franchise", "test"];
 	let url = $derived(page.url.pathname);
 
 	let { children } = $props();
@@ -32,7 +36,11 @@
 	function onKeyDown(event: KeyboardEvent) {
 		if (event.key === "Escape") {
 			$optionsWindowOpen = !get(optionsWindowOpen);
-			pauseGame();
+			if ($optionsWindowOpen) {
+				pauseGame();
+			} else {
+				resumeGame();
+			}
 		}
 		if (event.key === "t") {
 			testWindowOpen = !testWindowOpen;
@@ -45,8 +53,16 @@
 			console.log("app saving");
 			saveState();
 		}
-		if (event.key === "[") {
-			goto(`${base}/`);
+		if (event.key === "]") {
+			endGame();
+			goto(`${base}/game`);
+		}
+		if (event.key === "l") {
+			(stageManager.currentScene as Franchise).researchers += 1000;
+			(stageManager.currentScene as Franchise).money += 1000;
+			addMoney(1000);
+			addCoffee(1000);
+			(stageManager.currentScene as Franchise).sciencePoints += 1000;
 		}
 		if (event.key === "]") {
 			loading.set(!get(loading));
@@ -69,6 +85,12 @@
 
 	function onMouseDown(event: MouseEvent) {
 		let type = "default";
+		const rat = (event.target as HTMLElement).closest("img");
+		if (rat && rat.alt == "rat" && rat.dataset.clickable == "y") {
+			console.log('rat');
+			booped(rat.x - 0.1 * rat.width, rat.y + 0.4 * rat.height, "heart");
+			return;
+		}
 		const b = (event.target as HTMLElement).closest("button");
 		if (b) {
 			type = b.dataset.btn ?? "button";
@@ -98,6 +120,7 @@
 							onclick={() => {
 								$optionsWindowOpen = false;
 								saveState();
+								// resumeGame();
 								goto(`${base}/`);
 							}}
 						>
@@ -145,9 +168,10 @@
 									smanager.currentScene as MultiShop
 								).shops[0].multiShopUnlocked = true;
 								break;
-							// case 4:
-							//   smanager.loadStage(4, false);
-							//   break;
+							case 4:
+								 // franchise
+							  smanager.loadStage(3, false);
+							  break;
 						}
 						testWindowOpen = false;
 					}}>{tab}</a

@@ -25,31 +25,26 @@ export class UIManager {
 		this.alienGenerator.updateTypes(types);
 	}
 
-	newCustomer(totalCustomers: number) {
-		console.log("new customer", totalCustomers);
+	setCustomerCount(customers: number) {
 		const currAliens = this.alienGenerator.alienCount;
-		for (let i = 0; i < Math.floor(totalCustomers - currAliens); ++i) {
-			console.log('adding alien');
+
+		for (let i = 0; i < Math.floor(customers - currAliens); ++i) {
 			this.alienGenerator.addAlien();
 		}
-	}
-
-	customerLeaving() {
-		// TODO will break if customers left > 1
-		this.alienGenerator.removeAlien();
-	}
-
-	coffeeMade(totalCoffees: number) {
-		const currCoffee = this.coffeeGenerator.coffeeCount;
-		for (let i = 0; i < Math.floor(totalCoffees - currCoffee); ++i) {
-			this.coffeeGenerator.addCoffee();
+		for (let i = currAliens; i > customers; --i) {
+			this.alienGenerator.removeAlien();
 		}
 	}
 
-	coffeeSold() {
-		// TODO will need to update if coffee sell unit > 1
-		this.customerLeaving();
-		this.coffeeGenerator.removeCoffee();
+	setCoffeeCount(coffees: number) {
+		const currCoffee = this.coffeeGenerator.coffeeCount;
+
+		for (let i = 0; i < Math.floor(coffees - currCoffee); ++i) {
+			this.coffeeGenerator.addCoffee();
+		}
+		for (let i = currCoffee; i > coffees; --i) {
+			this.coffeeGenerator.removeCoffee();
+		}
 	}
 }
 
@@ -72,8 +67,7 @@ class CoffeeGenerator {
 	}
 
 	addCoffee() {
-		if (this.coffeeCount == this.loc.length) {
-			this.overflow++;
+		if (this.coffeeCount >= this.loc.length) {
 			return;
 		}
 		const possLoc = this.loc.filter((loc) => {
@@ -92,12 +86,6 @@ class CoffeeGenerator {
 			newCoffees.shift();
 			return newCoffees;
 		});
-		if (this.overflow > 0) {
-			this.overflow--;
-			setTimeout(() => {
-				this.addCoffee();
-			}, 200);
-		}
 	}
 }
 
@@ -108,16 +96,13 @@ const aTypeCounts: { [key: string]: number } = {
 class AlienGenerator {
 	aliens: Writable<[string, number][]> = writable([]);
 	alienTypes: string[];
-	overflow: number = 0;
-	maxAliens: number;
 
 	get alienCount() {
 		return get(this.aliens).length;
 	}
 
-	constructor(types: string[], maxAliens: number = 5) {
+	constructor(types: string[]) {
 		this.alienTypes = types;
-		this.maxAliens = maxAliens;
 	}
 
 	updateTypes(types: string[]) {
@@ -125,13 +110,8 @@ class AlienGenerator {
 	}
 
 	addAlien() {
-		if (this.alienCount == this.maxAliens) {
-			this.overflow++;
-			return;
-		}
 		this.aliens.update((aliens) => {
 			const type = this.alienTypes[Math.floor(Math.random() * this.alienTypes.length)];
-			console.log(type, aTypeCounts[type], Math.floor(Math.random() * aTypeCounts[type]));
 			aliens = [...aliens, [type, Math.floor(Math.random() * aTypeCounts[type])]];
 			return aliens;
 		});
@@ -143,9 +123,5 @@ class AlienGenerator {
 			newAliens.shift();
 			return newAliens;
 		});
-		if (this.overflow > 0) {
-			this.overflow--;
-			this.addAlien();
-		}
 	}
 }

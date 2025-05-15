@@ -4,7 +4,7 @@
 	import { Preshop } from "$lib/backend/classes/preshop";
 	import { stageManager } from "$lib/backend/game";
 	import Tooltip from "$lib/components/Tooltip.svelte";
-	import Dropdown from "$lib/components/Dropdown.svelte";
+	import Block from "$lib/components/Block.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import {
 		fMoney,
@@ -46,7 +46,7 @@
 		</div>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeStand} />
-			<img alt="rat" src={img.astrorat} class="float" />
+			<img alt="rat" src={img.astrorat} data-clickable="y" class="float" />
 			<div id="coffees" class="abs">
 				{#each $coffeeOnTable as coffee (coffee)}
 					<img
@@ -63,7 +63,6 @@
 			</div>
 			<div class="customers abs">
 				{#each $customersInLine as customer, ind (customer)}
-				{console.log(`alien_${customer[0]}_${customer[1]}`)}
 					<img
 						in:fly={{ y: -50, duration: 500 }}
 						out:fly={{ y: -50, duration: 500 }}
@@ -81,7 +80,7 @@
 
 	<div class="shop right row">
 		<div class="col scroll">
-			<Dropdown title={$t("making_title")}>
+			<Block title={$t("making_title")}>
 				<div class="tooltip">
 					<Tooltip text={["makeCoffee1_tooltip", "makeCoffee2_tooltip"]} />
 				</div>
@@ -110,11 +109,11 @@
 						pshop.makeCoffee();
 					}}>{$t("makeCoffee_btn")}</Button
 				>
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("promoting_title")}>
+			<Block title={$t("selling_title")}>
 				<div class="tooltip">
-					<Tooltip text={["promote_tooltip"]} />
+					<Tooltip text={["promote_tooltip", "sellCoffee_tooltip"]} />
 				</div>
 				<p>{$t("appeal_stat")}: {fAppeal($appeal)}</p>
 				<Button
@@ -123,12 +122,6 @@
 						pshop.promoteShop();
 					}}>{$t("promote_btn")}</Button
 				>
-			</Dropdown>
-
-			<Dropdown title={$t("selling_title")}>
-				<div class="tooltip">
-					<Tooltip text={["sellCoffee_tooltip"]} />
-				</div>
 				<p>{$t("customersWaiting_stat")}: {$waitingCustomers}</p>
 				<p>{$t("sellableCoffee_stat")}: {fSellableCoffee($coffee)}</p>
 				<Button
@@ -140,9 +133,9 @@
 						pshop.sellCoffee();
 					}}>{$t("sellCoffee_btn")}</Button
 				>
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("shop_title")}>
+			<Block title={$t("shop_title")}>
 				<div class="tooltip">
 					<Tooltip text={["shop_tooltip"]} />
 				</div>
@@ -163,7 +156,7 @@
 						}}>{$t("choresForBeans_btn")}</Button
 					>
 				{/if}
-			</Dropdown>
+			</Block>
 		</div>
 
 		<div class="col">
@@ -177,6 +170,7 @@
 		img[alt="rat"] {
 			top: 11%;
 			right: 20%;
+			cursor: var(--cpointer), pointer;
 		}
 
 		#coffees {
@@ -195,9 +189,8 @@
 		}
 
 		.customers {
-
 			img {
-				width: 55%
+				width: 55%;
 			}
 		}
 	}

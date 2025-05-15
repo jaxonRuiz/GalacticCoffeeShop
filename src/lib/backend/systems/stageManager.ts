@@ -3,6 +3,9 @@ import { Publisher } from "./observer";
 import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
+import { Franchise } from "../classes/franchise/franchise";
+import { resetState } from "../game";
+import { franchiseDone, multishopDone, preshopDone, startSession } from "../analytics";
 
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
@@ -15,12 +18,27 @@ export class StageManager extends Publisher {
 		this.w_currentSceneIndex.set(value);
 	}
 
+	w_gameOver: Writable<boolean> = writable(false);
+	get gameOver() {
+		return get(this.w_gameOver);
+	}
+	set gameOver(value) {
+		this.w_gameOver.set(value);
+	}
+
 	timer: Timer;
 
 	constructor(timer: Timer) {
 		super(["nextScene"]);
 		this.timer = timer;
 		this.subscribe(this.sceneWatcher, "nextScene");
+	}
+
+	reset(timer: Timer) {
+		this.timer = timer;
+		console.log("resetting stage manager");
+		this.currentScene = {} as IScene;
+		this.currentSceneIndex = 0;
 	}
 
 	// specifically handles loading stages from save state
@@ -41,6 +59,10 @@ export class StageManager extends Publisher {
 					this.currentScene = new MultiShop(this.timer.timeEvents, this);
 					break;
 				case 3:
+					console.log("loading franchise");
+					this.currentScene = new Franchise(this.timer.timeEvents, this);
+					break;
+				case 4:
 					console.log("game over reload");
 					break;
 				default:
@@ -72,15 +94,25 @@ export class StageManager extends Publisher {
 
 			case 1: // preshop to multishop
 				console.log("preshop to multishop");
-				let transferData = this.currentScene.getTransferData();
+				let preshopTransferData = this.currentScene.getTransferData();
+				preshopDone(); //ANALYTICS
 				this.currentScene = new MultiShop(this.timer.timeEvents, this);
-				this.currentScene.loadTransferData(transferData);
+				this.currentScene.loadTransferData(preshopTransferData);
 				this.currentSceneIndex = 2;
 				break;
 
-			case 2: // multishop to gameover
-				console.log("multishop to game over");
+			case 2: // multishop to franchise
+				console.log("multishop to franchise");
+				let multishopTransferData = this.currentScene.getTransferData();
+				multishopDone(); //ANALYTICS
+				this.currentScene = new Franchise(this.timer.timeEvents, this);
+				this.currentScene.loadTransferData(multishopTransferData);
 				this.currentSceneIndex = 3;
+				break;
+
+			case 3: // franchise to game over
+				console.log("franchise to game over");
+				franchiseDone(); //ANALYTICS
 				break;
 
 			default:

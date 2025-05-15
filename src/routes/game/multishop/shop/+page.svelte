@@ -11,7 +11,7 @@
 		fSellableCoffee,
 		pointerStyle,
 	} from "$lib/components/Styles.svelte";
-	import Dropdown from "$lib/components/Dropdown.svelte";
+	import Block from "$lib/components/Block.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Tooltip from "$lib/components/Tooltip.svelte";
 	import Worker from "$lib/components/Worker.svelte";
@@ -73,7 +73,7 @@
 		</div>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeShop_bot} />
-			<img alt="rat" src={img.astrorat} class="float" />
+			<img alt="rat" src={img.astrorat} data-clickable="y" class="float" />
 			<div id="coffees" class="abs">
 				{#each $coffeeOnTable as coffee (coffee)}
 					<img
@@ -97,8 +97,8 @@
 						alt="customer"
 						src={img[`alien_${customer[0]}_${customer[1]}`]}
 						style="
-							top: {ind * 2.5}%;
-							left: {ind * 2.5}%;
+							top: {23 + ind * 10}%;
+							right: {29 + ind * 10}%;
 							z-index:{ind}"
 					/>
 				{/each}
@@ -108,7 +108,7 @@
 
 	<div class="shop right row">
 		<div class="col scroll">
-			<Dropdown title={$t("making_title")}>
+			<Block title={$t("making_title")}>
 				<div class="tooltip">
 					<Tooltip text={["makeCoffee3_tooltip", "hire_tooltip"]} />
 				</div>
@@ -124,9 +124,9 @@
 				{#if true}
 					<Worker worker="barista" {sshop} />
 				{/if}
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("selling_title")}>
+			<Block title={$t("selling_title")}>
 				<div class="tooltip">
 					<Tooltip
 						text={["promote_tooltip", "sellCoffee_tooltip", "hire_tooltip"]}
@@ -155,27 +155,27 @@
 				{#if true}
 					<Worker worker="server" {sshop} />
 				{/if}
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("restocking_title")}>
+			<Block title={$t("restocking_title")}>
 				<div class="tooltip">
 					<Tooltip text={["restock_tooltip"]} />
 				</div>
-				<p>{$t("restockPrice_stat")}: {fMoney(sshop.getRestockPrice())}</p>
-				{#each Object.keys($restockSheet) as key}
-					{@render restockItem(key)}
-				{/each}
-				<Button
-					data-btn="coin"
-					disabled={$restockSheet.beans * sshop.beansPrice +
-						$restockSheet.emptyCups * sshop.cupsPrice >
-					$mshopMoney + $money
-						? true
-						: false}
-					onclick={() => {
-						sshop.restock();
-					}}>{$t("restock_btn")}</Button
-				>
+				{#key $restockSheet}
+					<p>{$t("restockPrice_stat")}: {fMoney(sshop.getRestockPrice())}</p>
+					{#each Object.keys($restockSheet) as key}
+						{@render restockItem(key)}
+					{/each}
+					<Button
+						data-btn="coin"
+						disabled={sshop.getRestockPrice() > $mshopMoney + $money
+							? true
+							: false}
+						onclick={() => {
+							sshop.restock();
+						}}>{$t("restock_btn")}</Button
+					>
+				{/key}
 				{#if ($coffee < 1 && (($money < sshop.cupsPrice && $emptyCups < 1) || ($money < sshop.beansPrice && $beans < 1))) || ($money < sshop.beansPrice + sshop.cupsPrice && $coffee < 3 && $beans < 3 && $emptyCups < 3)}
 					<Button
 						data-btn="plus"
@@ -184,7 +184,7 @@
 						}}>{$t("choresForBeans_btn")}</Button
 					>
 				{/if}
-			</Dropdown>
+			</Block>
 		</div>
 		<div class="col">
 			<UpgradesPanel wshop={sshop} umKey="localShop" money={totalMoney} />
@@ -262,6 +262,7 @@
 		img[alt="rat"] {
 			top: 24%;
 			right: 30%;
+			cursor: var(--cpointer), pointer;
 		}
 
 		#coffees {
@@ -278,11 +279,8 @@
 		}
 
 		.customers {
-			border: 1px solid var(--accent);
-
 			img {
-				border: 1px solid whitesmoke;
-				width: 20%;
+				width: 55%;
 				height: auto;
 			}
 		}
