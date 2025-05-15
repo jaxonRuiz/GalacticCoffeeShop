@@ -53,10 +53,6 @@
 			console.log("app saving");
 			saveState();
 		}
-		if (event.key === "]") {
-			endGame();
-			goto(`${base}/game`);
-		}
 		if (event.key === "l") {
 			(stageManager.currentScene as Franchise).researchers += 1000;
 			(stageManager.currentScene as Franchise).money += 1000;
