@@ -15,6 +15,7 @@
 
 	let umanager = new UpgradeManager(umKey);
 	const upgs = upgradeJSON[umKey];
+	let descKey = $state(""); // upgrade key to display
 
 	// upgrade checker on interval
 	const fn = () => {
@@ -51,9 +52,9 @@
 			<p>{$t("upgPurchased_btn")}</p>
 		</label>
 	</div>
-	<div class="col scroll" id="upgrades">
-		{#if upgPage == 0}
-			{#key rupg}
+	{#key rupg}
+		<div class="col scroll" id="upgrade-icon">
+			{#if upgPage == 0}
 				{#each availableUpgrades as upgkey (upgkey)}
 					<Upgrade
 						purchased={false}
@@ -68,22 +69,44 @@
 							availableUpgrades = umanager.checkUpgrade(wshop);
 							rupg = !rupg;
 						}}
+						onmouseover={() => {
+							descKey = upgkey;
+						}}
 					/>
 				{/each}
-			{/key}
-		{:else if upgPage === 1}
-			{#each [...wshop.upgrades.keys()] as upgkey (upgkey)}
-				<Upgrade
-					purchased={true}
-					item={upgs[upgkey]}
-					key={upgkey}
-					cost={umanager.getCost(upgkey, wshop)}
-					level={wshop.upgrades.get(upgkey) ?? 0}
-				/>
-			{/each}
-		{/if}
-	</div>
+			{:else if upgPage === 1}
+				{#each [...wshop.upgrades.keys()] as upgkey (upgkey)}
+					<Upgrade
+						purchased={true}
+						item={upgs[upgkey]}
+						key={upgkey}
+						level={wshop.upgrades.get(upgkey) ?? 0}
+					/>
+				{/each}
+			{/if}
+		</div>
+		<div class="col" id="upgrade-desc">
+			{#if descKey != ""}
+				{@render upgradeDesc(descKey, upgPage === 1)}
+			{:else}
+				<h3>{$t("upgrade_tooltip")}</h3>
+			{/if}
+		</div>
+	{/key}
 </div>
+
+{#snippet upgradeDesc(key: string, purchased: boolean)}
+	<h3>
+		{$t(`${key}_upgName`)}{upgs[key].maxLevel != 1
+			? ` LVL${wshop.upgrades.get(key) ?? 0 + (purchased ? 0 : 1)}`
+			: ""}
+	</h3>
+
+	<p>{$t(`${key}_upgDesc`)}</p>
+	{#if !purchased}
+		<p>{$t("cost_stat")}: {fMoney(umanager.getCost(key, wshop))}</p>
+	{/if}
+{/snippet}
 
 <style>
 	#upgrades-panel {
@@ -112,7 +135,15 @@
 		justify-content: space-evenly;
 	}
 
-	#upgrades {
+	#upgrade-icon {
 		flex-grow: 1;
+	}
+
+	#upgrade-desc {
+		height: 40%;
+		padding: 2rem;
+		h3 {
+			margin-top: 0;
+		}
 	}
 </style>

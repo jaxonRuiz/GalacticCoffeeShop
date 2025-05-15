@@ -79,6 +79,7 @@
 	"shop_tooltip": "Buy raw coffee beans from the market.",
 	"restock_tooltip": "Restock beans and empty cups in bulk.",
 	"hire_tooltip": "Hire workers to help you do tasks.",
+	"upgrade_tooltip": "Hover the upgrade icons for info. Click to purchase.",
 
 	"crank_grinder_upgName": "Crank Grinder",
 	"crank_grinder_upgDesc": "Make bean grinding process faster",

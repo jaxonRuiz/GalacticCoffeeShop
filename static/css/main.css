@@ -8,6 +8,7 @@
 	--green: #4cd649;
 	--yellow: #f2c144;
 	--text: #fff;
+	--borderStyle: 3px solid white;
 }
 
 * {
@@ -84,6 +85,20 @@
 		margin-left: auto;
 		display: flex;
 		flex-direction: row-reverse;
+	}
+}
+
+#upgrade-icon {
+	img {
+		height: 3rem;
+		aspect-ratio: 1/1;
+	}
+	button {
+		align-items: center;
+
+		&.purchased-upg {
+			opacity: 1;
+		}
 	}
 }
 

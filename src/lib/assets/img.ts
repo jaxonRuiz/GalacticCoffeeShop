@@ -3,6 +3,7 @@ export const img: { [key: string] : string } = {
 	cursor_default: new URL('./img/cursor/norm.svg', import.meta.url).href,
 	cursor_pointer: new URL('./img/cursor/pointer.svg', import.meta.url).href,
 	cursor_wait: new URL('./img/cursor/wait.svg', import.meta.url).href,
+
 	boop_plusOne: new URL('./img/clickEffects/plusOne.svg', import.meta.url).href,
 	boop_minusOne: new URL('./img/clickEffects/minusOne.svg', import.meta.url).href,
 	boop_coin: new URL('./img/clickEffects/coin.svg', import.meta.url).href,
@@ -23,17 +24,23 @@ export const img: { [key: string] : string } = {
 	boop_num0: new URL('./img/clickEffects/num0.svg', import.meta.url).href,
 	boop_numDec: new URL('./img/clickEffects/numDec.svg', import.meta.url).href,
 	boop_numPlus: new URL('./img/clickEffects/numPlus.svg', import.meta.url).href,
+
 	tooltip: new URL('./img/tooltip.svg', import.meta.url).href,
+
 	astrorat: new URL('./img/astrorat.svg', import.meta.url).href,
 	coffeeShop_bot: new URL('./img/buildings/coffeeShop_bot.svg', import.meta.url).href,
 	coffeeShop_top: new URL('./img/buildings/coffeeShop_top.svg', import.meta.url).href,
 	coffeeStand: new URL('./img/buildings/coffeeStand.svg', import.meta.url).href,
 	coffee: new URL('./img/coffee.svg', import.meta.url).href,
+	
 	titleScreen_planets_1: new URL('./img/splashes/planets_1.svg', import.meta.url).href,
 	titleScreen_planets_2: new URL('./img/splashes/planets_2.svg', import.meta.url).href,
 	titleScreen_planets_3: new URL('./img/splashes/planets_3.svg', import.meta.url).href,
+
 	alien_catorbiter_0: new URL('./img/catorbiter/catorbiter_0.svg', import.meta.url).href,
 	alien_catorbiter_1: new URL('./img/catorbiter/catorbiter_1.svg', import.meta.url).href,
 	alien_catorbiter_2: new URL('./img/catorbiter/catorbiter_2.svg', import.meta.url).href,	
 	alien_catorbiter_3: new URL('./img/catorbiter/catorbiter_3.svg', import.meta.url).href,
+
+	upg_brew: new URL('./img/upgrades/brew.svg', import.meta.url).href,
 };

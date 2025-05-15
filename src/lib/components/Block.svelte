@@ -22,7 +22,7 @@
 			margin: 0;
 			border: none;
 			border-radius: 0;
-			border-bottom: 3px solid white;
+			border-bottom: var(--borderStyle);
 		}
 	}
 </style>
