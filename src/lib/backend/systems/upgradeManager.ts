@@ -19,7 +19,7 @@ export class UpgradeManager {
 		this.audioManager.addSFX("upgrade", aud.upgrade);
 		this.audioManager.setVolume("upgrade", 0.5);
 		this.audioManager.playAudio("upgrade");
-		
+
 		// if multishop style
 		if (this.allUpgrades[id].flags?.includes("applyToChildren")) {
 			// maybe set it up so multishop upgrades show up in local shops?
@@ -450,25 +450,6 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			},
 			maxLevel: 1,
 			cost: 150,
-			costMultiplier: 1.2,
-			image: "flashy_sign.jpg",
-		},
-		drug_the_coffee: {
-			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 170 &&
-					shop.upgrades.has("bumpin_music");
-			},
-			upgrade: (shop, level) => {
-				let statLevels = [0.1, 0.15, 0.18];
-				(shop as ILocalShop).minAppeal! += statLevels[level];
-				(shop as ILocalShop).appealDecay *= 0.97;
-				if ((shop as ILocalShop).appeal < (shop as ILocalShop).minAppeal!) {
-					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
-				}
-				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
-			},
-			maxLevel: 1,
-			cost: 200,
 			costMultiplier: 1.2,
 			image: "flashy_sign.jpg",
 		},
