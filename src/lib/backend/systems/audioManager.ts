@@ -58,11 +58,18 @@ export class AudioManager {
 	playAudio(name: string) {
 		if (this.SFX.has(name)) {
 			const audioInstances = this.SFX.get(name)!;
+			// Remove ended instances
+			for (let i = audioInstances.length - 1; i >= 0; i--) {
+				if (audioInstances[i].ended) {
+					audioInstances.splice(i, 1);
+				}
+			}
 			let audio = audioInstances.find((a) => a.paused);
 			if (!audio) {
-				audio = audioInstances[0];
-				audio.pause();
-				audio.currentTime = 0;
+				const src = audioInstances[0].src;
+				audio = new Audio(src);
+				(audio as any).name = name;
+				audioInstances.push(audio);
 			}
 			audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", name);
 			audio.currentTime = 0;

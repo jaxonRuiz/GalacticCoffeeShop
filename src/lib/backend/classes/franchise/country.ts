@@ -2,6 +2,8 @@ import { get, type Writable, writable } from "svelte/store";
 import type { World } from "./world";
 import { Region } from "./region";
 import { Franchise } from "./franchise";
+import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
+import { aud } from "../../../assets/aud";
 
 export class Country{
 	parent: World;
@@ -72,6 +74,9 @@ export class Country{
 	firstRegions: number;
 	unlockCost: number = 500;
 	countryNum: number = 0;
+
+	//audio manager
+	audioManager: AudioManager;
 	
 	w_regionList: Writable<Region[]> = writable([]);
 	// need to figure out how to represent regions in a graph
@@ -104,6 +109,9 @@ export class Country{
 		this.refreshInfluenceTasks(3);
 
 		this.initializeRegions(4 + Math.floor(Math.random() * 3));
+
+		//audio
+		this.audioManager = franchise.audioManager;
 	}
 
 	tick() {

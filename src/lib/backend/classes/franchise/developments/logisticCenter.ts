@@ -2,15 +2,23 @@ import type { Publisher } from "$lib/backend/systems/observer";
 import type { Franchise } from "../franchise";
 import type { Region } from "../region";
 import { DevelopmentBase, DevelopmentType } from "./developmentbase";
+import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
+import { aud } from "../../../../assets/aud";
 
 export class LogisticCenter extends DevelopmentBase{
 	get developmentType(): DevelopmentType {
 		return DevelopmentType.Logistic;
 	  }
+	
+	//audioManager
+	audioManager: AudioManager;
 
 	constructor(region: Region, areaSize: number, franchise: Franchise) {
 		super(region, areaSize, franchise);
 		this.initializeDevelopment();
+
+		//audio
+		this.audioManager = franchise.audioManager;
 	}
 
 	day() {

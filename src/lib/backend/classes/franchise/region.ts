@@ -10,6 +10,8 @@ import { Franchise } from "./franchise";
 import { Farm } from "./developments/farm";
 import { LogisticCenter } from "./developments/logisticCenter";
 import { dictProxy } from "$lib/backend/proxies";
+import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
+import { aud } from "../../../assets/aud";
 
 export enum ClimateType {
 	Arid = 0,
@@ -215,6 +217,7 @@ export class Region implements IRegion {
 
 	parentCountry: Country;
 	franchise: Franchise;
+	audioManager: AudioManager;
 
 	constructor(
 		country: Country,
@@ -240,6 +243,9 @@ export class Region implements IRegion {
 		this.expectedCustomersPerHour = this.population/franchise.populationDivisor;
 
 		this.initializeRegion(climate);
+
+		//audio
+		this.audioManager = this.franchise.audioManager;
 	}
 
 	tick(){

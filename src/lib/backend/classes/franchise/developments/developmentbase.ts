@@ -2,6 +2,8 @@ import { Publisher } from "../../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import type { Region } from "../region";
 import { Franchise } from "../franchise";
+import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
+import { aud } from "../../../../assets/aud";
 
 export enum DevelopmentType{
 	Residential = "Residential",
@@ -46,12 +48,16 @@ export class DevelopmentBase implements IDevelopment{
 
 	parent: Region;
 	franchise: Franchise;
+	audioManager: AudioManager;
 	
 	constructor(region: Region, areaSize: number, franchise: Franchise) {
 		this.parent = region;
 		this.developmentArea = areaSize;
 		this.franchise = franchise;
 		this.parent.usableLand -= areaSize;
+
+		//audio
+		this.audioManager = franchise.audioManager;
 	}
 
 	tick(){

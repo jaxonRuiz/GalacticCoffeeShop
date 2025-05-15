@@ -1,6 +1,8 @@
 import { get, writable, type Writable } from "svelte/store";
 import type { Franchise } from "./franchise";
 import type { Region } from "./region";
+import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
+import { aud } from "../../../assets/aud";
 
 export class ResearchLab{
 	w_currentTaskList: Writable<IResearchTask[]> = writable([]);
@@ -27,6 +29,7 @@ export class ResearchLab{
 	}
 
 	franchise: Franchise;
+	audioManager: AudioManager
 	tasksAdded: number = 0;
 
 	taskNames: string[] = ["Analyze coffee molecules", "Dissect cocoa plants", "Optimize atomic structure of coffee"];
@@ -37,6 +40,9 @@ export class ResearchLab{
 		this.addNewTask();
 		this.addNewTask();
 		this.addNewTask();
+
+		//audio
+		this.audioManager = franchise.audioManager;
 	}
 
 	tick(){

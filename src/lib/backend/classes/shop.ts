@@ -169,7 +169,7 @@ export class Shop implements ILocalShop {
 	roles: Map<string, Role> = new Map();
 	upgrades: Map<string, number> = new Map();
 	multiShop: MultiShop;
-	audioManager: AudioManager = new AudioManager();
+	audioManager: AudioManager;
 	uiManager: UIManager;
 	boilTimer: number = 0;
 	playBoiler: boolean = false;
@@ -181,7 +181,6 @@ export class Shop implements ILocalShop {
 
 		// Setting up audio
 		this.audioManager.addSFX("boiling", aud.boiling);
-		this.audioManager.addSFX("ding", aud.ding);
 		this.audioManager.addSFX("papers", aud.papers);
 
 		// setting up default roles
