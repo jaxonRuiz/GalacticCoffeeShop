@@ -15,21 +15,17 @@
 
 	let umanager = new UpgradeManager(umKey);
 	const upgs = upgradeJSON[umKey];
-	const upgs_cost = $state(
-		Object.keys(upgs).reduce((costs: { [key: string]: number }, key) => {
-			costs[key] = upgs[key].cost;
-			return costs;
-		}, {})
-	);
 
 	// upgrade checker on interval
-	let availableUpgrades = $state(umanager.checkUpgrade(wshop));
-	umanager.checkUpgrade(wshop).forEach((upgkey) => {
-		upgs_cost[upgkey] = umanager.getCost(upgkey, wshop);
-	});
+	const fn = () => {
+		return umanager.checkUpgrade(wshop).sort((upgkey) => {
+			return umanager.getCost(upgkey, wshop) - $money;
+		});
+	};
+	let availableUpgrades = $state(fn());
 	const timerInterval = setInterval(() => {
-		availableUpgrades = umanager.checkUpgrade(wshop);
-	}, 1000);
+		availableUpgrades = fn();
+	}, 250);
 
 	onDestroy(() => {
 		clearInterval(timerInterval);
@@ -69,7 +65,6 @@
 						flags={upgs[upgkey].flags ?? []}
 						onclick={() => {
 							umanager.applyUpgrade(upgkey, wshop);
-							// upgs_cost[upgkey] = umanager.getCost(upgkey, wshop);
 							availableUpgrades = umanager.checkUpgrade(wshop);
 							rupg = !rupg;
 						}}
