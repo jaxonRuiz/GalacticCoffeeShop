@@ -21,6 +21,8 @@
 	import Boops from "$lib/components/Boops.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
+	import LoadingScreen from "$lib/components/LoadingScreen.svelte";
+	import { loading, loadingScreen } from "$lib/components/LoadingScreen";
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 	import { addCoffee, addMoney } from "$lib/backend/analytics";
 
@@ -62,6 +64,10 @@
 			addCoffee(1000);
 			(stageManager.currentScene as Franchise).sciencePoints += 1000;
 		}
+		if (event.key === "]") {
+			loading.set(!get(loading));
+			console.log(get(loading));
+		}
 		// if (event.key === "r") {
 		//   resetState();
 		//   smanager.currentSceneIndex = 0;
@@ -98,6 +104,8 @@
 </script>
 
 <svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
+
+<LoadingScreen />
 
 <div id="overlays" class="fl" style={pointerStyle}>
 	{#if $optionsWindowOpen}
@@ -178,7 +186,11 @@
 	</div>
 </div>
 
-<div id="content" style={pointerStyle}>
+<div
+	id="content"
+	style={pointerStyle}
+	class={$loading || $optionsWindowOpen ? "paused" : "playing"}
+>
 	{@render children()}
 </div>
 
