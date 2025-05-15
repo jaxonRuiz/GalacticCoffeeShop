@@ -2,7 +2,7 @@ import { AudioManager } from "./audioManager";
 import { aud } from "../../assets/aud";
 
 const unlockStages: boolean = false;
-const playtesterMode: boolean = false;
+const playtesterMode: boolean = true;
 const unlockAllUpgrades: boolean = false; // for testing purposes
 
 export class UpgradeManager {
