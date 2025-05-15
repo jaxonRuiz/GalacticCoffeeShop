@@ -43,4 +43,8 @@ export const img: { [key: string] : string } = {
 	alien_catorbiter_3: new URL('./img/catorbiter/catorbiter_3.svg', import.meta.url).href,
 
 	upg_brew: new URL('./img/upgrades/brew.svg', import.meta.url).href,
+	upg_buy: new URL('./img/upgrades/buy.svg', import.meta.url).href,
+	upg_grind: new URL('./img/upgrades/grind.svg', import.meta.url).href,
+	upg_promote: new URL('./img/upgrades/promote.svg', import.meta.url).href,
+	upg_sell: new URL('./img/upgrades/sell.svg', import.meta.url).href,
 };
