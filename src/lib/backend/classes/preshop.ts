@@ -24,7 +24,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	w_makeCoffeeTime: Writable<number> = writable(0);
 	w_makeCoffeeCount: Writable<number> = writable(0);
 	w_beansPerBuy: Writable<number> = writable(5);
-	w_coffeePrice: Writable<number> = writable(4.5);
+	w_coffeePrice: Writable<number> = writable(6);
 	w_maxCoffeeCups: Writable<number> = writable(36);
 	w_maxCustomers: Writable<number> = writable(5);
 	w_makeCoffeeMaxBatches: Writable<number> = writable(1);// how many cups of coffee are made per run
@@ -42,10 +42,10 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
 	runTutorial: boolean = true;
 	customerPatienceCount: number = 0;
-	customerPatienceAmount: number = 5; // how long customers wait before leaving
+	customerPatienceAmount: number = 7; // how long customers wait before leaving
 
 	autogrindingEnabled: boolean = false; // whether or not to grind automatically
-	autogrindInterval: number = 5;
+	autogrindInterval: number = 4;
 	autogrindCounter: number = 0;
 
 	autosellEnabled: boolean = false; // whether or not to sell automatically

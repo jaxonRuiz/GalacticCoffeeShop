@@ -119,6 +119,11 @@
 	"buy_coffee_shop_upgDesc": "Rent land to start a proper coffee shop! Open new managerial options and coffee creation options!",
 	"lingering_appeal_upgName": "Lingering Appeal",
 	"lingering_appeal_upgDesc": "Increase how long the memory of your coffee lasts",
+	"tip_jar_upgName": "Tip Jar",
+	"tip_jar_upgDesc": "Exploit your most loyal customers' generosity",
+	"water_boiler_upgName": "Water Boiler",
+	"water_boiler_upgDesc": "Speed up your coffee boiling with the power of modern technology!",
+
 	"play_tester_mode_upgName": "Play Tester Mode",
 	"play_tester_mode_upgDesc": "make game go fast",
 
