@@ -41,6 +41,7 @@ let franchiseMoneyMade = 0;
 
 export function startSession() {
 	sessionStartTime = Date.now();
+	logEvent(analytics, 'start-session');
 }
 
 export function endSession() {
