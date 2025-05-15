@@ -16,13 +16,13 @@
 		<img src={img.boop_plusOne} alt="+1" />
 	{:else if type === "minusOne"}
 		<img src={img.boop_minusOne} alt="-1" />
-	{:else if ["plus", "minus", "star"].includes(type)}
+	{:else if ["plus", "minus", "star", "heart"].includes(type)}
 		<img src={img[`boop_${type}`]} alt={type} />
 	{:else if type === "num"}
 		<div>
 			<img src={img[`boop_numPlus`]} alt="+" />
 			{#each numerical as n}
-				<img src={img[`boop_num${n == '.' ? 'Dec' : n}`]} alt={n} />
+				<img src={img[`boop_num${n == "." ? "Dec" : n}`]} alt={n} />
 			{/each}
 		</div>
 	{:else if type === "coin"}
@@ -80,7 +80,10 @@
 					width: auto;
 				}
 			}
-			}
+		}
+		&.heart > img {
+			animation: heart 0.5s linear forwards;
+		}
 	}
 	/* animations */
 	@keyframes boop {
@@ -128,6 +131,21 @@
 		}
 		100% {
 			transform: translate(calc(1 * var(--s)), calc(2.5 * var(--s)));
+			opacity: 0%;
+		}
+	}
+
+	@keyframes heart {
+		0% {
+			transform: rotate(-30deg) translate(0) scale(50%);
+			opacity: 100%;
+		}
+		75% {
+			opacity: 100%;
+		}
+		100% {
+			transform: rotate(0deg)
+				translate(calc(1 / 2 * var(--s)), calc(-1 * var(--s)));
 			opacity: 0%;
 		}
 	}

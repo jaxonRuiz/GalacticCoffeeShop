@@ -5,7 +5,7 @@ const maxBoopDuration = 1000;
 
 export function booped(x: number, y: number, type: string, num?: string) {
 	num = num || "";
-	boops.set([...get(boops), { x, y, type, id: Date.now(), num }]);
+	boops.set([...get(boops), { x, y, type, id: Date.now() + Math.random(), num }]);
 
 	setTimeout(() => {
 		boops.update((boops) => {

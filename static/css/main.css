@@ -8,6 +8,7 @@
 	--green: #4cd649;
 	--yellow: #f2c144;
 	--text: #fff;
+	--borderStyle: 3px solid white;
 }
 
 * {
@@ -87,16 +88,34 @@
 	}
 }
 
-button.green {
-	border-color: var(--green);
+#upgrade-icon {
+	img {
+		height: 3rem;
+		aspect-ratio: 1/1;
+	}
+	button {
+		align-items: center;
 
-	&:disabled {
-		border-color: transparent;
+		&.purchased-upg {
+			opacity: 1;
+		}
 	}
 }
 
-button.yellow {
-	border-color: var(--yellow);
+button {
+	&.green {
+		border-color: var(--green);
+	}
+
+	&.yellow {
+		border-color: var(--yellow);
+	}
+
+	&.img {
+		background-color: transparent;
+		width: fit-content;
+		height: fit-content;
+	}
 
 	&:disabled {
 		border-color: transparent;

@@ -10,7 +10,6 @@
 	import { cleanupAudioManagers, AudioManager } from "$lib/backend/systems/audioManager";
 	import { aud } from "$lib/assets/aud";
 	import { onMount, onDestroy } from "svelte";
-	import { menu } from "@tauri-apps/api";
 	import TextDisplay from "$lib/components/TextDisplay.svelte";
 
 	let page = $state("title");

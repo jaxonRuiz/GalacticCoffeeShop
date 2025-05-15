@@ -8,6 +8,11 @@
 		"data-num": dataNum = "",
 		style = "",
 		onclick = (() => {}),
+		onmouseover = (() => {}),
+		onfocus = (() => {}),
+		onmouseenter = (() => {}),
+		onmouseleave = (() => {}),
+		ondblclick = (() => {}),
 		disabled = false,
 		classes = [],
 		"class" : _class = "",
@@ -21,9 +26,14 @@
 	style={`${pointerStyle} ${style}`}
 	data-btn={dataBtn}
 	data-num={dataNum}
-	{onclick}
-	{disabled}
 	class="button {classes.join(' ')} {_class}"
+	{onclick}
+	{onmouseover}
+	{onfocus}
+	{onmouseenter}
+	{onmouseleave}
+	{ondblclick}
+	{disabled}
 >
 	{@render children()}
 </button>
