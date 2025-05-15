@@ -195,6 +195,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
+		console.log("preshop constructor");
 		timer.subscribe(this, "tick");
 		timer.subscribe(this, "hour");
 		timer.subscribe(this, "week");

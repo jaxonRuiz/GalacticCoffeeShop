@@ -176,6 +176,7 @@ export class Shop implements ILocalShop {
 	isSelected: boolean = false;
 
 	constructor(multiShop: MultiShop, audioManager: AudioManager) {
+		console.log("local shop constructor");
 		this.multiShop = multiShop;
 		this.audioManager = audioManager;
 

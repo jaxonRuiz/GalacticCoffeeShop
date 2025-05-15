@@ -61,6 +61,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	audioManager: AudioManager = new AudioManager();
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
+		console.log("preshop constructor");
 		timer.subscribe(this, "tick");
 		timer.subscribe(this, "day");
 		timer.subscribe(this, "week");
