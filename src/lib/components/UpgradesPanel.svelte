@@ -85,7 +85,7 @@
 				{/each}
 			{/if}
 		</div>
-		<div class="col" id="upgrade-desc">
+		<div class="col {availableUpgrades.length > 0 ? "" : "hidden"}" id="upgrade-desc">
 			{#if descKey != ""}
 				{@render upgradeDesc(descKey, upgPage === 1)}
 			{:else}
