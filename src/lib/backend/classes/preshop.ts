@@ -249,9 +249,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.tick();
 		}
 		if (event === "hour") {
-			if (this.waitingCustomers > 0) {
-			}
-			// this.decayAppeal();
+			console.log("lifetime coffee sold", this.lifetimeCoffeeSold);
+			console.log("lifetime coffee made", this.lifetimeCoffeeMade);
+			console.log("lifetime grind beans", this.lifetimeGrindBeans);
 		}
 		if (event === "week") {
 			console.log("week end", data);
