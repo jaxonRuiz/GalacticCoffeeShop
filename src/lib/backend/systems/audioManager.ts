@@ -35,6 +35,7 @@ sfxVolume.subscribe((value) => {
 
 export class AudioManager {
 	SFX: Map<string, HTMLAudioElement[]> = new Map();
+	SFXIndex: Map<string, number> = new Map();
 	ambience: Map<string, HTMLAudioElement> = new Map();
 	music: Map<string, HTMLAudioElement> = new Map();
 	audioEffects: Map<HTMLAudioElement, { task: number, callback: ((cancelled: boolean) => void) | undefined }> = new Map();
@@ -56,32 +57,51 @@ export class AudioManager {
 
 	// --- Playback Controls ---
 	playAudio(name: string) {
-		if (this.SFX.has(name)) {
-			const audioInstances = this.SFX.get(name)!;
-			// Remove ended instances
-			for (let i = audioInstances.length - 1; i >= 0; i--) {
-				if (audioInstances[i].ended) {
-					audioInstances.splice(i, 1);
+		try {
+			if (this.SFX.has(name)) {
+				const audioInstances = this.SFX.get(name);
+				if (!audioInstances || audioInstances.length === 0) {
+					console.warn(`No SFX audio instances found for "${name}"`);
+					return;
 				}
+				let idx = this.SFXIndex.get(name) ?? 0;
+				const audio = audioInstances[idx];
+				if (!audio) {
+					console.warn(`SFX audio instance at index ${idx} for "${name}" is undefined`);
+					return;
+				}
+				this.SFXIndex.set(name, (idx + 1) % audioInstances.length);
+				audio.pause();
+				audio.currentTime = 0;
+				audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", name);
+				audio.play().catch(e => {
+					console.warn(`Failed to play SFX "${name}":`, e);
+				});
+			} else if (this.music.has(name)) {
+				const audio = this.music.get(name);
+				if (!audio) {
+					console.warn(`Music audio instance for "${name}" is undefined`);
+					return;
+				}
+				audio.volume = this.applyVolumeScale(this.musicVolume, "music", name);
+				audio.play().catch(e => {
+					console.warn(`Failed to play music "${name}":`, e);
+				});
+			} else if (this.ambience.has(name)) {
+				const audio = this.ambience.get(name);
+				if (!audio) {
+					console.warn(`Ambience audio instance for "${name}" is undefined`);
+					return;
+				}
+				audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", name);
+				audio.play().catch(e => {
+					console.warn(`Failed to play ambience "${name}":`, e);
+				});
+			} else {
+				console.warn(`Audio "${name}" not found in SFX, music, or ambience.`);
 			}
-			let audio = audioInstances.find((a) => a.paused);
-			if (!audio) {
-				const src = audioInstances[0].src;
-				audio = new Audio(src);
-				(audio as any).name = name;
-				audioInstances.push(audio);
-			}
-			audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", name);
-			audio.currentTime = 0;
-			audio.play();
-		} else if (this.music.has(name)) {
-			const audio = this.music.get(name)!;
-			audio.volume = this.applyVolumeScale(this.musicVolume, "music", name);
-			audio.play();
-		} else if (this.ambience.has(name)) {
-			const audio = this.ambience.get(name)!;
-			audio.volume = this.applyVolumeScale(this.ambienceVolume, "ambience", name);
-			audio.play();
+		} catch (err) {
+			console.error(`Error in playAudio("${name}"):`, err);
 		}
 	}
 
@@ -289,6 +309,7 @@ export class AudioManager {
 		const audioInstances = [new Audio(path), new Audio(path), new Audio(path)];
 		audioInstances.forEach(audio => (audio as NamedAudio).name = name);
 		this.SFX.set(name, audioInstances);
+		this.SFXIndex.set(name, 0);
 	}
 
 	addMusic(name: string, path: string) {
