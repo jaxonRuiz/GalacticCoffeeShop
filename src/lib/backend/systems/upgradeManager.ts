@@ -4,7 +4,7 @@ import { aud } from "../../assets/aud";
 
 const unlockStages: boolean = false;
 const playtesterMode: boolean = false;
-const unlockAllUpgrades: boolean = true; // for testing purposes
+const unlockAllUpgrades: boolean = false; // for testing purposes
 
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
@@ -109,6 +109,19 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			flags: ["yellow"],
 		},
 
+		water_boiler: {
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade > 5;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).makeCoffeeCooldown -= 4000;
+			},
+			maxLevel: 1,
+			cost: 14,
+			costMultiplier: 1.5,
+			image: "water_boiler.jpg",
+		},
+
 		crank_grinder: {
 			unlock_condition: (shop) => {
 				let level = (shop as IPreshop).upgrades.get("crank_grinder") ?? 0;
@@ -116,39 +129,43 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as IPreshop).lifetimeGrindBeans > 2;
 			},
 			upgrade: (shop) => {
-				(shop as IPreshop).grindTime -= 2;
+				let level = (shop as IPreshop).upgrades.get("crank_grinder") ?? 0;
+				let grindTime = [4, 2];
+				(shop as IPreshop).grindTime -= grindTime[level];
 			},
 			maxLevel: 2,
 			cost: 8,
-			costMultiplier: 2.5,
+			costMultiplier: 1.75,
 			image: "crank_grinder.jpg",
-		},
-
-		deluxe_coffee_pot: {
-			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeMade > 8;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).makeCoffeeQuantity! += 3;
-				(shop as IPreshop).makeCoffeeCooldown += 1000;
-			},
-			maxLevel: 3,
-			cost: 13,
-			costMultiplier: 1.15,
-			image: "deluxe_coffee_pot.jpg",
 		},
 
 		word_of_mouth: {
 			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeSold >= 20;
+				return (shop as IPreshop).lifetimeCoffeeSold >= 7;
 			},
 			upgrade: (shop) => {
-				(shop as IPreshop).minAppeal! += 0.05;
+				(shop as IPreshop).maxAppeal! += 0.1;
+				(shop as IPreshop).appealDecay -= 0.15;
+				(shop as IPreshop).promotionEffectiveness! += 0.05;
 			},
 			maxLevel: 1,
-			cost: 50,
+			cost: 5,
 			costMultiplier: 1,
 			image: "word_of_mouth.jpg",
+		},
+
+		deluxe_coffee_pot: {
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).upgrades.get("water_boiler")! >= 1 && (shop as IPreshop).lifetimeCoffeeMade > 10;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).makeCoffeeQuantity! += 3;
+				(shop as IPreshop).makeCoffeeCooldown += 2000;
+			},
+			maxLevel: 3,
+			cost: 13,
+			costMultiplier: 1.35,
+			image: "deluxe_coffee_pot.jpg",
 		},
 
 		promotional_posters: {
@@ -163,9 +180,36 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IPreshop).maxCustomers! += 1;
 			},
 			maxLevel: 5,
-			cost: 40,
+			cost: 25,
 			costMultiplier: 1.3,
 			image: "promotional_posters.jpg",
+		},
+
+		enlist_younger_sibling: {
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("crank_grinder") ?? 0) >= 1 &&
+					(shop as IPreshop).lifetimeGrindBeans > 13;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).autogrindingEnabled = true;
+			},
+			maxLevel: 1,
+			cost: 20,
+			costMultiplier: 1,
+			image: "enlist_sibling.jpg",
+		},
+
+		hire_neighborhood_kid: {
+			unlock_condition: (shop) => {
+				return (shop as IPreshop).lifetimeCoffeeMade > 50;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).autosellEnabled = true;
+			},
+			maxLevel: 1,
+			cost: 30,
+			costMultiplier: 1.5,
+			image: "hire_neighborhood_kid.jpg",
 		},
 
 		makeshift_coffee_refiller: {
@@ -176,48 +220,9 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IPreshop).makeCoffeeMaxBatches += 1;
 			},
 			maxLevel: 1,
-			cost: 30,
+			cost: 40,
 			costMultiplier: 1,
 			image: "makeshift_coffee_refiller.jpg",
-		},
-
-		enlist_younger_sibling: {
-			unlock_condition: (shop) => {
-				return (shop.upgrades.get("crank_grinder") ?? 0) >= 1 &&
-					(shop as IPreshop).lifetimeGrindBeans > 20;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).autogrindingEnabled = true;
-			},
-			maxLevel: 1,
-			cost: 50,
-			costMultiplier: 1,
-			image: "enlist_sibling.jpg",
-		},
-
-		sibling_incentive: {
-			unlock_condition: (shop) => {
-				return (shop.upgrades.get("enlist_younger_sibling") ?? 0) >= 1;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).autogrindInterval -= 2;
-			},
-			maxLevel: 3,
-			cost: 50,
-			costMultiplier: 1.45,
-			image: "sibling_incentive.jpg",
-		},
-		hire_neighborhood_kid: {
-			unlock_condition: (shop) => {
-				return (shop as IPreshop).lifetimeCoffeeMade > 50;
-			},
-			upgrade: (shop) => {
-				(shop as IPreshop).autosellEnabled = true;
-			},
-			maxLevel: 1,
-			cost: 75,
-			costMultiplier: 1.5,
-			image: "hire_neighborhood_kid.jpg",
 		},
 
 		neighborhood_kid_incentive: {
@@ -228,9 +233,22 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as IPreshop).autosellInterval -= 3;
 			},
 			maxLevel: 4,
-			cost: 60,
+			cost: 75,
 			costMultiplier: 1.55,
 			image: "neighborhood_kid_incentive.jpg",
+		},
+
+		sibling_incentive: {
+			unlock_condition: (shop) => {
+				return (shop.upgrades.get("enlist_younger_sibling") ?? 0) >= 1;
+			},
+			upgrade: (shop) => {
+				(shop as IPreshop).autogrindInterval -= 2;
+			},
+			maxLevel: 3,
+			cost: 75,
+			costMultiplier: 1.45,
+			image: "sibling_incentive.jpg",
 		},
 		efficient_grinding: {
 			unlock_condition: (shop) => {
