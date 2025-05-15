@@ -106,7 +106,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			this.tick();
 		}
 		if (event === "hour") {
-			console.log(this.lifetimeStats);
 		}
 		if (event === "day") {
 			this.restockShops();
