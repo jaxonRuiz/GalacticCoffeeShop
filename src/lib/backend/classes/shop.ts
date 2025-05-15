@@ -9,7 +9,7 @@ import { addCoffee, addMoney } from "../analytics";
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
 	// writable resources
-	w_beans: Writable<number> = writable(10);
+	w_beans: Writable<number> = writable(50);
 	w_emptyCups: Writable<number> = writable(50);
 	w_coffeeCups: Writable<number> = writable(0); // sellable coffee
 	w_waitingCustomers: Writable<number> = writable(0);
