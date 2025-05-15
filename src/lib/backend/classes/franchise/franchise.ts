@@ -234,7 +234,6 @@ export class Franchise implements ISubscriber, IScene {
 		this.audioManager.addMusic("bgm", aud.franchise_music);
 		this.audioManager.addSFX("ding", aud.ding);
 		this.audioManager.addSFX("cashRegister", aud.new_cash);
-		this.audioManager.addSFX("boiling", aud.boiling);
 		this.audioManager.addSFX("papers", aud.papers);
 		this.audioManager.playAudio("bgm");
 		// Fade in bgm
@@ -316,9 +315,11 @@ export class Franchise implements ISubscriber, IScene {
 		this.currentCountry?.stopInfluenceTask(index);
 	}
 	voteForPolicy(index: number, num: number) {
+		this.audioManager.playAudio("papers");
 		this.currentCountry?.voteForPolicy(index, num);
 	}
 	voteAgainstPolicy(index: number, num: number) {
+		this.audioManager.playAudio("papers");
 		this.currentCountry?.voteAgainstPolicy(index, num);
 	}
 	startRegionalVote(index: number) {
