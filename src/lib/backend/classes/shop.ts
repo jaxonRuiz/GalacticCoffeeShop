@@ -15,7 +15,7 @@ export class Shop implements ILocalShop {
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_money: Writable<number> = writable(0); // local shop money is unusable untill collected
 	w_appeal: Writable<number> = writable(0);
-	w_coffeePrice: Writable<number> = writable(5);
+	w_coffeePrice: Writable<number> = writable(7);
 	w_promoterUnlocked: Writable<boolean> = writable(false);
 	w_supplierUnlocked: Writable<boolean> = writable(false);
 	w_multiShopUnlocked: Writable<boolean> = writable(false);
@@ -116,6 +116,12 @@ export class Shop implements ILocalShop {
 	set maxCoffeeCups(value) {
 		this.w_maxCoffeeCups.set(value);
 	}
+	get lifetimeStats() {
+		return this.multiShop.lifetimeStats;
+	}
+	set lifetimeStats(value: { [key: string]: number }) {
+		this.multiShop.lifetimeStats = value;
+	}
 
 	// variable containers ///////////////////////////////////////////////////////
 	w_restockSheet: Writable<{ [key: string]: number }> = writable({
@@ -147,13 +153,6 @@ export class Shop implements ILocalShop {
 		supplierMax: 1,
 	});
 
-	lifetimeStats: { [key: string]: number } = {
-		coffeeSold: 0,
-		moneyMade: 0,
-		coffeeMade: 0,
-		totalRestocked: 0,
-	};
-
 	// stats /////////////////////////////////////////////////////////////////////
 	beansPrice: number = 2.5;
 	cupsPrice: number = 0.1;
@@ -176,6 +175,7 @@ export class Shop implements ILocalShop {
 	isSelected: boolean = false;
 
 	constructor(multiShop: MultiShop, audioManager: AudioManager) {
+		console.log("local shop constructor");
 		this.multiShop = multiShop;
 		this.audioManager = audioManager;
 
@@ -480,7 +480,6 @@ export class Shop implements ILocalShop {
 			upgrades: {},
 			multiShopUnlocked: this.multiShopUnlocked,
 			promoterUnlocked: this.promoterUnlocked,
-			lifetimeStats: this.lifetimeStats,
 			workerStats: this.workerStats,
 			workerAmounts: {},
 			appeal: this.appeal,
@@ -520,7 +519,6 @@ export class Shop implements ILocalShop {
 		this.upgrades = new Map(Object.entries(state.upgrades));
 		this.multiShopUnlocked = state.multiShopUnlocked;
 		this.promoterUnlocked = state.promoterUnlocked;
-		this.lifetimeStats = state.lifetimeStats;
 		this.workerStats = state.workerStats;
 		this.appeal = state.appeal;
 		this.autoRestockUnlocked = state.autoRestockUnlocked;
@@ -564,7 +562,6 @@ export interface LocalShopSave {
 	promotionEffectiveness: number;
 	appealDecay: number;
 	upgrades: { [key: string]: number };
-	lifetimeStats: { [key: string]: number };
 	multiShopUnlocked: boolean;
 	promoterUnlocked: boolean;
 	workerStats: { [key: string]: number };

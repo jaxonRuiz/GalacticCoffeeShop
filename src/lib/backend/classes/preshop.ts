@@ -194,10 +194,13 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.w_lifetimeCoffeeMade.set(value);
 	}
 
+	timer: Publisher;
 	constructor(timer: Publisher, sceneManager: Publisher) {
-		timer.subscribe(this, "tick");
-		timer.subscribe(this, "hour");
-		timer.subscribe(this, "week");
+		console.log("preshop constructor");
+		this.timer = timer;
+		this.timer.subscribe(this, "tick");
+		this.timer.subscribe(this, "hour");
+		this.timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
 		// Clean up other audio managers
@@ -249,9 +252,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.tick();
 		}
 		if (event === "hour") {
-			console.log("lifetime coffee sold", this.lifetimeCoffeeSold);
-			console.log("lifetime coffee made", this.lifetimeCoffeeMade);
-			console.log("lifetime grind beans", this.lifetimeGrindBeans);
 		}
 		if (event === "week") {
 			console.log("week end", data);
@@ -443,6 +443,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		console.log("preshop endScene()");
 		// Fade out preshop bgm
 		this.audioManager.fadeAudio("bgm", 1000, 0, () => this.audioManager.stopAudio("bgm"));
+		this.timer.unsubscribe(this, "tick");
+		this.timer.unsubscribe(this, "hour");
+		this.timer.unsubscribe(this, "week");
 		this.audioManager.disableAudio();
 		this.sceneManager.emit("nextScene");
 	}
@@ -453,6 +456,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			beans: this.beans,
 			hasBarista: this.autogrindingEnabled,
 			hasCashier: this.autosellEnabled,
+			lifetimeCoffeeMade: this.lifetimeCoffeeMade,
+			lifetimeCoffeeSold: this.lifetimeCoffeeSold,
+			lifetimeGrindBeans: this.lifetimeGrindBeans,
 		};
 	}
 
