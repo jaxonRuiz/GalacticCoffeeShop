@@ -3,7 +3,7 @@ import { aud } from "../../assets/aud";
 
 const unlockStages: boolean = false;
 const playtesterMode: boolean = false;
-const unlockAllUpgrades: boolean = false; // for testing purposes
+const unlockAllUpgrades: boolean = true; // for testing purposes
 
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
@@ -13,11 +13,11 @@ export class UpgradeManager {
 	constructor(subset: string) {
 		this.allUpgrades = upgradeJSON[subset];
 		this.audioManager = new AudioManager();
+		this.audioManager.addSFX("upgrade", aud.upgrade);
+		this.audioManager.setVolume("upgrade", 0.5);
 	}
 
 	applyUpgrade(id: string, shopObject: IShop) {
-		this.audioManager.addSFX("upgrade", aud.upgrade);
-		this.audioManager.setVolume("upgrade", 0.5);
 		this.audioManager.playAudio("upgrade");
 
 		// if multishop style

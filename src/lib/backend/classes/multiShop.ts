@@ -2,7 +2,7 @@ import { get, type Writable, writable } from "svelte/store";
 import { Publisher } from "../systems/observer";
 import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
-import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
+import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { dictProxy } from "../proxies";
 
@@ -72,13 +72,15 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	multiShopUgradeManager: UpgradeManager = new UpgradeManager("multiShop");
 	localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
 	audioManager: AudioManager = new AudioManager();
+	timer: Publisher;
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		console.log("preshop constructor");
-		timer.subscribe(this, "tick");
-		timer.subscribe(this, "hour");
-		timer.subscribe(this, "day");
-		timer.subscribe(this, "week");
+		this.timer = timer;
+		this.timer.subscribe(this, "tick");
+		this.timer.subscribe(this, "hour");
+		this.timer.subscribe(this, "day");
+		this.timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
 		// Clean up other audio managers
@@ -115,8 +117,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 			// this.applyExpenses();
 			// this.shops.forEach((shop) => shop.restock());
-
-
 		}
 	}
 
@@ -134,14 +134,14 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 				console.log(key);
 				if (
 					this.multiShopUgradeManager.allUpgrades[key].flags?.includes(
-						"applyToChildren"
+						"applyToChildren",
 					)
 				) {
 					// pain peko
 					for (let i = 0; i < value; i++) {
 						this.multiShopUgradeManager.allUpgrades[key].upgrade(
 							newShop,
-							value - 1
+							value - 1,
 						);
 					}
 				}
@@ -161,7 +161,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.selectedShop = shop;
 		this.selectedShop.isSelected = true;
 		this.selectedShopIndex = this.shops.indexOf(shop);
-		this.audioManager.playAudio("crowd");
 	}
 
 	selectShopIndex(index: number) {
@@ -173,7 +172,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	deselectShop() {
 		if (this.selectedShop) {
 			this.selectedShop.isSelected = false;
-			this.audioManager.stopAudio("crowd");
 		}
 		this.selectedShop = null;
 		this.selectedShopIndex = -1;
@@ -218,8 +216,18 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	endScene() {
 		console.log("multishop endScene()");
 		// Fade out shop bgm
-		this.audioManager.fadeAudio("bgm", 1000, 0, () => this.audioManager.stopAudio("bgm"));
+		this.audioManager.fadeAudio(
+			"bgm",
+			1000,
+			0,
+			() => this.audioManager.stopAudio("bgm"),
+		);
 		this.sceneManager.emit("nextScene");
+
+		this.timer.unsubscribe(this, "tick");
+		this.timer.unsubscribe(this, "hour");
+		this.timer.unsubscribe(this, "day");
+		this.timer.unsubscribe(this, "week");
 	}
 
 	getTransferData() {
@@ -333,7 +341,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.money = state.money;
 	}
 
-	clearState() { }
+	clearState() {}
 }
 
 interface ShopWeekReport {
@@ -347,5 +355,4 @@ interface MultiShopSave {
 	upgrades: { [key: string]: number };
 	shops: LocalShopSave[];
 	lifetimeStats: { [key: string]: number };
-
 }
