@@ -85,7 +85,8 @@ button {
 
 button:disabled,
 button:disabled:not(.purchased-upg) * {
-	color: rgba(255, 255, 255, 0.2);
+	/* color: rgba(255, 255, 255, 0.2); */
+	opacity: 0.3;
 }
 
 button:hover:not(:disabled) {
