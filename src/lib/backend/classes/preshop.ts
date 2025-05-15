@@ -18,36 +18,38 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	w_coffeeCups: Writable<number> = writable(0);
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_appeal: Writable<number> = writable(0);
-	w_beanPrice: Writable<number> = writable(5.99);
+	w_beanPrice: Writable<number> = writable(3);
 	w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
 	w_canMakeCoffee: Writable<boolean> = writable(true);
 	w_makeCoffeeTime: Writable<number> = writable(0);
 	w_makeCoffeeCount: Writable<number> = writable(0);
-	w_beansPerBuy: Writable<number> = writable(3);
-	w_coffeePrice: Writable<number> = writable(3.5);
+	w_beansPerBuy: Writable<number> = writable(5);
+	w_coffeePrice: Writable<number> = writable(6);
 	w_maxCoffeeCups: Writable<number> = writable(36);
 	w_maxCustomers: Writable<number> = writable(5);
 	w_makeCoffeeMaxBatches: Writable<number> = writable(1);// how many cups of coffee are made per run
+	w_makeCoffeeCooldown: Writable<number> = writable(7000); // cooldown for making coffee IN MILLISECONDS
 
 	// internal stats
-	coffeePerBean: number = 2.5;
+	coffeePerBean: number = 0.5;
 	grindQuantity: number = 1; // how many beans are ground at a time
-	grindTime: number = 5; // number of times to click to grind a bean
+	grindTime: number = 9; // number of times to click to grind a bean
 	customerProgress: number = 0; // progress to next customer
-	promotionEffectiveness: number = 0.1; // current rate of customer generation
-	appealDecay: number = 0.05; // rate of decay of customer appeal
-	maxAppeal: number = 0.7;
+	promotionEffectiveness: number = 0.05; // current rate of customer generation
+	appealDecay: number = 0.35; // rate of decay of customer appeal
+	maxAppeal: number = 0.5;
 	minAppeal: number = 0; // minimum appeal (after decay)
 	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
-	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
 	runTutorial: boolean = true;
+	customerPatienceCount: number = 0;
+	customerPatienceAmount: number = 7; // how long customers wait before leaving
 
 	autogrindingEnabled: boolean = false; // whether or not to grind automatically
-	autogrindInterval: number = 10;
+	autogrindInterval: number = 4;
 	autogrindCounter: number = 0;
 
 	autosellEnabled: boolean = false; // whether or not to sell automatically
-	autosellInterval: number = 15;
+	autosellInterval: number = 8;
 	autosellCounter: number = 0;
 
 	// stat counters
@@ -165,6 +167,12 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	set makeCoffeeMaxBatches(value) {
 		this.w_makeCoffeeMaxBatches.set(value);
 	}
+	get makeCoffeeCooldown() {
+		return get(this.w_makeCoffeeCooldown);
+	}
+	set makeCoffeeCooldown(value) {
+		this.w_makeCoffeeCooldown.set(value);
+	}
 
 	// stat counters
 	get lifetimeGrindBeans() {
@@ -241,10 +249,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.tick();
 		}
 		if (event === "hour") {
-			if (this.waitingCustomers > 0) {
-				this.waitingCustomers--;
-			}
-			// this.decayAppeal();
+			console.log("lifetime coffee sold", this.lifetimeCoffeeSold);
+			console.log("lifetime coffee made", this.lifetimeCoffeeMade);
+			console.log("lifetime grind beans", this.lifetimeGrindBeans);
 		}
 		if (event === "week") {
 			console.log("week end", data);
@@ -252,10 +259,21 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		}
 	}
 
+
 	tick() {
 		if (this.waitingCustomers < 1) {
 			this.audioManager.setVolume("crowd", 0);
 		}
+
+		if (this.waitingCustomers > 0) {
+			if (this.customerPatienceCount > this.customerPatienceAmount) {
+				this.waitingCustomers -= 1;
+				this.customerPatienceCount = 0;
+			} else {
+				this.customerPatienceCount += 1;
+			}
+		} else { this.customerPatienceCount = 0; }
+
 		this.drawCustomers();
 		this.decayAppeal();
 		if (!this.canMakeCoffee) {
@@ -338,6 +356,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	// TODO make appeal diminishing effectiveness
 	promoteShop() {
+		this.customerPatienceCount = 0;
 		this.audioManager.playAudio("papers");
 		this.appeal +=
 			this.promotionEffectiveness *
@@ -346,6 +365,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 
 	sellCoffee() {
+		this.customerPatienceCount = 0;
 		if (this.coffeeCups < 1) return;
 		this.audioManager.playAudio("ding");
 		if (this.waitingCustomers >= 1) {
