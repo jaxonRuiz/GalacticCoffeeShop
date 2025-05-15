@@ -26,6 +26,6 @@
 	{onmouseover}
 	class={`row ${purchased ? "purchased-upg" : ""} ${flags}`}
 >
-	<img alt="upg" src={img.upg_brew} />
+	<img alt="upg" src={img[item.image]} />
 	<h3>{$t(`${key}_upgName`)}</h3>
 </Button>

@@ -3,7 +3,7 @@ import { aud } from "../../assets/aud";
 
 const unlockStages: boolean = false;
 const playtesterMode: boolean = false;
-const unlockAllUpgrades: boolean = false; // for testing purposes
+const unlockAllUpgrades: boolean = true; // for testing purposes
 
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
@@ -89,7 +89,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 0,
 			costMultiplier: 1,
-			image: "play_tester_mode.jpg",
+			image: "boop_star",
 		},
 
 		buy_coffee_shop: {
@@ -104,7 +104,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 600,
 			costMultiplier: 1,
-			image: "buy_coffee_shop.jpg",
+			image: "astrorat",
 			flags: ["yellow"],
 		},
 
@@ -120,7 +120,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 14,
 			costMultiplier: 1.5,
-			image: "water_boiler.jpg",
+			image: "upg_brew",
 		},
 
 		crank_grinder: {
@@ -137,7 +137,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 2,
 			cost: 8,
 			costMultiplier: 1.75,
-			image: "crank_grinder.jpg",
+			image: "upg_grind",
 		},
 
 		word_of_mouth: {
@@ -152,7 +152,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 5,
 			costMultiplier: 1,
-			image: "word_of_mouth.jpg",
+			image: "upg_promote",
 		},
 
 		deluxe_coffee_pot: {
@@ -166,7 +166,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 2,
 			cost: 13,
 			costMultiplier: 1.35,
-			image: "deluxe_coffee_pot.jpg",
+			image: "upg_brew",
 		},
 
 		enlist_younger_sibling: {
@@ -180,7 +180,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 20,
 			costMultiplier: 1,
-			image: "enlist_sibling.jpg",
+			image: "upg_grind",
 		},
 
 		hire_neighborhood_kid: {
@@ -194,7 +194,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 30,
 			costMultiplier: 1.5,
-			image: "hire_neighborhood_kid.jpg",
+			image: "upg_sell",
 		},
 
 		tip_jar: {
@@ -207,7 +207,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 10,
 			costMultiplier: 1.2,
-			image: "tip_jar.jpg",
+			image: "upg_sell",
 		},
 
 		makeshift_coffee_refiller: {
@@ -221,7 +221,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 23,
 			costMultiplier: 1,
-			image: "makeshift_coffee_refiller.jpg",
+			image: "upg_brew",
 		},
 
 		efficient_grinding: {
@@ -235,7 +235,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 22,
 			costMultiplier: 1.7,
-			image: "coffee_grind_catcher.jpg",
+			image: "upg_grind",
 		},
 
 		neighborhood_kid_incentive: {
@@ -248,7 +248,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 40,
 			costMultiplier: 1.45,
-			image: "neighborhood_kid_incentive.jpg",
+			image: "upg_sell",
 		},
 
 		sibling_incentive: {
@@ -261,7 +261,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 40,
 			costMultiplier: 1.45,
-			image: "sibling_incentive.jpg",
+			image: "upg_grind",
 		},
 
 		promotional_posters: {
@@ -278,7 +278,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 18,
 			costMultiplier: 1.3,
-			image: "promotional_posters.jpg",
+			image: "upg_promote",
 		},
 
 		lingering_appeal: {
@@ -292,7 +292,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 100,
 			costMultiplier: 1.5,
-			image: "lingering_appeal.jpg",
+			image: "upg_promote",
 		},
 
 		multi_grinder: {
@@ -305,7 +305,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 2,
 			cost: 60,
 			costMultiplier: 1.6,
-			image: "multi_grinder.jpg",
+			image: "upg_grind",
 		},
 
 		// bulk_bean_deal: {
@@ -338,7 +338,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 80,
 			costMultiplier: 1.4,
-			image: "automatic_coffee_refiller.jpg",
+			image: "upg_brew",
 		},
 
 		// preshop_nicer_coffee: {
@@ -367,7 +367,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 120,
 			costMultiplier: 1.2,
-			image: "express_coffee_maker.jpg",
+			image: "upg_brew",
 		},
 	},
 
@@ -382,7 +382,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 0,
 			costMultiplier: 1,
-			image: "play_tester_mode.jpg",
+			image: "boop_star",
 		},
 		unlock_multishop: {
 			unlock_condition: (shop) => {
@@ -396,7 +396,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 200,
 			costMultiplier: 1,
-			image: "unlock_multishop.jpg",
+			image: "astrorat",
 			flags: ["yellow"],
 		},
 		flashy_sign: {
@@ -414,7 +414,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 100,
 			costMultiplier: 1,
-			image: "flashy_sign.jpg",
+			image: "upg_promote",
 		},
 
 		trendy_aesthetic: {
@@ -433,7 +433,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 120,
 			costMultiplier: 1.2,
-			image: "flashy_sign.jpg",
+			image: "upg_promote",
 		},
 
 		expand_cashier_counter: {
@@ -446,7 +446,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 100,
 			costMultiplier: 1.5,
-			image: "expand_cashier_counter.jpg",
+			image: "upg_sell",
 		},
 		additional_promotion_materials: {
 			unlock_condition: (shop) => {
@@ -458,7 +458,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 100,
 			costMultiplier: 1.5,
-			image: "additional_promotion_materials.jpg",
+			image: "upg_promote",
 		},
 		expand_coffee_bar: {
 			unlock_condition: (shop) => {
@@ -470,7 +470,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 100,
 			costMultiplier: 1.5,
-			image: "expand_coffee_bar.jpg",
+			image: "upg_brew",
 		},
 		upgrade_cash_register: {
 			unlock_condition: (shop) => {
@@ -482,7 +482,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 60,
 			costMultiplier: 1.15,
-			image: "upgrade_cash_register.jpg",
+			image: "upg_sell",
 		},
 		increase_customer_flow: {
 			unlock_condition: (shop) => {
@@ -494,7 +494,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 5,
 			cost: 50,
 			costMultiplier: 1.2,
-			image: "increase_customer_flow.jpg",
+			image: "upg_sell",
 		},
 		better_coffee_machine: {
 			unlock_condition: (shop) => {
@@ -507,7 +507,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 70,
 			costMultiplier: 1,
-			image: "better_coffee_machine.jpg",
+			image: "upg_brew",
 		},
 
 		promoter_effectiveness: {
@@ -521,7 +521,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 100,
 			costMultiplier: 1.3,
-			image: "promoter_effectiveness.jpg",
+			image: "upg_promote",
 		},
 		local_shop_nicer_coffee: {
 			unlock_condition: (shop) => {
@@ -534,7 +534,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 40,
 			costMultiplier: 1.23,
-			image: "local_shop_nicer_coffee.jpg",
+			image: "upg_sell",
 		},
 		fancy_latte_art: {
 			unlock_condition: (shop) => {
@@ -548,7 +548,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 300,
 			costMultiplier: 1.2,
-			image: "fancy_latte_art.jpg",
+			image: "upg_brew",
 		}
 
 		// unlock_auto_restock: {
@@ -577,7 +577,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 10000,
 			costMultiplier: 1,
-			image: "establish_franchise.jpg",
+			image: "astrorat",
 		},
 		// apply to children style upgrades have the associated flag. their upgrade function applies to the LOCAL shops
 
@@ -594,7 +594,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 1,
 			cost: 200,
 			costMultiplier: 1.5,
-			image: "cohesive_branding.jpg",
+			image: "upg_promote",
 		},
 		cohesive_branding: {
 			unlock_condition: (multishop) => {
@@ -609,7 +609,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 3,
 			cost: 1000,
 			costMultiplier: 1.5,
-			image: "cohesive_branding.jpg",
+			image: "upg_promote",
 		},
 		unlock_promoter: {
 			unlock_condition: (multishop) => {
@@ -623,7 +623,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 300,
 			flags: ["applyToChildren"],
 			costMultiplier: 1,
-			image: "unlock_promoter.jpg",
+			image: "upg_promote",
 		},
 		unlock_auto_restock: {
 			unlock_condition: (multishop) => {
@@ -637,7 +637,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 1000,
 			flags: ["applyToChildren"],
 			costMultiplier: 1,
-			image: "unlock_promoter.jpg",
+			image: "upg_buy",
 		},
 		add_new_shop: {
 			unlock_condition: (multishop) => {
@@ -649,7 +649,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			maxLevel: 6,
 			cost: 700,
 			costMultiplier: 1.5,
-			image: "add_new_shop.jpg",
+			image: "coffee",
 		},
 	},
 };
