@@ -187,10 +187,8 @@ export class AudioManager {
 	applyVolumeScale(volume: number, type: "music" | "sfx" | "ambience", name?: string): number {
 		let maxScale = 1;
 		if (name && this.maxVolumeScales.has(name)) {
-			console.log("applyVolumeScale: found maxVolumeScale for", name, "=", this.maxVolumeScales.get(name));
 			maxScale = this.maxVolumeScales.get(name)!;
 		} else if (name) {
-			console.log("applyVolumeScale: NO maxVolumeScale for", name);
 		}
 		if (type === "ambience") {
 			return Math.min(volume * get(globalVolumeScale) * get(musicVolume) * this.ambienceVolume, maxScale);
