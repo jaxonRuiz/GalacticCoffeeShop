@@ -4,7 +4,7 @@
 	font-weight: 400;
 
 	/* color-scheme: light dark; */
-	background-color: var(--bg2);
+	background-color: var(--bg1);
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -80,7 +80,8 @@ button {
 
 button:disabled,
 button:disabled:not(.purchased-upg) * {
-	color: rgba(255, 255, 255, 0.2);
+	/* color: rgba(255, 255, 255, 0.2); */
+	opacity: 0.3;
 }
 
 button:hover:not(:disabled) {
