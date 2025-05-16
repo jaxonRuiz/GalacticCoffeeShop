@@ -21,6 +21,7 @@ export const audioManagerRegistry: Set<AudioManager> = new Set();
 
 globalVolumeScale.subscribe((value) => {
 	localStorage.setItem("globalVolumeScale", value.toString());
+	audioManagerRegistry.forEach((manager) => manager.updateAllVolumes());
 });
 
 musicVolume.subscribe((value) => {
@@ -51,6 +52,16 @@ export class AudioManager {
 
 		// Subscribe to globalVolumeScale changes
 		globalVolumeScale.subscribe(() => {
+			this.updateAllVolumes();
+		});
+
+		// Subscribe to musicVolume changes
+		musicVolume.subscribe(() => {
+			this.updateAllVolumes();
+		});
+
+		// Subscribe to sfxVolume changes
+		sfxVolume.subscribe(() => {
 			this.updateAllVolumes();
 		});
 	}
@@ -189,10 +200,8 @@ export class AudioManager {
 	applyVolumeScale(volume: number, type: "music" | "sfx" | "ambience", name?: string): number {
 		let maxScale = 1;
 		if (name && this.maxVolumeScales.has(name)) {
-			console.log("applyVolumeScale: found maxVolumeScale for", name, "=", this.maxVolumeScales.get(name));
 			maxScale = this.maxVolumeScales.get(name)!;
 		} else if (name) {
-			console.log("applyVolumeScale: NO maxVolumeScale for", name);
 		}
 		if (type === "ambience") {
 			return Math.min(volume * get(globalVolumeScale) * get(musicVolume) * this.ambienceVolume, maxScale);
@@ -287,7 +296,6 @@ export class AudioManager {
 		const audioInstances = [new Audio(path), new Audio(path), new Audio(path)];
 		audioInstances.forEach(audio => (audio as NamedAudio).name = name);
 		this.SFX.set(name, audioInstances);
-		this.SFXIndex.set(name, 0);
 	}
 
 	addMusic(name: string, path: string) {
@@ -301,7 +309,6 @@ export class AudioManager {
 		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
 		audio.name = name;
-		this.ambience.set(name, audio);
 	}
 
 	setMaxVolumeScale(name: string, scale: number) {

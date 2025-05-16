@@ -89,7 +89,6 @@ interface ILocalShop extends IShop {
 
 	coffeePrice: number;
 	beansPrice: number;
-	cupsPrice: number;
 	totalWorkers: number;
 	maxCustomers: number;
 	promotionEffectiveness: number;

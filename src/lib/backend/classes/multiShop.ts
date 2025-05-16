@@ -2,8 +2,9 @@ import { get, type Writable, writable } from "svelte/store";
 import { Publisher } from "../systems/observer";
 import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
-import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
+import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
+import { dictProxy } from "../proxies";
 
 export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	// writable resources
@@ -44,7 +45,19 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	set finishedFirstShop(value) {
 		this.w_finishedFirstShop.set(value);
 	}
+	get lifetimeStats() {
+		return dictProxy(this.w_lifetimeStats);
+	}
+	set lifetimeStats(value: { [key: string]: number }) {
+		this.w_lifetimeStats.set(value);
+	}
 
+	w_lifetimeStats: Writable<{ [key: string]: number }> = writable({
+		coffeeSold: 0,
+		moneyMade: 0,
+		coffeeMade: 0,
+		totalRestocked: 0,
+	});
 
 	// internal stats ////////////////////////////////////////////////////////////
 	upgrades: Map<string, number> = new Map();
@@ -59,11 +72,15 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	multiShopUgradeManager: UpgradeManager = new UpgradeManager("multiShop");
 	localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
 	audioManager: AudioManager = new AudioManager();
+	timer: Publisher;
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
-		timer.subscribe(this, "tick");
-		timer.subscribe(this, "day");
-		timer.subscribe(this, "week");
+		console.log("preshop constructor");
+		this.timer = timer;
+		this.timer.subscribe(this, "tick");
+		this.timer.subscribe(this, "hour");
+		this.timer.subscribe(this, "day");
+		this.timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
 		// Clean up other audio managers
@@ -90,6 +107,8 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		if (event === "tick") {
 			this.tick();
 		}
+		if (event === "hour") {
+		}
 		if (event === "day") {
 			this.restockShops();
 		}
@@ -98,39 +117,8 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 			// this.applyExpenses();
 			// this.shops.forEach((shop) => shop.restock());
-
-
 		}
 	}
-
-
-
-	// // multishop actions /////////////////////////////////////////////////////////
-	// addShop(applyUpgrades: boolean = true) {
-	// 	let newShop = new Shop(this);
-	// 	if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
-	// 	if (applyUpgrades) {
-	// 		this.upgrades.forEach((value, key) => {
-	// 			console.log(key);
-	// 			if (
-	// 				this.multiShopUgradeManager.allUpgrades[key].flags?.includes(
-	// 					"applyToChildren",
-	// 				)
-	// 			) {
-	// 				// pain peko
-	// 				for (let i = 0; i < value; i++) {
-	// 					this.multiShopUgradeManager.allUpgrades[key].upgrade(
-	// 						newShop,
-	// 						value - 1,
-	// 					);
-	// 				}
-	// 			}
-	// 		});
-	// 	}
-
-	// 	// this.shops.push(newShop);
-	// 	this.w_shops.update((shops) => [...shops, newShop]);
-	// }
 
 	tick() {
 		this.shops.forEach((shop) => shop.tick(this));
@@ -146,14 +134,14 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 				console.log(key);
 				if (
 					this.multiShopUgradeManager.allUpgrades[key].flags?.includes(
-						"applyToChildren"
+						"applyToChildren",
 					)
 				) {
 					// pain peko
 					for (let i = 0; i < value; i++) {
 						this.multiShopUgradeManager.allUpgrades[key].upgrade(
 							newShop,
-							value - 1
+							value - 1,
 						);
 					}
 				}
@@ -173,7 +161,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.selectedShop = shop;
 		this.selectedShop.isSelected = true;
 		this.selectedShopIndex = this.shops.indexOf(shop);
-		this.audioManager.playAudio("crowd");
 	}
 
 	selectShopIndex(index: number) {
@@ -185,7 +172,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	deselectShop() {
 		if (this.selectedShop) {
 			this.selectedShop.isSelected = false;
-			this.audioManager.stopAudio("crowd");
 		}
 		this.selectedShop = null;
 		this.selectedShopIndex = -1;
@@ -230,8 +216,18 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	endScene() {
 		console.log("multishop endScene()");
 		// Fade out shop bgm
-		this.audioManager.fadeAudio("bgm", 1000, 0, () => this.audioManager.stopAudio("bgm"));
+		this.audioManager.fadeAudio(
+			"bgm",
+			1000,
+			0,
+			() => this.audioManager.stopAudio("bgm"),
+		);
 		this.sceneManager.emit("nextScene");
+
+		this.timer.unsubscribe(this, "tick");
+		this.timer.unsubscribe(this, "hour");
+		this.timer.unsubscribe(this, "day");
+		this.timer.unsubscribe(this, "week");
 	}
 
 	getTransferData() {
@@ -239,11 +235,14 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			money: this.money,
 			upgrades: this.upgrades,
 			numShops: this.shops.length,
+			lifetimeStats: this.lifetimeStats,
 		};
 	}
 
 	loadTransferData(data: any): void {
 		this.money += data.money;
+		this.lifetimeStats.coffeeSold = data.lifetimeCoffeeSold;
+		this.lifetimeStats.coffeeMade = data.lifetimeCoffeeMade;
 		this.shops[0].beans += data.beans;
 		if (data.hasBarista) {
 			this.shops[0].addWorker("barista");
@@ -301,6 +300,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			selectedShopIndex: this.selectedShopIndex,
 			upgrades: {},
 			shops: [],
+			lifetimeStats: this.lifetimeStats,
 		};
 
 		for (let [key, value] of this.upgrades) {
@@ -320,6 +320,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		if (rawJSON === null) return;
 
 		const state: MultiShopSave = JSON.parse(rawJSON);
+		this.lifetimeStats = state.lifetimeStats;
 
 		// check that multishop upgrades work fine loading in like this, especially "apply to all" upgrades
 		this.upgrades = new Map(Object.entries(state.upgrades));
@@ -340,7 +341,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.money = state.money;
 	}
 
-	clearState() { }
+	clearState() {}
 }
 
 interface ShopWeekReport {
@@ -353,4 +354,5 @@ interface MultiShopSave {
 	selectedShopIndex: number;
 	upgrades: { [key: string]: number };
 	shops: LocalShopSave[];
+	lifetimeStats: { [key: string]: number };
 }

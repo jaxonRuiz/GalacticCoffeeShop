@@ -2,17 +2,20 @@
 	import { t } from "svelte-i18n";
   import { writable } from "svelte/store";
 	import Button from "./Button.svelte";
-	import { fMoney } from "./Styles.svelte";
+  import { img } from "$lib/assets/img";
+  import { fMoney } from "./Styles.svelte";
 
 	let {
 		item,
 		key,
 		purchased,
-		cost,
+		cost = 0,
 		level,
 		flags = [],
 		money = writable(0),
-		onclick = () => {},
+		onclick = (() => {}),
+		onmouseenter = (() => {}),
+		onmouseover = (() => {}),
 	} = $props();
 </script>
 
@@ -20,17 +23,21 @@
 	data-btn={purchased ? "" : "coin"}
 	disabled={purchased || $money < cost ? true : false}
 	{onclick}
-	class={purchased ? "purchased-upg" : ""}
-	classes={flags}
+	{onmouseenter}
+	{onmouseover}
+	class={`row ${purchased ? "purchased-upg" : ""} ${flags}`}
 >
-	<h3>
-		{$t(`${key}_upgName`)}{item.maxLevel != 1
+	<img alt="upg" src={img[item.image]} />
+	<h3>{$t(`${key}_upgName`)}{item.maxLevel != 1
 			? ` LVL${level + (purchased ? 0 : 1)}`
-			: ""}
-	</h3>
-
-	<p>{$t(`${key}_upgDesc`)}</p>
-	{#if !purchased}
-		<p>{$t("cost_stat")}: {fMoney(cost)}</p>
-	{/if}
+			: ""}</h3>
+	<p>{fMoney(cost)}</p>
 </Button>
+
+<style>
+	p {
+		width: fit-content;
+		margin-left: auto;
+		text-align: right;
+	}
+</style>

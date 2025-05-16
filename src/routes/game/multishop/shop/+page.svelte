@@ -11,7 +11,7 @@
 		fSellableCoffee,
 		pointerStyle,
 	} from "$lib/components/Styles.svelte";
-	import Dropdown from "$lib/components/Dropdown.svelte";
+	import Block from "$lib/components/Block.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Tooltip from "$lib/components/Tooltip.svelte";
 	import Worker from "$lib/components/Worker.svelte";
@@ -29,14 +29,12 @@
 	let mshopMoney = mshop.w_money;
 	let beans = sshop.w_beans;
 	let appeal = sshop.w_appeal;
-	let emptyCups = sshop.w_emptyCups;
 	let coffee = sshop.w_coffeeCups;
 	let customers = sshop.w_waitingCustomers;
 	let money = sshop.w_money;
 	let restockSheet = sshop.w_restockSheet;
 	let coffeePrice = sshop.w_coffeePrice;
 	let promoterBool = sshop.w_promoterUnlocked;
-	let supplierBool = sshop.w_supplierUnlocked;
 	let multiShopUnlocked = sshop.w_multiShopUnlocked;
 	let totalMoney = derived(
 		[money, mshopMoney],
@@ -73,7 +71,7 @@
 		</div>
 		<div id="main-art">
 			<img alt="shop" src={img.coffeeShop_bot} />
-			<img alt="rat" src={img.astrorat} class="float" />
+			<img alt="rat" src={img.astrorat} data-clickable="y" class="float" />
 			<div id="coffees" class="abs">
 				{#each $coffeeOnTable as coffee (coffee)}
 					<img
@@ -108,15 +106,14 @@
 
 	<div class="shop right row">
 		<div class="col scroll">
-			<Dropdown title={$t("making_title")}>
+			<Block title={$t("making_title")}>
 				<div class="tooltip">
 					<Tooltip text={["makeCoffee3_tooltip", "hire_tooltip"]} />
 				</div>
 				<p>{$t("beans_stat")}: {$beans}</p>
-				<p>{$t("emptyCups_stat")}: {$emptyCups}</p>
 				<Button
 					data-btn="plus"
-					disabled={$beans > 0 && $emptyCups > 0 ? false : true}
+					disabled={$beans > 0 ? false : true}
 					onclick={() => {
 						sshop.produceCoffee();
 					}}>{$t("makeCoffee_btn")}</Button
@@ -124,9 +121,9 @@
 				{#if true}
 					<Worker worker="barista" {sshop} />
 				{/if}
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("selling_title")}>
+			<Block title={$t("selling_title")}>
 				<div class="tooltip">
 					<Tooltip
 						text={["promote_tooltip", "sellCoffee_tooltip", "hire_tooltip"]}
@@ -155,9 +152,9 @@
 				{#if true}
 					<Worker worker="server" {sshop} />
 				{/if}
-			</Dropdown>
+			</Block>
 
-			<Dropdown title={$t("restocking_title")}>
+			<Block title={$t("restocking_title")}>
 				<div class="tooltip">
 					<Tooltip text={["restock_tooltip"]} />
 				</div>
@@ -176,7 +173,7 @@
 						}}>{$t("restock_btn")}</Button
 					>
 				{/key}
-				{#if ($coffee < 1 && (($money < sshop.cupsPrice && $emptyCups < 1) || ($money < sshop.beansPrice && $beans < 1))) || ($money < sshop.beansPrice + sshop.cupsPrice && $coffee < 3 && $beans < 3 && $emptyCups < 3)}
+				{#if ($coffee < 1 && (($money < sshop.beansPrice && $beans < 1))) || ($money < sshop.beansPrice && $coffee < 3 && $beans < 3)}
 					<Button
 						data-btn="plus"
 						onclick={() => {
@@ -184,7 +181,7 @@
 						}}>{$t("choresForBeans_btn")}</Button
 					>
 				{/if}
-			</Dropdown>
+			</Block>
 		</div>
 		<div class="col">
 			<UpgradesPanel wshop={sshop} umKey="localShop" money={totalMoney} />
@@ -262,6 +259,7 @@
 		img[alt="rat"] {
 			top: 24%;
 			right: 30%;
+			cursor: var(--cpointer), pointer;
 		}
 
 		#coffees {

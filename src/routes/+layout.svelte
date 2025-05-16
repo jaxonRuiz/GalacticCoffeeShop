@@ -21,9 +21,10 @@
 	import Boops from "$lib/components/Boops.svelte";
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
+	import LoadingScreen from "$lib/components/LoadingScreen.svelte";
+	import { loading, loadingScreen } from "$lib/components/LoadingScreen";
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
-	import { onDestroy, onMount } from "svelte";
-	import { addCoffee, addMoney, endSession, startSession } from "$lib/backend/analytics";
+	import { addCoffee, addMoney } from "$lib/backend/analytics";
 
 	const smanager = stageManager;
 	let testWindowOpen = $state(false);
@@ -52,16 +53,16 @@
 			console.log("app saving");
 			saveState();
 		}
-		if (event.key === "]") {
-			endGame();
-			goto(`${base}/game`);
-		}
 		if (event.key === "l") {
 			(stageManager.currentScene as Franchise).researchers += 1000;
 			(stageManager.currentScene as Franchise).money += 1000;
 			addMoney(1000);
 			addCoffee(1000);
 			(stageManager.currentScene as Franchise).sciencePoints += 1000;
+		}
+		if (event.key === "]") {
+			loading.set(!get(loading));
+			console.log(get(loading));
 		}
 		// if (event.key === "r") {
 		//   resetState();
@@ -80,6 +81,12 @@
 
 	function onMouseDown(event: MouseEvent) {
 		let type = "default";
+		const rat = (event.target as HTMLElement).closest("img");
+		if (rat && rat.alt == "rat" && rat.dataset.clickable == "y") {
+			console.log('rat');
+			booped(rat.x - 0.1 * rat.width, rat.y + 0.4 * rat.height, "heart");
+			return;
+		}
 		const b = (event.target as HTMLElement).closest("button");
 		if (b) {
 			type = b.dataset.btn ?? "button";
@@ -93,6 +100,8 @@
 </script>
 
 <svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
+
+<LoadingScreen />
 
 <div id="overlays" class="fl" style={pointerStyle}>
 	{#if $optionsWindowOpen}
@@ -173,7 +182,11 @@
 	</div>
 </div>
 
-<div id="content" style={pointerStyle}>
+<div
+	id="content"
+	style={pointerStyle}
+	class={$loading || $optionsWindowOpen ? "paused" : "playing"}
+>
 	{@render children()}
 </div>
 

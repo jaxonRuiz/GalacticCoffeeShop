@@ -1,8 +1,12 @@
 import { get, type Writable, writable } from "svelte/store";
-import { globalVolumeScale, musicVolume, sfxVolume } from "../systems/audioManager";
+import {
+	globalVolumeScale,
+	musicVolume,
+	sfxVolume,
+} from "../systems/audioManager";
 import { Publisher } from "../systems/observer";
 import { msPerTick } from "../systems/time";
-import { cleanupAudioManagers, AudioManager } from "../systems/audioManager";
+import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { addCoffee, addMoney } from "../analytics";
@@ -18,36 +22,38 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	w_coffeeCups: Writable<number> = writable(0);
 	w_waitingCustomers: Writable<number> = writable(0);
 	w_appeal: Writable<number> = writable(0);
-	w_beanPrice: Writable<number> = writable(5.99);
+	w_beanPrice: Writable<number> = writable(3);
 	w_grindProgress: Writable<number> = writable(-1); // -1 means not grinding
 	w_canMakeCoffee: Writable<boolean> = writable(true);
 	w_makeCoffeeTime: Writable<number> = writable(0);
 	w_makeCoffeeCount: Writable<number> = writable(0);
-	w_beansPerBuy: Writable<number> = writable(3);
-	w_coffeePrice: Writable<number> = writable(3.5);
+	w_beansPerBuy: Writable<number> = writable(5);
+	w_coffeePrice: Writable<number> = writable(6);
 	w_maxCoffeeCups: Writable<number> = writable(36);
 	w_maxCustomers: Writable<number> = writable(5);
-	w_makeCoffeeMaxBatches: Writable<number> = writable(1);// how many cups of coffee are made per run
+	w_makeCoffeeMaxBatches: Writable<number> = writable(1); // how many cups of coffee are made per run
+	w_makeCoffeeCooldown: Writable<number> = writable(7000); // cooldown for making coffee IN MILLISECONDS
 
 	// internal stats
-	coffeePerBean: number = 2.5;
+	coffeePerBean: number = 0.5;
 	grindQuantity: number = 1; // how many beans are ground at a time
-	grindTime: number = 5; // number of times to click to grind a bean
+	grindTime: number = 9; // number of times to click to grind a bean
 	customerProgress: number = 0; // progress to next customer
-	promotionEffectiveness: number = 0.1; // current rate of customer generation
-	appealDecay: number = 0.05; // rate of decay of customer appeal
-	maxAppeal: number = 0.7;
+	promotionEffectiveness: number = 0.05; // current rate of customer generation
+	appealDecay: number = 0.35; // rate of decay of customer appeal
+	maxAppeal: number = 0.5;
 	minAppeal: number = 0; // minimum appeal (after decay)
 	makeCoffeeQuantity: number = 3; // how many cups of coffee are made per run
-	makeCoffeeCooldown: number = 2000; // cooldown for making coffee IN MILLISECONDS
 	runTutorial: boolean = true;
+	customerPatienceCount: number = 0;
+	customerPatienceAmount: number = 7; // how long customers wait before leaving
 
 	autogrindingEnabled: boolean = false; // whether or not to grind automatically
-	autogrindInterval: number = 10;
+	autogrindInterval: number = 4;
 	autogrindCounter: number = 0;
 
 	autosellEnabled: boolean = false; // whether or not to sell automatically
-	autosellInterval: number = 15;
+	autosellInterval: number = 8;
 	autosellCounter: number = 0;
 
 	// stat counters
@@ -165,6 +171,12 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	set makeCoffeeMaxBatches(value) {
 		this.w_makeCoffeeMaxBatches.set(value);
 	}
+	get makeCoffeeCooldown() {
+		return get(this.w_makeCoffeeCooldown);
+	}
+	set makeCoffeeCooldown(value) {
+		this.w_makeCoffeeCooldown.set(value);
+	}
 
 	// stat counters
 	get lifetimeGrindBeans() {
@@ -186,10 +198,13 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.w_lifetimeCoffeeMade.set(value);
 	}
 
+	timer: Publisher;
 	constructor(timer: Publisher, sceneManager: Publisher) {
-		timer.subscribe(this, "tick");
-		timer.subscribe(this, "hour");
-		timer.subscribe(this, "week");
+		console.log("preshop constructor");
+		this.timer = timer;
+		this.timer.subscribe(this, "tick");
+		this.timer.subscribe(this, "hour");
+		this.timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
 		// Clean up other audio managers
@@ -230,10 +245,12 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		// UI
 		this.uiManager = new UIManager();
 		this.uiManager.coffeeGenerator.updateLocations(
-			Array.from({ length: 4 }, (_, row) =>
-				Array.from({ length: 9 }, (_, col) => [row, col])
-			).flat());
-		this.uiManager.alienGenerator.updateTypes(['catorbiter']);
+			Array.from(
+				{ length: 4 },
+				(_, row) => Array.from({ length: 9 }, (_, col) => [row, col]),
+			).flat(),
+		);
+		this.uiManager.alienGenerator.updateTypes(["catorbiter"]);
 	}
 
 	notify(event: string, data?: any) {
@@ -241,10 +258,6 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.tick();
 		}
 		if (event === "hour") {
-			if (this.waitingCustomers > 0) {
-				this.waitingCustomers--;
-			}
-			// this.decayAppeal();
 		}
 		if (event === "week") {
 			console.log("week end", data);
@@ -253,9 +266,15 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 
 	tick() {
-		if (this.waitingCustomers < 1) {
-			this.audioManager.setVolume("crowd", 0);
-		}
+		if (this.waitingCustomers > 0) {
+			if (this.customerPatienceCount > this.customerPatienceAmount) {
+				this.waitingCustomers -= 1;
+				this.customerPatienceCount = 0;
+			} else {
+				this.customerPatienceCount += 1;
+			}
+		} else this.customerPatienceCount = 0;
+
 		this.drawCustomers();
 		this.decayAppeal();
 		if (!this.canMakeCoffee) {
@@ -285,22 +304,33 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				this.waitingCustomers += Math.floor(this.customerProgress);
 				this.waitingCustomers = Math.min(
 					this.waitingCustomers,
-					this.maxCustomers
+					this.maxCustomers,
 				);
 				this.customerProgress %= 1;
 
 				//play random meow audio (Stipulation that no cat audio can be played back to back)
-				const meowSounds = ["meow1", "meow2", "meow3", "meow4", "meow5", "meow6", "meow7", "meow8"];
+				const meowSounds = [
+					"meow1",
+					"meow2",
+					"meow3",
+					"meow4",
+					"meow5",
+					"meow6",
+					"meow7",
+					"meow8",
+				];
 				const randomMeow = () => {
 					let availableMeows = meowSounds;
 					if (this.lastPlayedMeow) {
-						availableMeows = meowSounds.filter(m => m !== this.lastPlayedMeow);
+						availableMeows = meowSounds.filter((m) =>
+							m !== this.lastPlayedMeow
+						);
 					}
-					const meow = availableMeows[Math.floor(Math.random() * availableMeows.length)];
+					const meow =
+						availableMeows[Math.floor(Math.random() * availableMeows.length)];
 					this.lastPlayedMeow = meow;
 					this.audioManager.playAudio(meow);
 					const meowAudio = this.audioManager.getVolume(meow);
-					console.log("meowAudio: ", meowAudio);
 				};
 				randomMeow();
 			}
@@ -324,7 +354,10 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.coffeeCups += this.coffeeToMake;
 			this.makeCoffeeTime = 0;
 
-			if (this.makeCoffeeCount == 0 || this.groundCoffee < 1 || this.coffeeCups >= this.maxCoffeeCups) {
+			if (
+				this.makeCoffeeCount == 0 || this.groundCoffee < 1 ||
+				this.coffeeCups >= this.maxCoffeeCups
+			) {
 				// finished making coffee
 				this.audioManager.stopAudio("boil");
 				this.makeCoffeeTime = 0;
@@ -339,14 +372,15 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 	// TODO make appeal diminishing effectiveness
 	promoteShop() {
+		this.customerPatienceCount = 0;
 		this.audioManager.playAudio("papers");
-		this.appeal +=
-			this.promotionEffectiveness *
+		this.appeal += this.promotionEffectiveness *
 			(1 - (this.minAppeal + this.appeal) / (this.minAppeal + this.maxAppeal));
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
 	sellCoffee() {
+		this.customerPatienceCount = 0;
 		if (this.coffeeCups < 1) return;
 		this.audioManager.playAudio("ding");
 		if (this.waitingCustomers >= 1) {
@@ -397,14 +431,17 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			this.makeCoffeeCount = this.makeCoffeeMaxBatches;
 		}
 
-		this.coffeeToMake = Math.min(this.groundCoffee, this.makeCoffeeQuantity, this.maxCoffeeCups - this.coffeeCups);
+		this.coffeeToMake = Math.min(
+			this.groundCoffee,
+			this.makeCoffeeQuantity,
+			this.maxCoffeeCups - this.coffeeCups,
+		);
 		this.groundCoffee -= this.coffeeToMake;
 		this.makeCoffeeTime = 0;
 	}
 
 	buyBeans() {
 		// possibly make bean cost scale or change over time(?)
-
 
 		this.audioManager.playAudio("cashRegister");
 		if (this.money < this.beanPrice) return;
@@ -423,7 +460,15 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	endScene() {
 		console.log("preshop endScene()");
 		// Fade out preshop bgm
-		this.audioManager.fadeAudio("bgm", 1000, 0, () => this.audioManager.stopAudio("bgm"));
+		this.audioManager.fadeAudio(
+			"bgm",
+			1000,
+			0,
+			() => this.audioManager.stopAudio("bgm"),
+		);
+		this.timer.unsubscribe(this, "tick");
+		this.timer.unsubscribe(this, "hour");
+		this.timer.unsubscribe(this, "week");
 		this.audioManager.disableAudio();
 		this.sceneManager.emit("nextScene");
 	}
@@ -434,6 +479,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 			beans: this.beans,
 			hasBarista: this.autogrindingEnabled,
 			hasCashier: this.autosellEnabled,
+			lifetimeCoffeeMade: this.lifetimeCoffeeMade,
+			lifetimeCoffeeSold: this.lifetimeCoffeeSold,
+			lifetimeGrindBeans: this.lifetimeGrindBeans,
 		};
 	}
 
