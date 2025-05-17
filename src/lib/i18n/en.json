@@ -11,6 +11,9 @@
 	"developed_by": "developed by Rat Bones Studio",
 	"external_collaborators": "and external collaborators",
 
+	"spaceFact": "space fact",
+	"spaceFact_0": "coffee doesn't stay hot for long here...",
+
 	"opt_lang": "Language",
 	"opt_volume": "Volume",
 
@@ -69,7 +72,6 @@
 
 	"restockSheet_text": "Restock Sheet",
 	"beans_text": "Beans",
-	"emptyCups_text": "Empty Cups",
 
 	"makeCoffee1_tooltip": "Grind raw coffee beans to get grounded beans to make sellable coffee.",
 	"makeCoffee2_tooltip": "Grinding requires multiple clicks and making coffee takes time.",

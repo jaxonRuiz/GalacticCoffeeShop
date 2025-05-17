@@ -1,4 +1,5 @@
 <script>
+	import { t } from "svelte-i18n";
 	import { img } from "$lib/assets/img";
 	import { loading } from "./LoadingScreen";
 </script>
@@ -6,8 +7,8 @@
 <div id="loading-screen" class={$loading ? "loading" : "loaded"}>
 	<div class="text-container imgs">
 		<div class="text">
-			<h2>space fact</h2>
-			<p>coffee doesn't stay hot for long here...</p>
+			<h2>{$t("spaceFact")}</h2>
+			<p>{$t("spaceFact_0")}</p>
 		</div>
 	</div>
 	<div class="steam imgs">

@@ -11,6 +11,9 @@
 	"developed_by": "游戏由 Rat Bones Studios 开发",
 	"external_collaborators": "以及外部协作人员",
 
+	"spaceFact": "星空趣闻",
+	"spaceFact_0": "这里的咖啡容易凉……",
+
 	"opt_lang": "语言",
 	"opt_volume": "音量",
 
@@ -80,6 +83,24 @@
 	"shop_tooltip": "从市场购买生咖啡豆。",
 	"restock_tooltip": "批量补充咖啡豆和空杯。",
 	"hire_tooltip": "雇佣员工来帮助你完成任务。",
+
+	"play_tester_mode_upgName": "试玩模式",
+	"play_tester_mode_upgDesc": "速度加加加！",
+
+	"water_boiler_upgName": "热水壶",
+	"water_boiler_upgDesc": "新一代的科技可让咖啡制造加快哟",
+	"tip_jar_upgName": "小费罐",
+	"tip_jar_upgDesc": "利用你忠实客户的零花钱",
+	"consistent_imaging_upgName": "统一形象",
+	"consistent_imaging_upgDesc": "统一一下咖啡形象，提高吸引力",
+	"establish_franchise_upgName": "建立营业",
+	"establish_franchise_upgDesc": "何必只想着开店呢？",
+	"employee_orientation_upgName": "员工训练营",
+	"employee_orientation_upgDesc": "训练过的员工更加高效",
+	"trendy_aesthetic_upgName": "时尚大方",
+	"trendy_aesthetic_upgDesc": "使用文化知识让下一代的孩子也喜欢上你的咖啡",
+	"fancy_latte_art_upgName": "拿铁拉花",
+	"fancy_latte_art_upgDesc": "用一点漂亮的奶盖给你的咖啡加点价吧！",
 
 	"crank_grinder_upgName": "手摇研磨机",
 	"crank_grinder_upgDesc": "加快咖啡豆研磨速度",

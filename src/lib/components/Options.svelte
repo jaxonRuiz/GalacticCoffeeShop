@@ -26,7 +26,7 @@
 
 	<!-- Master Volume Slider -->
 	<div class="row item">
-		<p>{$t("Master")}</p>
+		<p>{$t("opt_volume")}</p>
 		<input
 			type="range"
 			min="0"
@@ -35,20 +35,6 @@
 			bind:value={$globalVolumeScale}
 		/>
 		<span>{fPercent(Math.round($globalVolumeScale * 100))}</span>
-	</div>
-
-	<!-- Music Volume Slider -->
-	<div class="row item">
-		<p>{$t("Music")}</p>
-		<input type="range" min="0" max="1" step="0.01" bind:value={$musicVolume} />
-		<span>{fPercent(Math.round($musicVolume * 100))}</span>
-	</div>
-
-	<!-- SFX Volume Slider -->
-	<div class="row item">
-		<p>{$t("SFX")}</p>
-		<input type="range" min="0" max="1" step="0.01" bind:value={$sfxVolume} />
-		<span>{fPercent(Math.round($sfxVolume * 100))}</span>
 	</div>
 </main>
 
