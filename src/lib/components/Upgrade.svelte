@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { t } from "svelte-i18n";
-  import { writable } from "svelte/store";
+	import { writable } from "svelte/store";
 	import Button from "./Button.svelte";
-  import { img } from "$lib/assets/img";
-  import { fMoney } from "./Styles.svelte";
+	import { img } from "$lib/assets/img";
+	import { fMoney } from "./Styles.svelte";
+	import { fly } from "svelte/transition";
 
 	let {
 		item,
@@ -13,31 +14,39 @@
 		level,
 		flags = [],
 		money = writable(0),
-		onclick = (() => {}),
-		onmouseenter = (() => {}),
-		onmouseover = (() => {}),
+		onclick = () => {},
+		onmouseenter = () => {},
+		onmouseover = () => {},
 	} = $props();
 </script>
 
-<Button
-	data-btn={purchased ? "" : "coin"}
-	disabled={purchased || $money < cost ? true : false}
-	{onclick}
-	{onmouseenter}
-	{onmouseover}
-	class={`row ${purchased ? "purchased-upg" : ""} ${flags}`}
->
-	<img alt="upg" src={img[item.image]} />
-	<h3>{$t(`${key}_upgName`)}{item.maxLevel != 1
-			? ` LVL${level + (purchased ? 0 : 1)}`
-			: ""}</h3>
-	<p>{fMoney(cost)}</p>
-</Button>
+<div class="col cont" in:fly={{ x: 500 , duration: 500 }} out:fly={{ x: 500, duration: 500 }}>
+	<Button
+		data-btn={purchased ? "" : "coin"}
+		disabled={purchased || $money < cost ? true : false}
+		{onclick}
+		{onmouseenter}
+		{onmouseover}
+		class={`row upg ${purchased ? "purchased-upg" : ""} ${flags}`}
+	>
+		<img alt="upg" src={img[item.image]} />
+		<h3>
+			{$t(`${key}_upgName`)}{item.maxLevel != 1
+				? ` LVL${level + (purchased ? 0 : 1)}`
+				: ""}
+		</h3>
+		<p>{fMoney(cost)}</p>
+	</Button>
+</div>
 
 <style>
 	p {
 		width: fit-content;
 		margin-left: auto;
 		text-align: right;
+	}
+
+	.cont {
+		height: fit-content;
 	}
 </style>
