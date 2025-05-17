@@ -40,23 +40,6 @@
 				resumeGame();
 			}
 		}
-		if (event.key === "]") {
-			loading.set(!get(loading));
-			console.log(get(loading));
-		}
-		// if (event.key === "r") {
-		//   resetState();
-		//   smanager.currentSceneIndex = 0;
-		//   currentTab = 0;
-		// }
-		if (event.key === "4") {
-			// dev key to add money, only works in valid scenes
-			try {
-				(smanager.currentScene as MultiShop).money += 1000;
-			} catch (e) {
-				console.log(e);
-			}
-		}
 	}
 
 	function onMouseDown(event: MouseEvent) {

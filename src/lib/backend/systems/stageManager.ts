@@ -95,16 +95,18 @@ export class StageManager extends Publisher {
 
 			case 1: // preshop to multishop
 				console.log("preshop to multishop");
+				let preshopTransferData = this.currentScene.getTransferData();
+				preshopDone(); //ANALYTICS
 				// TODO forced loading screen
 				loading.set(true);
 				setTimeout(() => {
 					loading.set(false)
 				}, 1000);
-				let preshopTransferData = this.currentScene.getTransferData();
-				preshopDone(); //ANALYTICS
-				this.currentScene = new MultiShop(this.timer.timeEvents, this);
-				this.currentScene.loadTransferData(preshopTransferData);
-				this.currentSceneIndex = 2;
+				setTimeout(() => {
+					this.currentScene = new MultiShop(this.timer.timeEvents, this);
+					this.currentScene.loadTransferData(preshopTransferData);
+					this.currentSceneIndex = 2;
+				}, 500);
 				break;
 
 			case 2: // multishop to franchise
