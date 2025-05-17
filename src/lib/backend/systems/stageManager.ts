@@ -4,8 +4,9 @@ import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
 import { Franchise } from "../classes/franchise/franchise";
-import { resetState } from "../game";
+import { endGame, resetState } from "../game";
 import { franchiseDone, multishopDone, preshopDone, startSession } from "../analytics";
+import { loading } from "$lib/components/LoadingScreen";
 
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;
@@ -94,6 +95,11 @@ export class StageManager extends Publisher {
 
 			case 1: // preshop to multishop
 				console.log("preshop to multishop");
+				// TODO forced loading screen
+				loading.set(true);
+				setTimeout(() => {
+					loading.set(false)
+				}, 1000);
 				let preshopTransferData = this.currentScene.getTransferData();
 				preshopDone(); //ANALYTICS
 				this.currentScene = new MultiShop(this.timer.timeEvents, this);
@@ -102,6 +108,8 @@ export class StageManager extends Publisher {
 				break;
 
 			case 2: // multishop to franchise
+				// game over for build
+				endGame();
 				console.log("multishop to franchise");
 				let multishopTransferData = this.currentScene.getTransferData();
 				multishopDone(); //ANALYTICS

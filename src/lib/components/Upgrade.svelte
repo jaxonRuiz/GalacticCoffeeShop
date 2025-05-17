@@ -47,6 +47,6 @@
 	}
 
 	.cont {
-		overflow: hidden;
+		height: fit-content;
 	}
 </style>

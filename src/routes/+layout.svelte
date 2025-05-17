@@ -13,7 +13,7 @@
 		stageManager,
 		pauseGame,
 		resumeGame,
-    endGame,
+		endGame,
 	} from "$lib/backend/game";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
@@ -27,8 +27,6 @@
 	import { addCoffee, addMoney } from "$lib/backend/analytics";
 
 	const smanager = stageManager;
-	let testWindowOpen = $state(false);
-	let tabs = ["game", "preshop", "shop", "multishop", "franchise", "test"];
 	let url = $derived(page.url.pathname);
 
 	let { children } = $props();
@@ -41,24 +39,6 @@
 			} else {
 				resumeGame();
 			}
-		}
-		if (event.key === "t") {
-			testWindowOpen = !testWindowOpen;
-		}
-		if (event.key === "p") {
-			console.log("app loading");
-			loadState();
-		}
-		if (event.key === "o") {
-			console.log("app saving");
-			saveState();
-		}
-		if (event.key === "l") {
-			(stageManager.currentScene as Franchise).researchers += 1000;
-			(stageManager.currentScene as Franchise).money += 1000;
-			addMoney(1000);
-			addCoffee(1000);
-			(stageManager.currentScene as Franchise).sciencePoints += 1000;
 		}
 		if (event.key === "]") {
 			loading.set(!get(loading));
@@ -83,7 +63,7 @@
 		let type = "default";
 		const rat = (event.target as HTMLElement).closest("img");
 		if (rat && rat.alt == "rat" && rat.dataset.clickable == "y") {
-			console.log('rat');
+			console.log("rat");
 			booped(rat.x - 0.1 * rat.width, rat.y + 0.4 * rat.height, "heart");
 			return;
 		}
@@ -136,44 +116,8 @@
 		</div>
 	{/if}
 
-	<div id="test-window" style="display: {testWindowOpen ? 'grid' : 'none'};">
-		<div id="tabs" class="col">
-			{#each tabs as tab, i}
-				<a
-					href="{base}/{i == 0 ? '' : i == tabs.length - 1 ? 'test' : 'game'}"
-					class="tab"
-					onclick={() => {
-						switch (i) {
-							case 0:
-								// game
-								smanager.loadStage(0, false);
-								break;
-							case 1:
-								// preshop
-								smanager.loadStage(1, false);
-								break;
-							case 2:
-								// shop
-								smanager.loadStage(2, false);
-								break;
-							case 3:
-								// multishop
-								smanager.loadStage(2, false);
-								(smanager.currentScene as MultiShop).finishedFirstShop = true;
-								(
-									smanager.currentScene as MultiShop
-								).shops[0].multiShopUnlocked = true;
-								break;
-							case 4:
-								 // franchise
-							  smanager.loadStage(3, false);
-							  break;
-						}
-						testWindowOpen = false;
-					}}>{tab}</a
-				>
-			{/each}
-		</div>
+	<div id="test-window" style="display: none;">
+		<div id="tabs" class="col"></div>
 	</div>
 	<div id="mouse-effects">
 		{#each $boops as b (b.id)}
@@ -197,8 +141,7 @@
 		height: 100%;
 		cursor: var(--cdefault), default;
 	}
-
-	div:has(#test-window) {
+	#overlays {
 		pointer-events: none;
 		position: absolute;
 		z-index: 10000;
@@ -206,20 +149,6 @@
 		height: 100vh;
 		display: grid;
 		place-content: center;
-		#test-window {
-			pointer-events: auto;
-			background: var(--bg2);
-			border: 1px solid var(--yellow);
-			a {
-				padding: 0.5rem 2rem;
-				text-decoration: none;
-				text-align: center;
-				cursor: var(--cpointer), pointer;
-				&:hover {
-					background: var(--bg1);
-				}
-			}
-		}
 	}
 
 	#mouse-effects {
