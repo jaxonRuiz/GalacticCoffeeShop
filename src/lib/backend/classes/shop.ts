@@ -184,7 +184,7 @@ export class Shop implements ILocalShop {
 				if (shop.beans >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
 						(shop.workerStats["baristaBaseProductivity"] *
-								shop.workerStats["baristaCumulativeProductivity"] +
+							shop.workerStats["baristaCumulativeProductivity"] +
 							shop.workerStats["baristaFlatProductivity"]) *
 						this.workerAmounts["baristaCurrent"];
 				}
@@ -199,7 +199,7 @@ export class Shop implements ILocalShop {
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
 						(shop.workerStats["serverBaseProductivity"] *
-								shop.workerStats["serverCumulativeProductivity"] +
+							shop.workerStats["serverCumulativeProductivity"] +
 							shop.workerStats["serverFlatProductivity"]) *
 						this.workerAmounts["serverCurrent"];
 				}
@@ -270,7 +270,7 @@ export class Shop implements ILocalShop {
 			}
 			if (shop.progressTrackers["serviceProgress"] >= 1) {
 				let amount = Math.floor(shop.progressTrackers["serviceProgress"]);
-				if (shop.sellCoffee(amount)) {
+				if (shop.sellCoffee(amount, false)) {
 					shop.progressTrackers["serviceProgress"] -= amount;
 				}
 			}
@@ -368,8 +368,8 @@ export class Shop implements ILocalShop {
 		return false;
 	}
 
-	sellCoffee(amount: number = 1) {
-		this.audioManager.playAudio("ding");
+	sellCoffee(amount: number = 1, playSound: Boolean = true) {
+		if (playSound) this.audioManager.playAudio("ding");
 		// if (this.isSelected) {
 
 		// }

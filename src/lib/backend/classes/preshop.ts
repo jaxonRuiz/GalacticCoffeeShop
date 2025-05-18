@@ -290,7 +290,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (this.autosellEnabled) {
 			this.autosellCounter++;
 			if (this.autosellCounter >= this.autosellInterval) {
-				this.sellCoffee();
+				this.sellCoffee(false);
 				this.autosellCounter = 0;
 			}
 		}
@@ -380,10 +380,10 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
 	}
 
-	sellCoffee() {
+	sellCoffee(playSound: Boolean = true) {
 		this.customerPatienceCount = 0;
 		if (this.coffeeCups < 1) return;
-		this.audioManager.playAudio("ding");
+		if (playSound) this.audioManager.playAudio("ding");
 		if (this.waitingCustomers >= 1) {
 			this.waitingCustomers--;
 			this.coffeeCups--;
