@@ -308,31 +308,32 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 				);
 				this.customerProgress %= 1;
 
-				//play random meow audio (Stipulation that no cat audio can be played back to back)
-				const meowSounds = [
-					"meow1",
-					"meow2",
-					"meow3",
-					"meow4",
-					"meow5",
-					"meow6",
-					"meow7",
-					"meow8",
-				];
-				const randomMeow = () => {
-					let availableMeows = meowSounds;
-					if (this.lastPlayedMeow) {
-						availableMeows = meowSounds.filter((m) =>
-							m !== this.lastPlayedMeow
-						);
-					}
-					const meow =
-						availableMeows[Math.floor(Math.random() * availableMeows.length)];
-					this.lastPlayedMeow = meow;
-					this.audioManager.playAudio(meow);
-					const meowAudio = this.audioManager.getVolume(meow);
-				};
-				randomMeow();
+				//play random meow audio for 20% of customers (Stipulation that no cat audio can be played back to back)
+				if (Math.random() < 0.4) {
+					const meowSounds = [
+						"meow1",
+						"meow2",
+						"meow3",
+						"meow4",
+						"meow5",
+						"meow6",
+						"meow7",
+						"meow8",
+					];
+					const randomMeow = () => {
+						let availableMeows = meowSounds;
+						if (this.lastPlayedMeow) {
+							availableMeows = meowSounds.filter((m) =>
+								m !== this.lastPlayedMeow
+							);
+						}
+						const meow =
+							availableMeows[Math.floor(Math.random() * availableMeows.length)];
+						this.lastPlayedMeow = meow;
+						this.audioManager.playAudio(meow);
+					};
+					randomMeow();
+				}
 			}
 		}
 	}

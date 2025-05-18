@@ -309,6 +309,7 @@ export class AudioManager {
 		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
 		audio.name = name;
+		this.ambience.set(name, audio);
 	}
 
 	setMaxVolumeScale(name: string, scale: number) {

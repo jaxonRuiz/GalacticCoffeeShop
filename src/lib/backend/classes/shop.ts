@@ -172,6 +172,8 @@ export class Shop implements ILocalShop {
 		// Setting up audio
 		this.audioManager.addSFX("boiling", aud.boiling);
 		this.audioManager.addSFX("papers", aud.papers);
+		this.audioManager.addSFX("cashRegister", aud.new_cash);
+		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
 
 		// setting up default roles
 		this.roles.set("barista", {
@@ -328,8 +330,7 @@ export class Shop implements ILocalShop {
 
 		this.beans += this.restockSheet["beans"];
 		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"];
-
-		this.audioManager.playAudio("ding");
+		this.audioManager.playAudio("cashRegister");
 	}
 
 	getTotalExpenses() {
