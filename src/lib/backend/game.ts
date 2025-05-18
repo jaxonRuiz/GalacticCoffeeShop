@@ -2,6 +2,7 @@ import { Timer } from "./systems/time";
 import { get, type Writable, writable } from "svelte/store";
 import { StageManager } from "./systems/stageManager";
 import { startSession } from "./analytics";
+import { audioManagerRegistry } from "./systems/audioManager";
 
 export let timer = new Timer();
 let gamePaused = writable(false);
@@ -22,6 +23,31 @@ GA.setEnabledInfoLog(true);
 GA.setEnabledVerboseLog(true);
 GA.configureBuild("0.10");
 GA.initialize('a07f4cd4e7485020da55d37998e8921f', '57d5a645ab68900bd7718a8ec09e456b570444cb');
+
+// Utility functions to mute/unmute or pause/resume all audio
+function muteAllAudio() {
+	for (const manager of audioManagerRegistry) {
+		manager.disableAudio();
+	}
+}
+function resumeAllAudio() {
+	for (const manager of audioManagerRegistry) {
+		manager.resumeAudio();
+	}
+}
+
+// Listen for tab/window visibility and focus changes
+if (typeof window !== "undefined") {
+	document.addEventListener("visibilitychange", () => {
+		if (document.hidden) {
+			muteAllAudio();
+		} else {
+			resumeAllAudio();
+		}
+	});
+	window.addEventListener("blur", muteAllAudio);
+	window.addEventListener("focus", resumeAllAudio);
+}
 
 // make sure startGame is only called on a new save
 export function startNewGame() {

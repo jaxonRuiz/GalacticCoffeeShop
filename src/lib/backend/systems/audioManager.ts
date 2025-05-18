@@ -345,6 +345,23 @@ export class AudioManager {
 		}
 	}
 
+	resumeAudio() {
+		// Resume music
+		for (let audio of this.music.values()) {
+			if (audio.paused) {
+				audio.play().catch(() => { });
+			}
+		}
+		// Resume ambience
+		for (let audio of this.ambience.values()) {
+			if (audio.paused) {
+				audio.play().catch(() => { });
+			}
+		}
+		// Restore volumes
+		this.enableAudio();
+	}
+
 	destroy() {
 		// Remove this instance from the registry
 		audioManagerRegistry.delete(this);
