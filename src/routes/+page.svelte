@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { exit } from '@tauri-apps/plugin-process';
 	import { t } from "svelte-i18n";
 	import { goto } from "$app/navigation";
 	import { base } from "$app/paths";
@@ -92,6 +93,15 @@
 					}}
 				>
 					<p>{$t("options_btn")}</p>
+				</Button>
+				<Button
+					move={false}
+					onclick = {async () => {
+						close();
+						await exit(0);
+					}}
+				>
+					<p>{$t("quit_btn")}</p>
 				</Button>
 			</div>
 		</div>

@@ -127,6 +127,7 @@
 						move={false}
 						onclick={() => {
 							$optionsWindowOpen = false;
+							resumeGame();
 						}}
 					>
 						{$t("closeOptions_btn")}
@@ -198,7 +199,7 @@
 		cursor: var(--cdefault), default;
 	}
 
-	div:has(#test-window) {
+	#overlays {
 		pointer-events: none;
 		position: absolute;
 		z-index: 10000;
