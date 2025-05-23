@@ -110,9 +110,11 @@ export class AudioManager {
 				});
 			} else {
 				console.warn(`Audio "${name}" not found in SFX, music, or ambience.`);
+				return;
 			}
 		} catch (err) {
 			console.error(`Error in playAudio("${name}"):`, err);
+			return;
 		}
 	}
 
@@ -307,6 +309,7 @@ export class AudioManager {
 		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
 		audio.name = name;
+		this.ambience.set(name, audio);
 	}
 
 	setMaxVolumeScale(name: string, scale: number) {
@@ -340,6 +343,23 @@ export class AudioManager {
 			audio?.pause();
 			this.audioEffects.delete(audio);
 		}
+	}
+
+	resumeAudio() {
+		// Resume music
+		for (let audio of this.music.values()) {
+			if (audio.paused) {
+				audio.play().catch(() => { });
+			}
+		}
+		// Resume ambience
+		for (let audio of this.ambience.values()) {
+			if (audio.paused) {
+				audio.play().catch(() => { });
+			}
+		}
+		// Restore volumes
+		this.enableAudio();
 	}
 
 	destroy() {

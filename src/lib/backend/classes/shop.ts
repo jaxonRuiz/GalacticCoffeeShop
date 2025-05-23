@@ -172,6 +172,8 @@ export class Shop implements ILocalShop {
 		// Setting up audio
 		this.audioManager.addSFX("boiling", aud.boiling);
 		this.audioManager.addSFX("papers", aud.papers);
+		this.audioManager.addSFX("cashRegister", aud.new_cash);
+		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
 
 		// setting up default roles
 		this.roles.set("barista", {
@@ -182,7 +184,7 @@ export class Shop implements ILocalShop {
 				if (shop.beans >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
 						(shop.workerStats["baristaBaseProductivity"] *
-								shop.workerStats["baristaCumulativeProductivity"] +
+							shop.workerStats["baristaCumulativeProductivity"] +
 							shop.workerStats["baristaFlatProductivity"]) *
 						this.workerAmounts["baristaCurrent"];
 				}
@@ -197,7 +199,7 @@ export class Shop implements ILocalShop {
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
 						(shop.workerStats["serverBaseProductivity"] *
-								shop.workerStats["serverCumulativeProductivity"] +
+							shop.workerStats["serverCumulativeProductivity"] +
 							shop.workerStats["serverFlatProductivity"]) *
 						this.workerAmounts["serverCurrent"];
 				}
@@ -268,7 +270,7 @@ export class Shop implements ILocalShop {
 			}
 			if (shop.progressTrackers["serviceProgress"] >= 1) {
 				let amount = Math.floor(shop.progressTrackers["serviceProgress"]);
-				if (shop.sellCoffee(amount)) {
+				if (shop.sellCoffee(amount, false)) {
 					shop.progressTrackers["serviceProgress"] -= amount;
 				}
 			}
@@ -328,8 +330,7 @@ export class Shop implements ILocalShop {
 
 		this.beans += this.restockSheet["beans"];
 		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"];
-
-		this.audioManager.playAudio("ding");
+		this.audioManager.playAudio("cashRegister");
 	}
 
 	getTotalExpenses() {
@@ -367,8 +368,8 @@ export class Shop implements ILocalShop {
 		return false;
 	}
 
-	sellCoffee(amount: number = 1) {
-		this.audioManager.playAudio("ding");
+	sellCoffee(amount: number = 1, playSound: Boolean = true) {
+		if (playSound) this.audioManager.playAudio("ding");
 		// if (this.isSelected) {
 
 		// }
