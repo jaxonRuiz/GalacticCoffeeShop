@@ -153,7 +153,7 @@ export class Shop implements ILocalShop {
 	});
 
 	// stats /////////////////////////////////////////////////////////////////////
-	beansPrice: number = 2.5;
+	beansPrice: number = 1.5;
 	totalWorkers: number = 0;
 	maxCustomers: number = 7;
 	promotionEffectiveness: number = 0.2;
