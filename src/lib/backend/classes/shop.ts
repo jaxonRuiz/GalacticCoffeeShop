@@ -357,9 +357,6 @@ export class Shop implements ILocalShop {
 	}
 
 	restock() {
-		if (!this.autoRestockUnlocked) {
-			return;
-		}
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
 
 		this.beans += this.restockSheet["beans"];
