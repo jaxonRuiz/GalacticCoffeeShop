@@ -48,6 +48,7 @@
 	"coffeePrice_stat": "Coffee Price",
 	"beansPerBuy_stat": "Beans per Pack",
 	"restockPrice_stat": "Cost to Restock",
+	"income_stat": "Avg. $/s",
 
 	"upgPurchased_btn": "Purchased",
 	"upgUnpurchased_btn": "Unpurchased",

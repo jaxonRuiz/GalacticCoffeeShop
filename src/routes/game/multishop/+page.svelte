@@ -12,12 +12,16 @@
 
 	// shop money checker on interval
 	let shopMoney = $state([mshop.shops[0].money]);
+	let shopIncome = $state([mshop.shops[0].incomePerSecond]);
 	const timerInterval = setInterval(() => {
-		let hold: number[] = [];
+		let moneyHold: number[] = [];
+		let incomeHold: number[] = [];
 		mshop.shops.forEach((shop, ind) => {
-			hold[ind] = shop.money;
+			moneyHold[ind] = shop.money;
+			incomeHold[ind] = shop.incomePerSecond;
 		});
-		shopMoney = hold;
+		shopMoney = moneyHold;
+		shopIncome = incomeHold;
 	}, 500);
 	onDestroy(() => {
 		clearInterval(timerInterval);
@@ -69,6 +73,7 @@
 	>
 		<h1>{$t("shop_title")} {ind + 1}</h1>
 		<p>{$t("money_stat")}: {fMoney(shopMoney[ind] ?? 0)}</p>
+		<p>{$t("income_stat")}: {fMoney(shopIncome[ind] ?? 0)}</p>
 	</button>
 {/snippet}
 
