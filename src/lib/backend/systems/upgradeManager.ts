@@ -461,7 +461,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return true;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).workerAmounts["serverMax"] += 1;
+				(shop as ILocalShop).workerAmounts["serverCurrent"] += 1;
 			},
 			maxLevel: 3,
 			cost: 200,
@@ -473,7 +473,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as ILocalShop).promoterUnlocked;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).workerAmounts["promoterMax"] += 1;
+				(shop as ILocalShop).workerAmounts["promoterCurrent"] += 1;
 			},
 			maxLevel: 3,
 			cost: 400,
@@ -485,7 +485,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return true;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).workerAmounts["baristaMax"] += 1;
+				(shop as ILocalShop).workerAmounts["baristaCurrent"] += 1;
 			},
 			maxLevel: 3,
 			cost: 200,

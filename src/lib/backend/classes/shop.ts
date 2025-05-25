@@ -142,14 +142,10 @@ export class Shop implements ILocalShop {
 		customerProgress: 0,
 	});
 	w_workerAmounts: Writable<{ [key: string]: number }> = writable({
-		baristaCurrent: 0,
-		serverCurrent: 0,
+		baristaCurrent: 2,
+		serverCurrent: 1,
 		promoterCurrent: 0,
 		supplierCurrent: 0,
-		baristaMax: 2,
-		serverMax: 1,
-		promoterMax: 1,
-		supplierMax: 1,
 	});
 
 	// stats /////////////////////////////////////////////////////////////////////
@@ -361,22 +357,14 @@ export class Shop implements ILocalShop {
 	}
 
 	restock() {
+		if (!this.autoRestockUnlocked) {
+			return;
+		}
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
 
 		this.beans += this.restockSheet["beans"];
 		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"];
 		this.audioManager.playAudio("cashRegister");
-	}
-
-	getTotalExpenses() {
-		let totalExpenses = 0;
-		this.roles.forEach((role: Role) => {
-			// pain peko
-			let numWorkers = this.workerAmounts[role.name.toLowerCase() + "Current"];
-			totalExpenses += numWorkers * role.wage;
-		});
-
-		return totalExpenses;
 	}
 
 	deselectShop() {
@@ -434,28 +422,6 @@ export class Shop implements ILocalShop {
 		this.appeal += this.promotionEffectiveness *
 			(1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);
-	}
-
-	addWorker(role: string) {
-		this.audioManager.playAudio("ding");
-		if (!this.roles.has(role)) throw new Error(`${role} does not exist`);
-		let numWorkers = this.workerAmounts[role + "Current"];
-		let maxWorkers = this.workerAmounts[role + "Max"];
-
-		let roleObj = this.roles.get(role);
-		if (numWorkers < maxWorkers) {
-			this.workerAmounts[role + "Current"]++;
-			// this.applyCost(roleObj!.wage*2); // hiring cost?
-		}
-	}
-
-	removeWorker(role: string) {
-		this.audioManager.playAudio("ding");
-		if (!this.roles.has(role)) throw new Error("Role does not exist");
-		let roleObj = this.roles.get(role)!;
-		if (this.workerAmounts[role + "Current"] > 0) {
-			this.workerAmounts[role + "Current"]--;
-		}
 	}
 
 	choresForBeans() {

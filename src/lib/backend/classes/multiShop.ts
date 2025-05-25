@@ -113,9 +113,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		}
 		if (event === "week") {
 			this.withdrawAll();
-
-			// this.applyExpenses();
-			// this.shops.forEach((shop) => shop.restock());
 		}
 	}
 
@@ -176,13 +173,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.selectedShopIndex = -1;
 	}
 
-	applyExpenses() {
-		let shopIndex = 0;
-		this.shops.forEach((shop) => {
-			this.money -= shop.getTotalExpenses();
-			this.weeklyRecap[shopIndex].expenses = shop.getTotalExpenses();
-		});
-	}
+
 
 	withdrawAll() {
 		let shopIndex = 0;
@@ -243,12 +234,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.lifetimeStats.coffeeSold = data.lifetimeCoffeeSold;
 		this.lifetimeStats.coffeeMade = data.lifetimeCoffeeMade;
 		this.shops[0].beans += data.beans;
-		if (data.hasBarista) {
-			this.shops[0].addWorker("barista");
-		}
-		if (data.hasCashier) {
-			this.shops[0].addWorker("server");
-		}
 		this.selectShop(this.shops[0]);
 	}
 
@@ -277,18 +262,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		if (!this.selectedShop) return;
 		this.money += this.selectedShop.money;
 		this.selectedShop.money = 0;
-	}
-
-	localAddWorker(role: string) {
-		// this.audioManager.playAudio("ding");
-		if (!this.selectedShop) return;
-		this.selectedShop.addWorker(role);
-	}
-
-	localRemoveWorker(role: string) {
-		// this.audioManager.playAudio("ding");
-		if (!this.selectedShop) return;
-		this.selectedShop.removeWorker(role);
 	}
 
 	// save state ////////////////////////////////////////////////////////////////
