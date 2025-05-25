@@ -36,6 +36,7 @@
 	let coffeePrice = sshop.w_coffeePrice;
 	let promoterBool = sshop.w_promoterUnlocked;
 	let multiShopUnlocked = sshop.w_multiShopUnlocked;
+	let maxCoffee = sshop.w_maxCoffeeCups;
 	let totalMoney = derived(
 		[money, mshopMoney],
 		([$money, $mshopMoney]) => $money + $mshopMoney
@@ -113,7 +114,7 @@
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<Button
 					data-btn="plus"
-					disabled={$beans > 0 ? false : true}
+					disabled={$beans > 0 ? false : true && $coffee >= $maxCoffee}
 					onclick={() => {
 						sshop.produceCoffee();
 					}}>{$t("makeCoffee_btn")}</Button
@@ -173,7 +174,7 @@
 						}}>{$t("restock_btn")}</Button
 					>
 				{/key}
-				{#if ($coffee < 1 && (($money < sshop.beansPrice && $beans < 1))) || ($money < sshop.beansPrice && $coffee < 3 && $beans < 3)}
+				{#if ($coffee < 1 && $money < sshop.beansPrice && $beans < 1) || ($money < sshop.beansPrice && $coffee < 3 && $beans < 3)}
 					<Button
 						data-btn="plus"
 						onclick={() => {

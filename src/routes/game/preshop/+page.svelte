@@ -36,6 +36,7 @@
 	let makeCoffeeTime = pshop.w_makeCoffeeTime;
 	let coffeePrice = pshop.w_coffeePrice;
 	let beansPerBuy = pshop.w_beansPerBuy;
+	let maxCoffee = pshop.w_maxCoffeeCups;
 </script>
 
 <main class="shop container" style={pointerStyle}>
@@ -104,7 +105,9 @@
 						100}%, var(--btnbg) {($makeCoffeeTime / pshop.makeCoffeeCooldown) *
 						100}% 100%);
 						{!$canMakeCoffee ? 'cursor: var(--cwait), wait' : ''}"
-					disabled={$canMakeCoffee && $groundedBeans >= 1 ? false : true}
+					disabled={$canMakeCoffee && $groundedBeans >= 1
+						? false
+						: true && $coffee < $maxCoffee}
 					onclick={() => {
 						pshop.makeCoffee();
 					}}>{$t("makeCoffee_btn")}</Button
