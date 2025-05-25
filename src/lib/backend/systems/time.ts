@@ -65,7 +65,7 @@ export class Timer {
 		this.w_year.set(value);
 	}
 
-	ticker: number;
+	ticker: NodeJS.Timeout;
 	timeEvents: Publisher; // dont forget to subscribe relevant classes to this
 
 	constructor() {
@@ -138,7 +138,7 @@ export class Timer {
 		this.year = data.year;
 	}
 
-	getDay(day: number){
+	getDay(day: number) {
 		return this.days[day];
 	}
 

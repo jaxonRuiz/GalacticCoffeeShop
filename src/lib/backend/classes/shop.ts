@@ -5,6 +5,7 @@ import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { dictProxy } from "../proxies";
 import { addCoffee, addMoney } from "../analytics";
+import { msPerTick } from "../systems/time";
 
 export class Shop implements ILocalShop {
 	moneyMultiplier: number = 1;
@@ -20,6 +21,7 @@ export class Shop implements ILocalShop {
 	w_multiShopUnlocked: Writable<boolean> = writable(false);
 	w_autoRestockUnlocked: Writable<boolean> = writable(false);
 	w_maxCoffeeCups: Writable<number> = writable(36);
+	w_incomePerSecond: Writable<number> = writable(0);
 
 	// writable getters/setters
 	get beans() {
@@ -114,6 +116,12 @@ export class Shop implements ILocalShop {
 	set lifetimeStats(value: { [key: string]: number }) {
 		this.multiShop.lifetimeStats = value;
 	}
+	get incomePerSecond() {
+		return get(this.w_incomePerSecond);
+	}
+	set incomePerSecond(value) {
+		this.w_incomePerSecond.set(value);
+	}
 
 	// variable containers ///////////////////////////////////////////////////////
 	w_restockSheet: Writable<{ [key: string]: number }> = writable({
@@ -163,6 +171,11 @@ export class Shop implements ILocalShop {
 	boilTimer: number = 0;
 	playBoiler: boolean = false;
 	isSelected: boolean = false;
+	lastSecondMoney: number = 0;
+	incomeRateCounter: number = 1;
+	incomeRateBufferCounter: number = 0;
+	incomeRateBufferCapacity: number = 5;
+	incomeRateBuffer: Array<number> = [];
 
 	constructor(multiShop: MultiShop, audioManager: AudioManager) {
 		console.log("local shop constructor");
@@ -244,6 +257,28 @@ export class Shop implements ILocalShop {
 
 		// progress updaters
 		progressUpdates(this);
+
+		// income rate updates
+		this.incomeRateCounter = (this.incomeRateCounter + 1) % (1000 / msPerTick);
+		if (this.incomeRateCounter === 0) {
+			// update income buffer
+			this.incomeRateBuffer.push(this.lastSecondMoney);
+			this.lastSecondMoney = 0;
+			// ^ IF THERE IS A SEVERE MEMORY ISSSUE IT IS LIKELY HERE.
+			if (this.incomeRateBufferCounter >= this.incomeRateBufferCapacity) {
+				this.incomeRateBuffer.shift();
+			} else {
+				this.incomeRateBufferCounter += 1;
+			}
+
+			// updating average income per second
+			let incomeSum = this.incomeRateBuffer.reduce((a, b) => a + b, 0);
+			this.incomePerSecond = incomeSum / this.incomeRateBufferCounter;
+			console.log(`Income per second: ${this.incomePerSecond}`);
+			console.log(
+				`Income rate buffer: ${this.incomeRateBuffer}, Counter: ${this.incomeRateBufferCounter}`,)
+		}
+
 
 		function audioUpdate(shop: Shop) {
 			if (shop.boilTimer > 0) {
@@ -380,6 +415,8 @@ export class Shop implements ILocalShop {
 			this.coffeeCups -= numToSell;
 			this.waitingCustomers -= numToSell;
 			this.money += this.coffeePrice * numToSell * this.moneyMultiplier;
+			this.lastSecondMoney += this.coffeePrice * numToSell *
+				this.moneyMultiplier;
 			this.lifetimeStats["moneyMade"] += this.coffeePrice * numToSell *
 				this.moneyMultiplier;
 			this.lifetimeStats["coffeeSold"] += numToSell;
