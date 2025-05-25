@@ -165,7 +165,6 @@ export class Shop implements ILocalShop {
 	audioManager: AudioManager;
 	uiManager: UIManager;
 	boilTimer: number = 0;
-	playBoiler: boolean = false;
 	isSelected: boolean = false;
 	lastSecondMoney: number = 0;
 	incomeRateCounter: number = 1;
@@ -179,7 +178,7 @@ export class Shop implements ILocalShop {
 		this.audioManager = audioManager;
 
 		// Setting up audio
-		this.audioManager.addSFX("boiling", aud.boiling);
+		this.audioManager.addSFX("crunch", aud.crunch2);
 		this.audioManager.addSFX("papers", aud.papers);
 		this.audioManager.addSFX("cashRegister", aud.new_cash);
 		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
@@ -245,10 +244,7 @@ export class Shop implements ILocalShop {
 
 		// only play audio if selected
 		if (this.isSelected) {
-			// this.audioManager.enableAudio();
 			audioUpdate(this);
-		} else {
-			// this.audioManager.disableAudio();
 		}
 
 		// progress updaters
@@ -279,15 +275,13 @@ export class Shop implements ILocalShop {
 		function audioUpdate(shop: Shop) {
 			if (shop.boilTimer > 0) {
 				shop.boilTimer -= 1;
-			} else {
-				shop.playBoiler = false;
 			}
 		}
 
 		function progressUpdates(shop: Shop) {
 			if (shop.progressTrackers["coffeeProgress"] >= 1) {
 				let amount = Math.floor(shop.progressTrackers["coffeeProgress"]);
-				if (shop.produceCoffee(amount)) {
+				if (shop.produceCoffee(amount, false)) {
 					shop.progressTrackers["coffeeProgress"] -= amount;
 				}
 			}
@@ -307,7 +301,7 @@ export class Shop implements ILocalShop {
 			}
 			if (shop.progressTrackers["promotionProgress"] >= 1) {
 				let amount = Math.floor(shop.progressTrackers["promotionProgress"]);
-				for (let i = 0; i < amount; i++) shop.promote();
+				for (let i = 0; i < amount; i++) shop.promote(false);
 				shop.progressTrackers["promotionProgress"] -= amount;
 			}
 		}
@@ -356,12 +350,12 @@ export class Shop implements ILocalShop {
 		);
 	}
 
-	restock() {
+	restock(playSound: boolean = true) {
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
 
 		this.beans += this.restockSheet["beans"];
 		this.lifetimeStats["totalRestocked"] += this.restockSheet["beans"];
-		this.audioManager.playAudio("cashRegister");
+		if (playSound) this.audioManager.playAudio("ding");
 	}
 
 	deselectShop() {
@@ -370,16 +364,16 @@ export class Shop implements ILocalShop {
 	}
 
 	// player actions ////////////////////////////////////////////////////////////
-	produceCoffee(amount: number = 1) {
+	produceCoffee(amount: number = 1, playSound: boolean = true) {
 		if (this.boilTimer === 0) {
 			this.boilTimer += 7;
-			this.audioManager.playAudio("boiling");
 		}
 
 		let numToMake = Math.floor(
 			Math.min(amount, this.beans, this.maxCoffeeCups - this.coffeeCups),
 		);
 		if (this.beans >= numToMake) {
+			if (playSound) this.audioManager.playAudio("crunch");
 			this.beans -= numToMake;
 			this.coffeeCups += numToMake;
 			this.lifetimeStats["coffeeMade"] += numToMake;
@@ -414,8 +408,8 @@ export class Shop implements ILocalShop {
 		return false;
 	}
 
-	promote() {
-		this.audioManager.playAudio("papers");
+	promote(playSound: boolean = true) {
+		if (playSound) this.audioManager.playAudio("papers");
 		this.appeal += this.promotionEffectiveness *
 			(1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);

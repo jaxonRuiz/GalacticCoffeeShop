@@ -109,10 +109,10 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		if (event === "hour") {
 		}
 		if (event === "day") {
-			this.restockShops();
+			this.restockShops(false);
 		}
 		if (event === "week") {
-			this.withdrawAll();
+			this.withdrawAll(false);
 		}
 	}
 
@@ -122,7 +122,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	// multishop actions /////////////////////////////////////////////////////////
 	addShop(applyUpgrades: boolean = true) {
-		this.audioManager.playAudio("ding");
 		let newShop = new Shop(this, this.audioManager);
 		if (this.finishedFirstShop) newShop.multiShopUnlocked = true;
 		if (applyUpgrades) {
@@ -175,20 +174,20 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 
 
-	withdrawAll() {
+	withdrawAll(playSound: boolean = true) {
 		let shopIndex = 0;
 		console.log("withdraw all");
-		this.audioManager.playAudio("ding");
+		if (playSound) this.audioManager.playAudio("ding");
 		this.shops.forEach((shop) => {
 			this.money += shop.money;
 			this.weeklyRecap[shopIndex].income = shop.money;
 			shop.money = 0;
 		});
 	}
-	restockShops() {
-		this.audioManager.playAudio("ding");
+	restockShops(playSound: boolean = true) {
+		if (playSound) this.audioManager.playAudio("ding");
 		this.shops.forEach((shop) => {
-			if (shop.autoRestockUnlocked) shop.restock();
+			if (shop.autoRestockUnlocked) shop.restock(false);
 		});
 	}
 
