@@ -170,7 +170,7 @@ export class Shop implements ILocalShop {
 	lastSecondMoney: number = 0;
 	incomeRateCounter: number = 1;
 	incomeRateBufferCounter: number = 0;
-	incomeRateBufferCapacity: number = 5;
+	incomeRateBufferDelay: number = 3;
 	incomeRateBuffer: Array<number> = [];
 
 	constructor(multiShop: MultiShop, audioManager: AudioManager) {
@@ -261,7 +261,7 @@ export class Shop implements ILocalShop {
 			this.incomeRateBuffer.push(this.lastSecondMoney);
 			this.lastSecondMoney = 0;
 			// ^ IF THERE IS A SEVERE MEMORY ISSSUE IT IS LIKELY HERE.
-			if (this.incomeRateBufferCounter >= this.incomeRateBufferCapacity) {
+			if (this.incomeRateBufferCounter >= this.incomeRateBufferDelay) {
 				this.incomeRateBuffer.shift();
 			} else {
 				this.incomeRateBufferCounter += 1;
