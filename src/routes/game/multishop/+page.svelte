@@ -22,7 +22,7 @@
 		});
 		shopMoney = moneyHold;
 		shopIncome = incomeHold;
-	}, 500);
+	}, 250);
 	onDestroy(() => {
 		clearInterval(timerInterval);
 	});
