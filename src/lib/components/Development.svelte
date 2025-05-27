@@ -34,14 +34,14 @@
 			<div class="bought-dev col inner-block">
 				<h3>Bought Buildings</h3>
 				{#each $boughtBuildings as building, i (building)}
-					<Building development = {d} building = {building} bought = {true}></Building>
+					<!-- <Building development = {d} building = {building} bought = {true}></Building> -->
 				{/each}
 			</div>
 
 			<div class="avail-dev col inner-block">
 				<h3>Available Buildings (resets daily)</h3>
 				{#each $availBuildings as building, i (building)}
-					<Building development = {d} building = {building} bought = {false}></Building>
+					<!-- <Building development = {d} building = {building} bought = {false}></Building> -->
 				{/each}
 			</div>
 		</div>

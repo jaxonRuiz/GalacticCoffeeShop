@@ -1,17 +1,13 @@
 import { Publisher } from "../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
-import {
-	DevelopmentBase,
-} from "./developments/developmentbase";
 import type { Country } from "./country";
 //import { dev } from "$app/environment";
-import { Residential } from "./developments/residential";
 import { Franchise } from "./franchise";
-import { Farm } from "./developments/farm";
-import { LogisticCenter } from "./developments/logisticCenter";
 import { dictProxy } from "$lib/backend/proxies";
 import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
+import type Building from "$lib/components/franchise/Building.svelte";
+import { addCoffee, addMoney } from "$lib/backend/analytics";
 
 export enum ClimateType {
 	Arid = 0,
@@ -27,9 +23,6 @@ export class Region implements IRegion {
 	w_unusableLand: Writable<number> = writable(0);
 	w_boughtUnusable: Writable<number> = writable(0);
 	w_unusableBuyCost: Writable<number> = writable(0);
-	w_developmentList: Writable<{ [key: string]: DevelopmentBase }> = writable({
-		// developments should be predefined, but set with area size of zero.
-	});
 	w_environmentalFactors: Writable<{ [key: string]: number }> = writable({
 		soilRichness: 1,
 		waterAvailability: 1,
@@ -45,6 +38,10 @@ export class Region implements IRegion {
 	w_population: Writable<number> = writable(500);
 	w_voteInProgress: Writable<boolean> = writable(false);
 	w_expectedCustomersPerHour: Writable<number> = writable();
+
+	// building stuff
+	w_boughtBuildings: Writable<IBuilding[]> = writable([]);
+	w_availableBuildings: Writable<IBuilding[]> = writable([]);
 
 	get voteInProgress() {
 		return get(this.w_voteInProgress);
@@ -94,18 +91,16 @@ export class Region implements IRegion {
 	set populationPurchasingPower(value) {
 		const old = this.populationPurchasingPower ?? 1;
 		this.w_populationPurchasingPower.set(value);
-		for (let key in this.developmentList){
-			this.developmentList[key].boughtBuildings.forEach(element => {
-				element.buyCost *= value/old;
-				element.sellCost *= value/old;
-				element.rent *= value/old;
-			});
-			this.developmentList[key].availableBuildings.forEach(element => {
-				element.buyCost *= value/old;
-				element.sellCost *= value/old;
-				element.rent *= value/old;
-			});
-		}
+		this.boughtBuildings.forEach(element => {
+			element.buyCost *= value/old;
+			element.sellCost *= value/old;
+			element.rent *= value/old;
+		});
+		this.availableBuildings.forEach(element => {
+			element.buyCost *= value/old;
+			element.sellCost *= value/old;
+			element.rent *= value/old;
+		});
 	}
 	get coffeesSoldLastHour() {
 		return get(this.w_coffeesSoldLastHour);
@@ -120,12 +115,6 @@ export class Region implements IRegion {
 	}
 	set totalArea(value) {
 		this.w_totalArea.set(value);
-	}
-	get developmentList() {
-		return dictProxy(this.w_developmentList);
-	}
-	set developmentList(value: { [key: string]: DevelopmentBase }) {
-		this.w_developmentList.set(value);
 	}
 	get environmentalFactors() {
 		return dictProxy(this.w_environmentalFactors);
@@ -208,6 +197,18 @@ export class Region implements IRegion {
 	set expectedCustomersPerHour(value) {
 		this.w_expectedCustomersPerHour.set(value);
 	}
+	get boughtBuildings() {
+		return get(this.w_boughtBuildings);
+	}
+	set boughtBuildings(value: IBuilding[]) {
+		this.w_boughtBuildings.set(value);
+	}
+	get availableBuildings() {
+		return get(this.w_availableBuildings);
+	}
+	set availableBuildings(value: IBuilding[]) {
+		this.w_availableBuildings.set(value);
+	}
 
 	//internal variables
 	dailyImport: number = this.importCapacity;
@@ -249,22 +250,17 @@ export class Region implements IRegion {
 	}
 
 	tick(){
-		for (let devkey in this.developmentList) {
-			this.developmentList[devkey].tick();
-		}
+		this.tickCoffee();
+		this.tickBeans();
 	}
 
 	hour() {
-		this.deliveriesThisHour = 0;
-		for (let devkey in this.developmentList) {
-			this.developmentList[devkey].hour();
-		}
+		this.coffeesSoldLastHour = this.coffeeSoldThisHour;
+		this.coffeeSoldThisHour = 0;
 	}
 
 	day() {
-		for (let devkey in this.developmentList) {
-			this.developmentList[devkey].day();
-		}
+		this.updateAvailableBuildings(4);
 	}
 
 	initializeRegion(climate: ClimateType) {
@@ -292,7 +288,7 @@ export class Region implements IRegion {
 			default:
 				break;
 		}
-		this.initializeDevelopments();
+		this.updateAvailableBuildings(4);
 	}
 
 	resetImportExport() {
@@ -317,12 +313,6 @@ export class Region implements IRegion {
 		return maxImportable;
 	}
 
-	initializeDevelopments() {
-		this.developmentList["farm"] = new Farm(this, 7, this.franchise);
-		this.developmentList["residential"] = new Residential(this, 5, this.franchise);
-		this.developmentList["logistic"] = new LogisticCenter(this, 4, this.franchise);
-	}
-
 	unlockRegion() {
 		this.unlocked = true;
 	}
@@ -333,6 +323,175 @@ export class Region implements IRegion {
 			this.boughtUnusable++;
 			this.unusableLand--;
 			this.usableLand++;
+		}
+	}
+
+	//BUILDING STUFF
+
+	buyBuilding(building: IBuilding){
+		if (building.areaSize > this.usableLand || building.buyCost > this.franchise.money) {return;}
+
+		this.franchise.money -= building.buyCost; //pay your dues
+		this.usableLand -= building.areaSize;
+		this.boughtBuildings = [...this.boughtBuildings, building]; //add to bought buildings
+		const index = this.availableBuildings.indexOf(building);
+		if (index !== -1) {
+			this.availableBuildings.splice(index, 1); // remove from available buildings
+			this.availableBuildings = [...this.availableBuildings]; // update for svelte
+		}
+		if (building.type == "farmBuilding"){
+			this.beansPerHour += building.num;
+		}
+		if (building.type == "coffeeBuilding"){
+			this.maxCoffeePerHour += building.num;
+		}
+	}
+
+	sellBuilding(building: IBuilding){
+		this.franchise.money += building.sellCost;
+		this.usableLand += building.areaSize;
+		const index = this.boughtBuildings.indexOf(building);
+		if (index !== -1) {
+			this.boughtBuildings.splice(index, 1); // remove from your bought buildings
+			this.boughtBuildings = [...this.boughtBuildings]; // update for svelte
+		}
+		if (building.type == "farmBuilding"){
+			this.beansPerHour -= building.num;
+		}
+		if (building.type == "coffeeBuilding"){
+			this.maxCoffeePerHour -= building.num;
+		}
+	}
+
+	readBuilding(building: IBuilding){
+		switch (building.type) {
+			case "coffeeBuilding":
+				return `Sells up to ${building.num} coffees/hour`;
+			case "farmBuilding":
+				return `Produces up to ${building.num} beans/hour`;
+			default:
+				break;
+		}
+	}
+
+	MakeBuilding(buildingType: BuildingType, buildingSize: BuildingSize) {
+		var data = this.BuildingList[buildingType][buildingSize];
+		var randomName = data.names[Math.floor(Math.random() * data.names.length)];
+		var multiplier = 1;
+		if (buildingType == 'coffeeBuilding') multiplier = this.franchise.maxCoffeeMultiplier;
+		else if (buildingType == 'farmBuilding') multiplier = this.franchise.coffeeMultiplier;
+		
+		return {
+			name: randomName,
+			type: buildingType,
+			areaSize: data.areaSize,
+			buyCost: data.cost * (1 + Math.floor(Math.random() * 10) / 20) * Math.pow(1.5, this.populationPurchasingPower),
+			sellCost: data.cost * (1 - Math.floor(Math.random() * 10) / 20) * Math.pow(1.5, this.populationPurchasingPower),
+			rent: data.rent * Math.pow(1.5, this.populationPurchasingPower),
+			num: Math.floor(data.num * (1 + Math.random() * 0.5) * multiplier)
+		};
+	}
+
+	updateAvailableBuildings(buildingCount: number): void {
+		const self = this;
+		this.availableBuildings = [];
+
+		let possibleBuildings = [];
+		if (this.franchise.moneyPerHour < (150 * this.populationPurchasingPower))	{
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "small"));
+		}
+		if (this.franchise.moneyPerHour >= (150 * this.populationPurchasingPower)){
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "medium"));
+		}
+		if (this.franchise.moneyPerHour >= (200 * this.populationPurchasingPower)){
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "large"));
+			possibleBuildings.push(this.MakeBuilding("farmBuilding", "medium"));
+			possibleBuildings.push(this.MakeBuilding("coffeeBuilding", "medium"));
+		}
+
+		this.availableBuildings = this.getRandomSubset(possibleBuildings, buildingCount);
+	}
+
+	getRandomSubset<T>(array: T[], count: number): T[] {
+		const copy = [...array];
+		for (let i = copy.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[copy[i], copy[j]] = [copy[j], copy[i]];
+		}
+		return copy.slice(0, count);
+	}
+
+	BuildingList: Record<BuildingType, Record<BuildingSize, BuildingData>> = {
+		coffeeBuilding: {
+			small: { names: ["The Bean Bros", "Mocha Mart"], cost: 2000, num: 20, areaSize: 1, rent: 50 },
+			medium: { names: ["Big Bean Bar", "Cocoa Company"], cost: 4000, num: 40, areaSize: 2, rent: 100 },
+			large: { names: ["The Bean.", "The Coffee Cacophony"], cost: 7000, num: 80, areaSize: 4, rent: 200 }
+		},
+		farmBuilding: {
+			small: { names: ["Family Farm", "Urban Garden"], cost: 2000, num: 30, areaSize: 2, rent: 50 },
+			medium: { names: ["Regional Farm", "Commercial Orchard"], cost: 4000, num: 60, areaSize: 3, rent: 100 },
+			large: { names: ["Industrial Farm Complex", "Agro-Enterprise Zone"], cost: 7000, num: 120, areaSize: 5, rent: 200 }
+		},
+	};
+
+	coffeeAccumulator: number = 0;
+	coffeeSoldThisHour: number = 0;
+	get coffeePrice(): number{
+	  return 5 * this.populationPurchasingPower;
+	}
+	
+	sellCoffee(coffeeAmount: number){
+		if (coffeeAmount > this.beans){
+		this.parentCountry.importBeansTo(coffeeAmount - this.beans, this); //try to import as much as possible
+		}
+		var coffeeSold = Math.max(Math.min(coffeeAmount, this.beans, Math.floor(this.expectedCustomersPerHour) - this.coffeeSoldThisHour), 0);
+
+		this.beans -= coffeeSold;
+		this.coffeeSoldThisHour += coffeeSold;
+		this.deliveriesThisHour += coffeeSold;
+		this.franchise.money += coffeeSold * this.coffeePrice * (1 - this.parentCountry.taxRate);
+		//ANALYTICS
+		addCoffee(coffeeSold);
+		addMoney(coffeeSold * this.coffeePrice * (1 - this.parentCountry.taxRate));
+	}
+
+	tickCoffee() {
+		const coffeePerTick = Math.min(this.maxCoffeePerHour, this.expectedCustomersPerHour) / 16;
+		this.coffeeAccumulator += coffeePerTick;
+
+		if (this.coffeeAccumulator >= 1){
+			const wholeCoffees = Math.floor(this.coffeeAccumulator);
+			this.sellCoffee(wholeCoffees);
+			this.coffeeAccumulator -= wholeCoffees;
+		}
+	}
+
+	get bpt (){
+		return this.beansPerHour/16; //16 ticks per hour
+	}
+
+	beanAccumulator: number = 0;
+
+	tickBeans() {
+		this.beanAccumulator += this.bpt;
+
+		if (this.beanAccumulator >= 1) {
+			const wholeBeans = Math.floor(this.beanAccumulator);
+			this.beans += wholeBeans;
+			this.beanAccumulator -= wholeBeans;
+		}
+	}
+
+	hireResearcher(){
+		const hireCost = 100 * Math.exp(1.05 * this.franchise.researchers);
+		if (this.franchise.money >= hireCost) {
+			this.franchise.money -= hireCost;
+			this.franchise.researchers++;
 		}
 	}
 }

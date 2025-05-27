@@ -3,7 +3,6 @@ import { get, type Writable, writable } from "svelte/store";
 import { World } from "./world";
 import { Country } from "./country";
 import { Region } from "./region";
-import { DevelopmentBase } from "./developments/developmentbase";
 import { ResearchLab } from "./researchLab";
 import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
@@ -53,7 +52,6 @@ export class Franchise implements ISubscriber, IScene {
 	// current country/region to be used by frontend
 	w_currentCountry: Writable<null | Country> = writable(null);
 	w_currentRegion: Writable<null | Region> = writable(null);
-	w_currentDevelopment: Writable<null | DevelopmentBase> = writable(null);
 	w_inResearchLab: Writable<Boolean> = writable(false);
 	audioManager: AudioManager = new AudioManager();
 
@@ -68,12 +66,6 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	set currentRegion(value: Region | null) {
 		this.w_currentRegion.set(value);
-	}
-	get currentDevelopment() {
-		return get(this.w_currentDevelopment);
-	}
-	set currentDevelopment(value: DevelopmentBase | null) {
-		this.w_currentDevelopment.set(value);
 	}
 	get inResearchLab() {
 		return get(this.w_inResearchLab);
@@ -111,12 +103,12 @@ export class Franchise implements ISubscriber, IScene {
 		for (let cKey in this.world.countries) {
 			this.world.countries[cKey].regionList.forEach(region => {
 				region.beansPerHour *= value / old;
-				region.developmentList["farm"].boughtBuildings.forEach(building => {
+				region.boughtBuildings.forEach(building => {
 					if (building.type === 'farmBuilding') {
 						building.num *= value / old;
 					}
 				});
-				region.developmentList["farm"].availableBuildings.forEach(building => {
+				region.availableBuildings.forEach(building => {
 					if (building.type === 'farmBuilding') {
 						building.num *= value / old;
 					}
@@ -133,12 +125,12 @@ export class Franchise implements ISubscriber, IScene {
 		for (let cKey in this.world.countries) {
 			this.world.countries[cKey].regionList.forEach(region => {
 				region.maxCoffeePerHour *= value / old;
-				region.developmentList["residential"].boughtBuildings.forEach(building => {
+				region.boughtBuildings.forEach(building => {
 					if (building.type === 'coffeeBuilding') {
 						building.num *= value / old;
 					}
 				});
-				region.developmentList["residential"].availableBuildings.forEach(building => {
+				region.availableBuildings.forEach(building => {
 					if (building.type === 'coffeeBuilding') {
 						building.num *= value / old;
 					}
@@ -153,64 +145,12 @@ export class Franchise implements ISubscriber, IScene {
 		const old = this.researcherMultiplier;
 		this.researcherMultiplier = value;
 		this.researchers *= value / old;
-		for (let cKey in this.world.countries) {
-			this.world.countries[cKey].regionList.forEach(region => {
-				region.developmentList["logistic"].boughtBuildings.forEach(building => {
-					if (building.type === 'researchBuilding') {
-						building.num *= value / old;
-					}
-				});
-				region.developmentList["logistic"].availableBuildings.forEach(building => {
-					if (building.type === 'researchBuilding') {
-						building.num *= value / old;
-					}
-				});
-			});
-		}
 	}
 	get populationMultiplier() {
 		return this._populationMultiplier;
 	}
 	set populationMultiplier(value) {
-		const old = this.populationMultiplier;
 		this._populationMultiplier = value;
-		for (let cKey in this.world.countries) {
-			this.world.countries[cKey].regionList.forEach(region => {
-				region.population *= value / old;
-				region.developmentList["residential"].boughtBuildings.forEach(building => {
-					if (building.type === 'housingBuilding') {
-						building.num *= value / old;
-					}
-				});
-				region.developmentList["residential"].availableBuildings.forEach(building => {
-					if (building.type === 'housingBuilding') {
-						building.num *= value / old;
-					}
-				});
-			});
-		}
-	}
-	get waterMultiplier() {
-		return get(this.w_waterMultiplier);
-	}
-	set waterMultiplier(value) {
-		const old = this.waterMultiplier;
-		this.w_waterMultiplier.set(value);
-		for (let cKey in this.world.countries) {
-			this.world.countries[cKey].regionList.forEach(region => {
-				region.waterPerHour *= value / old;
-				region.developmentList["farm"].boughtBuildings.forEach(building => {
-					if (building.type === 'waterBuilding') {
-						building.num *= value / old;
-					}
-				});
-				region.developmentList["farm"].availableBuildings.forEach(building => {
-					if (building.type === 'waterBuilding') {
-						building.num *= value / old;
-					}
-				});
-			});
-		}
 	}
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
@@ -327,12 +267,6 @@ export class Franchise implements ISubscriber, IScene {
 	}
 
 	//Region stuff
-	increaseDevelopmentArea(development: string, areaSize: number = 1) {
-		this.currentDevelopment?.increaseDevelopmentArea(areaSize);
-	}
-	decreaseDevelopmentArea(development: string, areaSize: number = 1) {
-		this.currentDevelopment?.decreaseDevelopmentArea(areaSize);
-	}
 	selectRegion(region: Region) {
 		this.currentRegion = region;
 	}
@@ -345,22 +279,18 @@ export class Franchise implements ISubscriber, IScene {
 		this.currentRegion?.buyUnusable();
 	}
 
-	//Development stuff
 	buyBuilding(index: number) { // let me know if you'd rather have the building reference as a parameter
 		//cash register sound
 		this.audioManager.playAudio("ding");
-		this.currentDevelopment?.buyBuilding(this.currentDevelopment.availableBuildings[index]);
+		this.currentRegion?.buyBuilding(this.currentRegion.availableBuildings[index]);
 	}
 	sellBuilding(index: number) {
 		//cash register sound
 		this.audioManager.playAudio("cashRegister");
-		this.currentDevelopment?.sellBuilding(this.currentDevelopment.availableBuildings[index]);
+		this.currentRegion?.sellBuilding(this.currentRegion.availableBuildings[index]);
 	}
-	selectDevelopment(development: DevelopmentBase) {
-		this.currentDevelopment = development;
-	}
-	deselectDevelopment() {
-		this.currentDevelopment = null;
+	hireResearcher(){
+		this.currentRegion?.hireResearcher();
 	}
 
 	//Research stuff

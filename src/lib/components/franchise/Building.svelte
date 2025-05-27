@@ -4,13 +4,13 @@
 	import Button from "../Button.svelte";
 	import { fMoney } from "../Styles.svelte";
 
-	let { development, building, bought } = $props();
+	let { region, building, bought } = $props();
 </script>
 
 <div class="building-card">
     <p style="font-size: 1.2rem; font-weight: bold;">{building.name}</p>
     <p>Area Size: {building.areaSize} acres</p>
-    <p>{development.readBuilding(building)}</p>
+    <p>{region.readBuilding(building)}</p>
     <p>Rent: {fMoney(building.rent)}/day</p>
     <div class="row">
         <div class="buttons">
@@ -18,21 +18,11 @@
                 <Button
                     style = "background-color:rgb(70, 70, 70);"
                     onclick={() => {
-                        development.sellBuilding(building);
+                        region.sellBuilding(building);
                     }}
                 >
                     Sell for: {fMoney(building.sellCost)}
                 </Button>
-                {#if development.buildingClickable(building)}
-                    <Button
-                        style = "background-color:rgb(70, 70, 70);"
-                        onclick={() => {
-                            development.clickBuilding(building);
-                        }}
-                    >
-                        {development.clickText(building)}
-                    </Button>
-                {/if}
             {/if}
         </div>
             
@@ -40,7 +30,7 @@
             <Button
                 style = "background-color:rgb(70, 70, 70);"
                 onclick={() => {
-                    development.buyBuilding(building);
+                    region.buyBuilding(building);
                 }}
             >
                 Buy for: {fMoney(building.buyCost)}

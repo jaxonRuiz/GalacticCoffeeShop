@@ -6,6 +6,8 @@
 	import Button from "$lib/components/Button.svelte";
 	import { fMoney } from "$lib/components/Styles.svelte";
 	import { timer } from "$lib/backend/game";
+	import Building from "$lib/components/franchise/Building.svelte";
+	import { writable } from "svelte/store";
 
 	let hour = timer.w_hour;
 	let day = timer.w_day;
@@ -21,7 +23,6 @@
 	let usableLand = $region?.w_usableLand;
 	let unusableLand = $region?.w_unusableLand;
 	let unusableCost = $region?.w_unusableBuyCost;
-	let devlopmentList = $region?.w_developmentList;
 	let environmentalFactors = $region?.w_environmentalFactors;
 	let accessibilityLevel = $region?.w_accessibilityLevel;
 	let importCapacity = $region?.w_importCapacity;
@@ -36,6 +37,8 @@
 	let researchers = franchise.w_researchers;
 	let custPerHour = $region?.w_expectedCustomersPerHour;
 	let delPerHour = $region?.w_deliveriesPerHour;
+	let boughtBuildings = $region?.w_boughtBuildings ?? writable([]);
+	let availBuildings = $region?.w_availableBuildings ?? writable([]);
 </script>
 
 <div class = "money">💰 {fMoney($money)}</div>
@@ -74,9 +77,7 @@
 			<p>Coffees sold last hour: {$coffeeSold} coffees</p>
 			<p>Max coffees/hour: {$maxCoffee} coffees</p>
 			<p>Beans/hour: {$beansPerHour} beans</p>
-			<p>Gallons of water/hour: {$waterPerHour} gallons</p>
 			<p>Estimated customers/hour: {Math.floor($custPerHour ?? 1)} customers</p>
-			<p>Max bean deliveries/hour: {$delPerHour} beans</p>
 		</div>
 		<div class = "stats">
 			<h1>Stats</h1>
@@ -87,7 +88,6 @@
 			<p>Import capacity: {$importCapacity} beans</p>
 			<p>Export capacity: {$exportCapacity} beans</p>
 			<p>Bean count: {$beans} beans</p>
-			<p>Water: {$water} gallons</p>
 			<p>Population: {$population} people</p>
 			<p>Researchers: {$researchers} researchers</p>
 		</div>
@@ -113,14 +113,21 @@
 	</div>
 
 	<div class="right block">
-		{#if $devlopmentList}
-			<h1>Developments</h1>
-			<div class="col scroll">
-				{#each Object.keys($devlopmentList) as key (key)}
-					<Development dev={$devlopmentList[key]} />
+		<div class="buildings-container">
+			<div class="bought-dev col inner-block">
+				<h3>Bought Buildings</h3>
+				{#each $boughtBuildings as building, i (building)}
+					<Building region = {$region} building = {building} bought = {true}></Building>
 				{/each}
 			</div>
-		{/if}
+
+			<div class="avail-dev col inner-block">
+				<h3>Available Buildings (resets daily)</h3>
+				{#each $availBuildings as building, i (building)}
+					<Building region = {$region} building = {building} bought = {false}></Building>
+				{/each}
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -166,10 +173,6 @@
 		background-color:rgb(28, 28, 28);
 		box-sizing: border-box;
 	}
-	.col.scroll {
-		overflow-y: auto;
-		max-height: 100%;
-	}
 	div.money {
 		position: fixed;
 		top: 30px;
@@ -182,5 +185,26 @@
 		font-weight: bold;
 		z-index: 1000;
 	}
+	.right.block {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+	.buildings-container {
+		display: flex;
+		flex: 1;
+		gap: 1rem;
+		overflow: hidden;
+	}
+	.col {
+		flex: 1;
+		overflow-y: auto;
+		overflow-x: hidden;
+		min-height: 0;
+		padding: 0.5rem;
+	}
+
+
+
 
 </style>

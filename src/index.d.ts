@@ -191,13 +191,7 @@ interface IBuilding {
 
 type BuildingType =
 	| "coffeeBuilding"
-	| "housingBuilding"
-	| "importBuilding"
-	| "exportBuilding"
-	| "deliveryBuilding"
-	| "waterBuilding"
-	| "farmBuilding"
-	| "researchBuilding";
+	| "farmBuilding";
 
 type BuildingSize = "small" | "medium" | "large";
 
