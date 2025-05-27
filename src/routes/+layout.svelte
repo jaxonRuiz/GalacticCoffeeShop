@@ -13,6 +13,7 @@
 		stageManager,
 		pauseGame,
 		resumeGame,
+    endGame,
 	} from "$lib/backend/game";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
@@ -62,6 +63,10 @@
 		if (event.key === "]") {
 			loading.set(!get(loading));
 			console.log(get(loading));
+		}
+		if (event.key === "[") {
+			endGame();
+			goto(`${base}/game/ending`);
 		}
 		// if (event.key === "r") {
 		//   resetState();
