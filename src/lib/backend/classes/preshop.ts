@@ -1,9 +1,4 @@
 import { get, type Writable, writable } from "svelte/store";
-import {
-	globalVolumeScale,
-	musicVolume,
-	sfxVolume,
-} from "../systems/audioManager";
 import { Publisher } from "../systems/observer";
 import { msPerTick } from "../systems/time";
 import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";

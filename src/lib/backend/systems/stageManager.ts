@@ -4,8 +4,7 @@ import { Timer } from "./time";
 import { Preshop } from "../classes/preshop";
 import { MultiShop } from "../classes/multiShop";
 import { Franchise } from "../classes/franchise/franchise";
-import { resetState } from "../game";
-import { franchiseDone, multishopDone, preshopDone, startSession } from "../analytics";
+import { franchiseDone, multishopDone, preshopDone } from "../analytics";
 
 export class StageManager extends Publisher {
 	currentScene: IScene = {} as IScene;

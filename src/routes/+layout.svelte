@@ -13,7 +13,6 @@
 		stageManager,
 		pauseGame,
 		resumeGame,
-    endGame,
 	} from "$lib/backend/game";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
@@ -22,7 +21,7 @@
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
 	import LoadingScreen from "$lib/components/LoadingScreen.svelte";
-	import { loading, loadingScreen } from "$lib/components/LoadingScreen";
+	import { loading } from "$lib/components/LoadingScreen";
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 	import { addCoffee, addMoney } from "$lib/backend/analytics";
 

@@ -1,9 +1,7 @@
-import { Publisher } from "../../../systems/observer";
 import { get, type Writable, writable } from "svelte/store";
 import type { Region } from "../region";
 import { Franchise } from "../franchise";
-import { cleanupAudioManagers, AudioManager } from "../../../systems/audioManager";
-import { aud } from "../../../../assets/aud";
+import { AudioManager } from "../../../systems/audioManager";
 
 export enum DevelopmentType{
 	Residential = "Residential",

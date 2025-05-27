@@ -1,6 +1,3 @@
-import { aud } from "$lib/assets/aud";
-import { once } from "@tauri-apps/api/event";
-import { on } from "svelte/events";
 import { get, writable } from "svelte/store";
 
 type NamedAudio = HTMLAudioElement & { name: string };
@@ -39,7 +36,7 @@ export class AudioManager {
 	SFXIndex: Map<string, number> = new Map();
 	ambience: Map<string, HTMLAudioElement> = new Map();
 	music: Map<string, HTMLAudioElement> = new Map();
-	audioEffects: Map<HTMLAudioElement, { task: number, callback: ((cancelled: boolean) => void) | undefined }> = new Map();
+	audioEffects: Map<HTMLAudioElement, { task: NodeJS.Timeout, callback: ((cancelled: boolean) => void) | undefined }> = new Map();
 
 	sfxVolume: number = 1;
 	ambienceVolume: number = 0.25;
