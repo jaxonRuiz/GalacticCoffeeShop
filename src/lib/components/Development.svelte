@@ -2,7 +2,6 @@
 	import { t } from "svelte-i18n";
 	import type { DevelopmentBase } from "$lib/backend/classes/franchise/developments/developmentbase";
 	import Button from "./Button.svelte";
-	import { fMoney } from "./Styles.svelte";
 	import Building from "./franchise/Building.svelte";
 
 	let { dev } = $props();

@@ -1,6 +1,6 @@
 import { get, type Writable, writable } from "svelte/store";
 import { MultiShop } from "./multiShop";
-import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";
+import { AudioManager } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { dictProxy } from "../proxies";

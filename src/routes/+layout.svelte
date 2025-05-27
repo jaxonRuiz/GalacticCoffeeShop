@@ -22,7 +22,7 @@
 	import Button from "$lib/components/Button.svelte";
 	import Options from "$lib/components/Options.svelte";
 	import LoadingScreen from "$lib/components/LoadingScreen.svelte";
-	import { loading, loadingScreen } from "$lib/components/LoadingScreen";
+	import { loading } from "$lib/components/LoadingScreen";
 	import type { Franchise } from "$lib/backend/classes/franchise/franchise";
 	import { addCoffee, addMoney } from "$lib/backend/analytics";
 
@@ -63,6 +63,10 @@
 		if (event.key === "]") {
 			loading.set(!get(loading));
 			console.log(get(loading));
+		}
+		if (event.key === "[") {
+			endGame();
+			goto(`${base}/game/ending`);
 		}
 		// if (event.key === "r") {
 		//   resetState();

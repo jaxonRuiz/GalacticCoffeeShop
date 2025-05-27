@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { t } from "svelte-i18n";
-	import Button from "./Button.svelte";
 
 	let { worker, sshop } = $props();
 
