@@ -8,6 +8,7 @@
 	import { fMoney } from "$lib/components/Styles.svelte";
 	import { timer } from "$lib/backend/game";
 	import RegionImportExport from "$lib/components/franchise/RegionImportExport.svelte";
+	import UpgradesPanel from "$lib/components/UpgradesPanel.svelte";
 
 	let hour = timer.w_hour;
 	let day = timer.w_day;
@@ -151,70 +152,8 @@
 	</div>
 		
 	<div class="rightright">
-		<h1>Events: (random ones will pop up)</h1>
-			{#if policyEvents}
-				{#each $policyEvents as event, i}
-					<div class="upgrade-card">
-						<p style="font-size: 1.2rem;"><strong>{event.desc}</strong></p>
-						<p>Time: {Math.floor(event.time)}</p>
-						<div
-							style="
-								width: 100%;
-								height: 24px;
-								background-color: #ddd;
-								border-radius: 12px;
-								overflow: hidden;
-								margin-bottom: 4px;
-							"
-						>
-							<div
-								style="
-									width: {event.currentInfluence/event.totalInfluence * 100}%;
-									height: 100%;
-									background-color: #4caf50;
-									transition: width 0.3s;
-								"
-							></div>
-						</div>
-						<Button onclick={() => franchise.voteAgainstPolicy(i, 10)} 
-							disabled={$influence < 10}
-							style="
-								background-color: {!$unlocked ? '#aaa' : 'green'};
-								color: white;
-								cursor: {!$unlocked ? '--cno' : '--cpointer'};
-							">
-							-10 votes
-						</Button>
-						<Button onclick={() => franchise.voteAgainstPolicy(i, 1)}
-							disabled={$influence < 1}
-							style="
-								background-color: {!$unlocked ? '#aaa' : 'green'};
-								color: white;
-								cursor: {!$unlocked ? '--cno' : '--cpointer'};
-							">
-							-1 vote
-						</Button>
-						<Button onclick={() => franchise.voteForPolicy(i, 1)}
-							disabled={$influence < 1}
-							style="
-								background-color: {!$unlocked ? '#aaa' : 'green'};
-								color: white;
-								cursor: {!$unlocked ? '--cno' : '--cpointer'};
-							">
-							+1 vote
-						</Button>
-						<Button onclick={() => franchise.voteForPolicy(i, 10)}
-							disabled={$influence < 10}
-							style="
-								background-color: {!$unlocked ? '#aaa' : 'green'};
-								color: white;
-								cursor: {!$unlocked ? '--cno' : '--cpointer'};
-							">
-							+10 votes
-						</Button>
-					</div>
-				{/each}
-			{/if}
+		<UpgradesPanel money = {influence} umKey =  {"franchise"} wshop = {franchise} ></UpgradesPanel>
+			
 	</div>
 
 	<div class="importexport">

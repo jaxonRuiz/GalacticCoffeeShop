@@ -1,10 +1,11 @@
+
 // global interfaces, no enums
 interface IUpgrade {
 	unlock_condition: (
-		shop: IShop | IMultiShop | IPreshop | ILocalShop | IContainerShop,
+		shop: IShop | IMultiShop | IPreshop | ILocalShop | IContainerShop | IFranchise,
 	) => boolean;
 	upgrade: (
-		shop: IShop | IMultiShop | IPreshop | ILocalShop | IScene,
+		shop: IShop | IMultiShop | IPreshop | ILocalShop | IScene | IFranchise,
 		level: number,
 	) => void; // LEVELS USE 1 BASED INDEXING; IScene only used for endScene upgrades
 	maxLevel: number | undefined; // undefined means infinite upgrade
@@ -107,6 +108,12 @@ interface ILocalShop extends IShop {
 	unlockSupplier(): void;
 }
 
+interface IFranchise extends IShop {
+	currentCountry: Country;
+	currentRegion: Region;
+	money: number;
+}
+
 interface IScene {
 	endScene(): void;
 	saveState(): void;
@@ -123,26 +130,6 @@ classes that implement subscriber should implement a
 notify(event: string, data?: any) method that does a behavior
 dont forget to add the subscriber to the observer with .subscribe()
 */
-
-interface IDevelopment {
-	// parent: Region;
-	// developmentCost: number;
-	// developmentArea: number;
-	// developmentType: DevelopmentType;
-
-	// InitializeDevelopment();
-}
-
-interface IResidential {
-	// population: number;
-	// shopCount: number;
-	// income: number;
-}
-
-
-interface IFarm {
-
-}
 
 interface IRegion {
 	// parent: Country;

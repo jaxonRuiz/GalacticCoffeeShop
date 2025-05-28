@@ -23,7 +23,7 @@
 	<Button
 		onclick={() => {
 			if ($unlocked) {
-				franchise.startRegionalVote(i);
+				franchise.buyRegion(i);
 			}
 		}}
 		disabled={!$unlocked}
@@ -36,6 +36,6 @@
 			cursor: {!$unlocked ? '--cno' : '--cpointer'};
 		"
 	>
-		Start vote for: {fMoney(region.unlockCost)}
+		Unlock region for {region.unlockCost} influence
 	</Button>
 {/if}

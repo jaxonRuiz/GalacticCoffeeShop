@@ -673,4 +673,19 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "coffee",
 		},
 	},
+	franchise: {
+		tax_decrease: {
+			unlock_condition: (franchise) => {
+				return (franchise as IFranchise).money > 5000;
+			},
+			upgrade: (franchise) => {
+				(franchise as IFranchise).currentCountry.taxRate /= 1.2;
+			},
+			maxLevel: 5,
+			cost: 200,
+			flags: [],
+			costMultiplier: 1.3,
+			image: "upg_buy",
+		},
+	}
 };

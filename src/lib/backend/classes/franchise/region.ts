@@ -221,7 +221,7 @@ export class Region implements IRegion {
 		this.unusableLand = Math.floor(this.totalArea/3); //probably change
 		this.usableLand = this.totalArea - this.unusableLand;
 		this.boughtUnusable = 0;
-		this.unlockCost = (2000 + Math.floor(Math.random() * 1000)) * purchasingPower;
+		this.unlockCost = (200 + Math.floor(Math.random() * 100));
 		this.coordinates = coordinates;
 		this.franchise = franchise;
 		this.population = 1000;

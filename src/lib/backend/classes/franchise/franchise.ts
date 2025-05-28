@@ -7,7 +7,7 @@ import { ResearchLab } from "./researchLab";
 import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
 
-export class Franchise implements ISubscriber, IScene {
+export class Franchise implements ISubscriber, IScene, IFranchise {
 	// writable resources
 	w_money: Writable<number> = writable(20000);
 	w_beans: Writable<number> = writable(0);
@@ -153,6 +153,15 @@ export class Franchise implements ISubscriber, IScene {
 		this._populationMultiplier = value;
 	}
 
+	applyCost(cost: number): void {
+		if (!this.currentCountry) return;
+		if (this.currentCountry?.influence ?? 0 >= cost) {
+			this.currentCountry.influence -= cost;
+		}
+	}
+
+	upgrades: Map<string, number> = new Map();
+
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		console.log("franchise constructor()");
 		timer.subscribe(this, "tick");
@@ -256,14 +265,17 @@ export class Franchise implements ISubscriber, IScene {
 	}
 	voteForPolicy(index: number, num: number) {
 		this.audioManager.playAudio("papers");
-		this.currentCountry?.voteForPolicy(index, num);
+		//this.currentCountry?.voteForPolicy(index, num);
 	}
 	voteAgainstPolicy(index: number, num: number) {
 		this.audioManager.playAudio("papers");
-		this.currentCountry?.voteAgainstPolicy(index, num);
+		//this.currentCountry?.voteAgainstPolicy(index, num);
 	}
 	startRegionalVote(index: number) {
-		this.currentCountry?.startRegionalVote(index);
+		//this.currentCountry?.startRegionalVote(index);
+	}
+	buyRegion(index: number) {
+		this.currentCountry?.buyRegion(index);
 	}
 
 	//Region stuff

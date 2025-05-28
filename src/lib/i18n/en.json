@@ -192,5 +192,8 @@
 	"bumpin_music_upgName": "Hire a Live Performer",
 	"bumpin_music_upgDesc": "He says he's Frank Sinatra but I'm not sure I believe him",
 	"drug_the_coffee_upgName": "Drug the Coffee",
-	"drug_the_coffee_upgDesc": "It looks like sugar so nobody will know"
+	"drug_the_coffee_upgDesc": "It looks like sugar so nobody will know",
+
+	"tax_decrease_upgName": "Tax Decrease",
+	"tax_decrease_upgDesc": "Bribe the government with that delicious coffee"
 }

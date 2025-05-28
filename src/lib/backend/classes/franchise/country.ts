@@ -52,7 +52,7 @@ export class Country{
 	set unlocked(value) {
 		this.w_unlocked.set(value);
 		if (value) {
-			this.startRandomEvents();
+			//this.startRandomEvents();
 		}
 	}
 
@@ -112,7 +112,7 @@ export class Country{
 			region.tick();
 		}
 		this.tickInfluenceTasks();
-		this.tickPolicyEvents();
+		//this.tickPolicyEvents();
 	}
 
 	hour() {
@@ -222,6 +222,13 @@ export class Country{
 		this.influenceTaskList = shuffled.slice(0, amount);
 	}
 
+	buyRegion(index: number) {
+		if (this.influence >= this.regionList[index].unlockCost) {
+			this.influence -= this.regionList[index].unlockCost;
+			this.unlockRegion(index);
+		}
+	}
+
 	initializeInfluenceTasks() { // initialize a list of tasks that will be pulled from in refreshInfluenceTasks
 		this.influenceTasksStatic.push({
 			desc: "Shake hands with da president",
@@ -253,99 +260,101 @@ export class Country{
 			influence: 50,
 			time: 10,
 		});
-	}	  
-
-	startPolicyEvent(event: IPolicyEvent) { // start a policy event
-		this.policyEvents.push(event);
-		this.policyEvents = [... this.policyEvents];
 	}
 
-	voteForPolicy(index: number, num: number){ // spend influence to vote for a policy
-		const amount = Math.min(this.policyEvents[index].totalInfluence - this.policyEvents[index].currentInfluence, num);
-		if (this.influence < amount || this.policyEvents[index].currentInfluence >= this.policyEvents[index].totalInfluence) return;
-		this.influence -= amount;
-		this.policyEvents[index].currentInfluence += amount;
-		this.policyEvents = [... this.policyEvents];
-	}
+	
 
-	voteAgainstPolicy(index: number, num: number){ // spend influence to vote against a policy
-		const amount = Math.min(this.policyEvents[index].currentInfluence, num);
-		if (this.influence < amount || this.policyEvents[index].currentInfluence <= 0) return;
-		this.influence -= amount;
-		this.policyEvents[index].currentInfluence -= amount;
-		this.policyEvents = [... this.policyEvents];
-	}
+	// startPolicyEvent(event: IPolicyEvent) { // start a policy event
+	// 	this.policyEvents.push(event);
+	// 	this.policyEvents = [... this.policyEvents];
+	// }
 
-	tickPolicyEvents(){ // update the list of policy events
-		for (let index = 0; index < this.policyEvents.length; index++) {
-			const event = this.policyEvents[index];
-			event.time -= 0.25;
-			if (event.time <= 0){
-				if (Math.random() < event.currentInfluence/event.totalInfluence){
-					event.won(this);
-				}
-				else {
-					event.lost(this);
-				}
-				event.eitherWay(this);
-				this.policyEvents.splice(index, 1);
-			}
-		}
-		this.policyEvents = [... this.policyEvents];
-	}
+	// voteForPolicy(index: number, num: number){ // spend influence to vote for a policy
+	// 	const amount = Math.min(this.policyEvents[index].totalInfluence - this.policyEvents[index].currentInfluence, num);
+	// 	if (this.influence < amount || this.policyEvents[index].currentInfluence >= this.policyEvents[index].totalInfluence) return;
+	// 	this.influence -= amount;
+	// 	this.policyEvents[index].currentInfluence += amount;
+	// 	this.policyEvents = [... this.policyEvents];
+	// }
 
-	startRegionalVote(index: number){ // add a policy event to the list for the region unlock
-		const self = this;
-		if (this.franchise.money < this.regionList[index].unlockCost) return;
-		this.franchise.money -= this.regionList[index].unlockCost;
-		this.regionList[index].voteInProgress = true; //MUST MATCH WITH THE EVENT
-		this.policyEvents.push({
-			desc: `A vote to unlock region ${index + 1}`,
-			time: 20,
-			currentInfluence: 100,
-			totalInfluence: 300,
-			won(country) {
-				country.unlockRegion(index);
-			},
-			lost(country) {
+	// voteAgainstPolicy(index: number, num: number){ // spend influence to vote against a policy
+	// 	const amount = Math.min(this.policyEvents[index].currentInfluence, num);
+	// 	if (this.influence < amount || this.policyEvents[index].currentInfluence <= 0) return;
+	// 	this.influence -= amount;
+	// 	this.policyEvents[index].currentInfluence -= amount;
+	// 	this.policyEvents = [... this.policyEvents];
+	// }
+
+	// tickPolicyEvents(){ // update the list of policy events
+	// 	for (let index = 0; index < this.policyEvents.length; index++) {
+	// 		const event = this.policyEvents[index];
+	// 		event.time -= 0.25;
+	// 		if (event.time <= 0){
+	// 			if (Math.random() < event.currentInfluence/event.totalInfluence){
+	// 				event.won(this);
+	// 			}
+	// 			else {
+	// 				event.lost(this);
+	// 			}
+	// 			event.eitherWay(this);
+	// 			this.policyEvents.splice(index, 1);
+	// 		}
+	// 	}
+	// 	this.policyEvents = [... this.policyEvents];
+	// }
+
+	// startRegionalVote(index: number){ // add a policy event to the list for the region unlock
+	// 	const self = this;
+	// 	if (this.franchise.money < this.regionList[index].unlockCost) return;
+	// 	this.franchise.money -= this.regionList[index].unlockCost;
+	// 	this.regionList[index].voteInProgress = true; //MUST MATCH WITH THE EVENT
+	// 	this.policyEvents.push({
+	// 		desc: `A vote to unlock region ${index + 1}`,
+	// 		time: 20,
+	// 		currentInfluence: 100,
+	// 		totalInfluence: 300,
+	// 		won(country) {
+	// 			country.unlockRegion(index);
+	// 		},
+	// 		lost(country) {
 			
-			},
-			eitherWay(country) {
-				country.regionList[index].voteInProgress = false;
-			},
-		})
-	}
+	// 		},
+	// 		eitherWay(country) {
+	// 			country.regionList[index].voteInProgress = false;
+	// 		},
+	// 	})
+	// }
 
 	wait(seconds: number): Promise<void> {
 		return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 	}
 
-	async startRandomEvents() {
-		if (!this.unlocked || this.policyEvents.length >= 2) return;
-		await this.wait(Math.floor(40 + Math.random() * 20));
-		this.policyEvents.push(this.getRandomEvent());
-		this.policyEvents = [... this.policyEvents];
-		await this.startRandomEvents();
-	}
+// 	async startRandomEvents() {
+// 		if (!this.unlocked || this.policyEvents.length >= 2) return;
+// 		await this.wait(Math.floor(40 + Math.random() * 20));
+// 		this.policyEvents.push(this.getRandomEvent());
+// 		this.policyEvents = [... this.policyEvents];
+// 		await this.startRandomEvents();
+// 	}
 
-	getRandomEvent(): IPolicyEvent{
-		const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
-		return {
-			desc: event.desc,
-			time: event.time,
-			currentInfluence: Math.floor(event.totalInfluence * (0.25 + Math.random() * 0.5)),
-			totalInfluence: event.totalInfluence,
-			won(country) {
-				event.won(country);
-			},
-			lost(country) {
-				event.lost(country);
-			},
-			eitherWay(country) {
-				event.eitherWay(country);
-			},
-		}
-	}
+// 	getRandomEvent(): IPolicyEvent{
+// 		const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+// 		return {
+// 			desc: event.desc,
+// 			time: event.time,
+// 			currentInfluence: Math.floor(event.totalInfluence * (0.25 + Math.random() * 0.5)),
+// 			totalInfluence: event.totalInfluence,
+// 			won(country) {
+// 				event.won(country);
+// 			},
+// 			lost(country) {
+// 				event.lost(country);
+// 			},
+// 			eitherWay(country) {
+// 				event.eitherWay(country);
+// 			},
+// 		}
+// 	}
 }
 
 const randomEvents: IPolicyEvent[] = [
