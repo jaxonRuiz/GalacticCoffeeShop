@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from "../Button.svelte";
 	import { fMoney } from "../Styles.svelte";
+	import RegionBar from "./RegionBar.svelte";
 
 	let { region, franchise, unlocked, i } = $props();
 
@@ -19,6 +20,14 @@
 >
 	region {i + 1}
 </Button>
+<RegionBar 
+	region = {region}
+	style="
+		position: absolute;
+		left: {region.coordinates[0] / 13}%;
+		top: {region.coordinates[1] / 11 - 3}%;
+	"
+	></RegionBar>
 {#if !$rUnlocked && !$rVote}
 	<Button
 		onclick={() => {
@@ -38,4 +47,5 @@
 	>
 		Unlock region for {region.unlockCost} influence
 	</Button>
+	
 {/if}

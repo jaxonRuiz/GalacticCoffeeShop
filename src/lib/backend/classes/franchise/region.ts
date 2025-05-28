@@ -274,6 +274,7 @@ export class Region implements IRegion {
 			default:
 				break;
 		}
+		this.population *= 10 * Math.random();
 		this.updateAvailableBuildings(4);
 	}
 
