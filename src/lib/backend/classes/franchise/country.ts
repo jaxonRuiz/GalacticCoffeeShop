@@ -8,7 +8,6 @@ import { aud } from "../../../assets/aud";
 export class Country{
 	parent: World;
 	w_taxRate: Writable<number> = writable(0.2);
-	w_tariffRate: Writable<number> = writable(0.1);
 	w_influence: Writable<number> = writable(0);
 	w_influenceTaskList: Writable<IInfluenceTask[]> = writable([]);
 	w_currInfluenceTasks: Writable<IInfluenceTask[]> = writable([]);
@@ -22,12 +21,6 @@ export class Country{
 	}
 	set taxRate(value) {
 		this.w_taxRate.set(Math.min(value, 0.5));
-	}
-	get tariffRate() {
-		return get(this.w_tariffRate);
-	}
-	set tariffRate(value) {
-		this.w_tariffRate.set(value);
 	}
 	get influenceTaskList() {
 		return get(this.w_influenceTaskList);
@@ -408,21 +401,6 @@ const randomEvents: IPolicyEvent[] = [
 		totalInfluence: 200,
 		won(country) {
 			country.taxRate /= 1.4;
-		},
-		lost(country) {
-			
-		},
-		eitherWay(country) {
-			
-		},
-	},
-	{
-		desc: 'Congress wants to import cocoa beans for cheaper',
-		time: 100,
-		currentInfluence: 10,
-		totalInfluence: 200,
-		won(country) {
-			country.tariffRate /= 2;
 		},
 		lost(country) {
 			

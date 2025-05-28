@@ -24,19 +24,15 @@
 	let unusableLand = $region?.w_unusableLand;
 	let unusableCost = $region?.w_unusableBuyCost;
 	let environmentalFactors = $region?.w_environmentalFactors;
-	let accessibilityLevel = $region?.w_accessibilityLevel;
 	let importCapacity = $region?.w_importCapacity;
 	let exportCapacity = $region?.w_exportCapacity;
 	let beans = $region?.w_beans;
 	let population = $region?.w_population;
-	let water = $region?.w_water;
-	let waterPerHour = $region?.w_waterPerHour;
 	let beansPerHour = $region?.w_beansPerHour;
 	let coffeeSold = $region?.w_coffeesSoldLastHour;
 	let maxCoffee = $region?.w_maxCoffeePerHour;
 	let researchers = franchise.w_researchers;
 	let custPerHour = $region?.w_expectedCustomersPerHour;
-	let delPerHour = $region?.w_deliveriesPerHour;
 	let boughtBuildings = $region?.w_boughtBuildings ?? writable([]);
 	let availBuildings = $region?.w_availableBuildings ?? writable([]);
 </script>

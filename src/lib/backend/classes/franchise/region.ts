@@ -29,10 +29,8 @@ export class Region implements IRegion {
 		averageTemp: 1,
 	});
 	w_accessibilityLevel: Writable<number> = writable(10);
-	w_importCapacity: Writable<number> = writable(1000);
-	w_exportCapacity: Writable<number> = writable(1000);
-	w_deliveriesPerHour: Writable<number> = writable(100);
-	w_deliveriesThisHour: Writable<number> = writable(0);
+	w_importCapacity: Writable<number> = writable(100);
+	w_exportCapacity: Writable<number> = writable(100);
 	w_beans: Writable<number> = writable(0);
 	w_unlocked: Writable<boolean> = writable(false);
 	w_population: Writable<number> = writable(500);
@@ -139,18 +137,6 @@ export class Region implements IRegion {
 	}
 	set exportCapacity(value) {
 		this.w_exportCapacity.set(value);
-	}
-	get deliveriesPerHour() {
-		return get(this.w_deliveriesPerHour);
-	}
-	set deliveriesPerHour(value) {
-		this.w_deliveriesPerHour.set(value);
-	}
-	get deliveriesThisHour() {
-		return get(this.w_deliveriesThisHour);
-	}
-	set deliveriesThisHour(value) {
-		this.w_deliveriesThisHour.set(value);
 	}
 	get usableLand() {
 		return get(this.w_usableLand);
@@ -453,7 +439,6 @@ export class Region implements IRegion {
 
 		this.beans -= coffeeSold;
 		this.coffeeSoldThisHour += coffeeSold;
-		this.deliveriesThisHour += coffeeSold;
 		this.franchise.money += coffeeSold * this.coffeePrice * (1 - this.parentCountry.taxRate);
 		//ANALYTICS
 		addCoffee(coffeeSold);
@@ -493,5 +478,19 @@ export class Region implements IRegion {
 			this.franchise.money -= hireCost;
 			this.franchise.researchers++;
 		}
+	}
+
+	increaseImport(amount: number) {
+		const cost = 10;
+		if (amount * cost > this.franchise.money) return;
+		this.franchise.money -= amount * cost;
+		this.importCapacity += amount;
+	}
+
+	increaseExport(amount: number) {
+		const cost = 10;
+		if (amount * cost > this.franchise.money) return;
+		this.franchise.money -= amount * cost;
+		this.exportCapacity += amount;
 	}
 }

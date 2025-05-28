@@ -7,6 +7,7 @@
 	import Region from "$lib/components/franchise/Region.svelte";
 	import { fMoney } from "$lib/components/Styles.svelte";
 	import { timer } from "$lib/backend/game";
+	import RegionImportExport from "$lib/components/franchise/RegionImportExport.svelte";
 
 	let hour = timer.w_hour;
 	let day = timer.w_day;
@@ -18,7 +19,6 @@
 
 	// define variables
 	let taxRate = $country?.w_taxRate;
-	let tariffRate = $country?.w_tariffRate;
 	let regions = $country?.w_regionList;
 	let money = franchise.w_money;
 	let influenceTasks = $country?.w_influenceTaskList ?? writable([]);
@@ -27,6 +27,7 @@
 	let maxInfluenceTasks = $country?.w_maxInfluenceTasks;
 	let policyEvents = $country?.w_policyEvents ?? writable([]);
 	let unlocked = $country?.w_unlocked;
+	let regionList = $country?.w_regionList ?? writable([]);
 
 </script>
 
@@ -65,7 +66,6 @@
 		<div class="block">
 			<h1>Country</h1>
 			<p style="font-size: 1.2rem;">Tax rate: {($taxRate ?? 1) * 100}%</p>
-			<p style="font-size: 1.2rem;">Tariff rate: {($tariffRate ?? 1) * 100}%</p>
 			<p style="font-size: 1.2rem;">Max influence tasks: {$maxInfluenceTasks}</p>
 		</div>
 		<div class = "block">
@@ -216,6 +216,13 @@
 				{/each}
 			{/if}
 	</div>
+
+	<div class="importexport">
+		<div style="font-size: 2rem;">Imports and Exports</div>
+		{#each $regionList as region, i}
+			<RegionImportExport region = {region} franchise = {franchise} i = {i}></RegionImportExport>
+		{/each}
+	</div>
 </div>
 
 <style>
@@ -281,5 +288,16 @@
 		border-radius: 0.5rem;
 		background-color: #1a1a1a;
 		box-sizing: border-box;
+	}
+	div.importexport{
+		position: relative; 
+		width: 25vw;
+		height: 40vw;
+		border: 1px solid #ccc;
+		padding: 1rem;
+		border-radius: 0.5rem;
+		background-color: #1a1a1a;
+		box-sizing: border-box;
+		overflow: auto;
 	}
 </style>
