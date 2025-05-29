@@ -101,9 +101,13 @@
 		}
 		booped(event.clientX, event.clientY, type);
 	}
+
+	function disableRightClick(event: Event) {
+		event.preventDefault();
+	}
 </script>
 
-<svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} />
+<svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} oncontextmenu={disableRightClick} />
 
 <LoadingScreen />
 

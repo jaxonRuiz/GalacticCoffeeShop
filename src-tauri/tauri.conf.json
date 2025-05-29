@@ -12,9 +12,10 @@
   "app": {
     "windows": [
       {
-        "title": "gcs",
-        "width": 1152,
-        "height": 648
+        "title": "Galactic Coffee Shop",
+        "width": 1920,
+        "height": 1080,
+        "devtools": false
       }
     ],
     "security": {

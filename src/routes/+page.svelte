@@ -4,7 +4,7 @@
 	import { goto } from "$app/navigation";
 	import { base } from "$app/paths";
 	import { fade } from "svelte/transition";
-	import { loadState, startNewGame } from "$lib/backend/game";
+	import { loadState, saveState, startNewGame } from "$lib/backend/game";
 	import { optionsWindowOpen } from "$lib/components/Options";
 	import { img } from "$lib/assets/img";
 	import Button from "$lib/components/Button.svelte";
@@ -97,6 +97,7 @@
 				<Button
 					move={false}
 					onclick = {async () => {
+						saveState(); // for sanity sake
 						close();
 						await exit(0);
 					}}
