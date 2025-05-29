@@ -86,6 +86,21 @@ export class Country{
 		this.w_influence.set(value);
 	}
 
+	get countryTotalCoffee() {
+		let t = 0;
+		this.regionList.forEach(element => {
+			t += Math.min(element.expectedCustomersPerHour, element.maxCoffeePerHour);
+		});
+		return t;
+	}
+	get countryTotalBeans() {
+		let t = 0;
+		this.regionList.forEach(element => {
+			t += element.beansPerHour;
+		});
+		return t;
+	}
+
 
 	constructor(parent: World, franchise: Franchise, coordinates: [number, number], influence: number, countryNum: number) {
 		this.parent = parent;

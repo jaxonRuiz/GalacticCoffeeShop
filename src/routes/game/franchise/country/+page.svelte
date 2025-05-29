@@ -30,7 +30,8 @@
 	let unlocked = $country?.w_unlocked;
 	let regionList = $country?.w_regionList ?? writable([]);
 	
-
+	let countryTotalCoffee = $country?.countryTotalCoffee;
+	let countryTotalBeans = $country?.countryTotalBeans;
 </script>
 
 <div class = "money">💰 {fMoney($money)}</div>
@@ -93,6 +94,8 @@
 					></div>
 				</div>
 				<p>{$influence} / 1000</p>
+				<div>Coffees sold per hour: {countryTotalCoffee}</div>
+				<div>Beans produced per hour: {countryTotalBeans}</div>
 			{/if}
 		</div>
 		<div class="erm">
