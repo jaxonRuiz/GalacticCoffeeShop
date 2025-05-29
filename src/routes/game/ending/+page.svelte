@@ -5,7 +5,10 @@
 	import { base } from "$app/paths";
 	import TextDisplay from "$lib/components/TextDisplay.svelte";
 	import { goto } from "$app/navigation";
+	import { img } from "$lib/assets/img";
 
+	let gameCreditsCont: HTMLElement | undefined = $state();
+	let gameCredits: HTMLElement | undefined = $state(); // actual content
 	let credits = $state(false);
 
 	const rbs: string[][] = [
@@ -26,12 +29,55 @@
 		["Aka", "Icon Design"],
 		["Zoe", "Icon Design"],
 	];
+
+	function rollCredits() {
+		credits = true;
+
+		const i = setInterval(() => {
+			// game credits may not be defined at speed :(
+			if (gameCredits) {
+				clearInterval(i);
+
+				const pain = new IntersectionObserver(startObservation, {
+					threshold: [0, 1],
+				});
+				pain.observe(gameCredits);
+			}
+		}, 16);
+
+		const i2 = setInterval(() => {
+			if (gameCreditsCont) {
+				gameCreditsCont.scrollTop += 1;
+			}
+		}, 16);
+
+		function startObservation(entries: any) {
+			entries.forEach((entry: any) => {
+				if (entry.intersectionRatio === 0) {
+					clearInterval(i2);
+
+					if (page.url.pathname == `${base}/game/ending`) {
+						goto(`${base}/`);
+					}
+				}
+			});
+		}
+	}
 </script>
 
 {#if credits}
-	<div class="cont" in:fade={{ delay: 1000 }} out:fade>
-		<div class="col">
+	<div
+		bind:this={gameCreditsCont}
+		class="cont game-credits disable-scrollbar"
+		in:fade={{ delay: 1000 }}
+		out:fade
+	>
+		<div class="spacer top"></div>
+		<div bind:this={gameCredits} class="col">
 			<h1>{$t("thankYou_demo")}</h1>
+			<br />
+			<br />
+			<img src={img.rbs} alt="studio icon" />
 			<br />
 			<h2>{$t("developed_by")}</h2>
 			<div>
@@ -48,20 +94,13 @@
 				{/each}
 			</div>
 		</div>
+		<div class="spacer"></div>
 	</div>
 {:else}
 	<div class="cont" out:fade>
 		<TextDisplay
 			script={["outro1", "outro2", "outro3"]}
-			callback={() => {
-				credits = true;
-				setTimeout(() => {
-					console.log(page.url.pathname);
-					if (page.url.pathname == `${base}/game/ending`) {
-						goto(`${base}/`);
-					}
-				}, 10000);
-			}}
+			callback={rollCredits}
 		/>
 	</div>
 {/if}
@@ -74,6 +113,11 @@
 {/snippet}
 
 <style>
+	div.game-credits {
+		overflow-y: auto;
+		user-select: none;
+		pointer-events: none;
+	}
 	div.cont {
 		position: fixed;
 		width: 100%;
@@ -105,6 +149,17 @@
 
 		.credit {
 			justify-content: space-between;
+		}
+	}
+
+	img[alt="studio icon"] {
+		width: 350px;
+	}
+
+	div.spacer {
+		height: 100%;
+		&.top {
+			height: 50%;
 		}
 	}
 </style>

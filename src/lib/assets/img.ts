@@ -54,4 +54,6 @@ export const img: { [key: string] : string } = {
 	upg_grind: new URL('./img/upgrades/grind.svg', import.meta.url).href,
 	upg_promote: new URL('./img/upgrades/promote.svg', import.meta.url).href,
 	upg_sell: new URL('./img/upgrades/sell.svg', import.meta.url).href,
+
+	rbs: new URL('./img/rbs.svg', import.meta.url).href,
 };
