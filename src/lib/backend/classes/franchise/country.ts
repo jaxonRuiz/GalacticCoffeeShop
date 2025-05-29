@@ -144,7 +144,8 @@ export class Country{
 
 			if (isSpaced) {
 				if (this.firstRegions > 0){
-					var newRegion = new Region(this, this.franchise, 30, 2, newCoords, true, 1);
+					if (this.firstRegions == 3) var newRegion = new Region(this, this.franchise, 30, 2, newCoords, true, 1);
+					else var newRegion = new Region(this, this.franchise, 30, Math.floor(Math.random() * 3.99), newCoords, true, 1);
 					this.firstRegions--;
 				}
 				else{

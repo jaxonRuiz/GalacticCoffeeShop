@@ -201,6 +201,7 @@ export class Region implements IRegion {
 	dailyExport: number = this.exportCapacity;
 	unlockCost: number;
 	coordinates: [number, number];
+	climate: ClimateType;
 
 	parentCountry: Country;
 	franchise: Franchise;
@@ -228,6 +229,7 @@ export class Region implements IRegion {
 		this.coffeesSoldLastHour = 0;
 		this.unlocked = unlocked;
 		this.expectedCustomersPerHour = this.population/franchise.populationDivisor;
+		this.climate = climate;
 
 		this.initializeRegion(climate);
 
@@ -275,6 +277,7 @@ export class Region implements IRegion {
 				break;
 		}
 		this.population *= 10 * Math.random();
+		this.population = Math.floor(this.population);
 		this.updateAvailableBuildings(4);
 	}
 
@@ -485,5 +488,20 @@ export class Region implements IRegion {
 		if (amount * cost > this.franchise.money) return;
 		this.franchise.money -= amount * cost;
 		this.exportCapacity += amount;
+	}
+
+	readClimate(climate: ClimateType): string{
+		switch (climate) {
+			case ClimateType.Arid:
+				return "Arid";
+			case ClimateType.Temperate:
+				return "Temperate";
+			case ClimateType.Tropical:
+				return "Tropical";
+			case ClimateType.Wintry:
+				return "Wintry";
+			default:
+				return "";
+		}
 	}
 }

@@ -7,6 +7,8 @@
 
 	let rUnlocked = region.w_unlocked;
 	let rVote = region.w_voteInProgress;
+	let population = region.w_population;
+	let environment = region.climate;
 </script>
 <Button
 	onclick={() => {
@@ -27,7 +29,21 @@
 		left: {region.coordinates[0] / 13}%;
 		top: {region.coordinates[1] / 11 - 3}%;
 	"
-	></RegionBar>
+></RegionBar>
+<div style="
+		position: absolute;
+		left: {region.coordinates[0] / 13}%;
+		top: {region.coordinates[1] / 11 - 5}%;
+	">
+	Population: {$population}
+</div>
+<div style="
+		position: absolute;
+		left: {region.coordinates[0] / 13}%;
+		top: {region.coordinates[1] / 11 - 7}%;
+	">
+	Environment: {region.readClimate(environment)}
+</div>
 {#if !$rUnlocked && !$rVote}
 	<Button
 		onclick={() => {
