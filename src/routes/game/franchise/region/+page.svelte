@@ -103,7 +103,7 @@
 					background-color: {$money < ($unusableCost ?? 1000) ? '#444' : '#515151'};
 					cursor: {$money < ($unusableCost ?? 1000) ? '--cno' : '--cpointer'};
 				">
-				Buy unusable land for: {($unusableCost ?? 1000)}
+				Buy unusable land for: {fMoney($unusableCost ?? 1000)}
 			</Button>
 		{/if}
 	</div>

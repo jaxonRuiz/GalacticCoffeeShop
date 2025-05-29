@@ -159,12 +159,12 @@ export class Country{
 
 			if (isSpaced) {
 				if (this.firstRegions > 0){
-					if (this.firstRegions == 3) var newRegion = new Region(this, this.franchise, 30, 2, newCoords, true, 1);
-					else var newRegion = new Region(this, this.franchise, 30, Math.floor(Math.random() * 3.99), newCoords, true, 1);
+					if (this.firstRegions == 3) var newRegion = new Region(this, this.franchise, 30, 2, newCoords, true, 1, true);
+					else var newRegion = new Region(this, this.franchise, 30, Math.floor(Math.random() * 3.99), newCoords, true, 1, false);
 					this.firstRegions--;
 				}
 				else{
-					var newRegion = new Region(this, this.franchise, 10 + Math.floor(Math.random() * 30), Math.floor(Math.random() * 3.99), newCoords, false, Math.pow(1.5, this.countryNum));
+					var newRegion = new Region(this, this.franchise, 10 + Math.floor(Math.random() * 30), Math.floor(Math.random() * 3.99), newCoords, false, Math.pow(1.5, this.countryNum), false);
 				}
 				this.regionList = [...this.regionList, newRegion];
 				// this.regionList.push(newRegion);

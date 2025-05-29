@@ -214,7 +214,8 @@ export class Region implements IRegion {
 		climate: ClimateType,
 		coordinates: [number, number],
 		unlocked: boolean,
-		purchasingPower: number
+		purchasingPower: number,
+		isFirst: boolean
 	) {
 		this.populationPurchasingPower = purchasingPower;
 		this.parentCountry = country;
@@ -231,7 +232,7 @@ export class Region implements IRegion {
 		this.expectedCustomersPerHour = this.population/franchise.populationDivisor;
 		this.climate = climate;
 
-		this.initializeRegion(climate);
+		this.initializeRegion(climate, isFirst);
 
 		//audio
 		this.audioManager = this.franchise.audioManager;
@@ -251,7 +252,7 @@ export class Region implements IRegion {
 		this.updateAvailableBuildings(4);
 	}
 
-	initializeRegion(climate: ClimateType) {
+	initializeRegion(climate: ClimateType, firstRegion: boolean) {
 		switch (climate) {
 			case ClimateType.Arid:
 				this.environmentalFactors["soilRichness"] = 0.5 + Math.random() * 0.1;
@@ -277,6 +278,7 @@ export class Region implements IRegion {
 				break;
 		}
 		this.population *= 10 * Math.random();
+		if (firstRegion) this.population = 5000;
 		this.population = Math.floor(this.population);
 		this.updateAvailableBuildings(4);
 	}
@@ -418,14 +420,14 @@ export class Region implements IRegion {
 
 	BuildingList: Record<BuildingType, Record<BuildingSize, BuildingData>> = {
 		coffeeBuilding: {
-			small: { names: ["The Bean Bros", "Mocha Mart"], cost: 2000, num: 20, areaSize: 1, rent: 50 },
-			medium: { names: ["Big Bean Bar", "Cocoa Company"], cost: 4000, num: 40, areaSize: 2, rent: 100 },
-			large: { names: ["The Bean.", "The Coffee Cacophony"], cost: 7000, num: 80, areaSize: 4, rent: 200 }
+			small: { names: ["The Bean Bros", "Mocha Mart"], cost: 2000, num: 20, areaSize: 4, rent: 50 },
+			medium: { names: ["Big Bean Bar", "Cocoa Company"], cost: 4000, num: 40, areaSize: 5, rent: 100 },
+			large: { names: ["The Bean.", "The Coffee Cacophony"], cost: 7000, num: 80, areaSize: 6, rent: 200 }
 		},
 		farmBuilding: {
-			small: { names: ["Family Farm", "Urban Garden"], cost: 2000, num: 30, areaSize: 2, rent: 50 },
-			medium: { names: ["Regional Farm", "Commercial Orchard"], cost: 4000, num: 60, areaSize: 3, rent: 100 },
-			large: { names: ["Industrial Farm Complex", "Agro-Enterprise Zone"], cost: 7000, num: 120, areaSize: 5, rent: 200 }
+			small: { names: ["Family Farm", "Urban Garden"], cost: 2000, num: 30, areaSize: 4, rent: 50 },
+			medium: { names: ["Regional Farm", "Commercial Orchard"], cost: 4000, num: 60, areaSize: 5, rent: 100 },
+			large: { names: ["Industrial Farm Complex", "Agro-Enterprise Zone"], cost: 7000, num: 120, areaSize: 6, rent: 200 }
 		},
 	};
 
@@ -444,6 +446,7 @@ export class Region implements IRegion {
 		this.beans -= coffeeSold;
 		this.coffeeSoldThisHour += coffeeSold;
 		this.franchise.money += coffeeSold * this.coffeePrice * (1 - this.parentCountry.taxRate);
+		this.franchise.taxedMoney += coffeeSold * this.coffeePrice * (this.parentCountry.taxRate);
 		//ANALYTICS
 		addCoffee(coffeeSold);
 		addMoney(coffeeSold * this.coffeePrice * (1 - this.parentCountry.taxRate));

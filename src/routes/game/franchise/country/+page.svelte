@@ -32,9 +32,21 @@
 	
 	let countryTotalCoffee = $country?.countryTotalCoffee;
 	let countryTotalBeans = $country?.countryTotalBeans;
+
+	let taxedMoney = franchise.w_taxedMoney;
 </script>
 
 <div class = "money">💰 {fMoney($money)}</div>
+<div style="position: fixed;
+		top: 30px;
+		right: 250px;
+		background-color: #222;
+		color: white;
+		padding: 10px 16px;
+		border-radius: 8px;
+		box-shadow: 0 0 10px rgba(0,0,0,0.3);
+		font-weight: bold;
+		z-index: 1000;">money lost to evil taxes: {fMoney($taxedMoney)}</div>
 
 <Button
 	static={true}

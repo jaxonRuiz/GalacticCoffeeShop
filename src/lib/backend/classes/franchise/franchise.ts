@@ -13,6 +13,7 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	w_beans: Writable<number> = writable(0);
 	w_researchers: Writable<number> = writable(0);
 	w_sciencePoints: Writable<number> = writable(0);
+	w_taxedMoney: Writable<number> = writable(0);
 
 	// writable getters/setters
 	get money() {
@@ -39,6 +40,12 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	set sciencePoints(value) {
 		this.w_sciencePoints.set(value);
 	}
+	get taxedMoney() {
+		return get(this.w_taxedMoney);
+	}
+	set taxedMoney(value) {
+		this.w_taxedMoney.set(Math.floor(value));
+	}
 
 	// internal stats ////////////////////////////////////////////////////////////
 
@@ -48,6 +55,7 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	researchLab: ResearchLab;
 	firstFarm: boolean = true;
 	firstCity: boolean = true;
+	totalResearchers: number = 0;
 
 	// current country/region to be used by frontend
 	w_currentCountry: Writable<null | Country> = writable(null);
@@ -302,10 +310,11 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		this.currentRegion?.sellBuilding(this.currentRegion.availableBuildings[index]);
 	}
 	hireResearcher(){
-		const hireCost = 100 * Math.pow(1.05, this.researchers);
+		const hireCost = 100 * Math.pow(1.05, this.totalResearchers);
 		if (this.money >= hireCost) {
 			this.money -= hireCost;
 			this.researchers++;
+			this.totalResearchers++;
 		}
 	}
 

@@ -96,7 +96,7 @@ export class ResearchLab{
 
 	createTask(researchLevel: number): IResearchTask {
 		const desc = this.taskNames[Math.floor(Math.random() * this.taskNames.length)];
-		const researchUnits = Math.floor(10000 * Math.pow(3, researchLevel));
+		const researchUnits = Math.floor(1000 * Math.pow(3, researchLevel));
 		const researchersAllocated = 0;
 		const sciencePoints = Math.floor(100 * Math.pow(2, researchLevel));
 		return {
