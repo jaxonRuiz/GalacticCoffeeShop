@@ -6,15 +6,16 @@
 	import { goto } from "$app/navigation";
 	import { get } from "svelte/store";
 	import { t } from "svelte-i18n";
-	import type { MultiShop } from "$lib/backend/classes/multiShop";
 	import {
 		loadState,
 		saveState,
 		stageManager,
 		pauseGame,
 		resumeGame,
-    endGame,
+		endGame,
+		DEVELOPMENT,
 	} from "$lib/backend/game";
+	import type { MultiShop } from "$lib/backend/classes/multiShop";
 	import { booped, boops } from "$lib/components/Boops";
 	import { pointerStyle } from "$lib/components/Styles.svelte";
 	import { optionsWindowOpen } from "$lib/components/Options";
@@ -42,43 +43,40 @@
 				resumeGame();
 			}
 		}
-		if (event.key === "t") {
-			testWindowOpen = !testWindowOpen;
-		}
-		if (event.key === "p") {
-			console.log("app loading");
-			loadState();
-		}
-		if (event.key === "o") {
-			console.log("app saving");
-			saveState();
-		}
-		if (event.key === "l") {
-			(stageManager.currentScene as Franchise).researchers += 1000;
-			(stageManager.currentScene as Franchise).money += 1000;
-			addMoney(1000);
-			addCoffee(1000);
-			(stageManager.currentScene as Franchise).sciencePoints += 1000;
-		}
-		if (event.key === "]") {
-			loading.set(!get(loading));
-			console.log(get(loading));
-		}
-		if (event.key === "[") {
-			endGame();
-			goto(`${base}/game/ending`);
-		}
-		// if (event.key === "r") {
-		//   resetState();
-		//   smanager.currentSceneIndex = 0;
-		//   currentTab = 0;
-		// }
-		if (event.key === "4") {
-			// dev key to add money, only works in valid scenes
-			try {
-				(smanager.currentScene as MultiShop).money += 1000;
-			} catch (e) {
-				console.log(e);
+		if (DEVELOPMENT) {
+			if (event.key === "t") {
+				testWindowOpen = !testWindowOpen;
+			}
+			if (event.key === "p") {
+				console.log("app loading");
+				loadState();
+			}
+			if (event.key === "o") {
+				console.log("app saving");
+				saveState();
+			}
+			if (event.key === "l") {
+				(stageManager.currentScene as Franchise).researchers += 1000;
+				(stageManager.currentScene as Franchise).money += 1000;
+				addMoney(1000);
+				addCoffee(1000);
+				(stageManager.currentScene as Franchise).sciencePoints += 1000;
+			}
+			if (event.key === "]") {
+				loading.set(!get(loading));
+				console.log(get(loading));
+			}
+			if (event.key === "[") {
+				endGame();
+				goto(`${base}/game/ending`);
+			}
+			if (event.key === "4") {
+				// dev key to add money, only works in valid scenes
+				try {
+					(smanager.currentScene as MultiShop).money += 1000;
+				} catch (e) {
+					console.log(e);
+				}
 			}
 		}
 	}
@@ -87,7 +85,7 @@
 		let type = "default";
 		const rat = (event.target as HTMLElement).closest("img");
 		if (rat && rat.alt == "rat" && rat.dataset.clickable == "y") {
-			console.log('rat');
+			console.log("rat");
 			booped(rat.x - 0.1 * rat.width, rat.y + 0.4 * rat.height, "heart");
 			return;
 		}
@@ -107,7 +105,11 @@
 	}
 </script>
 
-<svelte:window onkeydown={onKeyDown} onmousedown={onMouseDown} oncontextmenu={disableRightClick} />
+<svelte:window
+	onkeydown={onKeyDown}
+	onmousedown={onMouseDown}
+	oncontextmenu={disableRightClick}
+/>
 
 <LoadingScreen />
 
@@ -174,9 +176,9 @@
 								).shops[0].multiShopUnlocked = true;
 								break;
 							case 4:
-								 // franchise
-							  smanager.loadStage(3, false);
-							  break;
+								// franchise
+								smanager.loadStage(3, false);
+								break;
 						}
 						testWindowOpen = false;
 					}}>{tab}</a
