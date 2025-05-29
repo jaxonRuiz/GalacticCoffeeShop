@@ -97,7 +97,7 @@
 		<div class="spacer"></div>
 	</div>
 {:else}
-	<div class="cont" out:fade>
+	<div class="cont" transition:fade>
 		<TextDisplay
 			script={["outro1", "outro2", "outro3"]}
 			callback={rollCredits}
@@ -159,7 +159,7 @@
 	div.spacer {
 		height: 100%;
 		&.top {
-			height: 50%;
+			height: 70%;
 		}
 	}
 </style>

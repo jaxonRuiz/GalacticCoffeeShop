@@ -599,6 +599,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 10000,
 			costMultiplier: 1,
 			image: "astrorat",
+			flags: ["yellow"],
 		},
 		// apply to children style upgrades have the associated flag. their upgrade function applies to the LOCAL shops
 
