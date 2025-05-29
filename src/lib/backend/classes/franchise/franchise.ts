@@ -266,9 +266,11 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		this.currentCountry?.unlockCountry();
 	}
 	startInfluenceTask(index: number) {
+		this.audioManager.playAudio("papers");
 		this.currentCountry?.startInfluenceTask(index);
 	}
 	stopInfluenceTask(index: number) {
+		this.audioManager.playAudio("papers");
 		this.currentCountry?.stopInfluenceTask(index);
 	}
 	voteForPolicy(index: number, num: number) {
@@ -280,9 +282,11 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		//this.currentCountry?.voteAgainstPolicy(index, num);
 	}
 	startRegionalVote(index: number) {
+		this.audioManager.playAudio("papers");
 		//this.currentCountry?.startRegionalVote(index);
 	}
 	buyRegion(index: number) {
+		this.audioManager.playAudio("ding");
 		this.currentCountry?.buyRegion(index);
 	}
 
