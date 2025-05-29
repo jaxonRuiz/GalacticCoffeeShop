@@ -473,14 +473,6 @@ export class Region implements IRegion {
 		}
 	}
 
-	hireResearcher(){
-		const hireCost = 100 * Math.exp(1.05 * this.franchise.researchers);
-		if (this.franchise.money >= hireCost) {
-			this.franchise.money -= hireCost;
-			this.franchise.researchers++;
-		}
-	}
-
 	increaseImport(amount: number) {
 		const cost = 10;
 		if (amount * cost > this.franchise.money) return;

@@ -302,7 +302,11 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		this.currentRegion?.sellBuilding(this.currentRegion.availableBuildings[index]);
 	}
 	hireResearcher(){
-		this.currentRegion?.hireResearcher();
+		const hireCost = 100 * Math.pow(1.05, this.researchers);
+		if (this.money >= hireCost) {
+			this.money -= hireCost;
+			this.researchers++;
+		}
 	}
 
 	//Research stuff

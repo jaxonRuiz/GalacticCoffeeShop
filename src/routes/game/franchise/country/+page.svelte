@@ -29,6 +29,7 @@
 	let policyEvents = $country?.w_policyEvents ?? writable([]);
 	let unlocked = $country?.w_unlocked;
 	let regionList = $country?.w_regionList ?? writable([]);
+	
 
 </script>
 
@@ -150,7 +151,7 @@
 			{/if}
 		</div>
 	</div>
-		
+			
 	<div class="rightright">
 		<UpgradesPanel money = {influence} umKey =  {"franchise"} wshop = {franchise} ></UpgradesPanel>
 			
