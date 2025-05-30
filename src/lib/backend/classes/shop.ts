@@ -351,6 +351,7 @@ export class Shop implements ILocalShop {
 	}
 
 	restock(playSound: boolean = true) {
+		if (this.restockSheet["beans"] * this.beansPrice > (this.money + this.multiShop.money)) return;
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
 
 		this.beans += this.restockSheet["beans"];
