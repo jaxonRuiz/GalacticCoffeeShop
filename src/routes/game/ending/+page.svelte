@@ -26,8 +26,8 @@
 		["Connor Lowe", "QA"],
 		["Patrick", "QA"],
 		["Moore", "QA"],
-		["Aka", "Icon Design"],
-		["Zoe", "Icon Design"],
+		["Akash Basu", `"Mascot"`],
+		["Zoe", "Asset Drafting"],
 	];
 
 	function rollCredits() {
