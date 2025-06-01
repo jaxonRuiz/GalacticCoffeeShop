@@ -12,22 +12,23 @@
 	let credits = $state(false);
 
 	const rbs: string[][] = [
-		["Lyssa Li", "Producer & Interface Lead"],
-		["Jaxon Ruiz", "Backend & Systems Lead"],
+		["Lyssa Li", "Producer & User Experience Lead"],
+		["Jaxon Ruiz", "Backend & Systems Programming Lead"],
 		["Lily Chen", "Art & Design"],
 		["Aidan Higgins", "Backend & System Design"],
 		["Marco Ogaz-Vega", "Backend & Lead Audio Programmer"],
 	];
 	const collab: string[][] = [
-		["Tien", "Art & Trailer"],
-		["Cole Falxa", "Audio Programming"],
-		["Garrett Blake", "QA"],
-		["Jonah", "QA"],
-		["Connor Lowe", "QA"],
-		["Patrick", "QA"],
-		["Moore", "QA"],
+		["Tien", "Loading Art & Trailer Magician"],
+		["Cole Falxa", "Real Good Audio Programming"],
+		["Garrett Blake", "QA No.1"],
+		["Jonah", "Another QA"],
+		["Connor Lowe", "More QA"],
+		["Patrick", "Endless QA"],
+		["Moore", "Yet Another QA"],
+		["Jarod Spangler", "Unpaid QA Intern"],
 		["Akash Basu", `"Mascot"`],
-		["Zoe", "Asset Drafting"],
+		["Zoe", "Asset Sketches, Many"],
 	];
 
 	function rollCredits() {
