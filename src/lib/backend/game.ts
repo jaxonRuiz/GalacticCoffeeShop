@@ -4,7 +4,7 @@ import { StageManager } from "./systems/stageManager";
 import { startSession } from "./analytics";
 import { audioManagerRegistry } from "./systems/audioManager";
 
-export const DEVELOPMENT = true;
+export const DEVELOPMENT = false;
 
 export let timer = new Timer();
 let gamePaused = writable(false);
