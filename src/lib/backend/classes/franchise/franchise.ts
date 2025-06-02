@@ -4,7 +4,7 @@ import { World } from "./world";
 import { Country } from "./country";
 import { Region } from "./region";
 import { ResearchLab } from "./researchLab";
-import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
+import { cleanupAudioManagers, AudioManager, audioManagerRegistry } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
 
 export class Franchise implements ISubscriber, IScene, IFranchise {
@@ -246,6 +246,18 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 
 	loadState() {
 		console.log("franchise stage loadState()");
+
+		if (!this.audioManager || !audioManagerRegistry.has(this.audioManager)) {
+			this.audioManager = new AudioManager();
+			this.audioManager.addMusic("bgm", aud.franchise_music);
+			this.audioManager.addSFX("ding", aud.ding);
+			this.audioManager.addSFX("cashRegister", aud.new_cash);
+			this.audioManager.addSFX("papers", aud.papers);
+			this.audioManager.playAudio("bgm");
+			// Fade in bgm
+			this.audioManager.setVolume("bgm", 0);
+			this.audioManager.fadeAudio("bgm", 1000, 1);
+		}
 	}
 
 	clearState() { }
@@ -313,7 +325,7 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		this.audioManager.playAudio("cashRegister");
 		this.currentRegion?.sellBuilding(this.currentRegion.availableBuildings[index]);
 	}
-	hireResearcher(){
+	hireResearcher() {
 		const hireCost = 100 * Math.pow(1.05, this.totalResearchers);
 		if (this.money >= hireCost) {
 			this.money -= hireCost;

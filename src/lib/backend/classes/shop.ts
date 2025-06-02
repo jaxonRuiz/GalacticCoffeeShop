@@ -1,6 +1,6 @@
 import { get, type Writable, writable } from "svelte/store";
 import { MultiShop } from "./multiShop";
-import { AudioManager } from "../systems/audioManager";
+import { AudioManager, audioManagerRegistry } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { dictProxy } from "../proxies";
@@ -176,12 +176,6 @@ export class Shop implements ILocalShop {
 		console.log("local shop constructor");
 		this.multiShop = multiShop;
 		this.audioManager = audioManager;
-
-		// Setting up audio
-		this.audioManager.addSFX("crunch", aud.crunch2);
-		this.audioManager.addSFX("papers", aud.papers);
-		this.audioManager.addSFX("cashRegister", aud.new_cash);
-		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
 
 		// setting up default roles
 		this.roles.set("barista", {
@@ -519,6 +513,15 @@ export class Shop implements ILocalShop {
 		}
 		for (let key in state.workerStats) {
 			this.workerStats[key] = state.workerStats[key];
+		}
+
+		if (!this.audioManager || !audioManagerRegistry.has(this.audioManager)) {
+			this.audioManager = new AudioManager();
+			this.audioManager.addSFX("ding", aud.ding);
+			this.audioManager.addSFX("crunch", aud.crunch2);
+			this.audioManager.addSFX("papers", aud.papers);
+			this.audioManager.addSFX("cashRegister", aud.new_cash);
+			this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
 		}
 	}
 }

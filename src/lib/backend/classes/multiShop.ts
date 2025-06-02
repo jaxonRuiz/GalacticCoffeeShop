@@ -2,7 +2,7 @@ import { get, type Writable, writable } from "svelte/store";
 import { Publisher } from "../systems/observer";
 import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
-import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";
+import { AudioManager, cleanupAudioManagers, audioManagerRegistry } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { dictProxy } from "../proxies";
 
@@ -89,6 +89,11 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		// Setting up audio
 		this.audioManager.addMusic("bgm", aud.shop_music);
 		this.audioManager.addSFX("ding", aud.ding);
+		this.audioManager.addSFX("crunch", aud.crunch2);
+		this.audioManager.addSFX("papers", aud.papers);
+		this.audioManager.addSFX("cashRegister", aud.new_cash);
+		this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
+
 		this.audioManager.playAudio("bgm");
 		// Fade in bgm
 		this.audioManager.setVolume("bgm", 0);
@@ -310,9 +315,24 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		}
 
 		this.money = state.money;
+
+		if (!this.audioManager || !audioManagerRegistry.has(this.audioManager)) {
+			this.audioManager = new AudioManager();
+			this.audioManager.addMusic("bgm", aud.shop_music);
+			this.audioManager.addSFX("ding", aud.ding);
+			this.audioManager.addSFX("crunch", aud.crunch2);
+			this.audioManager.addSFX("papers", aud.papers);
+			this.audioManager.addSFX("cashRegister", aud.new_cash);
+			this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
+
+			this.audioManager.playAudio("bgm");
+			// Fade in bgm
+			this.audioManager.setVolume("bgm", 0);
+			this.audioManager.fadeAudio("bgm", 1000, 1);
+		}
 	}
 
-	clearState() {}
+	clearState() { }
 }
 
 interface ShopWeekReport {

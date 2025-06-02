@@ -372,10 +372,13 @@ export class AudioManager {
 	}
 }
 
-export function cleanupAudioManagers(activeAudioManager: AudioManager) {
+export function cleanupAudioManagers(activeAudioManager?: AudioManager) {
 	console.log("Cleaning up audio managers");
-	for (const manager of audioManagerRegistry) {
-		if (manager !== activeAudioManager) {
+	// Create a copy to avoid modifying the set while iterating
+	const managers = Array.from(audioManagerRegistry);
+	for (const manager of managers) {
+		// If an active manager is provided, skip it; otherwise, destroy all
+		if (!activeAudioManager || manager !== activeAudioManager) {
 			manager.destroy();
 		}
 	}

@@ -1,7 +1,7 @@
 import { get, type Writable, writable } from "svelte/store";
 import { Publisher } from "../systems/observer";
 import { msPerTick } from "../systems/time";
-import { AudioManager, cleanupAudioManagers } from "../systems/audioManager";
+import { AudioManager, cleanupAudioManagers, audioManagerRegistry } from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { addCoffee, addMoney } from "../analytics";
@@ -202,8 +202,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.timer.subscribe(this, "week");
 		this.sceneManager = sceneManager;
 
-		// Clean up other audio managers
-		cleanupAudioManagers(this.audioManager);
+		cleanupAudioManagers(); // Destroys all previous managers
+		this.audioManager = new AudioManager();
+		console.log("Preshop constructed");
 
 		// Setting up audio
 		this.audioManager.addMusic("bgm", aud.preshop_music);
@@ -278,7 +279,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (this.autogrindingEnabled) {
 			this.autogrindCounter++;
 			if (this.autogrindCounter >= this.autogrindInterval) {
-				this.grindBeans();
+				this.grindBeans(false);
 				this.autogrindCounter = 0;
 			}
 		}
@@ -391,9 +392,9 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 	}
 
 	beansToGrind: number = 0;
-	grindBeans() {
+	grindBeans(playSound: Boolean = true) {
 		if (this.beans <= 0 && this.grindProgress == -1) return;
-		this.audioManager.playAudio("grind");
+		if (playSound) this.audioManager.playAudio("grind");
 		// if not grinding yet
 		if (this.grindProgress === -1) {
 			this.grindProgress = 1;
@@ -407,7 +408,7 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 
 		// if finished grinding
 		if (this.grindProgress > this.grindTime) {
-			this.audioManager.playAudio("grind2");
+			if (playSound) this.audioManager.playAudio("grind2");
 			this.groundCoffee += this.coffeePerBean * this.beansToGrind;
 			this.grindProgress = -1;
 			this.lifetimeGrindBeans++;
@@ -584,6 +585,36 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		this.lifetimeGrindBeans = state.lifetimeGrindBeans;
 		this.lifetimeCoffeeSold = state.lifetimeCoffeeSold;
 		this.lifetimeCoffeeMade = state.lifetimeCoffeeMade;
+
+		// --- Fix: Recreate audioManager if missing or destroyed ---
+		if (!this.audioManager || !audioManagerRegistry.has(this.audioManager)) {
+			this.audioManager = new AudioManager();
+			this.audioManager.addMusic("bgm", aud.preshop_music);
+			this.audioManager.addSFX("ding", aud.ding);
+			this.audioManager.addSFX("grind", aud.crunch);
+			this.audioManager.addSFX("papers", aud.papers);
+			this.audioManager.addSFX("boil", aud.boiling);
+			this.audioManager.addSFX("cashRegister", aud.new_cash);
+			this.audioManager.addSFX("grind2", aud.crunch2);
+			this.audioManager.addSFX("meow1", aud.meow_1);
+			this.audioManager.addSFX("meow2", aud.meow_2);
+			this.audioManager.addSFX("meow3", aud.meow_3);
+			this.audioManager.addSFX("meow4", aud.meow_4);
+			this.audioManager.addSFX("meow5", aud.meow_5);
+			this.audioManager.addSFX("meow6", aud.meow_6);
+			this.audioManager.addSFX("meow7", aud.meow_7);
+			this.audioManager.addSFX("meow8", aud.meow_8);
+			this.audioManager.setMaxVolumeScale("meow1", 0.4);
+			this.audioManager.setMaxVolumeScale("meow2", 0.085);
+			this.audioManager.setMaxVolumeScale("meow3", 0.07);
+			this.audioManager.setMaxVolumeScale("meow4", 0.06);
+			this.audioManager.setMaxVolumeScale("meow5", 0.2);
+			this.audioManager.setMaxVolumeScale("meow6", 0.2);
+			this.audioManager.setMaxVolumeScale("meow7", 0.2);
+			this.audioManager.setMaxVolumeScale("meow8", 0.2);
+			this.audioManager.setMaxVolumeScale("cashRegister", 0.5);
+			this.audioManager.playAudio("bgm");
+		}
 	}
 
 	clearState() {
