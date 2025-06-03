@@ -17,6 +17,7 @@
 		onclick = () => {},
 		onmouseenter = () => {},
 		onmouseover = () => {},
+		influence,
 	} = $props();
 </script>
 
@@ -35,7 +36,12 @@
 				? ` LVL${level + (purchased ? 0 : 1)}`
 				: ""}
 		</h3>
-		<p>{fMoney(cost)}</p>
+		{#if influence == true}
+			<p>{(cost)} influence</p>
+		{:else}
+			<p>{fMoney(cost)}</p>
+		{/if}
+		
 	</Button>
 </div>
 

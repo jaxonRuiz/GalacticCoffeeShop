@@ -677,7 +677,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 	franchise: {
 		tax_decrease: {
 			unlock_condition: (franchise) => {
-				return (franchise as IFranchise).money > 5000;
+				return true;
 			},
 			upgrade: (franchise) => {
 				(franchise as IFranchise).currentCountry.taxRate /= 1.2;
@@ -686,6 +686,32 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			cost: 200,
 			flags: [],
 			costMultiplier: 1.3,
+			image: "upg_buy",
+		},
+		multitask: {
+			unlock_condition: (franchise) => {
+				return true;
+			},
+			upgrade: (franchise) => {
+				(franchise as IFranchise).currentCountry.maxInfluenceTasks++;
+			},
+			maxLevel: 2,
+			cost: 600,
+			flags: [],
+			costMultiplier: 1.3,
+			image: "upg_buy",
+		},
+		invest_in_space_travel: {
+			unlock_condition: (franchise) => {
+				return true;
+			},
+			upgrade: (franchise) => {
+				(franchise as IFranchise).increaseLaunchProgress(30);
+			},
+			maxLevel: 6,
+			cost: 200,
+			flags: [],
+			costMultiplier: 1.5,
 			image: "upg_buy",
 		},
 	}

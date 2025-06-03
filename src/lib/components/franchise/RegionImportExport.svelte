@@ -12,12 +12,12 @@
 
 <div class="block">
     <div style="font-size: 1.2rem">Region {i + 1}</div>
-    <div>Estimated extra beans: {($beansPerHour * 24) - Math.min(($beansPerHour * 24), ($estCust * 24), ($maxCoffee * 24))}</div>
+    <div>Estimated needed beans: {Math.max(0, Math.min(($estCust * 24), ($maxCoffee * 24)) - ($beansPerHour * 24))}</div>
     <div>Import capacity: {$imCap} <Button onclick={() => {region.increaseImport(100)}}>
             +100 for {fMoney(1000)}
         </Button>
     </div>
-    <div>Estimated needed beans: {Math.max(0, Math.min(($estCust * 24), ($maxCoffee * 24)) - ($beansPerHour * 24))}</div>
+    <div>Estimated extra beans: {($beansPerHour * 24) - Math.min(($beansPerHour * 24), ($estCust * 24), ($maxCoffee * 24))}</div>
     <div>Export capacity: {$exCap} <Button onclick={() => {region.increaseExport(100)}}>
             +100 for {fMoney(1000)}
         </Button>

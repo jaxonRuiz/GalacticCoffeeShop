@@ -14,6 +14,8 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	w_researchers: Writable<number> = writable(0);
 	w_sciencePoints: Writable<number> = writable(0);
 	w_taxedMoney: Writable<number> = writable(0);
+	w_launchProgress: Writable<number> = writable(0);
+	w_spaceFuelDiscovered: Writable<boolean> = writable(false);
 
 	// writable getters/setters
 	get money() {
@@ -45,6 +47,18 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	}
 	set taxedMoney(value) {
 		this.w_taxedMoney.set(Math.floor(value));
+	}
+	get launchProgress() {
+		return get(this.w_launchProgress);
+	}
+	set launchProgress(value) {
+		this.w_launchProgress.set(Math.floor(value));
+	}
+	get spaceFuelDiscovered() { 
+		return get(this.w_spaceFuelDiscovered);
+	}
+	set spaceFuelDiscovered(value) {
+		this.w_spaceFuelDiscovered.set(value);
 	}
 
 	// internal stats ////////////////////////////////////////////////////////////
@@ -158,7 +172,13 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		return this._populationMultiplier;
 	}
 	set populationMultiplier(value) {
+		const old = this.populationMultiplier;
 		this._populationMultiplier = value;
+		for (let cKey in this.world.countries) {
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.population *= value / old;
+			});
+		}
 	}
 
 	applyCost(cost: number): void {
@@ -329,8 +349,8 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		const hireCost = 100 * Math.pow(1.05, this.totalResearchers);
 		if (this.money >= hireCost) {
 			this.money -= hireCost;
-			this.researchers++;
-			this.totalResearchers++;
+			this.researchers += this.researcherMultiplier;
+			this.totalResearchers += this.researcherMultiplier;
 		}
 	}
 
@@ -364,5 +384,9 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 			});
 		}
 		this.moneyPerHour = Math.max(mph, this.moneyPerHour);
+	}
+
+	increaseLaunchProgress(amount: number) {
+		this.launchProgress = Math.min(this.launchProgress + amount, 1000)
 	}
 }

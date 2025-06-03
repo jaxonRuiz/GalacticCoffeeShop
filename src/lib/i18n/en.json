@@ -195,5 +195,7 @@
 	"drug_the_coffee_upgDesc": "It looks like sugar so nobody will know",
 
 	"tax_decrease_upgName": "Tax Decrease",
-	"tax_decrease_upgDesc": "Bribe the government with that delicious coffee"
+	"tax_decrease_upgDesc": "Bribe the government with that delicious coffee",
+	"multitask_upgName": "Multitask",
+	"multitask_upgDesc": "Do multiple tasks at a time"
 }

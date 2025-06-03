@@ -141,14 +141,6 @@ export class ResearchLab{
 			}
 		})
 		this.upgradeList.push({
-			name: "Start recycling waste water",
-			desc: "3x water production",
-			cost: 500,
-			effect(franchise) {
-				franchise.waterMultiplier *= 3;
-			}
-		})
-		this.upgradeList.push({
 			name: "Clone your researchers",
 			desc: "3x researcher count",
 			cost: 700,
@@ -170,6 +162,14 @@ export class ResearchLab{
 			cost: 1000,
 			effect(franchise) {
 				franchise.maxCoffeeMultiplier *= 3;
+			}
+		})
+		this.upgradeList.push({
+			name: "Unlock space travel",
+			desc: "expand your franchise to Mars??",
+			cost: 3000,
+			effect(franchise) {
+				franchise.spaceFuelDiscovered = true;
 			}
 		})
 	}

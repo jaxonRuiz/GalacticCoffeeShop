@@ -11,7 +11,7 @@
 	let franchise = stageManager.currentScene as Franchise;
 	let countries = franchise.world.w_countries;
 	let money = franchise.w_money;
-	
+	let launchProg = franchise.w_launchProgress;
 
 </script>
 
@@ -35,6 +35,32 @@
     z-index: 1000;">
 	Day: {timer.getDay($day)} {$hour}:00
 </p>
+
+<h2 style="font-size: 2rem">Launch Progress: {$launchProg}/1000</h2>
+{#if franchise.spaceFuelDiscovered}
+	<p>space fuel discovered :D</p>
+{:else}
+	<p>space fuel not discovered D:</p>
+{/if}
+<div
+	style="
+		width: 70%;
+		height: 24px;
+		background-color: #ddd;
+		border-radius: 12px;
+		overflow: hidden;
+		margin-bottom: 4px;
+	"
+>
+	<div
+		style="
+			width: {Math.min($launchProg / 1000 * 100, 100)}%;
+			height: 100%;
+			background-color: {$launchProg >= 500 ? 'green' : 'orange'};
+			transition: width 0.3s;
+		"
+	></div>
+</div>
 
 <div class="col block" style = "position: relative; height: 100vh;">
 	<h1>World View</h1>
