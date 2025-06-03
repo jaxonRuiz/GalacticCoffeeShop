@@ -3,7 +3,7 @@ import { aud } from "../../assets/aud";
 
 const unlockStages: boolean = false;
 const playtesterMode: boolean = false;
-const unlockAllUpgrades: boolean = false; // for testing purposes
+const unlockAllUpgrades: boolean = true; // for testing purposes
 
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
@@ -415,7 +415,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerStats.baristaFlatProductivity! += 0.1;
 			},
 			maxLevel: 1,
-			cost: 70,
+			cost: 40,
 			costMultiplier: 1.5,
 			image: "boop_star",
 		},
@@ -439,8 +439,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		trendy_aesthetic: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 200 &&
-					shop.upgrades.has("flashy_sign");
+				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 300;
+				return (shop as ILocalShop).multiShop.commercialLicenseUnlocked;
 			},
 			upgrade: (shop, level) => {
 				let statLevels = [0.1, 0.15, 0.18];
@@ -450,8 +450,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 					(shop as ILocalShop).appeal = (shop as ILocalShop).minAppeal!;
 				}
 			},
-			maxLevel: 1,
-			cost: 120,
+			maxLevel: 3,
+			cost: 1200,
 			costMultiplier: 1.2,
 			image: "upg_promote",
 		},
@@ -464,7 +464,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerAmounts["serverCurrent"] += 1;
 			},
 			maxLevel: 3,
-			cost: 200,
+			cost: 70,
 			costMultiplier: 1.5,
 			image: "upg_sell",
 		},
@@ -476,7 +476,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerAmounts["promoterCurrent"] += 1;
 			},
 			maxLevel: 3,
-			cost: 400,
+			cost: 200,
 			costMultiplier: 1.5,
 			image: "upg_promote",
 		},
@@ -488,39 +488,43 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).workerAmounts["baristaCurrent"] += 1;
 			},
 			maxLevel: 3,
-			cost: 200,
+			cost: 100,
 			costMultiplier: 1.5,
 			image: "upg_brew",
 		},
-		upgrade_cash_register: {
+
+		cross_promotion: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 10 &&
-					shop.upgrades.has("expand_cashier_counter");
+				return (shop as ILocalShop).multiShop.shops!.length > 1;
 			},
 			upgrade: (shop) => {
-				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.1;
+				(shop as ILocalShop).promotionEffectiveness += 0.1;
+				(shop as ILocalShop).minAppeal! += 0.05;
+				(shop as ILocalShop).maxAppeal! += 0.1;
 			},
-			maxLevel: 1,
-			cost: 500,
-			costMultiplier: 1.15,
-			image: "upg_sell",
+			maxLevel: 3,
+			cost: 200,
+			costMultiplier: 1.2,
+			image: "upg_promote",
 		},
 		increase_customer_flow: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeSold >= 40 &&
-					shop.upgrades.has("flashy_sign");
+				return (shop as ILocalShop).multiShop.employeeTrainingUnlocked &&
+					shop.upgrades.has("employee_orientation");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.serverCumulativeProductivity! += 0.15;
+				(shop as ILocalShop).workerStats.serverFlatProductivity! += 0.1;
 			},
 			maxLevel: 5,
-			cost: 550,
+			cost: 200,
 			costMultiplier: 1.2,
 			image: "upg_sell",
 		},
-		better_coffee_machine: {
+		streamlined_coffee_production: {
 			unlock_condition: (shop) => {
-				return shop.upgrades.has("expand_coffee_bar");
+				return (shop as ILocalShop).multiShop.employeeTrainingUnlocked &&
+					shop.upgrades.has("employee_orientation");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.05;
@@ -532,9 +536,10 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			image: "upg_brew",
 		},
 
-		promoter_effectiveness: {
+		motivate_promoters: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).promoterUnlocked;
+				return (shop as ILocalShop).multiShop.employeeTrainingUnlocked &&
+					shop.upgrades.has("employee_orientation");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.promoterProductivity! += 0.05;
@@ -559,8 +564,8 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		fancy_latte_art: {
 			unlock_condition: (shop) => {
-				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100 &&
-					shop.upgrades.has("local_shop_nicer_coffee");
+				return (shop as ILocalShop).multiShop.employeeTrainingUnlocked &&
+					shop.upgrades.has("employee_orientation");
 			},
 			upgrade: (shop) => {
 				(shop as ILocalShop).workerStats.baristaCumulativeProductivity! += 0.1;
@@ -590,7 +595,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		establish_franchise: {
 			unlock_condition: (multishop) => {
 				if (unlockStages) return true;
-				return (multishop as IMultiShop).shops!.length > 3;
+				return (multishop as IMultiShop).shops!.length > 4;
 			},
 			upgrade: (shop) => {
 				(shop as IScene).endScene();
@@ -605,7 +610,7 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 
 		consistent_imaging: {
 			unlock_condition: (multishop) => {
-				return true;
+				return (multishop as IMultiShop).shops!.length > 2;
 			},
 			upgrade: (shop, level) => {
 				console.log("applying upgrade to local shop");
@@ -620,15 +625,15 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 		},
 		cohesive_branding: {
 			unlock_condition: (multishop) => {
-				return multishop.shops!.length > 1; // maybe change to 2 later
+				return multishop.shops!.length > 3;
 			},
 			upgrade: (shop, level) => {
 				console.log("applying upgrade to local shop");
-				(shop as ILocalShop).minAppeal! += 0.2;
-				(shop as ILocalShop).promotionEffectiveness += 0.1;
+				(shop as ILocalShop).minAppeal! += 0.4;
+				(shop as ILocalShop).promotionEffectiveness += 0.2;
 			},
 			flags: ["applyToChildren"],
-			maxLevel: 3,
+			maxLevel: 1,
 			cost: 1000,
 			costMultiplier: 1.5,
 			image: "upg_promote",
@@ -642,25 +647,75 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				(shop as ILocalShop).unlockPromoter();
 			},
 			maxLevel: 1,
-			cost: 300,
+			cost: 500,
 			flags: ["applyToChildren"],
 			costMultiplier: 1,
 			image: "upg_promote",
 		},
+		unlock_multishop_restock: {
+			unlock_condition: (multishop) => {
+				return multishop.shops!.length > 2;
+			},
+			upgrade: (shop) => {
+				(shop as IMultiShop).multiShopRestockUnlocked = true;
+			},
+			maxLevel: 1,
+			cost: 500,
+			costMultiplier: 1,
+			image: "upg_buy",
+		},
+		// unlock_auto_restock: {
+		// 	unlock_condition: (multishop) => {
+		// 		return multishop.shops!.length > 3;
+		// 	},
+		// 	upgrade: (shop) => {
+		// 		(shop as ILocalShop).autoRestockUnlocked = true;
+		// 	},
+		// 	maxLevel: 1,
+		// 	cost: 1000,
+		// 	flags: ["applyToChildren"],
+		// 	costMultiplier: 1,
+		// 	image: "upg_buy",
+		// },
 		unlock_auto_restock: {
+			unlock_condition: (multishop) => {
+				return multishop.shops!.length > 3;
+			},
+			upgrade: (shop) => {
+				(shop as IMultiShop).multiShopAutoRestockToggled = true;
+				(shop as IMultiShop).multiShopAutoRestockUnlocked = true;
+			},
+			maxLevel: 1,
+			cost: 1000,
+			costMultiplier: 1,
+			image: "upg_buy",
+		},
+		greater_commercial_license: {
+			unlock_condition: (multishop) => {
+				return false;
+				return multishop.shops!.length > 2;
+			},
+			upgrade: (shop) => {
+				(shop as IMultiShop).commercialLicenseUnlocked = true;
+			},
+			maxLevel: 5,
+			cost: 1000,
+			costMultiplier: 1.5,
+			image: "upg_buy",
+		},
+		employee_training_program: {
 			unlock_condition: (multishop) => {
 				return multishop.shops!.length > 1;
 			},
 			upgrade: (shop) => {
-				console.log("unlocking promoter from multishop");
-				(shop as ILocalShop).autoRestockUnlocked = true;
+				(shop as IMultiShop).employeeTrainingUnlocked = true;
 			},
 			maxLevel: 1,
-			cost: 1000,
-			flags: ["applyToChildren"],
-			costMultiplier: 1,
-			image: "upg_buy",
+			cost: 500,
+			costMultiplier: 1.5,
+			image: "boop_star",
 		},
+
 		add_new_shop: {
 			unlock_condition: (multishop) => {
 				return true;
@@ -714,5 +769,5 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 			costMultiplier: 1.5,
 			image: "upg_buy",
 		},
-	}
+	},
 };

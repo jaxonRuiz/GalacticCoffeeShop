@@ -4,7 +4,7 @@ import { StageManager } from "./systems/stageManager";
 import { startSession } from "./analytics";
 import { audioManagerRegistry } from "./systems/audioManager";
 
-export const DEVELOPMENT = false;
+export const DEVELOPMENT = true;
 
 export let timer = new Timer();
 let gamePaused = writable(false);
@@ -12,10 +12,10 @@ export let firstTime = true;
 export let stageManager = new StageManager(timer);
 export let gameOver: Writable<boolean> = writable(false);
 
-console.log("hello world")
+console.log("hello world");
 declare global {
 	interface Window {
-		gameanalytics: any
+		gameanalytics: any;
 	}
 }
 
@@ -24,7 +24,10 @@ const GA = window.gameanalytics.GameAnalytics;
 GA.setEnabledInfoLog(true);
 GA.setEnabledVerboseLog(true);
 GA.configureBuild("0.10");
-GA.initialize('a07f4cd4e7485020da55d37998e8921f', '57d5a645ab68900bd7718a8ec09e456b570444cb');
+GA.initialize(
+	"a07f4cd4e7485020da55d37998e8921f",
+	"57d5a645ab68900bd7718a8ec09e456b570444cb",
+);
 
 // Utility functions to mute/unmute or pause/resume all audio
 function muteAllAudio() {
@@ -64,8 +67,11 @@ export function startNewGame() {
 	if (stageManager.currentSceneIndex == 0) {
 		console.log("stage manager was at 0");
 		stageManager.nextScene();
+		stageManager.nextScene();
 	} else {
-		console.error("stage manager was not at 0, resetting to 0 - this should not happen, alert jaxon");
+		console.error(
+			"stage manager was not at 0, resetting to 0 - this should not happen, alert jaxon",
+		);
 		stageManager.currentSceneIndex = 0;
 		stageManager.nextScene();
 	}
@@ -76,7 +82,7 @@ export function saveState() {
 	console.log("game saving state");
 	let saveData: SaveData = {
 		currentStageIndex: stageManager.currentSceneIndex,
-		timeData: timer.exportTimeData()
+		timeData: timer.exportTimeData(),
 	};
 	stageManager.currentScene.saveState();
 	localStorage.setItem("GameSaveData", JSON.stringify(saveData));
@@ -134,10 +140,11 @@ export function endGame() {
 
 interface SaveData {
 	currentStageIndex: number;
-	timeData: TimeData
+	timeData: TimeData;
 }
 
 globalThis.addEventListener("beforeunload", function () {
-	if (stageManager.currentSceneIndex != 0)
+	if (stageManager.currentSceneIndex != 0) {
 		saveState();
+	}
 });

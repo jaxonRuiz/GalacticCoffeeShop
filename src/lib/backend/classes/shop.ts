@@ -186,7 +186,7 @@ export class Shop implements ILocalShop {
 				if (shop.beans >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
 						(shop.workerStats["baristaBaseProductivity"] *
-							shop.workerStats["baristaCumulativeProductivity"] +
+								shop.workerStats["baristaCumulativeProductivity"] +
 							shop.workerStats["baristaFlatProductivity"]) *
 						this.workerAmounts["baristaCurrent"];
 				}
@@ -201,7 +201,7 @@ export class Shop implements ILocalShop {
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
 						(shop.workerStats["serverBaseProductivity"] *
-							shop.workerStats["serverCumulativeProductivity"] +
+								shop.workerStats["serverCumulativeProductivity"] +
 							shop.workerStats["serverFlatProductivity"]) *
 						this.workerAmounts["serverCurrent"];
 				}
@@ -262,9 +262,9 @@ export class Shop implements ILocalShop {
 			this.incomePerSecond = incomeSum / this.incomeRateBufferCounter;
 			console.log(`Income per second: ${this.incomePerSecond}`);
 			console.log(
-				`Income rate buffer: ${this.incomeRateBuffer}, Counter: ${this.incomeRateBufferCounter}`,)
+				`Income rate buffer: ${this.incomeRateBuffer}, Counter: ${this.incomeRateBufferCounter}`,
+			);
 		}
-
 
 		function audioUpdate(shop: Shop) {
 			if (shop.boilTimer > 0) {
@@ -345,7 +345,10 @@ export class Shop implements ILocalShop {
 	}
 
 	restock(playSound: boolean = true) {
-		if (this.restockSheet["beans"] * this.beansPrice > (this.money + this.multiShop.money)) return;
+		if (
+			this.restockSheet["beans"] * this.beansPrice >
+				(this.money + this.multiShop.money)
+		) return;
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
 
 		this.beans += this.restockSheet["beans"];
@@ -378,7 +381,7 @@ export class Shop implements ILocalShop {
 	}
 
 	sellCoffee(amount: number = 1, playSound: Boolean = true) {
-		if (playSound) this.audioManager.playAudio("ding");
+		if (this.isSelected) this.audioManager.playAudio("ding");
 		// if (this.isSelected) {
 
 		// }
@@ -404,7 +407,7 @@ export class Shop implements ILocalShop {
 	}
 
 	promote(playSound: boolean = true) {
-		if (playSound) this.audioManager.playAudio("papers");
+		if (this.isSelected) this.audioManager.playAudio("papers");
 		this.appeal += this.promotionEffectiveness *
 			(1 - this.appeal / this.maxAppeal);
 		this.appeal = Math.min(this.appeal, this.maxAppeal);

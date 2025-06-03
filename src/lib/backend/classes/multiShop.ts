@@ -2,7 +2,11 @@ import { get, type Writable, writable } from "svelte/store";
 import { Publisher } from "../systems/observer";
 import { type LocalShopSave, Shop } from "./shop";
 import { UpgradeManager } from "../systems/upgradeManager";
-import { AudioManager, cleanupAudioManagers, audioManagerRegistry } from "../systems/audioManager";
+import {
+	AudioManager,
+	audioManagerRegistry,
+	cleanupAudioManagers,
+} from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { dictProxy } from "../proxies";
 
@@ -13,6 +17,11 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	w_selectedShopIndex: Writable<number> = writable(-1);
 	w_shops: Writable<Shop[]> = writable([]);
 	w_finishedFirstShop: Writable<boolean> = writable(false);
+	w_multiShopRestockUnlocked: Writable<boolean> = writable(false);
+	w_multiShopAutoRestockUnlocked: Writable<boolean> = writable(false);
+	w_multiShopAutoRestockToggled: Writable<boolean> = writable(false);
+	w_restockCounter: Writable<number> = writable(0);
+	w_restockInterval: Writable<number> = writable(40);
 
 	// writable getters/setters
 	get money() {
@@ -51,6 +60,36 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	set lifetimeStats(value: { [key: string]: number }) {
 		this.w_lifetimeStats.set(value);
 	}
+	get multiShopRestockUnlocked() {
+		return get(this.w_multiShopRestockUnlocked);
+	}
+	set multiShopRestockUnlocked(value: boolean) {
+		this.w_multiShopRestockUnlocked.set(value);
+	}
+	get multiShopAutoRestockUnlocked() {
+		return get(this.w_multiShopAutoRestockUnlocked);
+	}
+	set multiShopAutoRestockUnlocked(value: boolean) {
+		this.w_multiShopAutoRestockUnlocked.set(value);
+	}
+	get multiShopAutoRestockToggled() {
+		return get(this.w_multiShopAutoRestockToggled);
+	}
+	set multiShopAutoRestockToggled(value: boolean) {
+		this.w_multiShopAutoRestockToggled.set(value);
+	}
+	get restockCounter() {
+		return get(this.w_restockCounter);
+	}
+	set restockCounter(value: number) {
+		this.w_restockCounter.set(value);
+	}
+	get restockInterval() {
+		return get(this.w_restockInterval);
+	}
+	set restockInterval(value: number) {
+		this.w_restockInterval.set(value);
+	}
 
 	w_lifetimeStats: Writable<{ [key: string]: number }> = writable({
 		coffeeSold: 0,
@@ -73,6 +112,10 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 	localShopUpgradeManager: UpgradeManager = new UpgradeManager("localShop");
 	audioManager: AudioManager = new AudioManager();
 	timer: Publisher;
+
+	// updgrade gates
+	commercialLicenseUnlocked: boolean = false;
+	employeeTrainingUnlocked: boolean = false;
 
 	constructor(timer: Publisher, sceneManager: Publisher) {
 		console.log("preshop constructor");
@@ -104,6 +147,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			income: 0,
 			expenses: 0,
 		};
+		this.selectShop(this.shops[0]);
 	}
 
 	notify(event: string, data?: any) {
@@ -114,7 +158,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		if (event === "hour") {
 		}
 		if (event === "day") {
-			this.restockShops(false);
 		}
 		if (event === "week") {
 			this.withdrawAll(false);
@@ -123,6 +166,12 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 
 	tick() {
 		this.shops.forEach((shop) => shop.tick(this));
+		if (this.multiShopAutoRestockToggled) {
+			this.restockCounter = (this.restockCounter + 1) % this.restockInterval;
+			if (this.restockCounter === 0) {
+				this.restockShops();
+			}
+		}
 	}
 
 	// multishop actions /////////////////////////////////////////////////////////
@@ -176,8 +225,6 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.selectedShop = null;
 		this.selectedShopIndex = -1;
 	}
-
-
 
 	withdrawAll(playSound: boolean = true) {
 		let shopIndex = 0;
@@ -332,7 +379,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		}
 	}
 
-	clearState() { }
+	clearState() {}
 }
 
 interface ShopWeekReport {

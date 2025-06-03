@@ -1,7 +1,11 @@
 import { get, type Writable, writable } from "svelte/store";
 import { Publisher } from "../systems/observer";
 import { msPerTick } from "../systems/time";
-import { AudioManager, cleanupAudioManagers, audioManagerRegistry } from "../systems/audioManager";
+import {
+	AudioManager,
+	audioManagerRegistry,
+	cleanupAudioManagers,
+} from "../systems/audioManager";
 import { aud } from "../../assets/aud";
 import { UIManager } from "../interface/uimanager";
 import { addCoffee, addMoney } from "../analytics";
@@ -279,14 +283,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (this.autogrindingEnabled) {
 			this.autogrindCounter++;
 			if (this.autogrindCounter >= this.autogrindInterval) {
-				this.grindBeans(false);
+				this.grindBeans();
 				this.autogrindCounter = 0;
 			}
 		}
 		if (this.autosellEnabled) {
 			this.autosellCounter++;
 			if (this.autosellCounter >= this.autosellInterval) {
-				this.sellCoffee(false);
+				this.sellCoffee();
 				this.autosellCounter = 0;
 			}
 		}
