@@ -1,4 +1,4 @@
-import { type Writable, writable } from "svelte/store";
+import { get, type Writable, writable } from "svelte/store";
 import { Franchise } from "./franchise";
 import { Country } from "./country";
 import { dictProxy } from "$lib/backend/proxies";

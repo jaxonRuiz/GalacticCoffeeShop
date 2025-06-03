@@ -168,7 +168,7 @@
 	</div>
 			
 	<div class="rightright">
-		<UpgradesPanel money = {influence} umKey =  {"franchise"} wshop = {franchise} ></UpgradesPanel>
+		<UpgradesPanel money = {influence} umKey =  {"franchise"} wshop = {franchise} influence={true}></UpgradesPanel>
 			
 	</div>
 

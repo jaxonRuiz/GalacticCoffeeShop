@@ -1,7 +1,14 @@
 import { get, writable } from "svelte/store";
 
+/*
+ * NamedAudio extends HTMLAudioElement to include a name property for easier tracking.
+ */
 type NamedAudio = HTMLAudioElement & { name: string };
 
+/*
+ * Global volume controls using Svelte stores.
+ * These persist to localStorage and update all registered AudioManagers on change.
+ */
 export const globalVolumeScale = writable(
 	parseFloat(localStorage.getItem("globalVolumeScale") || "1")
 );
@@ -14,8 +21,13 @@ export const sfxVolume = writable(
 	parseFloat(localStorage.getItem("sfxVolume") || "1")
 );
 
+/*
+ * Registry of all active AudioManager instances.
+ * Used for global volume and mute/unmute operations.
+ */
 export const audioManagerRegistry: Set<AudioManager> = new Set();
 
+// Subscribe to global volume changes and update all managers accordingly.
 globalVolumeScale.subscribe((value) => {
 	localStorage.setItem("globalVolumeScale", value.toString());
 	audioManagerRegistry.forEach((manager) => manager.updateAllVolumes());
@@ -31,6 +43,11 @@ sfxVolume.subscribe((value) => {
 	audioManagerRegistry.forEach((manager) => manager.updateAllVolumes());
 });
 
+/*
+ * AudioManager
+ * Handles SFX, music, and ambience playback for a all scenes.
+ * Registers itself in the global registry on creation and removes itself on destroy.
+ */
 export class AudioManager {
 	SFX: Map<string, HTMLAudioElement[]> = new Map();
 	SFXIndex: Map<string, number> = new Map();
@@ -47,23 +64,24 @@ export class AudioManager {
 		// Register this instance in the global registry
 		audioManagerRegistry.add(this);
 
-		// Subscribe to globalVolumeScale changes
+		// Subscribe to global volume changes
 		globalVolumeScale.subscribe(() => {
 			this.updateAllVolumes();
 		});
-
-		// Subscribe to musicVolume changes
 		musicVolume.subscribe(() => {
 			this.updateAllVolumes();
 		});
-
-		// Subscribe to sfxVolume changes
 		sfxVolume.subscribe(() => {
 			this.updateAllVolumes();
 		});
 	}
 
 	// --- Playback Controls ---
+
+	/*
+	 * Play an audio asset by name.
+	 * Supports SFX (with round-robin), music, and ambience.
+	 */
 	playAudio(name: string) {
 		try {
 			if (this.SFX.has(name)) {
@@ -115,6 +133,9 @@ export class AudioManager {
 		}
 	}
 
+	/*
+	 * Stop playback and reset an audio asset by name.
+	 */
 	stopAudio(name: string) {
 		if (this.SFX.has(name)) {
 			const audioInstances = this.SFX.get(name)!;
@@ -134,6 +155,10 @@ export class AudioManager {
 	}
 
 	// --- Volume Controls ---
+
+	/*
+	 * Set the volume for a specific audio asset.
+	 */
 	setVolume(name: string, volume: number) {
 		volume = Math.max(0, Math.min(1, volume)); // Ensure volume is between 0 and 1
 
@@ -160,6 +185,9 @@ export class AudioManager {
 		}
 	}
 
+	/*
+	 * Get the current volume for a specific audio asset.
+	 */
 	getVolume(name: string): number {
 		if (this.SFX.has(name)) {
 			const audioInstances = this.SFX.get(name)!;
@@ -174,6 +202,9 @@ export class AudioManager {
 		return 0; // Return 0 if the name is not found
 	}
 
+	/*
+	 * Update all audio volumes based on current global and type-specific settings.
+	 */
 	updateAllVolumes() {
 		for (let [name, audios] of this.SFX.entries()) {
 			audios.forEach((audio) => {
@@ -194,11 +225,13 @@ export class AudioManager {
 		}
 	}
 
+	/*
+	 * Calculate the effective volume for an audio asset, applying all relevant scales.
+	 */
 	applyVolumeScale(volume: number, type: "music" | "sfx" | "ambience", name?: string): number {
 		let maxScale = 1;
 		if (name && this.maxVolumeScales.has(name)) {
 			maxScale = this.maxVolumeScales.get(name)!;
-		} else if (name) {
 		}
 		if (type === "ambience") {
 			return Math.min(volume * get(globalVolumeScale) * get(musicVolume) * this.ambienceVolume, maxScale);
@@ -208,6 +241,10 @@ export class AudioManager {
 	}
 
 	// --- Fade and Cancel Fade ---
+
+	/*
+	 * Fade an audio asset to a target volume over a duration.
+	 */
 	fadeAudio(name: string, duration: number, targetVolume: number, onComplete?: (cancelled: boolean) => void): boolean {
 		let audio: HTMLAudioElement | HTMLAudioElement[] | undefined;
 		if (this.SFX.has(name)) {
@@ -237,6 +274,9 @@ export class AudioManager {
 		return true;
 	}
 
+	/*
+	 * Helper for fading a single audio instance.
+	 */
 	fadeAudioInstance(audio: HTMLAudioElement, duration: number, targetVolume: number, onComplete?: (cancelled: boolean) => void): void {
 		const stepTime = Math.min(duration, 100);
 		const initialVolume = audio.volume;
@@ -264,6 +304,9 @@ export class AudioManager {
 		this.audioEffects.set(audio, { task: fadeTask, callback: onComplete });
 	}
 
+	/*
+	 * Cancel any ongoing fade for a given audio asset.
+	 */
 	cancelFadeAudio(name: string) {
 		const clearFade = (audio: HTMLAudioElement) => {
 			if (audio && this.audioEffects.has(audio)) {
@@ -289,12 +332,19 @@ export class AudioManager {
 	}
 
 	// --- Add/Remove Audio Assets ---
+
+	/*
+	 * Register a new SFX asset with multiple instances for overlapping playback.
+	 */
 	addSFX(name: string, path: string) {
 		const audioInstances = [new Audio(path), new Audio(path), new Audio(path)];
 		audioInstances.forEach(audio => (audio as NamedAudio).name = name);
 		this.SFX.set(name, audioInstances);
 	}
 
+	/*
+	 * Register a new music asset.
+	 */
 	addMusic(name: string, path: string) {
 		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
@@ -302,6 +352,9 @@ export class AudioManager {
 		this.music.set(name, audio);
 	}
 
+	/*
+	 * Register a new ambience asset.
+	 */
 	addAmbience(name: string, path: string) {
 		const audio = new Audio(path) as NamedAudio;
 		audio.loop = true;
@@ -309,11 +362,18 @@ export class AudioManager {
 		this.ambience.set(name, audio);
 	}
 
+	/*
+	 * Set a maximum volume scale for a specific audio asset.
+	 */
 	setMaxVolumeScale(name: string, scale: number) {
 		this.maxVolumeScales.set(name, Math.max(0, Math.min(1, scale)));
 	}
 
 	// --- Enable/Disable/Cleanup ---
+
+	/*
+	 * Restore all audio volumes to their configured levels.
+	 */
 	enableAudio() {
 		for (let [name, audios] of this.SFX.entries()) {
 			audios.forEach((audio) => (audio.volume = this.applyVolumeScale(this.sfxVolume, "sfx", name)));
@@ -326,6 +386,9 @@ export class AudioManager {
 		}
 	}
 
+	/*
+	 * Mute all audio by setting volume to zero.
+	 */
 	disableAudio() {
 		for (let audios of this.SFX.values()) {
 			audios.forEach((audio) => (audio.volume = 0));
@@ -342,6 +405,9 @@ export class AudioManager {
 		}
 	}
 
+	/*
+	 * Resume music and ambience playback if paused, and restore volumes.
+	 */
 	resumeAudio() {
 		// Resume music
 		for (let audio of this.music.values()) {
@@ -359,6 +425,9 @@ export class AudioManager {
 		this.enableAudio();
 	}
 
+	/*
+	 * Destroy this AudioManager, remove from registry, and clear all resources.
+	 */
 	destroy() {
 		// Remove this instance from the registry
 		audioManagerRegistry.delete(this);
@@ -372,15 +441,25 @@ export class AudioManager {
 	}
 }
 
-export function cleanupAudioManagers(activeAudioManager: AudioManager) {
+/*
+ * Destroy all AudioManagers except the optionally provided active one.
+ * Use this when switching scenes to prevent audio conflicts and memory leaks.
+ */
+export function cleanupAudioManagers(activeAudioManager?: AudioManager) {
 	console.log("Cleaning up audio managers");
-	for (const manager of audioManagerRegistry) {
-		if (manager !== activeAudioManager) {
+	// Create a copy to avoid modifying the set while iterating
+	const managers = Array.from(audioManagerRegistry);
+	for (const manager of managers) {
+		// If an active manager is provided, skip it, otherwise, destroy all
+		if (!activeAudioManager || manager !== activeAudioManager) {
 			manager.destroy();
 		}
 	}
 }
 
+/*
+ * Log all currently active AudioManagers for debugging.
+ */
 export function logAudioManagers() {
 	console.log("Active AudioManagers:", audioManagerRegistry.size);
 	for (const manager of audioManagerRegistry) {

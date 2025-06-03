@@ -27,7 +27,7 @@
 	}
 
 	onMount(() => {
-		cleanupAudioManagers(menuAudioManager);
+		cleanupAudioManagers();
 		menuAudioManager = new AudioManager();
 		menuAudioManager.addMusic("menu", aud.cafe_crumble);
 

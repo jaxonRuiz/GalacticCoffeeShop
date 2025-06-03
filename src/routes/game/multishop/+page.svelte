@@ -60,7 +60,7 @@
 	</div>
 
 	<div class="col right">
-		<UpgradesPanel wshop={mshop} umKey="multiShop" {money} />
+		<UpgradesPanel wshop={mshop} umKey="multiShop" {money} influence={false} />
 	</div>
 </main>
 

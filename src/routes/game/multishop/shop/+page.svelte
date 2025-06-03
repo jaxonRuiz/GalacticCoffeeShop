@@ -185,7 +185,7 @@
 			</Block>
 		</div>
 		<div class="col">
-			<UpgradesPanel wshop={sshop} umKey="localShop" money={totalMoney} />
+			<UpgradesPanel wshop={sshop} umKey="localShop" money={totalMoney} influence={false} />
 		</div>
 	</div>
 </main>

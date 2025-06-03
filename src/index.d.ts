@@ -112,6 +112,7 @@ interface IFranchise extends IShop {
 	currentCountry: Country;
 	currentRegion: Region;
 	money: number;
+	increaseLaunchProgress(amount: number): void;
 }
 
 interface IScene {

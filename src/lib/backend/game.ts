@@ -4,7 +4,7 @@ import { StageManager } from "./systems/stageManager";
 import { startSession } from "./analytics";
 import { audioManagerRegistry } from "./systems/audioManager";
 
-export const DEVELOPMENT = true;
+export const DEVELOPMENT = false;
 
 export let timer = new Timer();
 let gamePaused = writable(false);
@@ -32,7 +32,7 @@ function muteAllAudio() {
 		manager.disableAudio();
 	}
 }
-function resumeAllAudio() {
+function unmuteAllAudio() {
 	for (const manager of audioManagerRegistry) {
 		manager.resumeAudio();
 	}
@@ -44,11 +44,11 @@ if (typeof window !== "undefined") {
 		if (document.hidden) {
 			muteAllAudio();
 		} else {
-			resumeAllAudio();
+			unmuteAllAudio();
 		}
 	});
 	window.addEventListener("blur", muteAllAudio);
-	window.addEventListener("focus", resumeAllAudio);
+	window.addEventListener("focus", unmuteAllAudio);
 }
 
 // make sure startGame is only called on a new save

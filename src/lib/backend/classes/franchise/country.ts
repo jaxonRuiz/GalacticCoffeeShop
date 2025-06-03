@@ -57,6 +57,7 @@ export class Country{
 	}
 
 	influenceTasksStatic: IInfluenceTask[];
+	taskNames: string[] = ["Do a backflip in front of their congress", "Call their president and tell them you love them", 'Send their president a corn dog (and write "not a bomb" on the label so he knows)',"Put out a video praising the infrastructure","Shake hands with da president"];
 
 	// modifiers represent taxes and subsidies. scaler to development building costs
 	farmModifier: number = 1.0;
@@ -83,7 +84,7 @@ export class Country{
 		return get(this.w_influence);
 	}
 	set influence(value) {
-		this.w_influence.set(value);
+		this.w_influence.set(Math.floor(value));
 	}
 
 	get countryTotalCoffee() {
@@ -113,7 +114,6 @@ export class Country{
 		this.influence = influence;
 		if (countryNum === 1) this.influence = 500;
 		this.influenceTasksStatic = [];
-		this.initializeInfluenceTasks();
 		this.refreshInfluenceTasks(3);
 
 		this.initializeRegions(4 + Math.floor(Math.random() * 3));
@@ -198,8 +198,7 @@ export class Country{
 		this.franchise.money -= this.influenceTaskList[index].cost;
 		this.currInfluenceTasks.push(this.influenceTaskList[index]);
 		this.currInfluenceTasks = [... this.currInfluenceTasks];
-		this.influenceTaskList.splice(index, 1);
-		this.influenceTaskList = [... this.influenceTaskList];
+		this.refreshInfluenceTasks(3);
 	}
 
 	stopInfluenceTask(index: number){ // cancel a task
@@ -228,14 +227,20 @@ export class Country{
 	}
 
 	refreshInfluenceTasks(amount: number) { // refresh list of tasks
-		const shuffled = [...this.influenceTasksStatic];
-
-		for (let i = shuffled.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+		this.influenceTaskList = [];
+		for (let index = 0; index < amount; index++) {
+			this.influenceTaskList.push(this.makeInfluenceTask());
 		}
+	}
 
-		this.influenceTaskList = shuffled.slice(0, amount);
+	makeInfluenceTask(): IInfluenceTask{
+		const a = this.franchise.money/10 * (0.5 + Math.random());
+		return {
+			desc: this.taskNames[Math.floor(Math.random() * this.taskNames.length)],
+			cost: Math.floor(a),
+			influence: Math.floor(a/20),
+			time: Math.floor(10 + Math.log10(a))
+		}
 	}
 
 	buyRegion(index: number) {
@@ -245,38 +250,7 @@ export class Country{
 		}
 	}
 
-	initializeInfluenceTasks() { // initialize a list of tasks that will be pulled from in refreshInfluenceTasks
-		this.influenceTasksStatic.push({
-			desc: "Shake hands with da president",
-			cost: 1000,
-			influence: 100,
-			time: 20,
-		});
-		this.influenceTasksStatic.push({
-			desc: "Put out a video praising the infrastructure",
-			cost: 2000,
-			influence: 200,
-			time: 30,
-		});
-		this.influenceTasksStatic.push({
-			desc: 'Send their president a corn dog (and write "not a bomb" on the label so he knows)',
-			cost: 500,
-			influence: 50,
-			time: 10,
-		});
-		this.influenceTasksStatic.push({
-			desc: "Do a backflip in front of their congress",
-			cost: 1000,
-			influence: 100,
-			time: 20,
-		});
-		this.influenceTasksStatic.push({
-			desc: "Call their president and tell them you love them",
-			cost: 500,
-			influence: 50,
-			time: 10,
-		});
-	}
+	
 
 	
 

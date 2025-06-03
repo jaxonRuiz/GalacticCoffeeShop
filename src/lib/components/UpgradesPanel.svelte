@@ -11,7 +11,7 @@
 	let upgPage = $state(0); // 0: unpurchased, 1: purchased
 	let rupg = $state(false); // refresh upgrades flag
 
-	let { money, umKey, wshop } = $props();
+	let { money, umKey, wshop, influence } = $props();
 
 	let umanager = new UpgradeManager(umKey);
 	const upgs = upgradeJSON[umKey];
@@ -35,7 +35,13 @@
 
 <div id="upgrades-panel" class="col block fixed">
 	<h1>{$t("upgrades_title")}</h1>
-	<p>{$t("money_stat")}: {fMoney($money)}</p>
+	{#if influence == true}
+		<p>Influence: {($money)}</p>
+	{:else}
+		<p>{$t("money_stat")}: {fMoney($money)}</p>
+	{/if}
+	
+	
 	<div class="row">
 		<label class="tab">
 			<input
@@ -72,6 +78,7 @@
 						onmouseenter={() => {
 							descKey = upgkey;
 						}}
+						influence = {influence}
 					/>
 				{/each}
 			{:else if upgPage === 1}
@@ -84,6 +91,7 @@
 						onmouseenter={() => {
 							descKey = upgkey;
 						}}
+						influence = {influence}
 					/>
 				{/each}
 			{/if}
@@ -110,7 +118,12 @@
 
 	<p>{$t(`${key}_upgDesc`)}</p>
 	{#if !purchased}
-		<p>{$t("cost_stat")}: {fMoney(umanager.getCost(key, wshop))}</p>
+		{#if influence == true}
+			<p>Influence: {(umanager.getCost(key, wshop))}</p>
+		{:else}
+			<p>{$t("cost_stat")}: {fMoney(umanager.getCost(key, wshop))}</p>
+		{/if}
+		
 	{/if}
 {/snippet}
 

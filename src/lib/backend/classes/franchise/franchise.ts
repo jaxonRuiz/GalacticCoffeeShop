@@ -4,7 +4,7 @@ import { World } from "./world";
 import { Country } from "./country";
 import { Region } from "./region";
 import { ResearchLab } from "./researchLab";
-import { cleanupAudioManagers, AudioManager } from "../../systems/audioManager";
+import { cleanupAudioManagers, AudioManager, audioManagerRegistry } from "../../systems/audioManager";
 import { aud } from "../../../assets/aud";
 
 export class Franchise implements ISubscriber, IScene, IFranchise {
@@ -14,6 +14,8 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	w_researchers: Writable<number> = writable(0);
 	w_sciencePoints: Writable<number> = writable(0);
 	w_taxedMoney: Writable<number> = writable(0);
+	w_launchProgress: Writable<number> = writable(0);
+	w_spaceFuelDiscovered: Writable<boolean> = writable(false);
 
 	// writable getters/setters
 	get money() {
@@ -45,6 +47,18 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	}
 	set taxedMoney(value) {
 		this.w_taxedMoney.set(Math.floor(value));
+	}
+	get launchProgress() {
+		return get(this.w_launchProgress);
+	}
+	set launchProgress(value) {
+		this.w_launchProgress.set(Math.floor(value));
+	}
+	get spaceFuelDiscovered() { 
+		return get(this.w_spaceFuelDiscovered);
+	}
+	set spaceFuelDiscovered(value) {
+		this.w_spaceFuelDiscovered.set(value);
 	}
 
 	// internal stats ////////////////////////////////////////////////////////////
@@ -158,7 +172,13 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		return this._populationMultiplier;
 	}
 	set populationMultiplier(value) {
+		const old = this.populationMultiplier;
 		this._populationMultiplier = value;
+		for (let cKey in this.world.countries) {
+			this.world.countries[cKey].regionList.forEach(region => {
+				region.population *= value / old;
+			});
+		}
 	}
 
 	applyCost(cost: number): void {
@@ -246,6 +266,18 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 
 	loadState() {
 		console.log("franchise stage loadState()");
+
+		if (!this.audioManager || !audioManagerRegistry.has(this.audioManager)) {
+			this.audioManager = new AudioManager();
+			this.audioManager.addMusic("bgm", aud.franchise_music);
+			this.audioManager.addSFX("ding", aud.ding);
+			this.audioManager.addSFX("cashRegister", aud.new_cash);
+			this.audioManager.addSFX("papers", aud.papers);
+			this.audioManager.playAudio("bgm");
+			// Fade in bgm
+			this.audioManager.setVolume("bgm", 0);
+			this.audioManager.fadeAudio("bgm", 1000, 1);
+		}
 	}
 
 	clearState() { }
@@ -266,9 +298,11 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		this.currentCountry?.unlockCountry();
 	}
 	startInfluenceTask(index: number) {
+		this.audioManager.playAudio("papers");
 		this.currentCountry?.startInfluenceTask(index);
 	}
 	stopInfluenceTask(index: number) {
+		this.audioManager.playAudio("papers");
 		this.currentCountry?.stopInfluenceTask(index);
 	}
 	voteForPolicy(index: number, num: number) {
@@ -280,9 +314,11 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		//this.currentCountry?.voteAgainstPolicy(index, num);
 	}
 	startRegionalVote(index: number) {
+		this.audioManager.playAudio("papers");
 		//this.currentCountry?.startRegionalVote(index);
 	}
 	buyRegion(index: number) {
+		this.audioManager.playAudio("ding");
 		this.currentCountry?.buyRegion(index);
 	}
 
@@ -309,12 +345,12 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 		this.audioManager.playAudio("cashRegister");
 		this.currentRegion?.sellBuilding(this.currentRegion.availableBuildings[index]);
 	}
-	hireResearcher(){
+	hireResearcher() {
 		const hireCost = 100 * Math.pow(1.05, this.totalResearchers);
 		if (this.money >= hireCost) {
 			this.money -= hireCost;
-			this.researchers++;
-			this.totalResearchers++;
+			this.researchers += this.researcherMultiplier;
+			this.totalResearchers += this.researcherMultiplier;
 		}
 	}
 
@@ -348,5 +384,9 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 			});
 		}
 		this.moneyPerHour = Math.max(mph, this.moneyPerHour);
+	}
+
+	increaseLaunchProgress(amount: number) {
+		this.launchProgress = Math.min(this.launchProgress + amount, 1000)
 	}
 }
