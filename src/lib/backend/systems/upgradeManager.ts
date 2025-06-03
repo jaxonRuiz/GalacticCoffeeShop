@@ -3,7 +3,7 @@ import { aud } from "../../assets/aud";
 
 const unlockStages: boolean = false;
 const playtesterMode: boolean = false;
-const unlockAllUpgrades: boolean = true; // for testing purposes
+const unlockAllUpgrades: boolean = false; // for testing purposes
 
 export class UpgradeManager {
 	// updgrades of a specific subset (preshop, shop, etc)
