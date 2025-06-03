@@ -165,8 +165,8 @@ export class ResearchLab{
 			}
 		})
 		this.upgradeList.push({
-			name: "Unlock space travel",
-			desc: "expand your franchise to Mars??",
+			name: "Turn coffee into space fuel",
+			desc: "expand your franchise to outer space??",
 			cost: 3000,
 			effect(franchise) {
 				franchise.spaceFuelDiscovered = true;

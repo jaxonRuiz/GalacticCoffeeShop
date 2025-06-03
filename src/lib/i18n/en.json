@@ -197,5 +197,7 @@
 	"tax_decrease_upgName": "Tax Decrease",
 	"tax_decrease_upgDesc": "Bribe the government with that delicious coffee",
 	"multitask_upgName": "Multitask",
-	"multitask_upgDesc": "Do multiple tasks at a time"
+	"multitask_upgDesc": "Do multiple tasks at a time",
+	"invest_in_space_travel_upgName": "Invest in space travel",
+	"invest_in_space_travel_upgDesc": "Get this country to invest in space travel (increase your launch progress)"
 }
