@@ -398,10 +398,12 @@ export let upgradeJSON: { [key: string]: { [key: string]: IUpgrade } } = {
 				return (shop as ILocalShop).lifetimeStats.coffeeMade >= 100;
 			},
 			upgrade: (shop) => {
+				(shop as ILocalShop).multiShop.finishedFirstShop = true;
 				(shop as ILocalShop).multiShopUnlocked = true;
+				(shop as ILocalShop).multiShop.addShop();
 			},
 			maxLevel: 1,
-			cost: 200,
+			cost: 400,
 			costMultiplier: 1,
 			image: "astrorat",
 			flags: ["yellow"],

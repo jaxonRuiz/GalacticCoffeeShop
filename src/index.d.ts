@@ -86,6 +86,7 @@ interface IMultiShop extends IContainerShop {
 	multiShopAutoRestockToggled: boolean;
 	commercialLicenseUnlocked: boolean;
 	employeeTrainingUnlocked: boolean;
+	finishedFirstShop: boolean;
 }
 
 interface ILocalShop extends IShop {

@@ -186,7 +186,7 @@ export class Shop implements ILocalShop {
 				if (shop.beans >= 1) {
 					shop.progressTrackers["coffeeProgress"] +=
 						(shop.workerStats["baristaBaseProductivity"] *
-								shop.workerStats["baristaCumulativeProductivity"] +
+							shop.workerStats["baristaCumulativeProductivity"] +
 							shop.workerStats["baristaFlatProductivity"]) *
 						this.workerAmounts["baristaCurrent"];
 				}
@@ -201,7 +201,7 @@ export class Shop implements ILocalShop {
 				if (shop.waitingCustomers > 0 && shop.coffeeCups > 0) {
 					shop.progressTrackers["serviceProgress"] +=
 						(shop.workerStats["serverBaseProductivity"] *
-								shop.workerStats["serverCumulativeProductivity"] +
+							shop.workerStats["serverCumulativeProductivity"] +
 							shop.workerStats["serverFlatProductivity"]) *
 						this.workerAmounts["serverCurrent"];
 				}
@@ -347,7 +347,7 @@ export class Shop implements ILocalShop {
 	restock(playSound: boolean = true) {
 		if (
 			this.restockSheet["beans"] * this.beansPrice >
-				(this.money + this.multiShop.money)
+			(this.money + this.multiShop.money)
 		) return;
 		this.applyCost(this.restockSheet["beans"] * this.beansPrice);
 
@@ -357,6 +357,7 @@ export class Shop implements ILocalShop {
 	}
 
 	deselectShop() {
+		console.log("deselecting shop");
 		this.multiShop.deselectShop();
 		this.multiShop.finishedFirstShop = true;
 	}

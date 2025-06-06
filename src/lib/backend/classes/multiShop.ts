@@ -324,6 +324,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			upgrades: {},
 			shops: [],
 			lifetimeStats: this.lifetimeStats,
+			finishedFirstShop: this.finishedFirstShop,
 			multiShopRestockUnlocked: this.multiShopRestockUnlocked,
 			multiShopAutoRestockUnlocked: this.multiShopAutoRestockUnlocked,
 			multiShopAutoRestockToggled: this.multiShopAutoRestockToggled,
@@ -359,6 +360,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		this.multiShopAutoRestockToggled = state.multiShopAutoRestockToggled;
 		this.commercialLicenseUnlocked = state.commercialLicenseUnlocked;
 		this.employeeTrainingUnlocked = state.employeeTrainingUnlocked;
+		this.finishedFirstShop = state.finishedFirstShop;
 
 		for (let i = 0; i < state.shops.length; i++) {
 			// only add new shop if shops > 1
@@ -401,6 +403,7 @@ interface MultiShopSave {
 	upgrades: { [key: string]: number };
 	shops: LocalShopSave[];
 	lifetimeStats: { [key: string]: number };
+	finishedFirstShop: boolean
 	multiShopRestockUnlocked: boolean;
 	multiShopAutoRestockUnlocked: boolean;
 	multiShopAutoRestockToggled: boolean;
