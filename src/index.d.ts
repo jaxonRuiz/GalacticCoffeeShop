@@ -1,8 +1,13 @@
-
 // global interfaces, no enums
 interface IUpgrade {
 	unlock_condition: (
-		shop: IShop | IMultiShop | IPreshop | ILocalShop | IContainerShop | IFranchise,
+		shop:
+			| IShop
+			| IMultiShop
+			| IPreshop
+			| ILocalShop
+			| IContainerShop
+			| IFranchise,
 	) => boolean;
 	upgrade: (
 		shop: IShop | IMultiShop | IPreshop | ILocalShop | IScene | IFranchise,
@@ -76,6 +81,11 @@ interface IContainerShop extends IShop {
 
 interface IMultiShop extends IContainerShop {
 	money: number;
+	multiShopRestockUnlocked: boolean;
+	multiShopAutoRestockUnlocked: boolean;
+	multiShopAutoRestockToggled: boolean;
+	commercialLicenseUnlocked: boolean;
+	employeeTrainingUnlocked: boolean;
 }
 
 interface ILocalShop extends IShop {
@@ -102,6 +112,7 @@ interface ILocalShop extends IShop {
 	moneyMultiplier: number;
 	autoRestockUnlocked: boolean;
 
+	multiShop: IMultiShop;
 
 	roles: Map<string, Role>;
 	unlockPromoter(): void;
@@ -155,7 +166,6 @@ interface ICountry {
 }
 
 interface IWorld {
-
 }
 interface TimeData {
 	tickProgress: number;
@@ -165,7 +175,6 @@ interface TimeData {
 	month: number;
 	year: number;
 }
-
 
 interface IBuilding {
 	name: string;

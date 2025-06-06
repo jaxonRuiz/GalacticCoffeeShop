@@ -114,7 +114,7 @@
 				<p>{$t("beans_stat")}: {$beans}</p>
 				<Button
 					data-btn="plus"
-					disabled={$beans > 0 ? false : true && $coffee >= $maxCoffee}
+					disabled={$beans > 0 && $coffee < $maxCoffee ? false : true}
 					onclick={() => {
 						sshop.produceCoffee();
 					}}>{$t("makeCoffee_btn")}</Button

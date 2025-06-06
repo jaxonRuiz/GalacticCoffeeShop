@@ -12,16 +12,20 @@
 
 	// shop money checker on interval
 	let shopMoney = $state([mshop.shops[0].money]);
+	let shopBeans = $state([mshop.shops[0].beans]);
 	let shopIncome = $state([mshop.shops[0].incomePerSecond]);
 	const timerInterval = setInterval(() => {
 		let moneyHold: number[] = [];
 		let incomeHold: number[] = [];
+		let beanHold: number[] = [];
 		mshop.shops.forEach((shop, ind) => {
 			moneyHold[ind] = shop.money;
 			incomeHold[ind] = shop.incomePerSecond;
+			beanHold[ind] = shop.beans;
 		});
 		shopMoney = moneyHold;
 		shopIncome = incomeHold;
+		shopBeans = beanHold;
 	}, 250);
 	onDestroy(() => {
 		clearInterval(timerInterval);
@@ -30,6 +34,11 @@
 	// define variables
 	let money = mshop.w_money;
 	let shops = mshop.w_shops;
+	let restockUnlocked = mshop.w_multiShopRestockUnlocked;
+
+	// two variables for unlocking and toggling.
+	let autoRestockToggled = mshop.w_multiShopAutoRestockToggled;
+	let autoRestockUnlocked = mshop.w_multiShopAutoRestockUnlocked;
 </script>
 
 <main class="row shop" style={pointerStyle}>
@@ -65,16 +74,27 @@
 </main>
 
 {#snippet card(ind: number)}
-	<button
-		class="card col"
-		onclick={() => {
-			mshop.selectShopIndex(ind);
-		}}
-	>
-		<h1>{$t("shop_title")} {ind + 1}</h1>
-		<p>{$t("money_stat")}: {fMoney(shopMoney[ind] ?? 0)}</p>
-		<p>{$t("income_stat")}: {fMoney(shopIncome[ind] ?? 0)}</p>
-	</button>
+	<div class="card-holder">
+		{#if $restockUnlocked}
+			<button 
+				onclick={() => {
+					mshop.shops[ind].restock();
+				}}>
+				{$t("restockLocal_btn")}
+			</button>
+		{/if}
+		<button
+			class="card col"
+			onclick={() => {
+				mshop.selectShopIndex(ind);
+			}}
+		>
+			<h1>{$t("shop_title")} {ind + 1}</h1>
+			<p>{$t("money_stat")}: {fMoney(shopMoney[ind] ?? 0)}</p>
+			<p>{$t("income_stat")}: {fMoney(shopIncome[ind] ?? 0)}</p>
+			<p>{$t("beans_stat")}: {shopBeans[ind] ?? 0}</p>
+		</button>
+	</div>
 {/snippet}
 
 <style>
@@ -117,6 +137,11 @@
 			justify-content: space-evenly;
 			box-sizing: border-box;
 		}
+	}
+	.card-holder {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	#main-art {
