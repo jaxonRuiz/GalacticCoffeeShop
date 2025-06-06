@@ -389,4 +389,8 @@ export class Franchise implements ISubscriber, IScene, IFranchise {
 	increaseLaunchProgress(amount: number) {
 		this.launchProgress = Math.min(this.launchProgress + amount, 1000)
 	}
+
+	endFranchise() {
+		
+	}
 }

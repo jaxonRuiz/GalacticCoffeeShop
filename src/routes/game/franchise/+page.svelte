@@ -37,14 +37,10 @@
 </p>
 
 <h2 style="font-size: 2rem">Launch Progress: {$launchProg}/1000</h2>
-{#if franchise.spaceFuelDiscovered}
-	<p>space fuel discovered :D</p>
-{:else}
-	<p>space fuel not discovered D:</p>
-{/if}
+
 <div
 	style="
-		width: 70%;
+		width: 50%;
 		height: 24px;
 		background-color: #ddd;
 		border-radius: 12px;
@@ -61,6 +57,23 @@
 		"
 	></div>
 </div>
+
+{#if franchise.spaceFuelDiscovered}
+	<p>space fuel discovered :D</p>
+{:else}
+	<p>space fuel not discovered D:</p>
+{/if}
+
+{#if franchise.spaceFuelDiscovered && $launchProg > 999}
+	<Button
+	static={true}
+	onclick={() => {
+		franchise.endFranchise();
+	}}
+>
+	Blast off to space!
+</Button>
+{/if}
 
 <div class="col block" style = "position: relative; height: 100vh;">
 	<h1>World View</h1>
