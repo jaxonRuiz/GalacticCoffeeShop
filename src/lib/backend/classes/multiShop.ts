@@ -324,6 +324,11 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 			upgrades: {},
 			shops: [],
 			lifetimeStats: this.lifetimeStats,
+			multiShopRestockUnlocked: this.multiShopRestockUnlocked,
+			multiShopAutoRestockUnlocked: this.multiShopAutoRestockUnlocked,
+			multiShopAutoRestockToggled: this.multiShopAutoRestockToggled,
+			commercialLicenseUnlocked: this.commercialLicenseUnlocked,
+			employeeTrainingUnlocked: this.employeeTrainingUnlocked,
 		};
 
 		for (let [key, value] of this.upgrades) {
@@ -348,15 +353,18 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		// check that multishop upgrades work fine loading in like this, especially "apply to all" upgrades
 		this.upgrades = new Map(Object.entries(state.upgrades));
 
-		// this.upgradeFunctions = state.upgradeFunctions;
 		this.selectedShopIndex = state.selectedShopIndex;
+		this.multiShopRestockUnlocked = state.multiShopRestockUnlocked;
+		this.multiShopAutoRestockUnlocked = state.multiShopAutoRestockUnlocked;
+		this.multiShopAutoRestockToggled = state.multiShopAutoRestockToggled;
+		this.commercialLicenseUnlocked = state.commercialLicenseUnlocked;
+		this.employeeTrainingUnlocked = state.employeeTrainingUnlocked;
 
 		for (let i = 0; i < state.shops.length; i++) {
 			// only add new shop if shops > 1
 			if (i >= this.shops.length) {
 				this.addShop(false);
-				// let shop = new Shop(this);
-				// this.shops.push(shop);
+
 			}
 			this.shops[i].loadLocalState(state.shops[i]);
 		}
@@ -379,7 +387,7 @@ export class MultiShop implements ISubscriber, IScene, IMultiShop {
 		}
 	}
 
-	clearState() {}
+	clearState() { }
 }
 
 interface ShopWeekReport {
@@ -393,4 +401,10 @@ interface MultiShopSave {
 	upgrades: { [key: string]: number };
 	shops: LocalShopSave[];
 	lifetimeStats: { [key: string]: number };
+	multiShopRestockUnlocked: boolean;
+	multiShopAutoRestockUnlocked: boolean;
+	multiShopAutoRestockToggled: boolean;
+	commercialLicenseUnlocked: boolean;
+	employeeTrainingUnlocked: boolean;
+
 }
