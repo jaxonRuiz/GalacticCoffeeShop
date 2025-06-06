@@ -283,14 +283,14 @@ export class Preshop implements ISubscriber, IScene, IPreshop {
 		if (this.autogrindingEnabled) {
 			this.autogrindCounter++;
 			if (this.autogrindCounter >= this.autogrindInterval) {
-				this.grindBeans();
+				this.grindBeans(false);
 				this.autogrindCounter = 0;
 			}
 		}
 		if (this.autosellEnabled) {
 			this.autosellCounter++;
 			if (this.autosellCounter >= this.autosellInterval) {
-				this.sellCoffee();
+				this.sellCoffee(false);
 				this.autosellCounter = 0;
 			}
 		}
